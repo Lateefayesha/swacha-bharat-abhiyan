@@ -9,30 +9,31 @@
 
     <ImageView
         android:id="@+id/img_logo"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="@dimen/logo_img_height"
+        android:layout_height="@dimen/logo_img_height"
         android:src="@drawable/logo"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="@dimen/login_margin"
         android:layout_centerHorizontal="true"/>
 
     <android.support.v7.widget.CardView
         android:layout_below="@id/img_logo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="250dp"
-        app:cardCornerRadius="5dp"
+        android:minHeight="@dimen/login_card_height"
+        app:cardCornerRadius="@dimen/card_radius"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
         android:layout_centerInParent="true"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="@dimen/login_margin">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:layout_margin="15dp">
+            android:layout_margin="@dimen/login_margin">
 
             <TextView
+                android:id="@+id/lbl_login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="15dp"
@@ -46,7 +47,7 @@
                 android:layout_height="wrap_content">
 
                 <EditText
-                    android:id="@+id/login_user_name"
+                    android:id="@+id/txt_user_name"
                     style="@style/MyEditTextStyle"
                     android:hint="User Name"
                     android:inputType="textCapWords" />
@@ -59,7 +60,7 @@
                 android:layout_marginTop="20dp">
 
                 <EditText
-                    android:id="@+id/login_password"
+                    android:id="@+id/txt_password"
                     style="@style/MyEditTextStyle"
                     android:hint="Password"
                     android:inputType="textPassword" />
@@ -75,6 +76,7 @@
                 android:textSize="12sp"/>
 
             <Button
+                android:id="@+id/btn_login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Login"
@@ -87,9 +89,9 @@
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/appynitty_img_height"
         android:src="@drawable/appynitty_icon"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"/>
 
