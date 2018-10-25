@@ -12,4 +12,11 @@
     <string name="password_txt">Password</string>
     <string name="forgot_password_txt">Forgot Password?</string>
 
+    <string name="lodin_success">Login Successfully!</string>
+    <string name="login_error">Unable to Login. Please try again later!</string>
+    <string name="serverError">Oops! We\'re having technical problems. Please try again later.</string>
+
+    <string name="plz_ent_username">Please enter User Name</string>
+    <string name="plz_ent_pwd">Please enter Password</string>
+
 </resources>
