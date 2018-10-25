@@ -33,6 +33,7 @@
             android:layout_margin="@dimen/login_margin">
 
             <TextView
+                android:id="@+id/lbl_login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="15dp"
@@ -46,7 +47,7 @@
                 android:layout_height="wrap_content">
 
                 <EditText
-                    android:id="@+id/login_user_name"
+                    android:id="@+id/txt_user_name"
                     style="@style/MyEditTextStyle"
                     android:hint="User Name"
                     android:inputType="textCapWords" />
@@ -59,7 +60,7 @@
                 android:layout_marginTop="20dp">
 
                 <EditText
-                    android:id="@+id/login_password"
+                    android:id="@+id/txt_password"
                     style="@style/MyEditTextStyle"
                     android:hint="Password"
                     android:inputType="textPassword" />
@@ -75,6 +76,7 @@
                 android:textSize="12sp"/>
 
             <Button
+                android:id="@+id/btn_login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Login"
