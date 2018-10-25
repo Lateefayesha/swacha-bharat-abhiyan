@@ -1,4 +1,4 @@
-package com.appynitty.retrofitconnectionlibrary.Connection;
+package com.appynitty.retrofitconnectionlibrary.connection;
 
 import com.google.gson.Gson;
 
