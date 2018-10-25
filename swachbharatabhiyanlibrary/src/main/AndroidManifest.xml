@@ -1,16 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.appynitty.swachbharatabhiyanlibrary" >
+    package="com.appynitty.swachbharatabhiyanlibrary">
 
     <application
         android:allowBackup="true"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
             android:name=".activity.LoginActivity"
-            android:label="@string/app_name">
-        </activity>
+            android:label="@string/app_name"/>
 
+        <activity
+            android:name=".activity.DashboardActivity"
+            android:label="@string/title_activity_dashboard"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
+
 </manifest>
