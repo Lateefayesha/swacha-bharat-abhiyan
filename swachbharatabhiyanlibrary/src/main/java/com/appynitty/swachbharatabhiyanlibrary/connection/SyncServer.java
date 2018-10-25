@@ -3,8 +3,8 @@ package com.appynitty.swachbharatabhiyanlibrary.connection;
 import android.content.Context;
 import android.util.Log;
 
+import com.appynitty.retrofitconnectionlibrary.connection.Connection;
 import com.appynitty.retrofitconnectionlibrary.pojos.ResultPojo;
-import com.appynitty.retrofitconnectionlibrary.Connection.Connection;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.LoginPojo;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 import com.appynitty.swachbharatabhiyanlibrary.webservices.LoginWebService;
