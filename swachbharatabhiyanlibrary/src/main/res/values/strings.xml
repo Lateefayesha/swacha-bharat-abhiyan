@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">Swach Bharat Abhiyan</string>
+    <string name="title_activity_dashboard">Swach Bharat Swasth Bharat</string>
+
+    <string name="change_language">Change Language</string>
+    <string name="rate_this_app">Rate This App</string>
+    <string name="share_the_app">Share The App</string>
+    <string name="about_appynitty">About Appynitty</string>
+    <string name="login_title">LOGIN</string>
+    <string name="login_txt">Login</string>
+    <string name="user_name_txt">User Name</string>
+    <string name="password_txt">Password</string>
+    <string name="forgot_password_txt">Forgot Password?</string>
+
 </resources>
