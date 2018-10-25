@@ -41,7 +41,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
     /* Custom Libraries*/
-    // implementation files('libs/QuickUtils.jar')
+    implementation files('libs/QuickUtils.jar')
     implementation(name: 'mithsoftlib-release', ext: 'aar')
     implementation ('com.budiyev.android:code-scanner:2.0.1'){
         exclude group: 'com.android.support'
@@ -54,4 +54,10 @@ dependencies {
         exclude module: 'appcompat-v7'
         exclude module: 'support-v4'
     }
+
+    implementation project(':retrofitconnectionlibrary')
+
+    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.4.1'
 }
