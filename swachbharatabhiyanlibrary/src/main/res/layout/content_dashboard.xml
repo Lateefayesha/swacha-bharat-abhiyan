@@ -30,7 +30,7 @@
             android:orientation="horizontal"
             android:padding="@dimen/padding_margin_layout_double">
 
-            <com.mithsoft.lib.components.CircleImageView
+            <ImageView
                 android:scaleType="fitCenter"
                 android:layout_width="140dp"
                 android:layout_height="match_parent"

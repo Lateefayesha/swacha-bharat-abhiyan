@@ -18,5 +18,6 @@
 
     <string name="plz_ent_username">Please enter User Name</string>
     <string name="plz_ent_pwd">Please enter Password</string>
+    <string name="logout_txt">Logout</string>
 
 </resources>

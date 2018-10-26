@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.DashboardActivity">
+    tools:context=".activity.AboutAppynittyActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -20,16 +20,9 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_dashboard" />
-
-    <io.github.kobakei.materialfabspeeddial.FabSpeedDial
-        android:id="@+id/fab_setting"
+    <WebView
+        android:id="@+id/webview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:fab_extraMargin="-10dp"
-        app:fab_menu="@menu/menu"
-        app:fab_miniFabTextColor="@color/colorAccent"
-        app:fab_miniFabTextBackground="@drawable/rounded_white_button"
-        app:fab_fabDrawable="@drawable/ic_repairing_service"/>
+        android:layout_height="match_parent"/>
 
 </android.support.design.widget.CoordinatorLayout>

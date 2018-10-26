@@ -2,20 +2,28 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_call"
+        android:id="@+id/action_change_language"
         android:icon="@drawable/ic_language_change"
         android:title="@string/change_language" />
+
     <item
-        android:id="@+id/action_text"
+        android:id="@+id/action_logout"
+        android:icon="@drawable/ic_logout_white"
+        android:title="@string/logout_txt" />
+
+    <item
+        android:id="@+id/action_rate_app"
         android:icon="@drawable/ic_star_white_24dp"
         android:title="@string/rate_this_app"/>
+
     <item
-        android:id="@+id/action_email"
-        android:icon="@drawable/ic_share_white_24dp"
-        android:title="@string/share_the_app" />
-    <item
-        android:id="@+id/action_about"
+        android:id="@+id/action_about_appynitty"
         android:icon="@drawable/icn_appynitty_white"
         android:title="@string/about_appynitty" />
+
+    <item
+        android:id="@+id/action_share_app"
+        android:icon="@drawable/ic_share_white_24dp"
+        android:title="@string/share_the_app" />
 
 </menu>
