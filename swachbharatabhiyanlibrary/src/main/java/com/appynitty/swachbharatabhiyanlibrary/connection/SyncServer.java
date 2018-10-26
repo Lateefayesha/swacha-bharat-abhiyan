@@ -34,12 +34,11 @@ public class SyncServer {
 
         try {
 
-            RequestBody username = RequestBody.create(MediaType.parse(AUtils.CONTENT_TYPE), loginPojo.getUserLoginId());
-            RequestBody userpwd = RequestBody.create(okhttp3.MultipartBody.FORM, loginPojo.getUserPassword());
 
             LoginWebService service = Connection.createService(LoginWebService.class, AUtils.SERVER_URL);
+            String appid = QuickUtils.prefs.getString(AUtils.APP_ID, "");
             resultPojo = service.saveLoginDetails(QuickUtils.prefs.getString(AUtils.APP_ID, ""), AUtils.CONTENT_TYPE,
-                    username, userpwd).execute().body();
+                    loginPojo.getUserLoginId(), loginPojo.getUserPassword()).execute().body();
 
 
         } catch (Exception e) {
