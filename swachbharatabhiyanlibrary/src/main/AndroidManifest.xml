@@ -28,7 +28,7 @@
         <activity
             android:name=".activity.AboutAppynittyActivity"
             android:label="@string/about_appynitty"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

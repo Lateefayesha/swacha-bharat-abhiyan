@@ -26,6 +26,10 @@ repositories {
     flatDir {
         dirs 'libs'
     }
+
+    maven {
+        url "https://jitpack.io"
+    }
 }
 
 dependencies {
@@ -43,17 +47,14 @@ dependencies {
     /* Custom Libraries*/
     implementation files('libs/QuickUtils.jar')
     implementation(name: 'mithsoftlib-release', ext: 'aar')
-    implementation ('com.budiyev.android:code-scanner:2.0.1'){
+
+    implementation('com.budiyev.android:code-scanner:2.0.1') {
         exclude group: 'com.android.support'
         exclude module: 'appcompat-v7'
         exclude module: 'support-v4'
     }
 
-    implementation ('io.github.yavski:fab-speed-dial:1.0.6'){
-        exclude group: 'com.android.support'
-        exclude module: 'appcompat-v7'
-        exclude module: 'support-v4'
-    }
+    implementation('com.github.kobakei:MaterialFabSpeedDial:1.2.0')
 
     implementation project(':retrofitconnectionlibrary')
 

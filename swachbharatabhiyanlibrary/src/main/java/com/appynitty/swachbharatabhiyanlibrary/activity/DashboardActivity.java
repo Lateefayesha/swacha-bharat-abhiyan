@@ -1,16 +1,12 @@
 package com.appynitty.swachbharatabhiyanlibrary.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.internal.NavigationMenu;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.MenuItem;
-import android.view.View;
 import android.widget.GridView;
 import android.widget.TextView;
 
@@ -65,7 +61,9 @@ public class DashboardActivity extends AppCompatActivity {
             @Override
             public void onMenuItemClick(FloatingActionButton miniFab, @Nullable TextView label, int itemId) {
                 if (itemId == R.id.action_change_language) {
+                    changeLanguage();
                 } else if (itemId == R.id.action_about_appynitty) {
+                    startActivity(new Intent(mContext, AboutAppynittyActivity.class));
                 } else if (itemId == R.id.action_rate_app) {
                     AUtils.rateApp(mContext);
                 } else if (itemId == R.id.action_share_app) {
@@ -88,6 +86,10 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     private void performLogout(){
+
+    }
+
+    private void changeLanguage(){
 
     }
 

@@ -7,6 +7,7 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.appynitty.swachbharatabhiyanlibrary.R;
 import com.mithsoft.lib.components.MyProgressDialog;
 
 /**
@@ -20,7 +21,7 @@ public class InternalWebviewClient extends WebViewClient {
 
     public InternalWebviewClient(Context context, Boolean showProgress){
         this.mContext = context;
-        progressDialog = new MyProgressDialog(context, com.mithsoft.lib.R.drawable.progress_bar, false);
+        progressDialog = new MyProgressDialog(context, R.drawable.progress_bar, false);
         if(showProgress){
             progressDialog.show();
         }
