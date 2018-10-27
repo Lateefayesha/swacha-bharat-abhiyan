@@ -35,12 +35,15 @@ public class AUtils extends MsUtils {
     public static final String CONTENT_TYPE = "application/json";
 
     public static final String APP_ID = "AppId";
-    public static final String USER_ID = "UserId";
 
-    public static final String TYPE = "Type";
 
     public static final String DIALOG_TYPE_VEHICLE = "DialogTypeVehicle";
     public static final String DIALOG_TYPE_LANGUAGE = "Dialog_Type_Language";
+
+    public static final String DEFAULT_LANGUAGE_ID = "2";
+    public static final String LANGUAGE_ID = "LanguageId";
+
+    public static final int SPLASH_SCREEN_TIME = 3000;
 
 
     // Language Change of an application
@@ -80,7 +83,14 @@ public class AUtils extends MsUtils {
         config.locale = locale;
         context.getApplicationContext().getResources().updateConfiguration(config, null);
         context.onConfigurationChanged(config);
+    }
 
+    public interface PREFS {
+
+        //    Save Data Constant
+        String IS_USER_LOGIN = "UserLoginStatus";
+        String USER_ID = "UserId";
+        String USER_TYPE = "UserType";
     }
 
 }

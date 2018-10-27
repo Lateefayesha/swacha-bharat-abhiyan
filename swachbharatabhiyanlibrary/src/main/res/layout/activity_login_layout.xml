@@ -44,7 +44,7 @@
 
                 <EditText
                     android:id="@+id/txt_user_name"
-                    style="@style/MyEditTextStyle"
+                    style="@style/MyEditTextStyleLight"
                     android:hint="@string/user_name_txt"
                     android:inputType="textCapWords" />
 
@@ -57,7 +57,7 @@
 
                 <EditText
                     android:id="@+id/txt_password"
-                    style="@style/MyEditTextStyle"
+                    style="@style/MyEditTextStyleLight"
                     android:hint="@string/password_txt"
                     android:inputType="textPassword" />
 
@@ -77,7 +77,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/login_txt"
                 android:background="@drawable/rounded_orange_button"
-                android:textColor="@color/colorPrimaryDark"
+                android:textColor="@android:color/white"
                 android:layout_marginTop="20dp"/>
 
         </LinearLayout>

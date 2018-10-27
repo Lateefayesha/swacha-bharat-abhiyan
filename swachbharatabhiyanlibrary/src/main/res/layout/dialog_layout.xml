@@ -44,7 +44,7 @@
 
             <EditText
                 android:id="@+id/txt_vehicle_no"
-                style="@style/MyEditTextStyle"
+                style="@style/MyEditTextStyleLight"
                 android:hint="@string/vehicle_no_txt" />
 
         </android.support.design.widget.TextInputLayout>
@@ -54,7 +54,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/submit_txt"
-            android:textColor="@color/colorPrimaryDark"
+            android:textColor="@android:color/white"
             android:background="@drawable/rounded_orange_button"
             android:layout_marginTop="@dimen/login_margin"/>
     </LinearLayout>
