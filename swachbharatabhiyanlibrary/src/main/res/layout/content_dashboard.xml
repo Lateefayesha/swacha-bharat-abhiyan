@@ -17,10 +17,10 @@
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="130dp"
-        android:layout_marginTop="45dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginEnd="15dp"
+        android:layout_height="@dimen/dim_130_dp"
+        android:layout_marginTop="@dimen/dim_45_dp"
+        android:layout_marginStart="@dimen/dimen_15_dp"
+        android:layout_marginEnd="@dimen/dimen_15_dp"
         app:cardCornerRadius="@dimen/padding_margin_layout"
         android:id="@+id/user_details_card"
         app:cardElevation="@dimen/padding_margin_layout">
@@ -34,7 +34,7 @@
             <ImageView
                 android:contentDescription="@string/hyphen"
                 android:scaleType="fitCenter"
-                android:layout_width="140dp"
+                android:layout_width="@dimen/dimen_140_dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.3"
                 android:layout_gravity="center_horizontal"

@@ -8,6 +8,8 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.GridView;
 import android.widget.Switch;
@@ -103,6 +105,28 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
                 onSwitchStatus(isChecked);
             }
         });
+
+        menuGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                setMenuClick(position);
+            }
+        });
+
+    }
+
+    private void setMenuClick(int position){
+        switch (position){
+            case 0:
+                startActivity(new Intent(mContext, QRcodeScannerActivity.class));
+                break;
+            case 1:
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+        }
     }
 
     private void initData() {
@@ -110,6 +134,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
 
         menuPojoList.add(new MenuListPojo("Scan QR code", R.drawable.ic_qr_code));
         menuPojoList.add(new MenuListPojo("Talking photo", R.drawable.ic_photograph));
+
         menuPojoList.add(new MenuListPojo("History", R.drawable.ic_history));
         menuPojoList.add(new MenuListPojo("Profile", R.drawable.ic_id_card));
 
