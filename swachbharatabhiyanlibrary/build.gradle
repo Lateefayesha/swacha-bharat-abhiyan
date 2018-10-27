@@ -44,16 +44,18 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
-    /* Custom Libraries*/
+    /** Custom Libraries*/
     implementation files('libs/QuickUtils.jar')
     implementation(name: 'mithsoftlib-release', ext: 'aar')
 
+    /** QR code scanner */
     implementation('com.budiyev.android:code-scanner:2.0.1') {
         exclude group: 'com.android.support'
         exclude module: 'appcompat-v7'
         exclude module: 'support-v4'
     }
 
+    /** Material Fab Button */
     implementation('com.github.kobakei:MaterialFabSpeedDial:1.2.0')
 
     implementation project(':retrofitconnectionlibrary')

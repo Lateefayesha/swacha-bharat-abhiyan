@@ -19,10 +19,11 @@
         android:layout_width="match_parent"
         android:layout_height="130dp"
         android:layout_marginTop="45dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
         app:cardCornerRadius="@dimen/padding_margin_layout"
-        android:id="@+id/user_details_card">
+        android:id="@+id/user_details_card"
+        app:cardElevation="@dimen/padding_margin_layout">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -69,21 +70,40 @@
                     android:layout_alignBaseline="@id/user_emp_id_lbl"
                     android:layout_toEndOf="@id/user_emp_id_lbl"/>
 
-                <TextView
-                    android:id="@+id/user_attendance_status"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="off duty"
-                    android:textColor="@color/cart_count_color"
-                    android:layout_alignParentBottom="true"/>
+                    android:orientation="horizontal"
+                    android:paddingStart="@dimen/card_radius"
+                    android:paddingEnd="@dimen/card_radius"
+                    android:layout_alignParentBottom="true">
 
-                <Switch
-                    android:id="@+id/user_attendance_toggle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentEnd="true"/>
+                    <TextView
+                        android:id="@+id/user_attendance_status"
+                        android:layout_width="0dp"
+                        android:layout_weight="0.3"
+                        android:layout_height="match_parent"
+                        android:text="off duty"
+                        android:gravity="center_vertical|start"
+                        android:textColor="@color/cart_count_color"/>
 
+                    <TextView
+                        android:id="@+id/user_vehicle_type"
+                        android:layout_width="0dp"
+                        android:layout_weight="0.5"
+                        android:layout_height="match_parent"
+                        android:text="(Truck)"
+                        android:gravity="center_vertical|start"
+                        android:textColor="@color/colorDefault"/>
+
+                    <Switch
+                        android:id="@+id/user_attendance_toggle"
+                        android:layout_width="0dp"
+                        android:layout_weight="0.2"
+                        android:gravity="end"
+                        android:layout_height="match_parent"/>
+
+                </LinearLayout>
 
             </RelativeLayout>
 

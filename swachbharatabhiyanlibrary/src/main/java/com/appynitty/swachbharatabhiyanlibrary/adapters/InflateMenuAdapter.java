@@ -1,19 +1,23 @@
 package com.appynitty.swachbharatabhiyanlibrary.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.appynitty.swachbharatabhiyanlibrary.R;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.MenuListPojo;
+import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 
 import java.util.List;
 
-import androidx.annotation.NonNull;
+import android.support.annotation.NonNull;
 
 /**
  * Created by Ayan Dey on 25/10/18.
@@ -32,8 +36,9 @@ public class InflateMenuAdapter extends ArrayAdapter<MenuListPojo> {
         this.menuList = objects;
     }
 
+    @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
 
         if (convertView == null) {
 
@@ -43,6 +48,7 @@ public class InflateMenuAdapter extends ArrayAdapter<MenuListPojo> {
             final ViewHolder viewHolder = new ViewHolder();
             viewHolder.menuNameTextView = view.findViewById(R.id.menu_title);
             viewHolder.menuImageView = view.findViewById(R.id.menu_icon);
+            viewHolder.menuCardView = view.findViewById(R.id.menu_card);
             view.setTag(viewHolder);
 
         } else {
@@ -50,13 +56,20 @@ public class InflateMenuAdapter extends ArrayAdapter<MenuListPojo> {
         }
         holder = (ViewHolder) view.getTag();
 
+        if (!AUtils.isNull(menuList) && !menuList.isEmpty()) {
+            MenuListPojo menuPojo = menuList.get(position);
+            holder.menuNameTextView.setText(menuPojo.getMenuName());
+            holder.menuImageView.setImageResource(menuPojo.getImage());
+        }
+
         return view;
     }
 
-    class ViewHolder {
+    private class ViewHolder {
 
         private TextView menuNameTextView;
         private ImageView menuImageView;
+        private CardView menuCardView;
     }
 
 
