@@ -48,7 +48,6 @@ public class InflateMenuAdapter extends ArrayAdapter<MenuListPojo> {
             final ViewHolder viewHolder = new ViewHolder();
             viewHolder.menuNameTextView = view.findViewById(R.id.menu_title);
             viewHolder.menuImageView = view.findViewById(R.id.menu_icon);
-            viewHolder.menuCardView = view.findViewById(R.id.menu_card);
             view.setTag(viewHolder);
 
         } else {
@@ -69,7 +68,6 @@ public class InflateMenuAdapter extends ArrayAdapter<MenuListPojo> {
 
         private TextView menuNameTextView;
         private ImageView menuImageView;
-        private CardView menuCardView;
     }
 
 
