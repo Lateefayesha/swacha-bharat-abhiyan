@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".activity.QRcodeScannerActivity"
+    tools:showIn="@layout/activity_qrcode_scanner"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:paddingTop="@dimen/dim_30_dp"
+        android:paddingBottom="@dimen/dim_30_dp"
+        android:paddingStart="@dimen/padding_margin_layout"
+        android:paddingEnd="@dimen/padding_margin_layout">
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/TextLabel">
+
+            <EditText
+                android:id="@+id/txt_house_no"
+                style="@style/MyEditTextStyle"
+                android:inputType="textCapWords"
+                android:hint="@string/house_number_hint"
+                android:textColorHint="@color/colorPrimaryDark"
+                android:textColor="@color/colorPrimaryDark"/>
+
+        </android.support.design.widget.TextInputLayout>
+
+    </LinearLayout>
+
+    <com.budiyev.android.codescanner.CodeScannerView
+        android:id="@+id/scanner_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:autoFocusButtonColor="@android:color/white"
+        app:autoFocusButtonVisible="true"
+        app:flashButtonColor="@android:color/white"
+        app:flashButtonVisible="true"
+        app:frameColor="@android:color/white"
+        app:frameCornersSize="@dimen/dim_40_dp"
+        app:frameAspectRatioWidth="1"
+        app:frameAspectRatioHeight="1"
+        app:frameSize="0.75"
+        app:frameThickness="@dimen/padding_margin_layout"
+        app:maskColor="#77000000"/>
+
+</LinearLayout>

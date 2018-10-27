@@ -45,6 +45,15 @@ public class InternalWebviewClient extends WebViewClient {
     }
 
     @Override
+    public void onPageFinished(WebView view, String url) {
+        super.onPageFinished(view, url);
+        if(progressDialog != null && progressDialog.isShowing()){
+            progressDialog.hide();
+            progressDialog = null;
+        }
+    }
+
+    @Override
     public boolean shouldOverrideUrlLoading(WebView view, String url) {
 
         if(url.contains("tel:")){

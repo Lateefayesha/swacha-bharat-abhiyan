@@ -108,8 +108,10 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
     private void initData() {
         List<MenuListPojo> menuPojoList = new ArrayList<MenuListPojo>();
 
-        menuPojoList.add(new MenuListPojo("Test", R.drawable.ic_user));
-        menuPojoList.add(new MenuListPojo("Test", R.drawable.ic_user));
+        menuPojoList.add(new MenuListPojo("Scan QR code", R.drawable.ic_qr_code));
+        menuPojoList.add(new MenuListPojo("Talking photo", R.drawable.ic_photograph));
+        menuPojoList.add(new MenuListPojo("History", R.drawable.ic_history));
+        menuPojoList.add(new MenuListPojo("Profile", R.drawable.ic_id_card));
 
         InflateMenuAdapter mainMenuAdaptor = new InflateMenuAdapter(DashboardActivity.this, menuPojoList);
         menuGridView.setAdapter(mainMenuAdaptor);
