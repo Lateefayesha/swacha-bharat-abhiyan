@@ -3,7 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:layout_margin="5dp">
 
     <TextView
         android:id="@+id/lbl_title"
@@ -15,18 +16,17 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="@color/colorDefault"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
+        android:layout_height="1dp"
+        android:background="@color/colorDivider"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:layout_marginBottom="5dp"/>
 
     <ListView
         android:id="@+id/dialog_listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:dividerHeight="1dp"
-        android:divider="@color/colorDefault"
+        android:listSelector="@color/colorItemSelected"
         android:visibility="visible"/>
 
 
