@@ -92,7 +92,7 @@ public class PopUpDialog extends Dialog {
             lblTitle.setText(mContext.getResources().getString(R.string.change_language));
         }
 
-        mAdapter = new ArrayAdapter<String>(mContext, android.R.layout.simple_list_item_1,mList);
+        mAdapter = new ArrayAdapter<String>(mContext, R.layout.dialog_adapter_layout,mList);
 
         mItemList.setAdapter(mAdapter);
     }
