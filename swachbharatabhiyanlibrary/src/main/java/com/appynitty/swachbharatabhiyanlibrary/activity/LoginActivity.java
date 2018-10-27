@@ -85,17 +85,22 @@ public class LoginActivity extends BaseActivity {
 
                         if (loginDetailsPojo.getStatus().equals(AUtils.STATUS_SUCCESS)) {
 
-                            QuickUtils.prefs.save(AUtils.USER_ID,loginDetailsPojo.getUserId());
-                            QuickUtils.prefs.save(AUtils.TYPE,loginDetailsPojo.getType());
+                            QuickUtils.prefs.save(AUtils.PREFS.USER_ID,loginDetailsPojo.getUserId());
+                            QuickUtils.prefs.save(AUtils.PREFS.USER_TYPE,loginDetailsPojo.getType());
+
+                            QuickUtils.prefs.save(AUtils.PREFS.IS_USER_LOGIN, true);
 
                             Toasty.success(mContext, "" + loginDetailsPojo.getMessage(), Toast.LENGTH_SHORT).show();
 
                             startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
                             LoginActivity.this.finish();
                         } else {
+                            QuickUtils.prefs.save(AUtils.PREFS.IS_USER_LOGIN, false);
+
                             Toasty.error(mContext, "" + loginDetailsPojo.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     } else {
+                        QuickUtils.prefs.save(AUtils.PREFS.IS_USER_LOGIN, false);
                         Toasty.error(mContext, "" + mContext.getString(R.string.serverError), Toast.LENGTH_SHORT).show();
                     }
 

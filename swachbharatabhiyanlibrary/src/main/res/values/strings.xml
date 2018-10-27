@@ -28,4 +28,7 @@
     <string name="status_on_duty">On Duty</string>
 
     <string name="hyphen">-</string>
+    <string name="opening_round_bracket">(</string>
+    <string name="closing_round_bracket">)</string>
+
 </resources>

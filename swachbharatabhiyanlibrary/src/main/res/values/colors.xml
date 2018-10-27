@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#ff9933</color>
-    <color name="colorPrimaryDark">#ffffff</color>
+    <color name="colorPrimaryDark">#fc840c</color>
     <color name="colorAccent">#FFA726</color>
     
     <color name="colorDefault">#a2a2a2</color>
+    <color name="colorGray">#7C7C7C</color>
+    <color name="colorBlackGray">#0F0F0F</color>
+
+    <color name="colorOFFDutyRed">#ff6168</color>
+    <color name="colorONDutyGreen">#159218</color>
 </resources>
