@@ -78,12 +78,9 @@
                 android:textSize="12sp"/>
 
             <Button
+                style="@style/MyButtonStyle"
                 android:id="@+id/btn_login"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:text="@string/login_txt"
-                android:background="@drawable/rounded_orange_button"
-                android:textColor="@android:color/white"
                 android:layout_marginTop="20dp"/>
 
         </LinearLayout>

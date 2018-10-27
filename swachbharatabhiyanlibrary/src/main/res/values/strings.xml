@@ -13,7 +13,7 @@
     <string name="password_txt">Password</string>
     <string name="forgot_password_txt">Forgot Password?</string>
 
-    <string name="vehicle_no_txt">Vehicle No.</string>
+    <string name="vehicle_no_txt">Enter Vehicle No.</string>
     <string name="submit_txt">Submit</string>
     <string name="dialog_title_txt_vehicle">Vehicle Types</string>
 
