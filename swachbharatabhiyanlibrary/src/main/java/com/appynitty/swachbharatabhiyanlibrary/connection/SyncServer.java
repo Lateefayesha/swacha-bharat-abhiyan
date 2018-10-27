@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.appynitty.retrofitconnectionlibrary.connection.Connection;
 import com.appynitty.retrofitconnectionlibrary.pojos.ResultPojo;
+import com.appynitty.swachbharatabhiyanlibrary.pojos.LoginDetailsPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.LoginPojo;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 import com.appynitty.swachbharatabhiyanlibrary.webservices.LoginWebService;
@@ -15,6 +16,9 @@ import java.io.File;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import quickutils.core.QuickUtils;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class SyncServer {
 
@@ -28,21 +32,18 @@ public class SyncServer {
         gson = new Gson();
     }
 
-    public ResultPojo saveLoginDetails(LoginPojo loginPojo) {
+    public LoginDetailsPojo saveLoginDetails(LoginPojo loginPojo) {
 
-        ResultPojo resultPojo = null;
-
+        LoginDetailsPojo resultPojo = null;
         try {
 
-
             LoginWebService service = Connection.createService(LoginWebService.class, AUtils.SERVER_URL);
-            String appid = QuickUtils.prefs.getString(AUtils.APP_ID, "");
-            resultPojo = service.saveLoginDetails(QuickUtils.prefs.getString(AUtils.APP_ID, ""), AUtils.CONTENT_TYPE,
-                    loginPojo.getUserLoginId(), loginPojo.getUserPassword()).execute().body();
-
+            resultPojo = service.saveLoginDetails(QuickUtils.prefs.getString(AUtils.APP_ID, "1"),AUtils.CONTENT_TYPE,
+                    loginPojo).execute().body();
 
         } catch (Exception e) {
 
+            resultPojo = null;
             e.printStackTrace();
         }
         return resultPojo;

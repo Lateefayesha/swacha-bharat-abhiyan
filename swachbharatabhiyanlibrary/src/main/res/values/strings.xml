@@ -12,6 +12,10 @@
     <string name="password_txt">Password</string>
     <string name="forgot_password_txt">Forgot Password?</string>
 
+    <string name="vehicle_no_txt">Vehicle No.</string>
+    <string name="submit_txt">Submit</string>
+    <string name="dialog_title_txt_vehicle">Vehicle Types</string>
+
     <string name="lodin_success">Login Successfully!</string>
     <string name="login_error">Unable to Login. Please try again later!</string>
     <string name="serverError">Oops! We\'re having technical problems. Please try again later.</string>
@@ -20,4 +24,8 @@
     <string name="plz_ent_pwd">Please enter Password</string>
     <string name="logout_txt">Logout</string>
 
+    <string name="status_off_duty">Off Duty</string>
+    <string name="status_on_duty">On Duty</string>
+
+    <string name="hyphen">-</string>
 </resources>

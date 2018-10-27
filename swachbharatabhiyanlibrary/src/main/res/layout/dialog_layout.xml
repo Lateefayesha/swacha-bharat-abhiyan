@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/lbl_title"
+        style="@style/MyTitle"
+        android:text="@string/login_title"
+        android:layout_margin="5dp"
+        android:paddingLeft="10dp"
+        android:textColor="@color/colorPrimary" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/colorDefault"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="5dp"/>
+
+    <ListView
+        android:id="@+id/dialog_listview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:dividerHeight="1dp"
+        android:divider="@color/colorDefault"
+        android:visibility="visible"/>
+
+
+    <LinearLayout
+        android:id="@+id/dialog_input_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="@dimen/login_margin"
+        android:visibility="gone">
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp">
+
+            <EditText
+                android:id="@+id/txt_vehicle_no"
+                style="@style/MyEditTextStyle"
+                android:hint="@string/vehicle_no_txt" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <Button
+            android:id="@+id/btn_submit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/submit_txt"
+            android:textColor="@color/colorPrimaryDark"
+            android:background="@drawable/rounded_orange_button"
+            android:layout_marginTop="@dimen/login_margin"/>
+    </LinearLayout>
+
+</LinearLayout>

@@ -17,6 +17,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:textSize">@dimen/settings_text_size</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:textCursorDrawable">@color/colorPrimary</item>
         <!--<item name="android:background">@drawable/rounded_corners_text_view</item>-->
         <item name="android:layout_marginTop">@dimen/edit_text_margin_padding</item>
         <item name="android:backgroundTint">@color/colorDefault</item>
@@ -37,6 +38,13 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_margin">@dimen/padding_margin_layout</item>
         <!--<item name="app:cardCornerRadius">@dimen/cardview_radius</item>-->
+    </style>
+
+    <style name="MyTitle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">@dimen/title_margin</item>
+        <item name="android:textSize">@dimen/title_text_size</item>
     </style>
 
 </resources>

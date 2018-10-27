@@ -1,6 +1,8 @@
 package com.appynitty.swachbharatabhiyanlibrary.webservices;
 
 import com.appynitty.retrofitconnectionlibrary.pojos.ResultPojo;
+import com.appynitty.swachbharatabhiyanlibrary.pojos.LoginDetailsPojo;
+import com.appynitty.swachbharatabhiyanlibrary.pojos.LoginPojo;
 
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -14,9 +16,11 @@ import retrofit2.http.Part;
 public interface LoginWebService {
 
     @POST("api/Account/Login")
-    @FormUrlEncoded
-    Call<ResultPojo> saveLoginDetails(@Header("appId") String key,
+    /*Call<ResultPojo> saveLoginDetails(@Header("appId") String key,
                                       @Header("Content-Type") String content_type,
-                                      @Field("userLoginId") String userName,
-                                      @Field("userPassword") String userPassword);
+                                      @Body String loginPojo);*/
+
+    Call<LoginDetailsPojo> saveLoginDetails(@Header("appId") String appId,
+                                      @Header("Content-Type") String content_type,
+                                      @Body LoginPojo loginPojo);
 }

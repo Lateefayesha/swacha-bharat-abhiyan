@@ -10,11 +10,14 @@ import android.widget.Toast;
 import com.appynitty.retrofitconnectionlibrary.pojos.ResultPojo;
 import com.appynitty.swachbharatabhiyanlibrary.R;
 import com.appynitty.swachbharatabhiyanlibrary.connection.SyncServer;
+import com.appynitty.swachbharatabhiyanlibrary.pojos.LoginDetailsPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.LoginPojo;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 import com.appynitty.swachbharatabhiyanlibrary.utils.MyAsyncTask;
 import com.mithsoft.lib.activity.BaseActivity;
 import com.mithsoft.lib.components.Toasty;
+
+import quickutils.core.QuickUtils;
 
 /**
  * Created by Richali Pradhan Gupte on 24-10-2018.
@@ -33,6 +36,7 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void generateId() {
 
+        QuickUtils.prefs.save(AUtils.APP_ID,"1");
         mContext = LoginActivity.this;
 
         setContentView(R.layout.activity_login_layout);
@@ -66,26 +70,30 @@ public class LoginActivity extends BaseActivity {
             getFormData();
 
             new MyAsyncTask(mContext, true, new MyAsyncTask.AsynTaskListener() {
-                public ResultPojo resultPojo = null;
+                public LoginDetailsPojo loginDetailsPojo = null;
 
                 @Override
                 public void doInBackgroundOpration(SyncServer syncServer) {
 
-                    resultPojo = syncServer.saveLoginDetails(loginPojo);
+                    loginDetailsPojo = syncServer.saveLoginDetails(loginPojo);
                 }
 
                 @Override
                 public void onFinished() {
 
-                    if (!AUtils.isNull(resultPojo)) {
+                    if (!AUtils.isNull(loginDetailsPojo)) {
 
-                        if (resultPojo.getStatus().equals(AUtils.STATUS_SUCCESS)) {
+                        if (loginDetailsPojo.getStatus().equals(AUtils.STATUS_SUCCESS)) {
 
-                            Toasty.success(mContext, "" + mContext.getString(R.string.lodin_success), Toast.LENGTH_SHORT).show();
+                            QuickUtils.prefs.save(AUtils.USER_ID,loginDetailsPojo.getUserId());
+                            QuickUtils.prefs.save(AUtils.TYPE,loginDetailsPojo.getType());
+
+                            Toasty.success(mContext, "" + loginDetailsPojo.getMessage(), Toast.LENGTH_SHORT).show();
+
                             startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
                             LoginActivity.this.finish();
                         } else {
-                            Toasty.error(mContext, "" + mContext.getString(R.string.login_error), Toast.LENGTH_SHORT).show();
+                            Toasty.error(mContext, "" + loginDetailsPojo.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     } else {
                         Toasty.error(mContext, "" + mContext.getString(R.string.serverError), Toast.LENGTH_SHORT).show();
@@ -114,6 +122,10 @@ public class LoginActivity extends BaseActivity {
     private void getFormData() {
 
         loginPojo = new LoginPojo();
+        /*loginPojo.setMessage("");
+        loginPojo.setStatus("");
+        loginPojo.setType("");
+        loginPojo.setUserId("");*/
         loginPojo.setUserLoginId(txtUserName.getText().toString());
         loginPojo.setUserPassword(txtUserPwd.getText().toString());
     }
