@@ -10,6 +10,7 @@
         android:id="@+id/lbl_title"
         style="@style/MyTitle"
         android:text="@string/login_title"
+        android:textSize="@dimen/spinner_text_size"
         android:layout_margin="5dp"
         android:paddingLeft="10dp"
         android:textColor="@color/colorPrimary" />
