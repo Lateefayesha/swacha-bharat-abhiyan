@@ -59,6 +59,13 @@ public class AUtils extends MsUtils {
 
     public static final String QR_DATA_KEY = "QR_DataKey";
 
+    public static final String REQUEST_CODE = "RequestCode";
+
+    public static final String VEHICLE_ID = "VehicleId";
+
+    public static final String LAT = "Lat";
+    public static final String LONG = "Long";
+
     // Language Change of an application
     public static void changeLanguage(Activity context, int languageId) {
 
@@ -121,6 +128,8 @@ public class AUtils extends MsUtils {
         String IS_USER_LOGIN = "UserLoginStatus";
         String USER_ID = "UserId";
         String USER_TYPE = "UserType";
+
+        String IMAGE_POJO = "ImagePojo";
     }
 
     public static boolean isCameraPermissionGiven(final Context context)
