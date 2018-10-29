@@ -1,11 +1,15 @@
 package com.appynitty.swachbharatabhiyanlibrary.utils;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Build;
+import android.support.v4.app.ActivityCompat;
 
+import com.appynitty.swachbharatabhiyanlibrary.activity.TakePhotoActivity;
 import com.mithsoft.lib.utils.MsUtils;
 
 import java.util.Locale;
@@ -117,6 +121,144 @@ public class AUtils extends MsUtils {
         String IS_USER_LOGIN = "UserLoginStatus";
         String USER_ID = "UserId";
         String USER_TYPE = "UserType";
+    }
+
+    public static boolean isCameraPermissionGiven(final Context context)
+    {
+
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale((Activity)context, Manifest.permission.CAMERA)) {
+                //Show Information about why you need the permission
+
+                AUtils.showPermissionDialog(context, "CAMERA", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        dialog.cancel();
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            ((Activity)context).requestPermissions(new String[]{Manifest.permission.CAMERA}, AUtils.MY_PERMISSIONS_REQUEST_CAMERA);
+                        }
+                    }
+                });
+
+            } else if (QuickUtils.prefs.getBoolean(Manifest.permission.CAMERA, false)) {
+                //Previously Permission Request was cancelled with 'Dont Ask Again',
+                // Redirect to Settings after showing Information about why you need the permission
+
+                AUtils.showPermissionDialog(context, "CAMERA", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        dialog.cancel();
+                        AUtils.goToAppSettings(context);
+                    }
+                });
+
+            } else {
+                //just request the permission
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    ((Activity)context).requestPermissions(new String[]{Manifest.permission.CAMERA}, AUtils.MY_PERMISSIONS_REQUEST_CAMERA);
+                }
+            }
+
+            QuickUtils.prefs.save(Manifest.permission.CAMERA, true);
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    public static boolean isStoragePermissionGiven(final Context context)
+    {
+
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale((Activity)context, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                //Show Information about why you need the permission
+
+                AUtils.showPermissionDialog(context, "EXTERNAL STORAGE", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        dialog.cancel();
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            ((Activity)context).requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, AUtils.MY_PERMISSIONS_REQUEST_STORAGE);
+                        }
+                    }
+                });
+
+            } else if (QuickUtils.prefs.getBoolean(Manifest.permission.WRITE_EXTERNAL_STORAGE, false)) {
+                //Previously Permission Request was cancelled with 'Dont Ask Again',
+                // Redirect to Settings after showing Information about why you need the permission
+
+                AUtils.showPermissionDialog(context, "EXTERNAL STORAGE", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        dialog.cancel();
+                        AUtils.goToAppSettings(context);
+                    }
+                });
+
+            } else {
+                //just request the permission
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    ((Activity)context).requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, AUtils.MY_PERMISSIONS_REQUEST_STORAGE);
+                }
+            }
+
+            QuickUtils.prefs.save(Manifest.permission.WRITE_EXTERNAL_STORAGE, true);
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    public static boolean isLocationPermissionGiven(final Context context)
+    {
+
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) context, Manifest.permission.ACCESS_FINE_LOCATION)) {
+                //Show Information about why you need the permission
+
+                AUtils.showPermissionDialog(context, "LOCATION", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        dialog.cancel();
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            ((Activity)context).requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, AUtils.MY_PERMISSIONS_REQUEST_LOCATION);
+                        }
+                    }
+                });
+
+            } else if (QuickUtils.prefs.getBoolean(Manifest.permission.ACCESS_FINE_LOCATION, false)) {
+                //Previously Permission Request was cancelled with 'Dont Ask Again',
+                // Redirect to Settings after showing Information about why you need the permission
+
+                AUtils.showPermissionDialog(context, "LOCATION", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        dialog.cancel();
+                        AUtils.goToAppSettings(context);
+                    }
+                });
+
+            } else {
+                //just request the permission
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    ((Activity)context).requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, AUtils.MY_PERMISSIONS_REQUEST_LOCATION);
+                }
+            }
+
+            QuickUtils.prefs.save(Manifest.permission.ACCESS_FINE_LOCATION, true);
+            return false;
+        }
+        else {
+            return true;
+        }
     }
 
 }
