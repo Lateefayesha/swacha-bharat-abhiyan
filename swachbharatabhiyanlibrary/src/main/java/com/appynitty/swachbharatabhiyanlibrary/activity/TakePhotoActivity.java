@@ -24,13 +24,21 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.appynitty.swachbharatabhiyanlibrary.R;
+import com.appynitty.swachbharatabhiyanlibrary.connection.SyncServer;
+import com.appynitty.swachbharatabhiyanlibrary.pojos.GarbageCollectionGarbagePointPojo;
+import com.appynitty.swachbharatabhiyanlibrary.pojos.GarbageCollectionHousePojo;
+import com.appynitty.swachbharatabhiyanlibrary.pojos.ImagePojo;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
+import com.appynitty.swachbharatabhiyanlibrary.webservices.GarbageCollectionHouseWebService;
+import com.google.gson.reflect.TypeToken;
 import com.mithsoft.lib.activity.BaseActivity;
 import com.mithsoft.lib.components.Toasty;
 import com.mithsoft.lib.filepicker.Constants;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.lang.reflect.Type;
+import java.util.List;
 import java.util.Objects;
 
 import quickutils.core.QuickUtils;
@@ -40,7 +48,6 @@ public class TakePhotoActivity extends BaseActivity {
     private final static String TAG = "TakePhotoActivity";
     private static final int REQUEST_CAMERA = 22;
     private static final int SELECT_FILE = 33;
-    private static final int FILE_CHOOSER = 44;
 
 
     private Context mContext;
@@ -53,10 +60,11 @@ public class TakePhotoActivity extends BaseActivity {
 
     private int imageViewNo = 0;
 
-    private String imageFilePath;
     private String resumeFilePath = "";
     private String beforeImageFilePath = "";
     private String afterImageFilePath = "";
+
+    private ImagePojo imagePojo;
 
     @Override
     protected void generateId() {
@@ -133,11 +141,6 @@ public class TakePhotoActivity extends BaseActivity {
             } else if (requestCode == REQUEST_CAMERA) {
 
                 onCaptureImageResult(data);
-            } else if (requestCode == FILE_CHOOSER) {
-
-                resumeFilePath = data.getStringExtra(Constants.KEY_FILE_SELECTED);
-            } else if (requestCode == AUtils.MY_RESULT_REQUEST_QR) {
-                onSubmit();
             }
         }
     }
@@ -264,7 +267,15 @@ public class TakePhotoActivity extends BaseActivity {
 
     private void openQRClicked() {
 
-        startActivityForResult(new Intent(TakePhotoActivity.this, QRcodeScannerActivity.class), AUtils.MY_RESULT_REQUEST_QR);
+        if(validateForm()) {
+
+           if(getFormData()) {
+
+               startActivity(new Intent(TakePhotoActivity.this,
+                       QRcodeScannerActivity.class).putExtra(AUtils.REQUEST_CODE, AUtils.MY_RESULT_REQUEST_QR));
+               TakePhotoActivity.this.finish();
+           }
+        }
     }
 
     private void initToolbar() {
@@ -352,6 +363,30 @@ public class TakePhotoActivity extends BaseActivity {
 
     }
 
-    private void onSubmit() {
+    private boolean validateForm() {
+
+        if (AUtils.isNullString(beforeImageFilePath) && AUtils.isNullString(afterImageFilePath)) {
+            Toasty.warning(mContext, mContext.getString(R.string.plz_capture_img), Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean getFormData() {
+
+        imagePojo = new ImagePojo();
+
+        if (!AUtils.isNullString(beforeImageFilePath)) {
+            imagePojo.setImage1(beforeImageFilePath);
+            imagePojo.setBeforeImage("Before");
+        }
+        if (!AUtils.isNullString(afterImageFilePath)) {
+            imagePojo.setImage2(afterImageFilePath);
+            imagePojo.setAfterImage("After");
+        }
+
+        if (SyncServer.saveImage(imagePojo)) return true;
+        else return false;
     }
 }

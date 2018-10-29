@@ -38,4 +38,6 @@
     <string name="take_after_photo">Take After Photo</string>
     <string name="comments">Comments</string>
 
+    <string name="plz_capture_img">Please capture any one image</string>
+
 </resources>
