@@ -1,6 +1,8 @@
 package com.appynitty.swachbharatabhiyanlibrary.utils;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.os.Build;
 
@@ -45,6 +47,13 @@ public class AUtils extends MsUtils {
 
     public static final int SPLASH_SCREEN_TIME = 3000;
 
+    public static final int MY_PERMISSIONS_REQUEST_CAMERA = 444;
+    public static final int MY_PERMISSIONS_REQUEST_STORAGE = 555;
+    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 666;
+
+    public static final int MY_RESULT_REQUEST_QR = 55;
+
+    public static final String QR_DATA_KEY = "QR_DataKey";
 
     // Language Change of an application
     public static void changeLanguage(Activity context, int languageId) {
@@ -83,6 +92,23 @@ public class AUtils extends MsUtils {
         config.locale = locale;
         context.getApplicationContext().getResources().updateConfiguration(config, null);
         context.onConfigurationChanged(config);
+    }
+
+    //app setting for permissions dialog
+    public static void showPermissionDialog(Context context, String message, DialogInterface.OnClickListener okListener) {
+
+        new android.support.v7.app.AlertDialog.Builder(context)
+                .setTitle("Need Permission")
+                .setMessage("App needs a permission to access " + message)
+                .setPositiveButton("Grant", okListener)
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                })
+                .create()
+                .show();
     }
 
     public interface PREFS {

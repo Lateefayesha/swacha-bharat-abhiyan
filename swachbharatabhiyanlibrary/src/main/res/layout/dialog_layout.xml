@@ -51,13 +51,13 @@
         </android.support.design.widget.TextInputLayout>
 
         <Button
+            style="@style/MyButtonStyle"
             android:id="@+id/btn_submit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:text="@string/submit_txt"
-            android:textColor="@android:color/white"
-            android:background="@drawable/rounded_orange_button"
-            android:layout_marginTop="@dimen/login_margin"/>
+            android:layout_marginTop="@dimen/login_margin"
+            android:layout_marginLeft="@dimen/dim_80_dp"
+            android:layout_marginRight="@dimen/dim_80_dp"
+            />
     </LinearLayout>
 
 </LinearLayout>

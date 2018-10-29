@@ -121,6 +121,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
                 startActivity(new Intent(mContext, QRcodeScannerActivity.class));
                 break;
             case 1:
+                startActivity(new Intent(mContext, TakePhotoActivity.class));
                 break;
             case 2:
                 break;

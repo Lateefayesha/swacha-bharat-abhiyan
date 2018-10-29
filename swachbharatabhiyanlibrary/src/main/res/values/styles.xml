@@ -45,13 +45,6 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="MyCardView" parent="CardView.Light">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_margin">@dimen/padding_margin_layout</item>
-        <!--<item name="app:cardCornerRadius">@dimen/cardview_radius</item>-->
-    </style>
-
     <style name="MyTitle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>

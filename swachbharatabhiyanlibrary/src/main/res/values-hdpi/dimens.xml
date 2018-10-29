@@ -32,5 +32,8 @@
     <dimen name="dimen_15_dp">15dp</dimen>
     <dimen name="dimen_140_dp">140dp</dimen>
     <dimen name="dim_300_dp">300dp</dimen>
+    <dimen name="dim_20_dp">20dp</dimen>
+    <dimen name="dim_10_dp">10dp</dimen>
+    <dimen name="dim_5_dp">5dp</dimen>
 
 </resources>
