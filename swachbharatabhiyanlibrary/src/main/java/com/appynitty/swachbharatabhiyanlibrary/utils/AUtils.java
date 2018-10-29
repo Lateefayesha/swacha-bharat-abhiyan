@@ -57,8 +57,6 @@ public class AUtils extends MsUtils {
 
     public static final int MY_RESULT_REQUEST_QR = 55;
 
-    public static final String QR_DATA_KEY = "QR_DataKey";
-
     public static final String REQUEST_CODE = "RequestCode";
 
     public static final String VEHICLE_ID = "VehicleId";

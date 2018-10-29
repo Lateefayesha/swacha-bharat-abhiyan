@@ -39,5 +39,7 @@
     <string name="comments">Comments</string>
 
     <string name="plz_capture_img">Please capture any one image</string>
+    <string name="garbage_collection_completed">Garbage Collection Completed</string>
+    <string name="done_txt">Done</string>
 
 </resources>

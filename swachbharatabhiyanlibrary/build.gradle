@@ -49,11 +49,7 @@ dependencies {
     implementation(name: 'mithsoftlib-release', ext: 'aar')
 
     /** QR code scanner */
-    implementation('com.budiyev.android:code-scanner:2.0.1') {
-        exclude group: 'com.android.support'
-        exclude module: 'appcompat-v7'
-        exclude module: 'support-v4'
-    }
+    implementation ('me.dm7.barcodescanner:zbar:1.9.8')
 
     /** Material Fab Button */
     implementation('com.github.kobakei:MaterialFabSpeedDial:1.2.0')
