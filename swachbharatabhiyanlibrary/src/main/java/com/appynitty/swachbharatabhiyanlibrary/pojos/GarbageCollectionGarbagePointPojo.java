@@ -16,6 +16,8 @@ public class GarbageCollectionGarbagePointPojo {
 
     private String beforeImage;
 
+    private String comment;
+
     public String getLong() {
         return Long;
     }
@@ -72,6 +74,14 @@ public class GarbageCollectionGarbagePointPojo {
         this.image2 = image2;
     }
 
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
     @Override
     public String toString() {
         return "GarbageCollectionGarbagePointPojo{" +
@@ -82,6 +92,7 @@ public class GarbageCollectionGarbagePointPojo {
                 ", AfterImage='" + AfterImage + '\'' +
                 ", Lat='" + Lat + '\'' +
                 ", beforeImage='" + beforeImage + '\'' +
+                ", comment='" + comment + '\'' +
                 '}';
     }
 }

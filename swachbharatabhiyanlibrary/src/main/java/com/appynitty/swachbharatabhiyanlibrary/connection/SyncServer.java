@@ -86,6 +86,7 @@ public class SyncServer {
             RequestBody houseId = RequestBody.create(okhttp3.MultipartBody.FORM, garbageCollectionHousePojo.getHouseId());
             RequestBody Lat = RequestBody.create(okhttp3.MultipartBody.FORM, garbageCollectionHousePojo.getLat());
             RequestBody Long = RequestBody.create(okhttp3.MultipartBody.FORM, garbageCollectionHousePojo.getLong());
+            RequestBody comment = RequestBody.create(okhttp3.MultipartBody.FORM, garbageCollectionHousePojo.getComment());
 
             RequestBody beforeImage = null;
             if (!AUtils.isNullString(garbageCollectionHousePojo.getBeforeImage())) {
@@ -101,7 +102,7 @@ public class SyncServer {
             GarbageCollectionHouseWebService service = Connection.createService(GarbageCollectionHouseWebService.class, AUtils.SERVER_URL);
 
             resultPojo = service.saveGarbageCollectionH(QuickUtils.prefs.getString(AUtils.APP_ID, ""),
-                    userId, houseId, Lat, Long, beforeImage, afterImage, imageFileMultiBody1,
+                    userId, houseId, Lat, Long, beforeImage, afterImage, comment, imageFileMultiBody1,
                     imageFileMultiBody2).execute().body();
 
         } catch (Exception e) {
@@ -139,6 +140,7 @@ public class SyncServer {
             RequestBody gpId = RequestBody.create(okhttp3.MultipartBody.FORM, garbageCollectionGarbagePointPojo.getGpId());
             RequestBody Lat = RequestBody.create(okhttp3.MultipartBody.FORM, QuickUtils.prefs.getString(AUtils.LAT,""));
             RequestBody Long = RequestBody.create(okhttp3.MultipartBody.FORM, QuickUtils.prefs.getString(AUtils.LONG,""));
+            RequestBody comment = RequestBody.create(okhttp3.MultipartBody.FORM, garbageCollectionGarbagePointPojo.getComment());
 
             RequestBody beforeImage = null;
             if (!AUtils.isNullString(garbageCollectionGarbagePointPojo.getBeforeImage())) {
@@ -154,7 +156,7 @@ public class SyncServer {
             GarbageCollectionHouseWebService service = Connection.createService(GarbageCollectionHouseWebService.class, AUtils.SERVER_URL);
 
             resultPojo = service.saveGarbageCollectionH(QuickUtils.prefs.getString(AUtils.APP_ID, ""),
-                    userId, gpId, Lat, Long, beforeImage, afterImage, imageFileMultiBody1,
+                    userId, gpId, Lat, Long, beforeImage, afterImage, comment, imageFileMultiBody1,
                     imageFileMultiBody2).execute().body();
 
         } catch (Exception e) {

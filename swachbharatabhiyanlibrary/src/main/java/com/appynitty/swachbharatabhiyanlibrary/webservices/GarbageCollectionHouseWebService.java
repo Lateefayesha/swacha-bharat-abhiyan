@@ -21,6 +21,7 @@ public interface GarbageCollectionHouseWebService {
                                              @Part("Long") RequestBody Long,
                                              @Part("beforeImage") RequestBody beforeImage,
                                              @Part("AfterImage") RequestBody afterImage,
+                                             @Part("comment") RequestBody comment,
                                              @Part MultipartBody.Part image1,
                                              @Part MultipartBody.Part image2);
 }

@@ -16,6 +16,8 @@ public class GarbageCollectionHousePojo {
 
     private String houseId;
 
+    private String comment;
+
     public String getLong() {
         return Long;
     }
@@ -72,6 +74,14 @@ public class GarbageCollectionHousePojo {
         this.houseId = houseId;
     }
 
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
     @Override
     public String toString() {
         return "GarbageCollectionHousePojo{" +
@@ -82,6 +92,7 @@ public class GarbageCollectionHousePojo {
                 ", AfterImage='" + AfterImage + '\'' +
                 ", beforeImage='" + beforeImage + '\'' +
                 ", houseId='" + houseId + '\'' +
+                ", comment='" + comment + '\'' +
                 '}';
     }
 }
