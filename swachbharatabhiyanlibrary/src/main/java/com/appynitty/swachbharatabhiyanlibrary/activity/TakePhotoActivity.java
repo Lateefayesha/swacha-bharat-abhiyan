@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -30,6 +31,7 @@ import com.appynitty.swachbharatabhiyanlibrary.pojos.GarbageCollectionHousePojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.ImagePojo;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 import com.appynitty.swachbharatabhiyanlibrary.webservices.GarbageCollectionHouseWebService;
+import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mithsoft.lib.activity.BaseActivity;
 import com.mithsoft.lib.components.Toasty;
@@ -38,6 +40,7 @@ import com.mithsoft.lib.filepicker.Constants;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.lang.reflect.Type;
+import java.net.URI;
 import java.util.List;
 import java.util.Objects;
 
@@ -127,6 +130,23 @@ public class TakePhotoActivity extends BaseActivity {
     @Override
     protected void initData() {
 
+        Type type = new TypeToken<ImagePojo>() {
+        }.getType();
+
+        imagePojo = new Gson().fromJson(
+                QuickUtils.prefs.getString(AUtils.PREFS.IMAGE_POJO , null), type);
+
+
+        if (!AUtils.isNull(imagePojo)) {
+
+            if(!AUtils.isNullString(imagePojo.getImage1())) {
+                beforeImage.setImageURI(Uri.parse(imagePojo.getImage1()));
+                beforeImageFilePath = imagePojo.getImage1();
+            } else if(!AUtils.isNullString(imagePojo.getImage2())) {
+                afterImage.setImageURI(Uri.parse(imagePojo.getImage2()));
+                afterImageFilePath = imagePojo.getImage2();
+            }
+        }
     }
 
     @Override
@@ -384,6 +404,10 @@ public class TakePhotoActivity extends BaseActivity {
         if (!AUtils.isNullString(afterImageFilePath)) {
             imagePojo.setImage2(afterImageFilePath);
             imagePojo.setAfterImage("After");
+        }
+
+        if (!AUtils.isNullString(comments.getText().toString())) {
+            imagePojo.setComment(comments.getText().toString());
         }
 
         if (SyncServer.saveImage(imagePojo)) return true;

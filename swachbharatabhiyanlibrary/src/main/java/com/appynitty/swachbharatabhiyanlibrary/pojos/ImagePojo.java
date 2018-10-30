@@ -10,6 +10,8 @@ public class ImagePojo {
 
     private String beforeImage;
 
+    private String comment;
+
     public String getImage2() {
         return image2;
     }
@@ -42,6 +44,14 @@ public class ImagePojo {
         this.beforeImage = beforeImage;
     }
 
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
     @Override
     public String toString() {
         return "ImagePojo{" +
@@ -49,6 +59,7 @@ public class ImagePojo {
                 ", image1='" + image1 + '\'' +
                 ", AfterImage='" + AfterImage + '\'' +
                 ", beforeImage='" + beforeImage + '\'' +
+                ", comment='" + comment + '\'' +
                 '}';
     }
 }
