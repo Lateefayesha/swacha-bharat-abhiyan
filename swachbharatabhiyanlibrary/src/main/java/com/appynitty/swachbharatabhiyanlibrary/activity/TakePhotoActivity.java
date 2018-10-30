@@ -410,7 +410,16 @@ public class TakePhotoActivity extends BaseActivity {
             imagePojo.setComment(comments.getText().toString());
         }
 
-        if (SyncServer.saveImage(imagePojo)) return true;
-        else return false;
+        if (!AUtils.isNull(imagePojo)) {
+
+            Type type = new TypeToken<ImagePojo>() {
+            }.getType();
+            QuickUtils.prefs.save(AUtils.PREFS.IMAGE_POJO, new Gson().toJson(imagePojo, type));
+
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 }
