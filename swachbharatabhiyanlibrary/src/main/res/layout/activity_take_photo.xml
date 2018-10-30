@@ -26,7 +26,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="@dimen/dim_10_dp">
         <LinearLayout
@@ -51,7 +51,7 @@
 
                 <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
-                    android:layout_height="250dp"
+                    android:layout_height="200dp"
                     android:layout_marginTop="@dimen/dim_5_dp"
                     app:cardCornerRadius="@dimen/padding_margin_layout"
                     app:cardElevation="@dimen/padding_margin_layout">
@@ -81,7 +81,7 @@
 
                 <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
-                    android:layout_height="250dp"
+                    android:layout_height="200dp"
                     android:layout_marginTop="@dimen/dim_5_dp"
                     app:cardCornerRadius="@dimen/padding_margin_layout"
                     app:cardElevation="@dimen/padding_margin_layout">
@@ -105,17 +105,20 @@
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="70dp"
+            android:layout_height="100dp"
             android:layout_marginTop="@dimen/dim_5_dp"
             app:cardCornerRadius="@dimen/padding_margin_layout"
             app:cardElevation="@dimen/padding_margin_layout">
 
             <EditText
+                style="@style/MyEditTextStylelight.Dark"
                 android:id="@+id/txt_comments"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:maxLength="10"
-                android:maxLines="10" />
+                android:maxLines="10"
+                android:overScrollMode="always"
+                android:scrollbarStyle="insideInset"
+                android:scrollbars="vertical"/>
 
         </android.support.v7.widget.CardView>
 
