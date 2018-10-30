@@ -26,23 +26,16 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.appynitty.swachbharatabhiyanlibrary.R;
-import com.appynitty.swachbharatabhiyanlibrary.connection.SyncServer;
-import com.appynitty.swachbharatabhiyanlibrary.pojos.GarbageCollectionGarbagePointPojo;
-import com.appynitty.swachbharatabhiyanlibrary.pojos.GarbageCollectionHousePojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.ImagePojo;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
-import com.appynitty.swachbharatabhiyanlibrary.webservices.GarbageCollectionHouseWebService;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mithsoft.lib.activity.BaseActivity;
 import com.mithsoft.lib.components.Toasty;
-import com.mithsoft.lib.filepicker.Constants;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.lang.reflect.Type;
-import java.net.URI;
-import java.util.List;
 import java.util.Objects;
 
 import quickutils.core.QuickUtils;
@@ -270,12 +263,12 @@ public class TakePhotoActivity extends BaseActivity {
                 checkGpsStatus();
             } else if (ActivityCompat.shouldShowRequestPermissionRationale(TakePhotoActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
 
-                AUtils.showPermissionDialog(mContext, "EXTERNAL STORAGE", new DialogInterface.OnClickListener() {
+                AUtils.showPermissionDialog(mContext, "Location Service", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, AUtils.MY_PERMISSIONS_REQUEST_STORAGE);
+                            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, AUtils.MY_PERMISSIONS_REQUEST_LOCATION);
                         }
                     }
                 });

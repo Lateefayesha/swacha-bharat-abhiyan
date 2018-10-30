@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.location.Location;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 
@@ -19,7 +20,7 @@ import quickutils.core.QuickUtils;
 public class AUtils extends MsUtils {
 
     //    Local URL
-    public static final String SERVER_URL = "http://192.168.200.3:6077/";
+    public static final String SERVER_URL = "http://192.168.200.4:6077/";
 
     //    Staging URL
 //    public static final String SERVER_URL = "http://115.115.153.117:6088/";
@@ -236,7 +237,7 @@ public class AUtils extends MsUtils {
 
                         dialog.cancel();
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            ((Activity)context).requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, AUtils.MY_PERMISSIONS_REQUEST_LOCATION);
+                            ((Activity)context).requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, AUtils.MY_PERMISSIONS_REQUEST_LOCATION);
                         }
                     }
                 });
@@ -266,6 +267,16 @@ public class AUtils extends MsUtils {
         }
         else {
             return true;
+        }
+    }
+
+    public static void saveLocation(Location location){
+        if(!AUtils.isNull(location)){
+            Double latti = location.getLatitude();
+            Double longi = location.getLongitude();
+
+            QuickUtils.prefs.save(AUtils.LONG, longi.toString());
+            QuickUtils.prefs.save(AUtils.LAT, latti.toString());
         }
     }
 

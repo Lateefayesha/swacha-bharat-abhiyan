@@ -1,29 +1,25 @@
 package com.appynitty.swachbharatabhiyanlibrary.pojos;
 
-public class GarbageCollectionGarbagePointPojo {
-
-    private String Long;
-
-    private String image1;
+public class GarbageCollectionPojo {
 
     private String image2;
 
-    private String gpId;
+    private String image1;
 
     private String AfterImage;
 
-    private String Lat;
-
     private String beforeImage;
+
+    private String id;
 
     private String comment;
 
-    public String getLong() {
-        return Long;
+    public String getImage2() {
+        return image2;
     }
 
-    public void setLong(String aLong) {
-        Long = aLong;
+    public void setImage2(String image2) {
+        this.image2 = image2;
     }
 
     public String getImage1() {
@@ -34,28 +30,12 @@ public class GarbageCollectionGarbagePointPojo {
         this.image1 = image1;
     }
 
-    public String getGpId() {
-        return gpId;
-    }
-
-    public void setGpId(String gpId) {
-        this.gpId = gpId;
-    }
-
     public String getAfterImage() {
         return AfterImage;
     }
 
     public void setAfterImage(String afterImage) {
         AfterImage = afterImage;
-    }
-
-    public String getLat() {
-        return Lat;
-    }
-
-    public void setLat(String lat) {
-        Lat = lat;
     }
 
     public String getBeforeImage() {
@@ -66,12 +46,12 @@ public class GarbageCollectionGarbagePointPojo {
         this.beforeImage = beforeImage;
     }
 
-    public String getImage2() {
-        return image2;
+    public String getId() {
+        return id;
     }
 
-    public void setImage2(String image2) {
-        this.image2 = image2;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getComment() {
@@ -84,14 +64,12 @@ public class GarbageCollectionGarbagePointPojo {
 
     @Override
     public String toString() {
-        return "GarbageCollectionGarbagePointPojo{" +
-                "Long='" + Long + '\'' +
-                ", image1='" + image1 + '\'' +
+        return "GarbageCollectionPojo{" +
                 ", image2='" + image2 + '\'' +
-                ", gpId='" + gpId + '\'' +
+                ", image1='" + image1 + '\'' +
                 ", AfterImage='" + AfterImage + '\'' +
-                ", Lat='" + Lat + '\'' +
                 ", beforeImage='" + beforeImage + '\'' +
+                ", id='" + id + '\'' +
                 ", comment='" + comment + '\'' +
                 '}';
     }
