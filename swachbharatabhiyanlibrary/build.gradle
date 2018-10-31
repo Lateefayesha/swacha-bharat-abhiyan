@@ -49,7 +49,7 @@ dependencies {
     implementation(name: 'mithsoftlib-release', ext: 'aar')
 
     /** QR code scanner */
-    implementation ('me.dm7.barcodescanner:zbar:1.9.8')
+    implementation('me.dm7.barcodescanner:zbar:1.9.8')
 
     /** Material Fab Button */
     implementation('com.github.kobakei:MaterialFabSpeedDial:1.2.0')

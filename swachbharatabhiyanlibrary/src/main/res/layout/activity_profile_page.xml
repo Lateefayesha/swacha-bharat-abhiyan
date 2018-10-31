@@ -4,9 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.DashboardActivity">
+    android:orientation="vertical"
+    tools:context=".activity.ProfilePageActivity">
 
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay"
@@ -21,16 +23,6 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_dashboard" />
-
-    <io.github.kobakei.materialfabspeeddial.FabSpeedDial
-        android:id="@+id/fab_setting"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:fab_extraMargin="-15dp"
-        app:fab_menu="@menu/menu"
-        app:fab_miniFabTextColor="@color/colorAccent"
-        app:fab_miniFabTextBackground="@drawable/rounded_white_button"
-        app:fab_fabDrawable="@drawable/ic_repairing_service"/>
+    <include layout="@layout/content_profile_page" />
 
 </android.support.design.widget.CoordinatorLayout>

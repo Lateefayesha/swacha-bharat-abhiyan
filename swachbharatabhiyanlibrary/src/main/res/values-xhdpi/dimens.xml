@@ -3,6 +3,7 @@
     <dimen name="logo_img_height">160dp</dimen>
     <dimen name="login_margin">20dp</dimen>
     <dimen name="card_radius">5dp</dimen>
+    <dimen name="card_elevation">3dp</dimen>
     <dimen name="login_card_height">200dp</dimen>
     <dimen name="appynitty_img_height">30dp</dimen>
     <dimen name="login_left_right_margin">30dp</dimen>
@@ -35,5 +36,11 @@
     <dimen name="dim_10_dp">10dp</dimen>
     <dimen name="dim_5_dp">5dp</dimen>
     <dimen name="dimen_30_sp">30sp</dimen>
+    <dimen name="dimen_200_dp">200dp</dimen>
+    <dimen name="dimen_100_dp">100dp</dimen>
+    <dimen name="dimen_25_sp">25sp</dimen>
+    <dimen name="dimen_120_dp">120dp</dimen>
+    <dimen name="dim_50_dp">50dp</dimen>
+    <dimen name="dim_220_dp">220dp</dimen>
 
 </resources>
