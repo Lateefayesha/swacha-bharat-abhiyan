@@ -80,7 +80,6 @@ public class MyApplication extends Application {
     public void startLocationTracking()
     {
         Intent intent = new Intent(this, ForgroundService.class);
-        intent.putExtra(AUtils.LOCATION,"Location");
         startService(intent);
     }
 

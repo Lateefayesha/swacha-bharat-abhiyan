@@ -3,19 +3,26 @@ package com.appynitty.swachbharatabhiyanlibrary.connection;
 import android.content.Context;
 
 import com.appynitty.retrofitconnectionlibrary.connection.Connection;
+import com.appynitty.retrofitconnectionlibrary.pojos.ResultPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.GarbageCollectionPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.GcResultPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.ImagePojo;
+import com.appynitty.swachbharatabhiyanlibrary.pojos.InPunchPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.LoginDetailsPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.LoginPojo;
+import com.appynitty.swachbharatabhiyanlibrary.pojos.OutPunchPojo;
+import com.appynitty.swachbharatabhiyanlibrary.pojos.VehicleTypePojo;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 import com.appynitty.swachbharatabhiyanlibrary.webservices.GarbageCollectionWebService;
 import com.appynitty.swachbharatabhiyanlibrary.webservices.LoginWebService;
+import com.appynitty.swachbharatabhiyanlibrary.webservices.PunchWebService;
+import com.appynitty.swachbharatabhiyanlibrary.webservices.VehicleTypeWebService;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
 import java.lang.reflect.Type;
+import java.util.List;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -78,6 +85,8 @@ public class SyncServer {
             RequestBody id = RequestBody.create(okhttp3.MultipartBody.FORM, garbageCollectionPojo.getId());
 
             RequestBody userId = RequestBody.create(okhttp3.MultipartBody.FORM, QuickUtils.prefs.getString(AUtils.PREFS.USER_ID,""));
+            String lat = QuickUtils.prefs.getString(AUtils.LAT, "");
+            String LongStr = QuickUtils.prefs.getString(AUtils.LONG, "");
             RequestBody Lat = RequestBody.create(okhttp3.MultipartBody.FORM, QuickUtils.prefs.getString(AUtils.LAT, ""));
             RequestBody Long = RequestBody.create(okhttp3.MultipartBody.FORM, QuickUtils.prefs.getString(AUtils.LONG, ""));
 
@@ -99,7 +108,7 @@ public class SyncServer {
 
             GarbageCollectionWebService service = Connection.createService(GarbageCollectionWebService.class, AUtils.SERVER_URL);
 
-            int vehicleId = QuickUtils.prefs.getInt(AUtils.VEHICLE_ID, 1);
+            int vehicleId = QuickUtils.prefs.getInt(AUtils.VEHICLE_ID, 0);
 
             if(vehicleId == 1){
                 resultPojo = service.saveGarbageCollectionH(QuickUtils.prefs.getString(AUtils.APP_ID, ""),
@@ -131,5 +140,82 @@ public class SyncServer {
         else {
             return false;
         }
+    }
+
+    public ResultPojo saveInPunch(InPunchPojo inPunchPojo) {
+
+        ResultPojo resultPojo = null;
+        try {
+
+            PunchWebService service = Connection.createService(PunchWebService.class, AUtils.SERVER_URL);
+
+            inPunchPojo.setUserId(QuickUtils.prefs.getString(AUtils.PREFS.USER_ID,""));
+            inPunchPojo.setVtId(String.valueOf(QuickUtils.prefs.getInt(AUtils.VEHICLE_ID, 0)));
+            inPunchPojo.setStartLat(QuickUtils.prefs.getString(AUtils.LAT,""));
+            inPunchPojo.setStartLong(QuickUtils.prefs.getString(AUtils.LONG,""));
+
+            Type type = new TypeToken<InPunchPojo>() {
+            }.getType();
+            QuickUtils.prefs.save(AUtils.PREFS.IN_PUNCH_POJO, gson.toJson(inPunchPojo, type));
+
+            resultPojo = service.saveInPunchDetails(QuickUtils.prefs.getString(AUtils.APP_ID, "1"), AUtils.CONTENT_TYPE,
+                    inPunchPojo).execute().body();
+
+        } catch (Exception e) {
+
+            resultPojo = null;
+            e.printStackTrace();
+        }
+        return resultPojo;
+    }
+
+    public ResultPojo saveOutPunch(OutPunchPojo outPunchPojo) {
+
+        ResultPojo resultPojo = null;
+        try {
+
+            PunchWebService service = Connection.createService(PunchWebService.class, AUtils.SERVER_URL);
+
+            outPunchPojo.setUserId(QuickUtils.prefs.getString(AUtils.PREFS.USER_ID,""));
+            outPunchPojo.setEndLat(QuickUtils.prefs.getString(AUtils.LAT,""));
+            outPunchPojo.setEndLong(QuickUtils.prefs.getString(AUtils.LONG,""));
+
+            resultPojo = service.saveOutPunchDetails(QuickUtils.prefs.getString(AUtils.APP_ID, "1"), AUtils.CONTENT_TYPE,
+                    outPunchPojo).execute().body();
+
+        } catch (Exception e) {
+
+            resultPojo = null;
+            e.printStackTrace();
+        }
+        return resultPojo;
+    }
+
+    public boolean pullVehicleTypeListFromServer() {
+
+        List<VehicleTypePojo> vehicleTypePojoList = null;
+
+        try {
+
+            VehicleTypeWebService service = Connection.createService(VehicleTypeWebService.class, AUtils.SERVER_URL);
+            vehicleTypePojoList = service.pullVehicleTypeList(QuickUtils.prefs.getString(AUtils.APP_ID, ""),
+                    AUtils.CONTENT_TYPE).execute().body();
+
+            if (!AUtils.isNull(vehicleTypePojoList) && !vehicleTypePojoList.isEmpty()) {
+
+                Type type = new TypeToken<List<VehicleTypePojo>>() {
+                }.getType();
+                QuickUtils.prefs.save(AUtils.PREFS.VEHICLE_TYPE_POJO_LIST, gson.toJson(vehicleTypePojoList, type));
+
+                return true;
+            } else {
+
+                QuickUtils.prefs.save(AUtils.PREFS.VEHICLE_TYPE_POJO_LIST, null);
+            }
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+        return false;
     }
 }
