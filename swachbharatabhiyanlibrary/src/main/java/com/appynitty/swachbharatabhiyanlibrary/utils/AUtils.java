@@ -2,11 +2,14 @@ package com.appynitty.swachbharatabhiyanlibrary.utils;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.ActivityCompat;
 
 import com.appynitty.swachbharatabhiyanlibrary.activity.TakePhotoActivity;
@@ -63,6 +66,21 @@ public class AUtils extends MsUtils {
 
     public static final String LAT = "Lat";
     public static final String LONG = "Long";
+
+    public static final int LOCATION_INTERVAL = 10000;
+    public static final int FASTEST_LOCATION_INTERVAL = 5000;
+
+    public static final String LOCATION = "LocationLatLog";
+
+    public static MyApplication mApplication;
+
+    public static MyApplication getmApplication() {
+        return mApplication;
+    }
+
+    public static void setmApplication(MyApplication mApplication) {
+        AUtils.mApplication = mApplication;
+    }
 
     // Language Change of an application
     public static void changeLanguage(Activity context, int languageId) {
@@ -126,7 +144,7 @@ public class AUtils extends MsUtils {
         String IS_USER_LOGIN = "UserLoginStatus";
         String USER_ID = "UserId";
         String USER_TYPE = "UserType";
-        boolean IS_ON_DUTY = true;
+        String IS_ON_DUTY = "IsOnDuty";
 
         String IMAGE_POJO = "ImagePojo";
     }
@@ -269,4 +287,8 @@ public class AUtils extends MsUtils {
         }
     }
 
+    public static void runOnUIThread(Runnable r)
+    {
+        new Handler(Looper.getMainLooper()).post(r);
+    }
 }

@@ -20,6 +20,8 @@ import com.appynitty.swachbharatabhiyanlibrary.R;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.InflateMenuAdapter;
 import com.appynitty.swachbharatabhiyanlibrary.dialogs.PopUpDialog;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.MenuListPojo;
+import com.appynitty.swachbharatabhiyanlibrary.services.ForgroundService;
+import com.appynitty.swachbharatabhiyanlibrary.services.LocationMonitoringService;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 import com.appynitty.swachbharatabhiyanlibrary.utils.LocaleHelper;
 import com.mithsoft.lib.components.Toasty;
@@ -174,20 +176,21 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
     @Override
     public void onPopUpDismissed(String type, String listItemSelected, @Nullable String vehicleNo) {
 
-        switch (type) {
-            case AUtils.DIALOG_TYPE_VEHICLE:
-                {
+        if (!AUtils.isNullString(listItemSelected)){
+            switch (type) {
+                case AUtils.DIALOG_TYPE_VEHICLE: {
                     Toasty.success(mContext, "" + "Vehicle Type = " + listItemSelected + "Vehicle No. =" + vehicleNo, Toast.LENGTH_SHORT).show();
 
                     attendanceStatus.setText(this.getResources().getString(R.string.status_on_duty));
                     attendanceStatus.setTextColor(this.getResources().getColor(R.color.colorONDutyGreen));
 
                     vehicleStatus.setText(this.getResources().getString(R.string.opening_round_bracket) + listItemSelected
-                                        + this.getResources().getString(R.string.closing_round_bracket));
+                            + this.getResources().getString(R.string.closing_round_bracket));
+
+                    AUtils.mApplication.startLocationTracking();
                 }
                 break;
-            case AUtils.DIALOG_TYPE_LANGUAGE:
-                {
+                case AUtils.DIALOG_TYPE_LANGUAGE: {
                     if (listItemSelected.equals("English")) {
                         changeLanguage(1);
                     } else if (listItemSelected.equals("मराठी")) {
@@ -195,6 +198,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
                     }
                 }
                 break;
+            }
         }
     }
 
@@ -219,6 +223,8 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
             attendanceStatus.setTextColor(this.getResources().getColor(R.color.colorOFFDutyRed));
 
             vehicleStatus.setText("");
+
+            AUtils.mApplication.stopLocationTracking();
         }
     }
 }
