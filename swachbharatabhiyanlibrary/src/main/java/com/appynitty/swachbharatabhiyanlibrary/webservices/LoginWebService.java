@@ -16,10 +16,6 @@ import retrofit2.http.Part;
 public interface LoginWebService {
 
     @POST("api/Account/Login")
-    /*Call<ResultPojo> saveLoginDetails(@Header("appId") String key,
-                                      @Header("Content-Type") String content_type,
-                                      @Body String loginPojo);*/
-
     Call<LoginDetailsPojo> saveLoginDetails(@Header("appId") String appId,
                                       @Header("Content-Type") String content_type,
                                       @Body LoginPojo loginPojo);

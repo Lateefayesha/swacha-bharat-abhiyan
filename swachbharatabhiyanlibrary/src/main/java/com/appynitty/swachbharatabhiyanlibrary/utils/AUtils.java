@@ -16,6 +16,9 @@ import android.support.v4.app.ActivityCompat;
 import com.appynitty.swachbharatabhiyanlibrary.activity.TakePhotoActivity;
 import com.mithsoft.lib.utils.MsUtils;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 import quickutils.core.QuickUtils;
@@ -74,6 +77,10 @@ public class AUtils extends MsUtils {
     public static final String LOCATION = "LocationLatLog";
 
     public static MyApplication mApplication;
+
+    private static final String SERVER_DATE_FORMATE = "MM-dd-yyyy";
+
+    private static final String SERVER_TIME_FORMATE = "HH:mm";
 
     public static MyApplication getmApplication() {
         return mApplication;
@@ -148,6 +155,9 @@ public class AUtils extends MsUtils {
         String IS_ON_DUTY = "isOnDuty";
 
         String IMAGE_POJO = "ImagePojo";
+
+        String IN_PUNCH_POJO = "InPunchPull";
+        String VEHICLE_TYPE_POJO_LIST = "VehicleTypePullList";
     }
 
     public static boolean isCameraPermissionGiven(final Context context)
@@ -301,6 +311,18 @@ public class AUtils extends MsUtils {
             QuickUtils.prefs.save(AUtils.LONG, longi.toString());
             QuickUtils.prefs.save(AUtils.LAT, latti.toString());
         }
+    }
+
+    public static String getSeverDate() {
+
+        SimpleDateFormat format = new SimpleDateFormat(AUtils.SERVER_DATE_FORMATE, Locale.ENGLISH);
+        return format.format(Calendar.getInstance().getTime());
+    }
+
+    public static String getSeverTime() {
+
+        SimpleDateFormat format = new SimpleDateFormat(AUtils.SERVER_TIME_FORMATE, Locale.ENGLISH);
+        return format.format(Calendar.getInstance().getTime());
     }
 
 }

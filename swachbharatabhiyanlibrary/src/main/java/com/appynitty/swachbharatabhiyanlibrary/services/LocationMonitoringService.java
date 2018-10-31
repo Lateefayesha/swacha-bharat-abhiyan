@@ -28,6 +28,9 @@ public class LocationMonitoringService implements
     public LocationMonitoringService (Context context)
     {
         mContext = context;
+    }
+
+    public void onStartTacking(){
 
         mLocationClient = new GoogleApiClient.Builder(mContext)
                 .addConnectionCallbacks(this)
@@ -45,10 +48,6 @@ public class LocationMonitoringService implements
 
 
         mLocationRequest.setPriority(priority);
-    }
-
-    public void onStartTacking(){
-
         mLocationClient.connect();
     }
 

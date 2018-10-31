@@ -22,13 +22,13 @@ public class ForgroundService extends Service {
 
         @Override
         public void onCreate() {
-            Toast.makeText(this, " MyService Created ", Toast.LENGTH_LONG).show();
+            //Toast.makeText(this, " MyService Created ", Toast.LENGTH_LONG).show();
             monitoringService = new LocationMonitoringService(this);
         }
 
         @Override
         public int onStartCommand(Intent intent, int flags, int startId) {
-            Toast.makeText(this, " MyService Started", Toast.LENGTH_LONG).show();
+            //Toast.makeText(this, " MyService Started", Toast.LENGTH_LONG).show();
             final int currentId = startId;
 
             Runnable r = new Runnable() {
@@ -38,15 +38,15 @@ public class ForgroundService extends Service {
                 }
             };
 
-            Thread t = new Thread(r);
-            t.setName(intent.getStringExtra(AUtils.LOCATION));
-            t.start();
+            Handler H = new Handler(Looper.getMainLooper());
+            //H.setName(intent.getStringExtra(AUtils.LOCATION));
+            H.post(r);
             return Service.START_STICKY;
         }
 
         @Override
         public void onDestroy() {
-            Toast.makeText(this, "MyService Stopped", Toast.LENGTH_LONG).show();
+            //Toast.makeText(this, "MyService Stopped", Toast.LENGTH_LONG).show();
             monitoringService.onStopTracking();
         }
 
