@@ -38,6 +38,8 @@
     </style>
 
     <style name="MyEditTextStylelight.Dark" parent="Base.V7.Widget.AppCompat.EditText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
         <item name="android:textSize">@dimen/settings_text_size</item>
         <item name="android:textCursorDrawable">@drawable/cursor_orange</item>
         <!--<item name="android:background">@drawable/rounded_corners_text_view</item>-->

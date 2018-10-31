@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.location.Location;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
@@ -22,7 +23,7 @@ import quickutils.core.QuickUtils;
 public class AUtils extends MsUtils {
 
     //    Local URL
-    public static final String SERVER_URL = "http://192.168.200.3:6077/";
+    public static final String SERVER_URL = "http://192.168.200.4:6077/";
 
     //    Staging URL
 //    public static final String SERVER_URL = "http://115.115.153.117:6088/";
@@ -144,7 +145,7 @@ public class AUtils extends MsUtils {
         String IS_USER_LOGIN = "UserLoginStatus";
         String USER_ID = "UserId";
         String USER_TYPE = "UserType";
-        String IS_ON_DUTY = "IsOnDuty";
+        boolean IS_ON_DUTY = true;
 
         String IMAGE_POJO = "ImagePojo";
     }
@@ -291,4 +292,15 @@ public class AUtils extends MsUtils {
     {
         new Handler(Looper.getMainLooper()).post(r);
     }
+
+    public static void saveLocation(Location location){
+        if(!AUtils.isNull(location)){
+            Double latti = location.getLatitude();
+            Double longi = location.getLongitude();
+
+            QuickUtils.prefs.save(AUtils.LONG, longi.toString());
+            QuickUtils.prefs.save(AUtils.LAT, latti.toString());
+        }
+    }
+
 }

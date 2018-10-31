@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
             android:paddingTop="@dimen/dim_30_dp"
-            android:paddingBottom="@dimen/dim_30_dp"
+            android:paddingBottom="@dimen/dim_20_dp"
             android:paddingStart="@dimen/padding_margin_layout"
             android:paddingEnd="@dimen/padding_margin_layout">
 
@@ -40,7 +40,8 @@
                     android:textColorHint="@color/white"
                     android:textColor="@color/white"
                     android:layout_marginStart="@dimen/padding_margin_layout"
-                    android:layout_marginEnd="@dimen/padding_margin_layout"/>
+                    android:layout_marginEnd="@dimen/padding_margin_layout"
+                    android:textSize="@dimen/button_text_size"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -58,6 +59,21 @@
         android:textSize="@dimen/button_text_size"
         android:layout_margin="@dimen/padding_margin_layout_double"
         android:background="@drawable/rounded_orange_button"
+        android:visibility="gone"/>
+
+    <Button
+        android:id="@+id/grant_permission"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:layout_marginTop="@dimen/dim_80_dp"
+        android:textAllCaps="false"
+        android:text="@string/grant_permission_txt"
+        android:textColor="@color/colorDivider"
+        android:textSize="@dimen/button_text_size"
+        android:background="@android:color/transparent"
+        android:drawableTop="@drawable/ic_photo_camera_light_gray_50dp"
+        android:elevation="@dimen/padding_margin_layout_double"
         android:visibility="gone"/>
 
     <include

@@ -59,4 +59,13 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.3.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.4.1'
+
+    // location play services
+    implementation 'com.google.android.gms:play-services-location:12.0.1'
+
+//     dexter runtime permissions
+//    implementation 'com.karumi:dexter:4.2.0'
+
+    // map
+    implementation 'com.google.android.gms:play-services:12.0.1'
 }

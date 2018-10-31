@@ -1,33 +1,26 @@
 package com.appynitty.swachbharatabhiyanlibrary.connection;
 
 import android.content.Context;
-import android.provider.ContactsContract;
-import android.util.Log;
 
 import com.appynitty.retrofitconnectionlibrary.connection.Connection;
-import com.appynitty.retrofitconnectionlibrary.pojos.ResultPojo;
-import com.appynitty.swachbharatabhiyanlibrary.pojos.GarbageCollectionGarbagePointPojo;
-import com.appynitty.swachbharatabhiyanlibrary.pojos.GarbageCollectionHousePojo;
+import com.appynitty.swachbharatabhiyanlibrary.pojos.GarbageCollectionPojo;
+import com.appynitty.swachbharatabhiyanlibrary.pojos.GcResultPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.ImagePojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.LoginDetailsPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.LoginPojo;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
-import com.appynitty.swachbharatabhiyanlibrary.webservices.GarbageCollectionHouseWebService;
+import com.appynitty.swachbharatabhiyanlibrary.webservices.GarbageCollectionWebService;
 import com.appynitty.swachbharatabhiyanlibrary.webservices.LoginWebService;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
 import java.lang.reflect.Type;
-import java.util.List;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import quickutils.core.QuickUtils;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class SyncServer {
 
@@ -58,17 +51,17 @@ public class SyncServer {
         return resultPojo;
     }
 
-    public ResultPojo saveGarbageCollectionHouse(GarbageCollectionHousePojo garbageCollectionHousePojo) {
+    public GcResultPojo saveGarbageCollection(GarbageCollectionPojo garbageCollectionPojo) {
 
-        ResultPojo resultPojo = null;
+        GcResultPojo resultPojo = null;
 
         try {
 
             RequestBody requestBody1 = null;
             MultipartBody.Part imageFileMultiBody1 = null;
 
-            if (!AUtils.isNull(garbageCollectionHousePojo.getImage1())) {
-                File startImageFile = new File(garbageCollectionHousePojo.getImage1());
+            if (!AUtils.isNull(garbageCollectionPojo.getImage1())) {
+                File startImageFile = new File(garbageCollectionPojo.getImage1());
                 requestBody1 = RequestBody.create(MediaType.parse("multipart/form-data"), startImageFile);
                 imageFileMultiBody1 = MultipartBody.Part.createFormData("vmImage1", startImageFile.getName(), requestBody1);
             }
@@ -76,88 +69,47 @@ public class SyncServer {
             RequestBody requestBody2 = null;
             MultipartBody.Part imageFileMultiBody2 = null;
 
-            if (!AUtils.isNull(garbageCollectionHousePojo.getImage2())) {
-                File startImageFile = new File(garbageCollectionHousePojo.getImage2());
+            if (!AUtils.isNull(garbageCollectionPojo.getImage2())) {
+                File startImageFile = new File(garbageCollectionPojo.getImage2());
                 requestBody2 = RequestBody.create(MediaType.parse("multipart/form-data"), startImageFile);
                 imageFileMultiBody2 = MultipartBody.Part.createFormData("vmImage1", startImageFile.getName(), requestBody2);
             }
 
+            RequestBody id = RequestBody.create(okhttp3.MultipartBody.FORM, garbageCollectionPojo.getId());
+
             RequestBody userId = RequestBody.create(okhttp3.MultipartBody.FORM, QuickUtils.prefs.getString(AUtils.PREFS.USER_ID,""));
-            RequestBody houseId = RequestBody.create(okhttp3.MultipartBody.FORM, garbageCollectionHousePojo.getHouseId());
-            RequestBody Lat = RequestBody.create(okhttp3.MultipartBody.FORM, garbageCollectionHousePojo.getLat());
-            RequestBody Long = RequestBody.create(okhttp3.MultipartBody.FORM, garbageCollectionHousePojo.getLong());
-            RequestBody comment = RequestBody.create(okhttp3.MultipartBody.FORM, garbageCollectionHousePojo.getComment());
+            RequestBody Lat = RequestBody.create(okhttp3.MultipartBody.FORM, QuickUtils.prefs.getString(AUtils.LAT, ""));
+            RequestBody Long = RequestBody.create(okhttp3.MultipartBody.FORM, QuickUtils.prefs.getString(AUtils.LONG, ""));
+
+            RequestBody comment = null;
+            if(!AUtils.isNull(garbageCollectionPojo.getComment())){
+                comment = RequestBody.create(okhttp3.MultipartBody.FORM, garbageCollectionPojo.getComment());
+            }
 
             RequestBody beforeImage = null;
-            if (!AUtils.isNullString(garbageCollectionHousePojo.getBeforeImage())) {
-                beforeImage = RequestBody.create(okhttp3.MultipartBody.FORM, garbageCollectionHousePojo.getBeforeImage());
+            if (!AUtils.isNullString(garbageCollectionPojo.getBeforeImage())) {
+                beforeImage = RequestBody.create(okhttp3.MultipartBody.FORM, garbageCollectionPojo.getBeforeImage());
             }
 
             RequestBody afterImage = null;
-            if (!AUtils.isNullString(garbageCollectionHousePojo.getAfterImage())) {
-                afterImage = RequestBody.create(okhttp3.MultipartBody.FORM, garbageCollectionHousePojo.getAfterImage());
+            if (!AUtils.isNullString(garbageCollectionPojo.getAfterImage())) {
+                afterImage = RequestBody.create(okhttp3.MultipartBody.FORM, garbageCollectionPojo.getAfterImage());
             }
 
 
-            GarbageCollectionHouseWebService service = Connection.createService(GarbageCollectionHouseWebService.class, AUtils.SERVER_URL);
+            GarbageCollectionWebService service = Connection.createService(GarbageCollectionWebService.class, AUtils.SERVER_URL);
 
-            resultPojo = service.saveGarbageCollectionH(QuickUtils.prefs.getString(AUtils.APP_ID, ""),
-                    userId, houseId, Lat, Long, beforeImage, afterImage, comment, imageFileMultiBody1,
-                    imageFileMultiBody2).execute().body();
+            int vehicleId = QuickUtils.prefs.getInt(AUtils.VEHICLE_ID, 1);
 
-        } catch (Exception e) {
-
-            e.printStackTrace();
-        }
-        return resultPojo;
-    }
-
-    public ResultPojo saveGarbageCollectionGP(GarbageCollectionGarbagePointPojo garbageCollectionGarbagePointPojo) {
-
-        ResultPojo resultPojo = null;
-
-        try {
-
-            RequestBody requestBody1 = null;
-            MultipartBody.Part imageFileMultiBody1 = null;
-
-            if (!AUtils.isNull(garbageCollectionGarbagePointPojo.getImage1())) {
-                File startImageFile = new File(garbageCollectionGarbagePointPojo.getImage1());
-                requestBody1 = RequestBody.create(MediaType.parse("multipart/form-data"), startImageFile);
-                imageFileMultiBody1 = MultipartBody.Part.createFormData("vmImage1", startImageFile.getName(), requestBody1);
+            if(vehicleId == 1){
+                resultPojo = service.saveGarbageCollectionH(QuickUtils.prefs.getString(AUtils.APP_ID, ""),
+                        userId, id, Lat, Long, beforeImage, afterImage, comment, imageFileMultiBody1,
+                        imageFileMultiBody2).execute().body();
+            }else if(vehicleId == 2){
+                resultPojo = service.saveGarbageCollectionGP(QuickUtils.prefs.getString(AUtils.APP_ID, ""),
+                        userId, id, Lat, Long, beforeImage, afterImage, comment, imageFileMultiBody1,
+                        imageFileMultiBody2).execute().body();
             }
-
-            RequestBody requestBody2 = null;
-            MultipartBody.Part imageFileMultiBody2 = null;
-
-            if (!AUtils.isNull(garbageCollectionGarbagePointPojo.getImage2())) {
-                File startImageFile = new File(garbageCollectionGarbagePointPojo.getImage2());
-                requestBody2 = RequestBody.create(MediaType.parse("multipart/form-data"), startImageFile);
-                imageFileMultiBody2 = MultipartBody.Part.createFormData("vmImage1", startImageFile.getName(), requestBody2);
-            }
-
-            RequestBody userId = RequestBody.create(okhttp3.MultipartBody.FORM, QuickUtils.prefs.getString(AUtils.PREFS.USER_ID,""));
-            RequestBody gpId = RequestBody.create(okhttp3.MultipartBody.FORM, garbageCollectionGarbagePointPojo.getGpId());
-            RequestBody Lat = RequestBody.create(okhttp3.MultipartBody.FORM, QuickUtils.prefs.getString(AUtils.LAT,""));
-            RequestBody Long = RequestBody.create(okhttp3.MultipartBody.FORM, QuickUtils.prefs.getString(AUtils.LONG,""));
-            RequestBody comment = RequestBody.create(okhttp3.MultipartBody.FORM, garbageCollectionGarbagePointPojo.getComment());
-
-            RequestBody beforeImage = null;
-            if (!AUtils.isNullString(garbageCollectionGarbagePointPojo.getBeforeImage())) {
-                beforeImage = RequestBody.create(okhttp3.MultipartBody.FORM, garbageCollectionGarbagePointPojo.getBeforeImage());
-            }
-
-            RequestBody afterImage = null;
-            if (!AUtils.isNullString(garbageCollectionGarbagePointPojo.getAfterImage())) {
-                afterImage = RequestBody.create(okhttp3.MultipartBody.FORM, garbageCollectionGarbagePointPojo.getAfterImage());
-            }
-
-
-            GarbageCollectionHouseWebService service = Connection.createService(GarbageCollectionHouseWebService.class, AUtils.SERVER_URL);
-
-            resultPojo = service.saveGarbageCollectionH(QuickUtils.prefs.getString(AUtils.APP_ID, ""),
-                    userId, gpId, Lat, Long, beforeImage, afterImage, comment, imageFileMultiBody1,
-                    imageFileMultiBody2).execute().body();
 
         } catch (Exception e) {
 
