@@ -37,11 +37,7 @@
             android:label="@string/title_activity_take_photo"
             android:theme="@style/AppTheme.NoActionBar" />
 
-        <!--<service android:name=".services.ForgroundService" />-->
-
-        <service
-            android:name=".services.ForgroundService" />
-            android:theme="@style/AppTheme.NoActionBar" />
+        <service android:name=".services.ForgroundService"/>
 
     </application>
 
