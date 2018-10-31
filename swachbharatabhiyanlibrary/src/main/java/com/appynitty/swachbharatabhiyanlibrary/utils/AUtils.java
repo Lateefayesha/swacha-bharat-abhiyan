@@ -145,7 +145,7 @@ public class AUtils extends MsUtils {
         String IS_USER_LOGIN = "UserLoginStatus";
         String USER_ID = "UserId";
         String USER_TYPE = "UserType";
-        boolean IS_ON_DUTY = true;
+        String IS_ON_DUTY = "isOnDuty";
 
         String IMAGE_POJO = "ImagePojo";
     }
