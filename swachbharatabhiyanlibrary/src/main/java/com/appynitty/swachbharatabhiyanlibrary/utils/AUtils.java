@@ -17,6 +17,7 @@ import com.appynitty.swachbharatabhiyanlibrary.activity.TakePhotoActivity;
 import com.mithsoft.lib.utils.MsUtils;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -323,6 +324,38 @@ public class AUtils extends MsUtils {
 
         SimpleDateFormat format = new SimpleDateFormat(AUtils.SERVER_TIME_FORMATE, Locale.ENGLISH);
         return format.format(Calendar.getInstance().getTime());
+    }
+
+    public static ArrayList<String> getMonthSpinnerList(){
+        ArrayList<String> spinnerList = new ArrayList<>();
+
+        spinnerList.add("Select Month");
+        spinnerList.add("January");
+        spinnerList.add("February");
+        spinnerList.add("March");
+        spinnerList.add("May");
+        spinnerList.add("June");
+        spinnerList.add("July");
+        spinnerList.add("August");
+        spinnerList.add("September");
+        spinnerList.add("Qctober");
+        spinnerList.add("November");
+        spinnerList.add("December");
+
+        return spinnerList;
+    }
+
+    public static ArrayList<String> getYearSpinnerList(){
+        ArrayList<String> spinnerList = new ArrayList<>();
+
+        spinnerList.add("Select Year");
+        for(int i = 0; i > -5; i--){
+            Calendar currYear = Calendar.getInstance();
+            currYear.add(Calendar.YEAR, i);
+            spinnerList.add(String.valueOf(currYear.get(Calendar.YEAR)));
+        }
+
+        return spinnerList;
     }
 
 }
