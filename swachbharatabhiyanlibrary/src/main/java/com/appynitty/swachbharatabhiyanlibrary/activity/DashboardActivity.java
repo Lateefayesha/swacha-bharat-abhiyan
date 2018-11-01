@@ -2,6 +2,7 @@ package com.appynitty.swachbharatabhiyanlibrary.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,10 +26,12 @@ import com.appynitty.swachbharatabhiyanlibrary.dialogs.PopUpDialog;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.InPunchPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.MenuListPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.OutPunchPojo;
+import com.appynitty.swachbharatabhiyanlibrary.pojos.UserDetailPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.VehicleTypePojo;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 import com.appynitty.swachbharatabhiyanlibrary.utils.LocaleHelper;
 import com.appynitty.swachbharatabhiyanlibrary.utils.MyAsyncTask;
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mithsoft.lib.components.Toasty;
@@ -51,12 +55,17 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
     private TextView attendanceStatus;
     private TextView vehicleStatus;
     private Switch markAttendance;
+    private TextView userName;
+    private TextView empId;
+    private ImageView profilePic;
 
     private InPunchPojo inPunchPojo = null;
 
     private boolean isOnDuty = false;
 
     private List<VehicleTypePojo> vehicleTypePojoList;
+
+    private UserDetailPojo userDetailPojo;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -88,6 +97,10 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         attendanceStatus = findViewById(R.id.user_attendance_status);
         vehicleStatus = findViewById(R.id.user_vehicle_type);
         markAttendance = findViewById(R.id.user_attendance_toggle);
+        userName = findViewById(R.id.user_full_name);
+        empId = findViewById(R.id.user_emp_id);
+        profilePic = findViewById(R.id.user_profile_pic);
+
         initToolBar();
     }
 
@@ -148,6 +161,11 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
     }
 
     private void initData() {
+
+        getVehicleType();
+
+        getUserDetail();
+
         List<MenuListPojo> menuPojoList = new ArrayList<MenuListPojo>();
 
         menuPojoList.add(new MenuListPojo("Scan QR code", R.drawable.ic_qr_code));
@@ -161,8 +179,6 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
 
         Type type = new TypeToken<InPunchPojo>(){}.getType();
         inPunchPojo = new Gson().fromJson(QuickUtils.prefs.getString(AUtils.PREFS.IN_PUNCH_POJO, null), type);
-
-        getVehicleType();
     }
 
     private void performLogout() {
@@ -231,10 +247,10 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
 
             switch (QuickUtils.prefs.getInt(AUtils.VEHICLE_ID,0))
             {
-                case 1:
+                case 2:
                     vehicleName = "Van";
                     break;
-                case 2:
+                case 1:
                     vehicleName = "Truck";
                     break;
             }
@@ -260,8 +276,12 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
 
         if (isChecked) {
             List<String> mLanguage = new ArrayList<>();
-            mLanguage.add("Van");
-            mLanguage.add("Truck");
+
+            for (int i = 0; i < vehicleTypePojoList.size(); i++)
+            {
+                mLanguage.add(vehicleTypePojoList.get(i).getDescription());
+            }
+
 
             if(!isOnDuty) {
                 AUtils.mApplication.startLocationTracking();
@@ -299,11 +319,13 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         switch (listItemSelected)
         {
             case "Van":
-                QuickUtils.prefs.save(AUtils.VEHICLE_ID,1);
+
+                QuickUtils.prefs.save(AUtils.VEHICLE_ID,2);
                 break;
 
             case "Truck":
-                QuickUtils.prefs.save(AUtils.VEHICLE_ID,2);
+
+                QuickUtils.prefs.save(AUtils.VEHICLE_ID,1);
                 break;
         }
 
@@ -407,6 +429,44 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
 
                 vehicleTypePojoList = new Gson().fromJson(
                         QuickUtils.prefs.getString(AUtils.PREFS.VEHICLE_TYPE_POJO_LIST, null), type);
+
+            }
+        }).execute();
+    }
+
+    private void getUserDetail() {
+
+        new MyAsyncTask(mContext, false, new MyAsyncTask.AsynTaskListener() {
+            public boolean isDataPull = false;
+
+            @Override
+            public void doInBackgroundOpration(SyncServer syncServer) {
+
+                isDataPull = syncServer.pullUserDetailsFromServer();
+            }
+
+            @Override
+            public void onFinished() {
+
+                Type type = new TypeToken<UserDetailPojo>() {
+                }.getType();
+
+                userDetailPojo = new Gson().fromJson(
+                        QuickUtils.prefs.getString(AUtils.PREFS.USER_DETAIL_POJO, null), type);
+
+                if(!AUtils.isNull(userDetailPojo))
+                {
+                    if(!AUtils.isNullString(userDetailPojo.getProfileImage()))
+                    {
+                        Glide.with(mContext).load(userDetailPojo.getProfileImage())
+                                .placeholder(R.drawable.ic_user)
+                                .error(R.drawable.ic_user)
+                                .into(profilePic);
+                        //profilePic.setImageURI(Uri.parse(userDetailPojo.getProfileImage()));
+                    }
+                    userName.setText(userDetailPojo.getName());
+                    empId.setText(userDetailPojo.getUserId());
+                }
 
             }
         }).execute();

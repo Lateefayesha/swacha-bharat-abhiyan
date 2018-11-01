@@ -32,6 +32,7 @@
             android:padding="@dimen/padding_margin_layout_double">
 
             <ImageView
+                android:id="@+id/user_profile_pic"
                 android:contentDescription="@string/hyphen"
                 android:scaleType="fitCenter"
                 android:layout_width="@dimen/dimen_140_dp"
