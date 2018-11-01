@@ -82,6 +82,8 @@ public class AUtils extends MsUtils {
 
     private static final String SERVER_TIME_FORMATE = "HH:mm";
 
+    private static final String SERVER_DATE_TIME_FORMATE = "MM-dd-yyyy HH:mm:ss";
+
     public static MyApplication getmApplication() {
         return mApplication;
     }
@@ -158,6 +160,9 @@ public class AUtils extends MsUtils {
 
         String IN_PUNCH_POJO = "InPunchPull";
         String VEHICLE_TYPE_POJO_LIST = "VehicleTypePullList";
+        String USER_DETAIL_POJO = "UserDetailPull";
+        String WORK_HISTORY_POJO_LIST = "WorkHistoryPullList";
+        String WORK_HISTORY_DETAIL_POJO_LIST = "WorkHistoryDetailPullList";
     }
 
     public static boolean isCameraPermissionGiven(final Context context)
@@ -322,6 +327,12 @@ public class AUtils extends MsUtils {
     public static String getSeverTime() {
 
         SimpleDateFormat format = new SimpleDateFormat(AUtils.SERVER_TIME_FORMATE, Locale.ENGLISH);
+        return format.format(Calendar.getInstance().getTime());
+    }
+
+    public static String getSeverDateTime() {
+
+        SimpleDateFormat format = new SimpleDateFormat(AUtils.SERVER_DATE_TIME_FORMATE, Locale.ENGLISH);
         return format.format(Calendar.getInstance().getTime());
     }
 
