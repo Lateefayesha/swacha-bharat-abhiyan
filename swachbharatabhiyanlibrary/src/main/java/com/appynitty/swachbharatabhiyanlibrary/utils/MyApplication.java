@@ -5,11 +5,10 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.os.Build;
 import android.os.Bundle;
-import android.widget.FrameLayout;
 
 import com.appynitty.swachbharatabhiyanlibrary.services.ForgroundService;
-import com.appynitty.swachbharatabhiyanlibrary.services.LocationMonitoringService;
 
 import quickutils.core.QuickUtils;
 
@@ -64,28 +63,31 @@ public class MyApplication extends Application {
             }
         });
 
-
-        if(QuickUtils.prefs.getBoolean(AUtils.PREFS.IS_ON_DUTY, false))
-        {
-
-        }
     }
 
     @Override
     protected void attachBaseContext(Context base) {
 
-        super.attachBaseContext(LocaleHelper.onAttach(base, AUtils.DEFAULT_LANGUAGE_NAME));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            super.attachBaseContext(LocaleHelper.onAttach(base, AUtils.DEFAULT_LANGUAGE_NAME));
+        } else {
+            super.attachBaseContext(base);
+        }
+
     }
 
     public void startLocationTracking()
     {
         Intent intent = new Intent(this, ForgroundService.class);
-        startService(intent);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(intent);
+        } else {
+            startService(intent);
+        }
     }
 
     public void stopLocationTracking()
     {
         stopService(new Intent(this, ForgroundService.class));
     }
-
 }
