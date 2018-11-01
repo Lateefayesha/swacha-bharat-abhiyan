@@ -45,6 +45,10 @@
             android:name=".activity.HistoryPageActivity"
             android:label="@string/title_activity_history_page"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.HistoryDetailsPageActivity"
+            android:label="@string/title_activity_history_page"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <service android:name=".services.ForgroundService" />
 

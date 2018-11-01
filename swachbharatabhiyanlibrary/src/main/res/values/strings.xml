@@ -47,5 +47,8 @@
     <string name="grant_permission_txt">Grant Permission</string>
     <string name="emp_id_full">Employee ID :</string>
     <string name="emp_id_short">Employee ID</string>
+    <string name="month_txt">Month</string>
+    <string name="point_collection_txt">Point Collection</string>
+    <string name="house_collection_txt">House Collection</string>
 
 </resources>

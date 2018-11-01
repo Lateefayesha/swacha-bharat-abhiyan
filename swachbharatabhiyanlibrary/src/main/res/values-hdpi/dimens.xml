@@ -43,5 +43,6 @@
     <dimen name="dimen_120_dp">120dp</dimen>
     <dimen name="dim_50_dp">50dp</dimen>
     <dimen name="dim_220_dp">220dp</dimen>
+    <dimen name="dim_2_dp">2dp</dimen>
 
 </resources>

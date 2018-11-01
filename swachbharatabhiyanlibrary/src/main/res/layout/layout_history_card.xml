@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/padding_margin_layout"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/menu_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padding_margin_layout"
+        android:layout_marginBottom="@dimen/padding_margin_layout"
+        android:layout_marginStart="@dimen/dim_2_dp"
+        android:layout_marginEnd="@dimen/dim_2_dp"
+        app:cardCornerRadius="@dimen/card_radius"
+        app:cardElevation="@dimen/card_elevation"
+        android:layout_gravity="center">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/padding_margin_layout_double"
+            android:paddingBottom="@dimen/padding_margin_layout_double">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="0.4"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center_horizontal|center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorOrange"
+                    android:text="24"
+                    android:textStyle="bold"
+                    android:textSize="20sp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAllCaps="true"
+                    android:textColor="@color/colorOrange"
+                    android:text="Oct"
+                    android:textSize="12sp"/>
+
+            </LinearLayout>
+
+            <View
+                android:visibility="visible"
+                android:layout_width="2dp"
+                android:layout_height="match_parent"
+                android:background="@color/colorAccent"
+                android:layout_marginStart="@dimen/dim_2_dp"
+                android:layout_marginEnd="@dimen/padding_margin_layout_double"/>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_weight="0.8"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/house_collection_lbl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorDefault"
+                    android:textSize="10sp"
+                    android:text="@string/house_collection_txt"/>
+
+                <TextView
+                    android:id="@+id/house_collection"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/house_collection_lbl"
+                    android:textSize="@dimen/secondary_text_size"
+                    android:textColor="@color/colorBlue"
+                    android:layout_marginBottom="@dimen/padding_margin_layout"
+                    android:text="0"/>
+
+                <TextView
+                    android:id="@+id/gp_collection_lbl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorDefault"
+                    android:textSize="10sp"
+                    android:layout_below="@id/house_collection"
+                    android:layout_marginTop="@dimen/padding_margin_layout"
+                    android:text="@string/point_collection_txt"/>
+
+                <TextView
+                    android:id="@+id/gp_collection"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/gp_collection_lbl"
+                    android:textSize="@dimen/secondary_text_size"
+                    android:textColor="@color/colorPinkLight"
+                    android:text="0"/>
+
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

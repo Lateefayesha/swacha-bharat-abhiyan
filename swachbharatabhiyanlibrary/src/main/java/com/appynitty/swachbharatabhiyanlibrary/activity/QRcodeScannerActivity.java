@@ -344,11 +344,6 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
-
     private void startPreview(){
         scannerView.startCamera();
         scannerView.resumeCameraPreview(this);
