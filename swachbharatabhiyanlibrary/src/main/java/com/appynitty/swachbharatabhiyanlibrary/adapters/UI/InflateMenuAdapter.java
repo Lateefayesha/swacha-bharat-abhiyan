@@ -1,4 +1,4 @@
-package com.appynitty.swachbharatabhiyanlibrary.adapters;
+package com.appynitty.swachbharatabhiyanlibrary.adapters.UI;
 
 import android.content.Context;
 import android.graphics.Color;
