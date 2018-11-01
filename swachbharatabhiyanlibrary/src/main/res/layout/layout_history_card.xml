@@ -35,16 +35,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/colorOrange"
-                    android:text="24"
+                    android:text="@string/hyphen"
                     android:textStyle="bold"
-                    android:textSize="20sp"/>
+                    android:textSize="@dimen/button_text_size"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAllCaps="true"
                     android:textColor="@color/colorOrange"
-                    android:text="Oct"
+                    android:text="@string/hyphen"
                     android:textSize="12sp"/>
 
             </LinearLayout>
@@ -67,7 +67,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/colorDefault"
-                    android:textSize="10sp"
+                    android:textSize="@dimen/dim_12_sp"
                     android:text="@string/house_collection_txt"/>
 
                 <TextView
@@ -78,14 +78,14 @@
                     android:textSize="@dimen/secondary_text_size"
                     android:textColor="@color/colorBlue"
                     android:layout_marginBottom="@dimen/padding_margin_layout"
-                    android:text="0"/>
+                    android:text="@string/hyphen"/>
 
                 <TextView
                     android:id="@+id/gp_collection_lbl"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/colorDefault"
-                    android:textSize="10sp"
+                    android:textSize="@dimen/dim_12_sp"
                     android:layout_below="@id/house_collection"
                     android:layout_marginTop="@dimen/padding_margin_layout"
                     android:text="@string/point_collection_txt"/>
@@ -97,7 +97,7 @@
                     android:layout_below="@id/gp_collection_lbl"
                     android:textSize="@dimen/secondary_text_size"
                     android:textColor="@color/colorPinkLight"
-                    android:text="0"/>
+                    android:text="@string/hyphen"/>
 
 
             </RelativeLayout>

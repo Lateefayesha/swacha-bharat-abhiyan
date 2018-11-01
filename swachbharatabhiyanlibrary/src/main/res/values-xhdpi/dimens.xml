@@ -28,14 +28,12 @@
 
 
     <dimen name="title_margin">15dp</dimen>
-    <dimen name="title_text_size">24sp</dimen>
     <dimen name="dimen_15_dp">15dp</dimen>
     <dimen name="dimen_140_dp">140dp</dimen>
     <dimen name="dim_300_dp">300dp</dimen>
     <dimen name="dim_20_dp">20dp</dimen>
     <dimen name="dim_10_dp">10dp</dimen>
     <dimen name="dim_5_dp">5dp</dimen>
-    <dimen name="dimen_30_sp">30sp</dimen>
     <dimen name="dimen_200_dp">200dp</dimen>
     <dimen name="dimen_100_dp">100dp</dimen>
     <dimen name="dimen_25_sp">25sp</dimen>
@@ -43,5 +41,9 @@
     <dimen name="dim_50_dp">50dp</dimen>
     <dimen name="dim_220_dp">220dp</dimen>
     <dimen name="dim_2_dp">2dp</dimen>
+
+    <dimen name="dim_12_sp">12sp</dimen>
+    <dimen name="dimen_30_sp">30sp</dimen>
+    <dimen name="title_text_size">24sp</dimen>
 
 </resources>
