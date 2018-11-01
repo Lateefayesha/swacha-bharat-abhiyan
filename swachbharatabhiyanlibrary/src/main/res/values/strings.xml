@@ -4,6 +4,7 @@
     <string name="title_activity_qrcode_scanner">Scan QR Code</string>
     <string name="title_activity_take_photo">Taking Photo</string>
     <string name="title_activity_profile_page">Profile</string>
+    <string name="title_activity_history_page">Work History</string>
 
     <string name="change_language">Change Language</string>
     <string name="rate_this_app">Rate This App</string>

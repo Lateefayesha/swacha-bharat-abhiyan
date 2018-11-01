@@ -145,8 +145,10 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
                 startActivity(new Intent(mContext, TakePhotoActivity.class));
                 break;
             case 2:
+                startActivity(new Intent(mContext, HistoryPageActivity.class));
                 break;
             case 3:
+                startActivity(new Intent(mContext, ProfilePageActivity.class));
                 break;
         }
     }
@@ -245,12 +247,9 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
 
             if(!AUtils.isNullString(inPunchPojo.getVehicleNumber())) {
 
-                vehicleStatus.setText(this.getResources().getString(R.string.opening_round_bracket) + vehicleName
-                        + " " + this.getResources().getString(R.string.hyphen) + " " + inPunchPojo.getVehicleNumber()
-                        + this.getResources().getString(R.string.closing_round_bracket));
+                vehicleStatus.setText(String.format("%s%s %s %s%s", this.getResources().getString(R.string.opening_round_bracket), vehicleName, this.getResources().getString(R.string.hyphen), inPunchPojo.getVehicleNumber(), this.getResources().getString(R.string.closing_round_bracket)));
             } else {
-                vehicleStatus.setText(this.getResources().getString(R.string.opening_round_bracket) + vehicleName
-                        + this.getResources().getString(R.string.closing_round_bracket));
+                vehicleStatus.setText(String.format("%s%s%s", this.getResources().getString(R.string.opening_round_bracket), vehicleName, this.getResources().getString(R.string.closing_round_bracket)));
             }
         }
     }
@@ -298,12 +297,9 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
 
         if(!AUtils.isNullString(vehicleNo)) {
 
-            vehicleStatus.setText(this.getResources().getString(R.string.opening_round_bracket) + listItemSelected
-                    + " " + this.getResources().getString(R.string.hyphen) + " " + vehicleNo
-                    + this.getResources().getString(R.string.closing_round_bracket));
+            vehicleStatus.setText(String.format("%s%s %s %s%s", this.getResources().getString(R.string.opening_round_bracket), listItemSelected, this.getResources().getString(R.string.hyphen), vehicleNo, this.getResources().getString(R.string.closing_round_bracket)));
         } else {
-            vehicleStatus.setText(this.getResources().getString(R.string.opening_round_bracket) + listItemSelected
-                    + this.getResources().getString(R.string.closing_round_bracket));
+            vehicleStatus.setText(String.format("%s%s%s", this.getResources().getString(R.string.opening_round_bracket), listItemSelected, this.getResources().getString(R.string.closing_round_bracket)));
         }
 
         switch (listItemSelected)
