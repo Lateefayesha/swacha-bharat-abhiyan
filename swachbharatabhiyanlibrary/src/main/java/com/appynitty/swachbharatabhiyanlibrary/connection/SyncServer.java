@@ -238,7 +238,7 @@ public class SyncServer {
 
             if (!AUtils.isNull(userDetailPojo)) {
 
-                Type type = new TypeToken<VehicleTypePojo>() {
+                Type type = new TypeToken<UserDetailPojo>() {
                 }.getType();
                 QuickUtils.prefs.save(AUtils.PREFS.USER_DETAIL_POJO, gson.toJson(userDetailPojo, type));
 
