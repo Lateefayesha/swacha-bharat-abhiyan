@@ -347,12 +347,13 @@ public class AUtils extends MsUtils {
         spinnerList.add("January");
         spinnerList.add("February");
         spinnerList.add("March");
+        spinnerList.add("April");
         spinnerList.add("May");
         spinnerList.add("June");
         spinnerList.add("July");
         spinnerList.add("August");
         spinnerList.add("September");
-        spinnerList.add("Qctober");
+        spinnerList.add("October");
         spinnerList.add("November");
         spinnerList.add("December");
 
