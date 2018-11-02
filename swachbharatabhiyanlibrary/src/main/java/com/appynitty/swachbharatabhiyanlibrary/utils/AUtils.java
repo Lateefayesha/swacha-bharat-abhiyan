@@ -86,13 +86,7 @@ public class AUtils extends MsUtils {
 
     private static final String SERVER_DATE_TIME_FORMATE = "MM-dd-yyyy HH:mm:ss";
 
-    public static MyApplication getmApplication() {
-        return mApplication;
-    }
-
-    public static void setmApplication(MyApplication mApplication) {
-        AUtils.mApplication = mApplication;
-    }
+    public static Context mCurrentContext;
 
     // Language Change of an application
     public static void changeLanguage(Activity context, int languageId) {
@@ -369,5 +363,4 @@ public class AUtils extends MsUtils {
         SimpleDateFormat format = new SimpleDateFormat(AUtils.SERVER_DATE_TIME_FORMATE, Locale.ENGLISH);
         return format.format(Calendar.getInstance().getTime());
     }
-
 }

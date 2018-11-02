@@ -5,6 +5,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.widget.FrameLayout;
 
@@ -22,7 +23,7 @@ public class MyApplication extends Application {
 //        init QuickUtils lib
         QuickUtils.init(getApplicationContext());
 
-        AUtils.setmApplication(this);
+        AUtils.mApplication = this;
         //FirebaseApp.initializeApp(getApplicationContext());
 
 //        TypefaceUtil.overrideFont(getApplicationContext(), "SERIF", "MYRIADPRO-REGULAR.OTF"); // font from assets: "assets/fonts/Roboto-Regular.ttf
@@ -74,13 +75,22 @@ public class MyApplication extends Application {
     @Override
     protected void attachBaseContext(Context base) {
 
-        super.attachBaseContext(LocaleHelper.onAttach(base, AUtils.DEFAULT_LANGUAGE_NAME));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            super.attachBaseContext(LocaleHelper.onAttach(base, AUtils.DEFAULT_LANGUAGE_NAME));
+        } else {
+            super.attachBaseContext(base);
+        }
     }
 
     public void startLocationTracking()
     {
         Intent intent = new Intent(this, ForgroundService.class);
-        startService(intent);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(intent);
+        } else {
+            startService(intent);
+        }
     }
 
     public void stopLocationTracking()
