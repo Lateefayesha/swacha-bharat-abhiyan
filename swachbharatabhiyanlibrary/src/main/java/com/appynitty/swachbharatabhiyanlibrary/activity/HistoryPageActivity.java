@@ -98,7 +98,7 @@ public class HistoryPageActivity extends AppCompatActivity {
                             String.valueOf(position)
                     );
                 }else{
-                    Toasty.info(mContext, getResources().getString(R.string.select_month_year_warn)).show();
+                    AUtils.showWarning(mContext, getResources().getString(R.string.select_month_year_warn));
                 }
             }
 
