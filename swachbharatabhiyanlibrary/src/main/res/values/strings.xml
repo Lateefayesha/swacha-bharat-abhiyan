@@ -51,4 +51,6 @@
     <string name="point_collection_txt">Point Collection</string>
     <string name="house_collection_txt">House Collection</string>
 
+    <string name="something_error">Something went wrong!! Please try again later. </string>
+
 </resources>

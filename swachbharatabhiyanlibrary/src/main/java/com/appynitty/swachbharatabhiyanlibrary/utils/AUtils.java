@@ -7,13 +7,19 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.location.Location;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.ActivityCompat;
+import android.widget.Toast;
 
+import com.appynitty.swachbharatabhiyanlibrary.R;
 import com.appynitty.swachbharatabhiyanlibrary.activity.TakePhotoActivity;
+import com.mithsoft.lib.components.Toasty;
 import com.mithsoft.lib.utils.MsUtils;
 
 import java.text.SimpleDateFormat;
@@ -362,5 +368,11 @@ public class AUtils extends MsUtils {
 
         SimpleDateFormat format = new SimpleDateFormat(AUtils.SERVER_DATE_TIME_FORMATE, Locale.ENGLISH);
         return format.format(Calendar.getInstance().getTime());
+    }
+
+    public static void showWarning(Context context, String message)
+    {
+        Toasty.custom(context,message, R.drawable.ic_error_outline_white_48dp,Color.parseColor("#C8FE973C"),
+                Toast.LENGTH_SHORT,true,true).show();
     }
 }

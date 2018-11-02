@@ -28,6 +28,8 @@ import com.appynitty.retrofitconnectionlibrary.pojos.ResultPojo;
 import com.appynitty.swachbharatabhiyanlibrary.R;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.UI.InflateMenuAdapter;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.AttendanceAdapterClass;
+import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.UserDetailAdapterClass;
+import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.VehicleTypeAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.connection.SyncServer;
 import com.appynitty.swachbharatabhiyanlibrary.dialogs.PopUpDialog;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.InPunchPojo;
@@ -79,6 +81,10 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
 
     private AttendanceAdapterClass mAttendanceAdapter;
 
+    private VehicleTypeAdapterClass mVehicleTypeAdapter;
+
+    private UserDetailAdapterClass mUserDetailAdapter;
+
     @Override
     protected void attachBaseContext(Context newBase) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -104,10 +110,16 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
     }
 
     private void generateId() {
+
         setContentView(R.layout.activity_dashboard);
+
         mContext = DashboardActivity.this;
         AUtils.mCurrentContext = mContext;
+
         mAttendanceAdapter = new AttendanceAdapterClass();
+        mVehicleTypeAdapter = new VehicleTypeAdapterClass();
+        mUserDetailAdapter = new UserDetailAdapterClass();
+
         fab = findViewById(R.id.fab_setting);
         menuGridView = findViewById(R.id.menu_grid);
         toolbar = findViewById(R.id.toolbar);
@@ -131,23 +143,22 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
             @Override
             public void onSuccessCallBack(int type) {
 
-                if(type == 1)
-                {
+                if (type == 1) {
 
-                } else if(type == 2)
-                {
-                    markAttendance.setChecked(false);
+                    onInPunchSuccess();
+                } else if (type == 2) {
+
+                    onOutPunchSuccess();
                 }
             }
 
             @Override
             public void onFailureCallBack(int type) {
 
-                if(type == 1)
-                {
+                if (type == 1) {
+
                     markAttendance.setChecked(false);
-                } else if(type == 2)
-                {
+                } else if (type == 2) {
 
                 }
             }
@@ -184,15 +195,39 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
             }
         });
 
+        mUserDetailAdapter.setUserDetailListener(new UserDetailAdapterClass.UserDetailListener() {
+            @Override
+            public void onSuccessCallBack() {
+
+                userDetailPojo = mUserDetailAdapter.getUserDetailPojo();
+
+                if (!AUtils.isNullString(userDetailPojo.getProfileImage())) {
+                    Glide.with(mContext).load(userDetailPojo.getProfileImage())
+                            .placeholder(R.drawable.ic_user)
+                            .error(R.drawable.ic_user)
+                            .into(profilePic);
+                }
+                userName.setText(userDetailPojo.getName());
+                empId.setText(userDetailPojo.getUserId());
+            }
+
+            @Override
+            public void onFailureCallBack() {
+
+            }
+        });
+
     }
 
-    private void setMenuClick(int position){
-        switch (position){
+    private void setMenuClick(int position) {
+        switch (position) {
             case 0:
-                startActivity(new Intent(mContext, QRcodeScannerActivity.class));
+                if(QuickUtils.prefs.getBoolean(AUtils.PREFS.IS_ON_DUTY, false))
+                    startActivity(new Intent(mContext, QRcodeScannerActivity.class));
                 break;
             case 1:
-                startActivity(new Intent(mContext, TakePhotoActivity.class));
+                if(QuickUtils.prefs.getBoolean(AUtils.PREFS.IS_ON_DUTY, false))
+                    startActivity(new Intent(mContext, TakePhotoActivity.class));
                 break;
             case 2:
                 startActivity(new Intent(mContext, HistoryPageActivity.class));
@@ -205,9 +240,9 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
 
     private void initData() {
 
-        getVehicleType();
+        mVehicleTypeAdapter.getVehicleType();
 
-        getUserDetail();
+        mUserDetailAdapter.getUserDetail();
 
         List<MenuListPojo> menuPojoList = new ArrayList<MenuListPojo>();
 
@@ -220,16 +255,19 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         InflateMenuAdapter mainMenuAdaptor = new InflateMenuAdapter(DashboardActivity.this, menuPojoList);
         menuGridView.setAdapter(mainMenuAdaptor);
 
-        Type type = new TypeToken<InPunchPojo>(){}.getType();
+        Type type = new TypeToken<InPunchPojo>() {
+        }.getType();
         inPunchPojo = new Gson().fromJson(QuickUtils.prefs.getString(AUtils.PREFS.IN_PUNCH_POJO, null), type);
     }
 
     private void performLogout() {
 
-        QuickUtils.prefs.save(AUtils.PREFS.IS_USER_LOGIN, false);
-
-        QuickUtils.prefs.save(AUtils.PREFS.USER_ID,"");
-        QuickUtils.prefs.save(AUtils.PREFS.USER_TYPE,"");
+        QuickUtils.prefs.remove(AUtils.PREFS.IS_USER_LOGIN);
+        QuickUtils.prefs.remove(AUtils.PREFS.USER_ID);
+        QuickUtils.prefs.remove(AUtils.PREFS.USER_TYPE);
+        QuickUtils.prefs.remove(AUtils.PREFS.VEHICLE_TYPE_POJO_LIST);
+        QuickUtils.prefs.remove(AUtils.PREFS.USER_DETAIL_POJO);
+        QuickUtils.prefs.remove(AUtils.PREFS.IS_ON_DUTY);
 
         openLogin();
 
@@ -255,10 +293,10 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
     @Override
     public void onPopUpDismissed(String type, String listItemSelected, @Nullable String vehicleNo) {
 
-        if (!AUtils.isNullString(listItemSelected)){
+        if (!AUtils.isNullString(listItemSelected)) {
             switch (type) {
                 case AUtils.DIALOG_TYPE_VEHICLE: {
-                    onVehicleTypeDialogClose(listItemSelected,vehicleNo);
+                    onVehicleTypeDialogClose(listItemSelected, vehicleNo);
                 }
                 break;
                 case AUtils.DIALOG_TYPE_LANGUAGE: {
@@ -270,8 +308,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
                 }
                 break;
             }
-        }
-        else {
+        } else {
             markAttendance.setChecked(false);
         }
     }
@@ -280,10 +317,9 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
     protected void onResume() {
         super.onResume();
 
-        isOnDuty = QuickUtils.prefs.getBoolean(AUtils.PREFS.IS_ON_DUTY,false);
+        isOnDuty = QuickUtils.prefs.getBoolean(AUtils.PREFS.IS_ON_DUTY, false);
 
-        if(isOnDuty)
-        {
+        if (isOnDuty) {
             markAttendance.setChecked(true);
 
             attendanceStatus.setText(this.getResources().getString(R.string.status_on_duty));
@@ -291,8 +327,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
 
             String vehicleName = "";
 
-            switch (QuickUtils.prefs.getInt(AUtils.VEHICLE_ID,0))
-            {
+            switch (QuickUtils.prefs.getInt(AUtils.VEHICLE_ID, 0)) {
                 case 2:
                     vehicleName = "Van";
                     break;
@@ -301,7 +336,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
                     break;
             }
 
-            if(!AUtils.isNullString(inPunchPojo.getVehicleNumber())) {
+            if (!AUtils.isNullString(inPunchPojo.getVehicleNumber())) {
 
                 vehicleStatus.setText(String.format("%s%s %s %s%s", this.getResources().getString(R.string.opening_round_bracket), vehicleName, this.getResources().getString(R.string.hyphen), inPunchPojo.getVehicleNumber(), this.getResources().getString(R.string.closing_round_bracket)));
             } else {
@@ -322,145 +357,119 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
 
         isSwitchOn = isChecked;
 
-        isOnDuty = QuickUtils.prefs.getBoolean(AUtils.PREFS.IS_ON_DUTY,false);
+        isOnDuty = QuickUtils.prefs.getBoolean(AUtils.PREFS.IS_ON_DUTY, false);
 
         if (isChecked) {
-            if(isLocationPermission) {
+            if (isLocationPermission) {
                 List<String> mLanguage = new ArrayList<>();
 
-                for (int i = 0; i < vehicleTypePojoList.size(); i++) {
-                    mLanguage.add(vehicleTypePojoList.get(i).getDescription());
+                vehicleTypePojoList = mVehicleTypeAdapter.getVehicleTypePojoList();
+
+                if(!AUtils.isNull(vehicleTypePojoList) && !vehicleTypePojoList.isEmpty()) {
+                    for (int i = 0; i < vehicleTypePojoList.size(); i++) {
+                        mLanguage.add(vehicleTypePojoList.get(i).getDescription());
+                    }
+
+
+                    if (!isOnDuty) {
+                        AUtils.mApplication.startLocationTracking();
+
+                        PopUpDialog dialog = new PopUpDialog(DashboardActivity.this, AUtils.DIALOG_TYPE_VEHICLE, mLanguage, this);
+                        dialog.show();
+                    }
                 }
-
-
-                if (!isOnDuty) {
-                    AUtils.mApplication.startLocationTracking();
-
-                    PopUpDialog dialog = new PopUpDialog(DashboardActivity.this, AUtils.DIALOG_TYPE_VEHICLE, mLanguage, this);
-                    dialog.show();
+                else {
+                    mVehicleTypeAdapter.getVehicleType();
+                    markAttendance.setChecked(false);
+                    Toasty.error(mContext, mContext.getString(R.string.something_error), Toast.LENGTH_SHORT).show();
                 }
-            }
-            else {
+            } else {
                 isLocationPermission = AUtils.isLocationPermissionGiven(DashboardActivity.this);
             }
         } else {
-            if(isOnDuty) {
-                attendanceStatus.setText(this.getResources().getString(R.string.status_off_duty));
-                attendanceStatus.setTextColor(this.getResources().getColor(R.color.colorOFFDutyRed));
+            if (isOnDuty) {
+                if (AUtils.isNetWorkAvailable(this)) {
 
-                vehicleStatus.setText("");
-
-                AUtils.mApplication.stopLocationTracking();
-
-                mAttendanceAdapter.MarkOutPunch();
+                    mAttendanceAdapter.MarkOutPunch();
+                } else {
+                    AUtils.showWarning(mContext, mContext.getString(R.string.noInternet));
+                    markAttendance.setChecked(true);
+                }
             }
         }
     }
 
 
-    private void onVehicleTypeDialogClose(String listItemSelected, String vehicleNo)
+    private void onVehicleTypeDialogClose(String listItemSelected, String vehicleNo) {
+        if (AUtils.isNetWorkAvailable(this)) {
+
+            switch (listItemSelected) {
+                case "Van":
+
+                    QuickUtils.prefs.save(AUtils.VEHICLE_ID, 2);
+                    break;
+
+                case "Truck":
+
+                    QuickUtils.prefs.save(AUtils.VEHICLE_ID, 1);
+                    break;
+            }
+
+            if (!AUtils.isNull(inPunchPojo)) {
+                inPunchPojo.setDaDate(AUtils.getSeverDate());
+                inPunchPojo.setStartTime(AUtils.getSeverTime());
+
+                inPunchPojo.setVehicleNumber(vehicleNo);
+            } else {
+                inPunchPojo = new InPunchPojo();
+
+                inPunchPojo.setDaDate(AUtils.getSeverDate());
+                inPunchPojo.setStartTime(AUtils.getSeverTime());
+
+                inPunchPojo.setVehicleNumber(vehicleNo);
+            }
+
+            mAttendanceAdapter.MarkInPunch(inPunchPojo);
+        } else {
+            AUtils.showWarning(mContext, mContext.getString(R.string.noInternet));
+            markAttendance.setChecked(false);
+        }
+    }
+
+    private void onInPunchSuccess()
     {
         attendanceStatus.setText(this.getResources().getString(R.string.status_on_duty));
         attendanceStatus.setTextColor(this.getResources().getColor(R.color.colorONDutyGreen));
 
-        if(!AUtils.isNullString(vehicleNo)) {
+        String vehicleType = null;
 
-            vehicleStatus.setText(String.format("%s%s %s %s%s", this.getResources().getString(R.string.opening_round_bracket), listItemSelected, this.getResources().getString(R.string.hyphen), vehicleNo, this.getResources().getString(R.string.closing_round_bracket)));
+        for (int i = 0; i < vehicleTypePojoList.size(); i++) {
+            int vID = Integer.parseInt(vehicleTypePojoList.get(i).getVtId());
+            if(QuickUtils.prefs.getInt(AUtils.VEHICLE_ID,0) == vID)
+            {
+                vehicleType = vehicleTypePojoList.get(i).getDescription();
+            }
+        }
+
+        if (!AUtils.isNullString(inPunchPojo.getVehicleNumber())) {
+
+            vehicleStatus.setText(String.format("%s%s %s %s%s", this.getResources().getString(R.string.opening_round_bracket), vehicleType,
+                    this.getResources().getString(R.string.hyphen), inPunchPojo.getVehicleNumber(),
+                    this.getResources().getString(R.string.closing_round_bracket)));
         } else {
-            vehicleStatus.setText(String.format("%s%s%s", this.getResources().getString(R.string.opening_round_bracket), listItemSelected, this.getResources().getString(R.string.closing_round_bracket)));
+            vehicleStatus.setText(String.format("%s%s%s", this.getResources().getString(R.string.opening_round_bracket),
+                    vehicleType, this.getResources().getString(R.string.closing_round_bracket)));
         }
-
-        switch (listItemSelected)
-        {
-            case "Van":
-
-                QuickUtils.prefs.save(AUtils.VEHICLE_ID,2);
-                break;
-
-            case "Truck":
-
-                QuickUtils.prefs.save(AUtils.VEHICLE_ID,1);
-                break;
-        }
-
-        if(!AUtils.isNull(inPunchPojo))
-        {
-            inPunchPojo.setDaDate(AUtils.getSeverDate());
-            inPunchPojo.setStartTime(AUtils.getSeverTime());
-
-            inPunchPojo.setVehicleNumber(vehicleNo);
-        } else {
-            inPunchPojo = new InPunchPojo();
-
-            inPunchPojo.setDaDate(AUtils.getSeverDate());
-            inPunchPojo.setStartTime(AUtils.getSeverTime());
-
-            inPunchPojo.setVehicleNumber(vehicleNo);
-        }
-
-        mAttendanceAdapter.MarkInPunch(inPunchPojo);
     }
 
-    private void getVehicleType() {
+    private void onOutPunchSuccess(){
+        attendanceStatus.setText(this.getResources().getString(R.string.status_off_duty));
+        attendanceStatus.setTextColor(this.getResources().getColor(R.color.colorOFFDutyRed));
 
-        new MyAsyncTask(mContext, false, new MyAsyncTask.AsynTaskListener() {
-            public boolean isDataPull = false;
+        vehicleStatus.setText("");
 
-            @Override
-            public void doInBackgroundOpration(SyncServer syncServer) {
-
-                isDataPull = syncServer.pullVehicleTypeListFromServer();
-            }
-
-            @Override
-            public void onFinished() {
-
-                Type type = new TypeToken<List<VehicleTypePojo>>() {
-                }.getType();
-
-                vehicleTypePojoList = new Gson().fromJson(
-                        QuickUtils.prefs.getString(AUtils.PREFS.VEHICLE_TYPE_POJO_LIST, null), type);
-
-            }
-        }).execute();
-    }
-
-    private void getUserDetail() {
-
-        new MyAsyncTask(mContext, false, new MyAsyncTask.AsynTaskListener() {
-            public boolean isDataPull = false;
-
-            @Override
-            public void doInBackgroundOpration(SyncServer syncServer) {
-
-                isDataPull = syncServer.pullUserDetailsFromServer();
-            }
-
-            @Override
-            public void onFinished() {
-
-                Type type = new TypeToken<UserDetailPojo>() {
-                }.getType();
-
-                userDetailPojo = new Gson().fromJson(
-                        QuickUtils.prefs.getString(AUtils.PREFS.USER_DETAIL_POJO, null), type);
-
-                if(!AUtils.isNull(userDetailPojo))
-                {
-                    if(!AUtils.isNullString(userDetailPojo.getProfileImage()))
-                    {
-                        Glide.with(mContext).load(userDetailPojo.getProfileImage())
-                                .placeholder(R.drawable.ic_user)
-                                .error(R.drawable.ic_user)
-                                .into(profilePic);
-                        //profilePic.setImageURI(Uri.parse(userDetailPojo.getProfileImage()));
-                    }
-                    userName.setText(userDetailPojo.getName());
-                    empId.setText(userDetailPojo.getUserId());
-                }
-
-            }
-        }).execute();
+        AUtils.mApplication.stopLocationTracking();
+        markAttendance.setChecked(false);
     }
 
     private void getPermission() {
@@ -498,8 +507,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
                     }
                 });
             } else {
-                if(isSwitchOn)
-                {
+                if (isSwitchOn) {
                     markAttendance.setChecked(false);
                 }
             }

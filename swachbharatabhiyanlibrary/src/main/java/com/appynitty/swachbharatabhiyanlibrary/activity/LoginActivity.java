@@ -1,7 +1,15 @@
 package com.appynitty.swachbharatabhiyanlibrary.activity;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,6 +32,7 @@ import quickutils.core.QuickUtils;
  */
 public class LoginActivity extends BaseActivity {
 
+    public static final int PERMISSIONS_MULTIPLE_REQUEST = 123;
     private Context mContext = null;
 
     private EditText txtUserName = null;
@@ -36,7 +45,9 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void generateId() {
 
-        QuickUtils.prefs.save(AUtils.APP_ID,"1");
+        getPermission();
+
+        QuickUtils.prefs.save(AUtils.APP_ID, "1");
         mContext = LoginActivity.this;
 
         setContentView(R.layout.activity_login_layout);
@@ -85,8 +96,8 @@ public class LoginActivity extends BaseActivity {
 
                         if (loginDetailsPojo.getStatus().equals(AUtils.STATUS_SUCCESS)) {
 
-                            QuickUtils.prefs.save(AUtils.PREFS.USER_ID,loginDetailsPojo.getUserId());
-                            QuickUtils.prefs.save(AUtils.PREFS.USER_TYPE,loginDetailsPojo.getType());
+                            QuickUtils.prefs.save(AUtils.PREFS.USER_ID, loginDetailsPojo.getUserId());
+                            QuickUtils.prefs.save(AUtils.PREFS.USER_TYPE, loginDetailsPojo.getType());
 
                             QuickUtils.prefs.save(AUtils.PREFS.IS_USER_LOGIN, true);
 
@@ -113,12 +124,12 @@ public class LoginActivity extends BaseActivity {
     private boolean validateForm() {
 
         if (AUtils.isNullString(txtUserName.getText().toString())) {
-            Toasty.warning(mContext, mContext.getString(R.string.plz_ent_username), Toast.LENGTH_SHORT).show();
+            AUtils.showWarning(mContext, mContext.getString(R.string.plz_ent_username));
             return false;
         }
 
         if (AUtils.isNullString(txtUserPwd.getText().toString())) {
-            Toasty.warning(mContext, mContext.getString(R.string.plz_ent_pwd), Toast.LENGTH_SHORT).show();
+            AUtils.showWarning(mContext, mContext.getString(R.string.plz_ent_pwd));
             return false;
         }
         return true;
@@ -133,5 +144,96 @@ public class LoginActivity extends BaseActivity {
         loginPojo.setUserId("");*/
         loginPojo.setUserLoginId(txtUserName.getText().toString());
         loginPojo.setUserPassword(txtUserPwd.getText().toString());
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode) {
+            case PERMISSIONS_MULTIPLE_REQUEST:
+
+                boolean allgranted = false;
+                for (int i = 0; i < grantResults.length; i++) {
+                    if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                        allgranted = true;
+                    } else {
+                        allgranted = false;
+                        break;
+                    }
+                }
+
+                if (allgranted) {
+
+                    // write your logic here
+                } else {
+                    Snackbar.make(LoginActivity.this.findViewById(android.R.id.content),
+                            "Please Grant Permissions to upload profile photo",
+                            Snackbar.LENGTH_INDEFINITE).setAction("ENABLE",
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                        requestPermissions(
+                                                new String[]{Manifest.permission
+                                                        .READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA},
+                                                PERMISSIONS_MULTIPLE_REQUEST);
+                                    }
+                                }
+                            }).show();
+                }
+
+                break;
+        }
+    }
+
+    private void getPermission() {
+        if (ActivityCompat.checkSelfPermission(LoginActivity.this,
+                Manifest.permission.READ_EXTERNAL_STORAGE) + ActivityCompat
+                .checkSelfPermission(LoginActivity.this,
+                        Manifest.permission.CAMERA) + ActivityCompat
+                .checkSelfPermission(LoginActivity.this,
+                        Manifest.permission.ACCESS_COARSE_LOCATION) + ActivityCompat
+                .checkSelfPermission(LoginActivity.this,
+                        Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale
+                    (LoginActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) ||
+                    ActivityCompat.shouldShowRequestPermissionRationale
+                            (LoginActivity.this, Manifest.permission.CAMERA) ||
+                    ActivityCompat.shouldShowRequestPermissionRationale
+                            (LoginActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) ||
+                    ActivityCompat.shouldShowRequestPermissionRationale
+                            (LoginActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION)) {
+
+                Snackbar.make(LoginActivity.this.findViewById(android.R.id.content),
+                        "Please Grant Permissions to start using application",
+                        Snackbar.LENGTH_INDEFINITE).setAction("ENABLE",
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                    requestPermissions(
+                                            new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
+                                                    Manifest.permission.CAMERA,
+                                                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                                                    Manifest.permission.ACCESS_FINE_LOCATION},
+                                            PERMISSIONS_MULTIPLE_REQUEST);
+                                }
+                            }
+                        }).show();
+            } else {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    requestPermissions(
+                            new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
+                                    Manifest.permission.CAMERA,
+                                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                                    Manifest.permission.ACCESS_FINE_LOCATION},
+                            PERMISSIONS_MULTIPLE_REQUEST);
+                }
+            }
+        } else {
+            // write your logic code if permission already granted
+        }
     }
 }
