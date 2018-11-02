@@ -34,6 +34,7 @@
             android:layout_width="0dp"
             android:layout_weight="0.5"
             android:gravity="center_vertical"
+            android:textAlignment="gravity"
             android:layout_height="wrap_content"
             android:popupBackground="@color/colorPrimary"
             android:backgroundTint="@color/white"/>
@@ -41,7 +42,7 @@
         <Spinner
             android:id="@+id/spinner_year"
             android:layout_width="0dp"
-            android:layout_weight="0.5"
+            android:layout_weight="0.4"
             android:gravity="center_vertical"
             android:layout_height="wrap_content"
             android:popupBackground="@color/colorPrimary"
@@ -54,5 +55,21 @@
         android:layout_height="wrap_content"
         android:numColumns="2"
         android:id="@+id/grid_history"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/show_error"
+        android:layout_marginTop="@dimen/dim_150_dp"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="No History"
+            android:gravity="center"
+            android:layout_gravity="center_vertical"/>
+
+    </LinearLayout>
 
 </LinearLayout>

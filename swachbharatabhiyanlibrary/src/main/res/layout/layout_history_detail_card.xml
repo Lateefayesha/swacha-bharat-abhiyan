@@ -9,10 +9,11 @@
 
 
     <Button
+        android:id="@+id/history_details_time"
         android:layout_width="0dp"
         android:layout_weight="0.3"
         android:layout_height="@dimen/dim_20_dp"
-        android:text="09:00 AM"
+        android:text="@string/hyphen"
         android:textSize="@dimen/dim_12_sp"
         android:gravity="center"
         android:background="@drawable/rounded_blue_button"
@@ -28,16 +29,18 @@
         android:layout_marginEnd="@dimen/dim_5_dp">
 
         <TextView
+            android:id="@+id/history_details_id"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="House ID : SBA1044sadasdsa"
+            android:text="@string/hyphen"
             android:textColor="@color/colorBlackGray"
             android:textStyle="bold"/>
 
         <TextView
+            android:id="@+id/history_details_vehicle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Vehicle No. MH31-ER-4444"
+            android:text="@string/hyphen"
             android:textColor="@color/colorDefault"
             android:textSize="@dimen/dim_10_sp"
             android:textStyle="bold"/>
@@ -45,10 +48,11 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/history_details_area"
         android:layout_width="0dp"
         android:layout_weight="0.3"
         android:layout_height="wrap_content"
-        android:text="Dharampethsdsadasd"
+        android:text="@string/hyphen"
         android:textSize="@dimen/dim_10_sp"
         android:gravity="end"
         android:layout_gravity="top"

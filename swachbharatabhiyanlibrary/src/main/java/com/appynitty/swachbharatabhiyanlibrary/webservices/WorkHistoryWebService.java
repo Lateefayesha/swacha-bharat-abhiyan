@@ -14,7 +14,6 @@ public interface WorkHistoryWebService {
 
     @GET("api/Get/WorkHistory")
     Call<List<WorkHistoryPojo>> pullWorkHistoryList(@Header("appId") String appId,
-                                                    @Header("Content-Type") String content_type,
                                                     @Header("userId") String userId,
                                                     @Header("year") String year,
                                                     @Header("month") String month);
@@ -22,8 +21,7 @@ public interface WorkHistoryWebService {
 
     @GET("api//Get/WorkHistory/Details")
     Call<List<WorkHistoryDetailPojo>> pullWorkHistoryDetailList(@Header("appId") String appId,
-                                                                @Header("Content-Type") String content_type,
                                                                 @Header("userId") String userId,
                                                                 @Header("fdate") String fDate,
-                                                                @Header("LaguageId") String languageId);
+                                                                @Header("LanguageId") String languageId);
 }

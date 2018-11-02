@@ -262,9 +262,9 @@ public class SyncServer {
 
             WorkHistoryWebService service = Connection.createService(WorkHistoryWebService.class, AUtils.SERVER_URL);
             workHistoryPojoList = service.pullWorkHistoryList(QuickUtils.prefs.getString(AUtils.APP_ID, ""),
-                    AUtils.CONTENT_TYPE, QuickUtils.prefs.getString(AUtils.PREFS.USER_ID,null), year, month).execute().body();
+                    QuickUtils.prefs.getString(AUtils.PREFS.USER_ID,null), year, month).execute().body();
 
-            if (!AUtils.isNull(workHistoryPojoList) && !workHistoryPojoList.isEmpty()) {
+            if (!AUtils.isNull(workHistoryPojoList)) {
 
                 Type type = new TypeToken<List<WorkHistoryPojo>>() {
                 }.getType();
@@ -282,7 +282,7 @@ public class SyncServer {
         return false;
     }
 
-    public boolean pullWorkHistoryDetailListFromServer(String fDate, String languageId) {
+    public boolean pullWorkHistoryDetailListFromServer(String fDate) {
 
         List<WorkHistoryDetailPojo> workHistoryDetailPojoList = null;
 
@@ -290,7 +290,8 @@ public class SyncServer {
 
             WorkHistoryWebService service = Connection.createService(WorkHistoryWebService.class, AUtils.SERVER_URL);
             workHistoryDetailPojoList = service.pullWorkHistoryDetailList(QuickUtils.prefs.getString(AUtils.APP_ID, ""),
-                    AUtils.CONTENT_TYPE, QuickUtils.prefs.getString(AUtils.PREFS.USER_ID,null), fDate, languageId).execute().body();
+                    QuickUtils.prefs.getString(AUtils.PREFS.USER_ID,null), fDate,
+                    QuickUtils.prefs.getString(AUtils.LANGUAGE_ID, "1")).execute().body();
 
             if (!AUtils.isNull(workHistoryDetailPojoList) && !workHistoryDetailPojoList.isEmpty()) {
 
