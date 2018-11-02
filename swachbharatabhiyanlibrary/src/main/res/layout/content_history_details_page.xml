@@ -8,7 +8,17 @@
     tools:context=".activity.HistoryDetailsPageActivity"
     tools:showIn="@layout/activity_history_details_page">
 
+    <View
+        android:layout_width="@dimen/dim_2_dp"
+        android:layout_height="match_parent"
+        android:background="@color/black_alpfa_50"
+        android:layout_marginStart="@dimen/dim_40_dp"/>
 
+    <GridView
+        android:id="@+id/history_detail_grid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:verticalSpacing="15dp"/>
 
 
 </RelativeLayout>

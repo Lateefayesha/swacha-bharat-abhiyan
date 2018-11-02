@@ -178,6 +178,7 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
     private void showPopup(String id, GcResultPojo pojo){
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setCancelable(false);
         View view = View.inflate(mContext, R.layout.layout_qr_result, null);
         builder.setView(view);
         final AlertDialog dialog = builder.create();
@@ -222,6 +223,7 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
             public void onDismiss(DialogInterface dialogInterface) {
                 restartPreview();
                 if(responseStatus.equals(AUtils.STATUS_SUCCESS)){
+                    imagePojo = null;
                     finish();
                 }
             }

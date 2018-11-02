@@ -1,10 +1,13 @@
 package com.appynitty.swachbharatabhiyanlibrary.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.Spinner;
@@ -63,6 +66,12 @@ public class HistoryPageActivity extends AppCompatActivity {
     }
 
     private void registerEvents() {
+        historyGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                showHistoryDetails();
+            }
+        });
     }
 
     private void initData() {
@@ -94,5 +103,12 @@ public class HistoryPageActivity extends AppCompatActivity {
     }
 
     private void fetchHistory() {
+    }
+
+    private void showHistoryDetails() {
+        Intent intent = new Intent(mContext, HistoryDetailsPageActivity.class);
+        intent.putExtra(AUtils.HISTORY_DETAILS, "24 OCT 2018");
+        startActivity(intent);
+
     }
 }

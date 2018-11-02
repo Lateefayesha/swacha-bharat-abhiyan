@@ -76,6 +76,7 @@ public class AUtils extends MsUtils {
     public static final int FASTEST_LOCATION_INTERVAL = 5000;
 
     public static final String LOCATION = "LocationLatLog";
+    public static final String HISTORY_DETAILS = "HistoryDetails";
 
     public static MyApplication mApplication;
 

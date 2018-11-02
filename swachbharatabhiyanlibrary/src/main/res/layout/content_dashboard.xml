@@ -17,8 +17,8 @@
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dim_150_dp"
-        android:layout_marginTop="@dimen/dim_20_dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
         android:layout_marginStart="@dimen/padding_margin_layout_double"
         android:layout_marginEnd="@dimen/padding_margin_layout_double"
         app:cardCornerRadius="@dimen/padding_margin_layout"
@@ -27,7 +27,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:padding="@dimen/padding_margin_layout_double">
 
@@ -46,13 +46,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.7"
+                android:layout_gravity="center"
                 android:paddingBottom="@dimen/padding_margin_layout">
 
                 <TextView
                     android:id="@+id/user_full_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="addasdsadasdsadsadsadsadasdasdasdasdd"
+                    android:text="@string/hyphen"
+                    android:textSize="@dimen/dimen_25_sp"
                     android:textColor="@color/black"/>
 
                 <TextView
@@ -103,7 +105,6 @@
                     android:layout_width="match_parent"
                     android:layout_below="@id/duty_layout"
                     android:layout_height="wrap_content"
-                    android:text="(Truck - MH31ER3333)"
                     android:gravity="center_vertical|start"
                     android:textColor="@color/colorDefault"/>
 

@@ -23,6 +23,6 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_history_page" />
+    <include layout="@layout/content_history_details_page" />
 
 </android.support.design.widget.CoordinatorLayout>
