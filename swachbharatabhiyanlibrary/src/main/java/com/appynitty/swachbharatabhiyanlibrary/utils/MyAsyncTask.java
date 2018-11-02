@@ -63,7 +63,7 @@ public class MyAsyncTask extends AsyncTask {
         } else {
 
             if (isShowPrgressDialog) {
-                Toasty.warning(context, context.getString(R.string.noInternet), Toast.LENGTH_SHORT).show();
+                AUtils.showWarning(context, context.getString(R.string.noInternet));
             }
         }
     }

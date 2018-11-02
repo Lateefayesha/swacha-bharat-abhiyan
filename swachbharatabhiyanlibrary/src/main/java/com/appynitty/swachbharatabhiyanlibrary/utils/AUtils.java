@@ -7,13 +7,19 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.location.Location;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.ActivityCompat;
+import android.widget.Toast;
 
+import com.appynitty.swachbharatabhiyanlibrary.R;
 import com.appynitty.swachbharatabhiyanlibrary.activity.TakePhotoActivity;
+import com.mithsoft.lib.components.Toasty;
 import com.mithsoft.lib.utils.MsUtils;
 
 import java.text.ParseException;
@@ -94,13 +100,7 @@ public class AUtils extends MsUtils {
 
     private static final String SERVER_DATE_TIME_FORMATE = "MM-dd-yyyy HH:mm:ss";
 
-    public static MyApplication getmApplication() {
-        return mApplication;
-    }
-
-    public static void setmApplication(MyApplication mApplication) {
-        AUtils.mApplication = mApplication;
-    }
+    public static Context mCurrentContext;
 
     // Language Change of an application
     public static void changeLanguage(Activity context, int languageId) {
@@ -347,7 +347,6 @@ public class AUtils extends MsUtils {
         spinnerList.add("January");
         spinnerList.add("February");
         spinnerList.add("March");
-        spinnerList.add("April");
         spinnerList.add("May");
         spinnerList.add("June");
         spinnerList.add("July");
@@ -430,4 +429,9 @@ public class AUtils extends MsUtils {
         }
     }
 
+    public static void showWarning(Context context, String message)
+    {
+        Toasty.custom(context,message, R.drawable.ic_error_outline_white_48dp,Color.parseColor("#C8FE973C"),
+                Toast.LENGTH_SHORT,true,true).show();
+    }
 }

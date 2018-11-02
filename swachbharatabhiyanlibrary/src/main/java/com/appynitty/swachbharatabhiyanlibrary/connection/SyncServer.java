@@ -4,6 +4,8 @@ import android.content.Context;
 
 import com.appynitty.retrofitconnectionlibrary.connection.Connection;
 import com.appynitty.retrofitconnectionlibrary.pojos.ResultPojo;
+import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.UserDetailAdapterClass;
+import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.VehicleTypeAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.GarbageCollectionPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.GcResultPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.ImagePojo;
@@ -210,9 +212,7 @@ public class SyncServer {
 
             if (!AUtils.isNull(vehicleTypePojoList) && !vehicleTypePojoList.isEmpty()) {
 
-                Type type = new TypeToken<List<VehicleTypePojo>>() {
-                }.getType();
-                QuickUtils.prefs.save(AUtils.PREFS.VEHICLE_TYPE_POJO_LIST, gson.toJson(vehicleTypePojoList, type));
+                VehicleTypeAdapterClass.setVehicleTypePojoList(vehicleTypePojoList);
 
                 return true;
             } else {
@@ -238,9 +238,7 @@ public class SyncServer {
 
             if (!AUtils.isNull(userDetailPojo)) {
 
-                Type type = new TypeToken<UserDetailPojo>() {
-                }.getType();
-                QuickUtils.prefs.save(AUtils.PREFS.USER_DETAIL_POJO, gson.toJson(userDetailPojo, type));
+                UserDetailAdapterClass.setUserDetailPojo(userDetailPojo);
 
                 return true;
             } else {
