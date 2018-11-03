@@ -22,6 +22,7 @@ import com.appynitty.swachbharatabhiyanlibrary.activity.TakePhotoActivity;
 import com.mithsoft.lib.components.Toasty;
 import com.mithsoft.lib.utils.MsUtils;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -83,10 +84,17 @@ public class AUtils extends MsUtils {
 
     public static final String LOCATION = "LocationLatLog";
     public static final String HISTORY_DETAILS = "HistoryDetails";
+    public static final String HISTORY_DETAILS_DATE = "HistoryDetailsDate";
 
     public static MyApplication mApplication;
 
     private static final String SERVER_DATE_FORMATE = "MM-dd-yyyy";
+
+    private static final String HISTORY_DATE_FORMATE = "dd-MM-yyyy";
+    private static final String TITLE_DATE_FORMATE = "dd MMM yyyy";
+
+    private static final String SEMI_MONTH_FORMATE = "MMM";
+    private static final String DATE_VALUE_FORMATE = "dd";
 
     private static final String SERVER_TIME_FORMATE = "HH:mm";
 
@@ -341,12 +349,13 @@ public class AUtils extends MsUtils {
         spinnerList.add("January");
         spinnerList.add("February");
         spinnerList.add("March");
+        spinnerList.add("April");
         spinnerList.add("May");
         spinnerList.add("June");
         spinnerList.add("July");
         spinnerList.add("August");
         spinnerList.add("September");
-        spinnerList.add("Qctober");
+        spinnerList.add("October");
         spinnerList.add("November");
         spinnerList.add("December");
 
@@ -358,9 +367,9 @@ public class AUtils extends MsUtils {
 
         spinnerList.add("Select Year");
         for(int i = 0; i > -5; i--){
-            Calendar currYear = Calendar.getInstance();
-            currYear.add(Calendar.YEAR, i);
-            spinnerList.add(String.valueOf(currYear.get(Calendar.YEAR)));
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.YEAR, i);
+            spinnerList.add(String.valueOf(calendar.get(Calendar.YEAR)));
         }
 
         return spinnerList;
@@ -370,6 +379,57 @@ public class AUtils extends MsUtils {
 
         SimpleDateFormat format = new SimpleDateFormat(AUtils.SERVER_DATE_TIME_FORMATE, Locale.ENGLISH);
         return format.format(Calendar.getInstance().getTime());
+    }
+
+    public static Integer getCurrentMonth(){
+        Calendar currMonth = Calendar.getInstance();
+        currMonth.add(Calendar.MONTH, 1);
+        return currMonth.get(Calendar.MONTH);
+    }
+
+    public static Integer getCurrentYear(){
+        Calendar currYear = Calendar.getInstance();
+        currYear.add(Calendar.YEAR, 0);
+        return currYear.get(Calendar.YEAR);
+    }
+
+    public static String getTitleDateFormat(String date){
+
+        SimpleDateFormat serverFormat = new SimpleDateFormat(SERVER_DATE_FORMATE, Locale.ENGLISH);
+        SimpleDateFormat titleDateFormat = new SimpleDateFormat(TITLE_DATE_FORMATE, Locale.ENGLISH);
+
+        try {
+            return  titleDateFormat.format(serverFormat.parse(date));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
+    public static String extractDate(String date){
+
+        SimpleDateFormat serverFormat = new SimpleDateFormat(SERVER_DATE_FORMATE, Locale.ENGLISH);
+        SimpleDateFormat titleDateFormat = new SimpleDateFormat(DATE_VALUE_FORMATE, Locale.ENGLISH);
+
+        try {
+            return  titleDateFormat.format(serverFormat.parse(date));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
+    public static String extractMonth(String date){
+
+        SimpleDateFormat serverFormat = new SimpleDateFormat(SERVER_DATE_FORMATE, Locale.ENGLISH);
+        SimpleDateFormat titleDateFormat = new SimpleDateFormat(SEMI_MONTH_FORMATE, Locale.ENGLISH);
+
+        try {
+            return  titleDateFormat.format(serverFormat.parse(date));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return "";
+        }
     }
 
     public static void showWarning(Context context, String message)

@@ -9,6 +9,8 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.appynitty.swachbharatabhiyanlibrary.R;
+import com.appynitty.swachbharatabhiyanlibrary.pojos.MenuListPojo;
+import com.appynitty.swachbharatabhiyanlibrary.pojos.WorkHistoryDetailPojo;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 
 import java.util.List;
@@ -17,17 +19,17 @@ import java.util.List;
  * Created by Ayan Dey on 25/10/18.
  */
 
-public class InflateHistoryDetailsAdapter extends ArrayAdapter<String> {
+public class InflateHistoryDetailsAdapter extends ArrayAdapter<WorkHistoryDetailPojo> {
 
-    private List<String> menuList;
+    private List<WorkHistoryDetailPojo> workHistoryDetailPojoList;
     private Context context;
     private View view;
     private ViewHolder holder;
 
-    public InflateHistoryDetailsAdapter(@NonNull Context context, @NonNull List<String> objects) {
+    public InflateHistoryDetailsAdapter(@NonNull Context context, @NonNull List<WorkHistoryDetailPojo> objects) {
         super(context, android.R.layout.simple_list_item_1, objects);
         this.context = context;
-        this.menuList = objects;
+        this.workHistoryDetailPojoList = objects;
     }
 
     @NonNull
@@ -39,9 +41,12 @@ public class InflateHistoryDetailsAdapter extends ArrayAdapter<String> {
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.layout_history_detail_card, null);
-            final ViewHolder viewHolder = new ViewHolder();
-//            viewHolder.menuNameTextView = view.findViewById(R.id.menu_title);
-//            viewHolder.menuImageView = view.findViewById(R.id.menu_icon);
+            ViewHolder viewHolder = new ViewHolder();
+            viewHolder.time = view.findViewById(R.id.history_details_time);
+            viewHolder.id = view.findViewById(R.id.history_details_id);
+            viewHolder.vehicleNo = view.findViewById(R.id.history_details_vehicle);
+            viewHolder.area = view.findViewById(R.id.history_details_area);
+
             view.setTag(viewHolder);
 
         } else {
@@ -49,10 +54,16 @@ public class InflateHistoryDetailsAdapter extends ArrayAdapter<String> {
         }
         holder = (ViewHolder) view.getTag();
 
-        if (!AUtils.isNull(menuList) && !menuList.isEmpty()) {
-//            MenuListPojo menuPojo = menuList.get(position);
-//            holder.menuNameTextView.setText(menuPojo.getMenuName());
-//            holder.menuImageView.setImageResource(menuPojo.getImage());
+        if (!AUtils.isNull(workHistoryDetailPojoList) && !workHistoryDetailPojoList.isEmpty()) {
+            WorkHistoryDetailPojo workHistoryDetailPojo = workHistoryDetailPojoList.get(position);
+            if(workHistoryDetailPojo.getType().equals("2")){
+                holder.time.setBackground(context.getResources().getDrawable(R.drawable.rounded_pink_button));
+                holder.time.setPadding(0,0,0,0);
+            }
+            holder.time.setText(workHistoryDetailPojo.getTime());
+            holder.id.setText(String.format("%s %s", context.getResources().getString(R.string.house_id_txt), workHistoryDetailPojo.getHouseNumber()));
+            holder.vehicleNo.setText(String.format("%s %s", context.getResources().getString(R.string.vehicle_number_txt), workHistoryDetailPojo.getVehicleNumber()));
+            holder.area.setText(workHistoryDetailPojo.getArea());
         }
 
         return view;

@@ -6,14 +6,27 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import com.appynitty.swachbharatabhiyanlibrary.R;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.UI.InflateHistoryAdapter;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.UI.InflateHistoryDetailsAdapter;
+import com.appynitty.swachbharatabhiyanlibrary.connection.SyncServer;
+import com.appynitty.swachbharatabhiyanlibrary.pojos.WorkHistoryDetailPojo;
+import com.appynitty.swachbharatabhiyanlibrary.pojos.WorkHistoryPojo;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
+import com.appynitty.swachbharatabhiyanlibrary.utils.MyAsyncTask;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
+import java.util.List;
 import java.util.Objects;
+
+import quickutils.core.QuickUtils;
+import quickutils.core.categories.view;
 
 public class HistoryDetailsPageActivity extends AppCompatActivity {
 
@@ -21,6 +34,9 @@ public class HistoryDetailsPageActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private Context mContext;
     private GridView detailsGrid;
+    private List<WorkHistoryDetailPojo> workHistoryDetailPojoList;
+    private String historyDate;
+    private View lineView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +47,6 @@ public class HistoryDetailsPageActivity extends AppCompatActivity {
 
     private void initComponents() {
         generateId();
-        registerEvents();
         initData();
     }
 
@@ -41,6 +56,7 @@ public class HistoryDetailsPageActivity extends AppCompatActivity {
         
         mContext = HistoryDetailsPageActivity.this;
         detailsGrid = findViewById(R.id.history_detail_grid);
+        lineView = findViewById(R.id.line_view);
 
         initToolbar();
     }
@@ -48,8 +64,11 @@ public class HistoryDetailsPageActivity extends AppCompatActivity {
     private void initToolbar() {
 
         Intent intent = getIntent();
-        if(intent.hasExtra(AUtils.HISTORY_DETAILS)){
-            toolbar.setTitle(intent.getStringExtra(AUtils.HISTORY_DETAILS));
+
+        if(intent.hasExtra(AUtils.HISTORY_DETAILS_DATE)){
+            String date = intent.getStringExtra(AUtils.HISTORY_DETAILS_DATE);
+            toolbar.setTitle(AUtils.getTitleDateFormat(date));
+            historyDate = intent.getStringExtra(AUtils.HISTORY_DETAILS_DATE);
         }
 
         setSupportActionBar(toolbar);
@@ -66,19 +85,36 @@ public class HistoryDetailsPageActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void registerEvents() {
-    }
-
     private void initData() {
-        setHistoryDetails();
+        fetchHistoryDetails();
     }
 
     private void setHistoryDetails() {
-        InflateHistoryDetailsAdapter adapter = new InflateHistoryDetailsAdapter(mContext, AUtils.getMonthSpinnerList());
-        detailsGrid.setAdapter(adapter);
-        fetchHistoryDetsils();
+        Type type = new TypeToken<List<WorkHistoryDetailPojo>>(){}.getType();
+        workHistoryDetailPojoList = new Gson().fromJson(
+                QuickUtils.prefs.getString(AUtils.PREFS.WORK_HISTORY_DETAIL_POJO_LIST, null),
+                type);
+
+        if(!AUtils.isNull(workHistoryDetailPojoList)){
+            lineView.setVisibility(View.VISIBLE);
+            InflateHistoryDetailsAdapter adapter = new InflateHistoryDetailsAdapter(mContext, workHistoryDetailPojoList);
+            detailsGrid.setAdapter(adapter);
+        }else{
+            Toast.makeText(mContext, "No data", Toast.LENGTH_SHORT).show();
+        }
     }
 
-    private void fetchHistoryDetsils() {
+    private void fetchHistoryDetails() {
+        new MyAsyncTask(mContext, true, new MyAsyncTask.AsynTaskListener() {
+            @Override
+            public void doInBackgroundOpration(SyncServer syncServer) {
+                syncServer.pullWorkHistoryDetailListFromServer(historyDate);
+            }
+
+            @Override
+            public void onFinished() {
+                setHistoryDetails();
+            }
+        }).execute();
     }
 }

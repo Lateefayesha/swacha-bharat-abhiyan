@@ -9,10 +9,12 @@
     tools:showIn="@layout/activity_history_details_page">
 
     <View
+        android:id="@+id/line_view"
         android:layout_width="@dimen/dim_2_dp"
         android:layout_height="match_parent"
         android:background="@color/black_alpfa_50"
-        android:layout_marginStart="@dimen/dim_40_dp"/>
+        android:layout_marginStart="@dimen/dim_40_dp"
+        android:visibility="gone"/>
 
     <GridView
         android:id="@+id/history_detail_grid"
