@@ -94,6 +94,8 @@ public class AUtils extends MsUtils {
 
     public static Context mCurrentContext;
 
+    public static final int SHARE_LOCATION_WAIT_TIME = 10000;
+
     // Language Change of an application
     public static void changeLanguage(Activity context, int languageId) {
 
