@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.webkit.WebView;
 
 import com.appynitty.swachbharatabhiyanlibrary.R;
+import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 import com.appynitty.swachbharatabhiyanlibrary.utils.WebviewInitialize;
 import com.mithsoft.lib.activity.BaseActivity;
 
@@ -30,6 +31,8 @@ public class AboutAppynittyActivity extends BaseActivity {
 
         setContentView(R.layout.activity_about_appynitty);
         mContext = AboutAppynittyActivity.this;
+        AUtils.mCurrentContext = mContext;
+
         toolbar = findViewById(R.id.toolbar);
         webView = findViewById(R.id.webview);
         webviewInit = new WebviewInitialize(mContext, webView);

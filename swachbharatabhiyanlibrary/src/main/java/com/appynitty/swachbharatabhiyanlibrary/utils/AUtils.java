@@ -344,18 +344,13 @@ public class AUtils extends MsUtils {
         ArrayList<String> spinnerList = new ArrayList<>();
 
         spinnerList.add("Select Month");
-        spinnerList.add("January");
-        spinnerList.add("February");
-        spinnerList.add("March");
-        spinnerList.add("April");
-        spinnerList.add("May");
-        spinnerList.add("June");
-        spinnerList.add("July");
-        spinnerList.add("August");
-        spinnerList.add("September");
-        spinnerList.add("October");
-        spinnerList.add("November");
-        spinnerList.add("December");
+        for (int i = 0; i < 12; i++) {
+            Calendar cal = Calendar.getInstance();
+            SimpleDateFormat month_date = new SimpleDateFormat("MMMM", Locale.ENGLISH);
+            cal.set(Calendar.MONTH, i);
+            String month_name = month_date.format(cal.getTime());
+            spinnerList.add(month_name);
+        }
 
         return spinnerList;
     }

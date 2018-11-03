@@ -2,16 +2,14 @@ package com.appynitty.swachbharatabhiyanlibrary.activity;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.appynitty.swachbharatabhiyanlibrary.R;
+import com.appynitty.swachbharatabhiyanlibrary.custom_component.GlideCircleTransformation;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.UserDetailAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.UserDetailPojo;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
@@ -117,10 +115,15 @@ public class ProfilePageActivity extends AppCompatActivity {
 
         if(!AUtils.isNullString(userDetailPojo.getProfileImage()))
         {
-            Glide.with(mContext).load(userDetailPojo.getProfileImage())
-                    .placeholder(R.drawable.ic_user_white)
-                    .error(R.drawable.ic_user_white)
-                    .into(profilePic);
+            try{
+                Glide.with(mContext).load(userDetailPojo.getProfileImage())
+                        .placeholder(R.drawable.ic_user_white)
+                        .error(R.drawable.ic_user_white)
+                        .bitmapTransform(new GlideCircleTransformation(getApplicationContext()))
+                        .into(profilePic);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         }
         userName.setText(userDetailPojo.getName());
         empId.setText(userDetailPojo.getUserId());

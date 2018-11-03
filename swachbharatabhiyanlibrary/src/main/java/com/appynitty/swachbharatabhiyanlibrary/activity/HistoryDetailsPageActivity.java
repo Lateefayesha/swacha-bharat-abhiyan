@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.GridView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.appynitty.swachbharatabhiyanlibrary.R;
@@ -37,6 +38,7 @@ public class HistoryDetailsPageActivity extends AppCompatActivity {
     private List<WorkHistoryDetailPojo> workHistoryDetailPojoList;
     private String historyDate;
     private View lineView;
+    private LinearLayout noDataErrorLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,8 +57,11 @@ public class HistoryDetailsPageActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
         
         mContext = HistoryDetailsPageActivity.this;
+        AUtils.mCurrentContext = mContext;
+
         detailsGrid = findViewById(R.id.history_detail_grid);
         lineView = findViewById(R.id.line_view);
+        noDataErrorLayout = findViewById(R.id.show_error_data);
 
         initToolbar();
     }
@@ -96,11 +101,12 @@ public class HistoryDetailsPageActivity extends AppCompatActivity {
                 type);
 
         if(!AUtils.isNull(workHistoryDetailPojoList)){
+            noDataErrorLayout.setVisibility(View.GONE);
             lineView.setVisibility(View.VISIBLE);
             InflateHistoryDetailsAdapter adapter = new InflateHistoryDetailsAdapter(mContext, workHistoryDetailPojoList);
             detailsGrid.setAdapter(adapter);
         }else{
-            Toast.makeText(mContext, "No data", Toast.LENGTH_SHORT).show();
+            noDataErrorLayout.setVisibility(View.VISIBLE);
         }
     }
 

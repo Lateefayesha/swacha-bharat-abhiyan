@@ -38,7 +38,7 @@ public class HistoryPageActivity extends AppCompatActivity {
     private Spinner yearSpinner, monthSpinner;
     private GridView historyGrid;
     private List<WorkHistoryPojo> historyPojoList;
-    private LinearLayout noDataErrorLayout;
+    private LinearLayout noDataErrorLayout, noInternetErrorLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,11 +56,15 @@ public class HistoryPageActivity extends AppCompatActivity {
     private void generateId() {
         setContentView(R.layout.activity_history_page);
         toolbar = findViewById(R.id.toolbar);
+
         mContext = HistoryPageActivity.this;
+        AUtils.mCurrentContext = mContext;
+
         monthSpinner = findViewById(R.id.spinner_month);
         yearSpinner = findViewById(R.id.spinner_year);
         historyGrid = findViewById(R.id.grid_history);
-        noDataErrorLayout = findViewById(R.id.show_error);
+        noDataErrorLayout = findViewById(R.id.show_error_data);
+        noInternetErrorLayout = findViewById(R.id.show_error_internet);
         historyPojoList = null;
 
         initToolbar();
@@ -130,8 +134,13 @@ public class HistoryPageActivity extends AppCompatActivity {
 
     private void initData() {
         initSpinner();
-        fetchHistory(String.valueOf(AUtils.getCurrentYear()),
-                String.valueOf(AUtils.getCurrentMonth()));
+        if(AUtils.isNetWorkAvailable(mContext)){
+            noInternetErrorLayout.setVisibility(View.GONE);
+            fetchHistory(String.valueOf(AUtils.getCurrentYear()),
+                    String.valueOf(AUtils.getCurrentMonth()));
+        }else{
+            noInternetErrorLayout.setVisibility(View.VISIBLE);
+        }
     }
 
     private void initSpinner() {
@@ -154,6 +163,7 @@ public class HistoryPageActivity extends AppCompatActivity {
     }
 
     private void setHistoryData() {
+        noInternetErrorLayout.setVisibility(View.GONE);
         Type type = new TypeToken<List<WorkHistoryPojo>>(){}.getType();
         historyPojoList = new Gson().fromJson(
                 QuickUtils.prefs.getString(AUtils.PREFS.WORK_HISTORY_POJO_LIST, null),

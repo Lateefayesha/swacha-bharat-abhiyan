@@ -31,6 +31,7 @@ import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.AttendanceAda
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.UserDetailAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.VehicleTypeAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.connection.SyncServer;
+import com.appynitty.swachbharatabhiyanlibrary.custom_component.GlideCircleTransformation;
 import com.appynitty.swachbharatabhiyanlibrary.dialogs.PopUpDialog;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.InPunchPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.MenuListPojo;
@@ -134,6 +135,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
     }
 
     private void initToolBar() {
+//        toolbar.setNavigationIcon(R.drawable.ic_action_name);
         setSupportActionBar(toolbar);
     }
 
@@ -198,17 +200,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         mUserDetailAdapter.setUserDetailListener(new UserDetailAdapterClass.UserDetailListener() {
             @Override
             public void onSuccessCallBack() {
-
-                userDetailPojo = mUserDetailAdapter.getUserDetailPojo();
-
-                if (!AUtils.isNullString(userDetailPojo.getProfileImage())) {
-                    Glide.with(mContext).load(userDetailPojo.getProfileImage())
-                            .placeholder(R.drawable.ic_user)
-                            .error(R.drawable.ic_user)
-                            .into(profilePic);
-                }
-                userName.setText(userDetailPojo.getName());
-                empId.setText(userDetailPojo.getUserId());
+                initUserDetails();
             }
 
             @Override
@@ -224,10 +216,14 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
             case 0:
                 if(QuickUtils.prefs.getBoolean(AUtils.PREFS.IS_ON_DUTY, false))
                     startActivity(new Intent(mContext, QRcodeScannerActivity.class));
+                else
+                    AUtils.showWarning(mContext, "Please Start Your Duty");
                 break;
             case 1:
                 if(QuickUtils.prefs.getBoolean(AUtils.PREFS.IS_ON_DUTY, false))
                     startActivity(new Intent(mContext, TakePhotoActivity.class));
+                else
+                    AUtils.showWarning(mContext, "Please Start Your Duty");
                 break;
             case 2:
                 startActivity(new Intent(mContext, HistoryPageActivity.class));
@@ -239,9 +235,8 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
     }
 
     private void initData() {
-
+        initUserDetails();
         mVehicleTypeAdapter.getVehicleType();
-
         mUserDetailAdapter.getUserDetail();
 
         List<MenuListPojo> menuPojoList = new ArrayList<MenuListPojo>();
@@ -317,6 +312,8 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
     protected void onResume() {
         super.onResume();
 
+        AUtils.mCurrentContext = mContext;
+
         isOnDuty = QuickUtils.prefs.getBoolean(AUtils.PREFS.IS_ON_DUTY, false);
 
         if (isOnDuty) {
@@ -390,7 +387,12 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
             if (isOnDuty) {
                 if (AUtils.isNetWorkAvailable(this)) {
 
-                    mAttendanceAdapter.MarkOutPunch();
+                    try{
+                        mAttendanceAdapter.MarkOutPunch();
+                    }catch (Exception e){
+                        e.printStackTrace();
+                        markAttendance.setChecked(true);
+                    }
                 } else {
                     AUtils.showWarning(mContext, mContext.getString(R.string.noInternet));
                     markAttendance.setChecked(true);
@@ -429,7 +431,13 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
                 inPunchPojo.setVehicleNumber(vehicleNo);
             }
 
-            mAttendanceAdapter.MarkInPunch(inPunchPojo);
+            try{
+                mAttendanceAdapter.MarkInPunch(inPunchPojo);
+            }catch (Exception e){
+                e.printStackTrace();
+                markAttendance.setChecked(false);
+                Toasty.error(mContext, mContext.getString(R.string.something_error), Toast.LENGTH_SHORT).show();
+            }
         } else {
             AUtils.showWarning(mContext, mContext.getString(R.string.noInternet));
             markAttendance.setChecked(false);
@@ -512,6 +520,22 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
                 }
             }
 
+        }
+    }
+
+    private void initUserDetails(){
+        userDetailPojo = mUserDetailAdapter.getUserDetailPojo();
+
+        if(!AUtils.isNull(userDetailPojo)){
+            userName.setText(userDetailPojo.getName());
+            empId.setText(userDetailPojo.getUserId());
+            if (!AUtils.isNullString(userDetailPojo.getProfileImage())) {
+                Glide.with(mContext).load(userDetailPojo.getProfileImage())
+                        .placeholder(R.drawable.ic_user)
+                        .error(R.drawable.ic_user)
+                        .bitmapTransform(new GlideCircleTransformation(getApplicationContext()))
+                        .into(profilePic);
+            }
         }
     }
 }

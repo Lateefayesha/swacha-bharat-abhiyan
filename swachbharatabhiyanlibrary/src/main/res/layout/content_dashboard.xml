@@ -29,7 +29,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="@dimen/padding_margin_layout_double">
+            android:paddingStart="@dimen/padding_margin_layout_double"
+            android:paddingEnd="@dimen/padding_margin_layout_double"
+            android:paddingTop="@dimen/dim_5_dp"
+            android:paddingBottom="@dimen/dim_5_dp">
 
             <ImageView
                 android:id="@+id/user_profile_pic"
@@ -40,6 +43,7 @@
                 android:layout_weight="0.3"
                 android:layout_gravity="center_horizontal"
                 android:src="@drawable/ic_user"
+                android:padding="0dp"
                 android:layout_marginEnd="@dimen/padding_margin_layout"/>
 
             <RelativeLayout
@@ -80,7 +84,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:paddingEnd="@dimen/card_radius"
-                    android:layout_marginTop="@dimen/padding_margin_layout_double"
+                    android:layout_marginTop="@dimen/dim_10_dp"
                     android:layout_below="@id/user_emp_id_lbl">
 
                     <TextView
