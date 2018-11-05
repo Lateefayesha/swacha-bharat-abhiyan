@@ -1,6 +1,7 @@
 package com.appynitty.swachbharatabhiyanlibrary.activity;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -13,9 +14,12 @@ import com.appynitty.swachbharatabhiyanlibrary.custom_component.GlideCircleTrans
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.UserDetailAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.UserDetailPojo;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
+import com.appynitty.swachbharatabhiyanlibrary.utils.LocaleHelper;
 import com.bumptech.glide.Glide;
 
 import java.util.Objects;
+
+import quickutils.core.QuickUtils;
 
 public class ProfilePageActivity extends AppCompatActivity {
 
@@ -28,6 +32,15 @@ public class ProfilePageActivity extends AppCompatActivity {
     private UserDetailPojo userDetailPojo;
 
     private Context mContext;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            super.attachBaseContext(LocaleHelper.onAttach(newBase));
+        } else {
+            super.attachBaseContext(newBase);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,7 +138,13 @@ public class ProfilePageActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-        userName.setText(userDetailPojo.getName());
+
+        if(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID, AUtils.DEFAULT_LANGUAGE_ID).equals("2")){
+            userName.setText(userDetailPojo.getNameMar());
+        }else{
+            userName.setText(userDetailPojo.getName());
+        }
+
         empId.setText(userDetailPojo.getUserId());
         contactNo.setText(userDetailPojo.getMobileNumber());
         address.setText(userDetailPojo.getAddress());

@@ -535,6 +535,12 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
     private void initUserDetails(){
         userDetailPojo = mUserDetailAdapter.getUserDetailPojo();
 
+        if(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID, AUtils.DEFAULT_LANGUAGE_ID).equals("2")){
+            userName.setText(userDetailPojo.getNameMar());
+        }else{
+            userName.setText(userDetailPojo.getName());
+        }
+
         if(!AUtils.isNull(userDetailPojo)){
             userName.setText(userDetailPojo.getName());
             empId.setText(userDetailPojo.getUserId());
