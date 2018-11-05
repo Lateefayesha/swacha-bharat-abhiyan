@@ -68,7 +68,9 @@ public class TakePhotoActivity extends BaseActivity {
 
         setContentView(R.layout.activity_take_photo);
         toolbar = findViewById(R.id.toolbar);
+
         mContext = TakePhotoActivity.this;
+        AUtils.mCurrentContext = mContext;
 
         beforeImage = findViewById(R.id.img_before_photo);
         afterImage = findViewById(R.id.img_after_photo);

@@ -56,5 +56,7 @@
     <string name="select_month_year_warn">Please Select Proper Month / Year</string>
 
     <string name="something_error">Something went wrong!! Please try again later. </string>
+    <string name="no_data_error">No history Found</string>
+    <string name="no_internet_error">No Internet Connection</string>
 
 </resources>

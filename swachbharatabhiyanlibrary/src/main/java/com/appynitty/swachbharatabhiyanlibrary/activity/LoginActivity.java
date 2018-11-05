@@ -49,6 +49,7 @@ public class LoginActivity extends BaseActivity {
 
         QuickUtils.prefs.save(AUtils.APP_ID, "1");
         mContext = LoginActivity.this;
+        AUtils.mCurrentContext = mContext;
 
         setContentView(R.layout.activity_login_layout);
 

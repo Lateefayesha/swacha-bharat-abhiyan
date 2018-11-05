@@ -75,7 +75,9 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
     protected void generateId() {
         setContentView(R.layout.activity_qrcode_scanner);
         toolbar = findViewById(R.id.toolbar);
+
         mContext = QRcodeScannerActivity.this;
+        AUtils.mCurrentContext = mContext;
 
         fabSpeedDial = findViewById(R.id.flash_toggle);
         houseNoEditText = findViewById(R.id.txt_house_no);
