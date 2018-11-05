@@ -5,6 +5,8 @@ import com.appynitty.swachbharatabhiyanlibrary.pojos.LoginDetailsPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.LoginPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.UserLocationPojo;
 
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Header;
@@ -16,5 +18,5 @@ public interface UserLocationWebService {
     Call<ResultPojo> saveUserLocation(@Header("appId") String appId,
                                       @Header("Content-Type") String content_type,
                                       @Header("userId") String userId,
-                                      @Body UserLocationPojo userLocationPojo);
+                                      @Body List<UserLocationPojo> userLocationPojoList);
 }

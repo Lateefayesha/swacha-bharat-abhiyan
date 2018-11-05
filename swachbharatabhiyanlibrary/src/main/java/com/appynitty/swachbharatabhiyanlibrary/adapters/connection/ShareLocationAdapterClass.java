@@ -27,7 +27,7 @@ public class ShareLocationAdapterClass {
 
     public void shareLocation() {
 
-        new MyAsyncTask(AUtils.mCurrentContext, true, new MyAsyncTask.AsynTaskListener() {
+        new MyAsyncTask(AUtils.mCurrentContext, false, new MyAsyncTask.AsynTaskListener() {
             ResultPojo resultPojo = null;
             @Override
             public void doInBackgroundOpration(SyncServer syncServer) {

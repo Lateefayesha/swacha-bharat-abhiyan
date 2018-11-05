@@ -22,6 +22,7 @@ import com.appynitty.swachbharatabhiyanlibrary.activity.TakePhotoActivity;
 import com.mithsoft.lib.components.Toasty;
 import com.mithsoft.lib.utils.MsUtils;
 
+import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -102,7 +103,8 @@ public class AUtils extends MsUtils {
 
     public static Context mCurrentContext;
 
-    public static final int SHARE_LOCATION_WAIT_TIME = 10000;
+    public static final long TEN_MINUTES = 10 * 60 * 1000;
+
 
     // Language Change of an application
     public static void changeLanguage(Activity context, int languageId) {

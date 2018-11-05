@@ -7,11 +7,14 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 
+import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.ShareLocationAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+
+import java.util.Calendar;
 
 import quickutils.core.QuickUtils;
 
@@ -25,9 +28,28 @@ public class LocationMonitoringService implements
     LocationRequest mLocationRequest = LocationRequest.create();
     Context mContext;
 
+    ShareLocationAdapterClass mAdapter;
+
+    long updatedTime = 0;
+
+
     public LocationMonitoringService (Context context)
     {
         mContext = context;
+
+        mAdapter = new ShareLocationAdapterClass();
+
+        mAdapter.setShareLocationListener(new ShareLocationAdapterClass.ShareLocationListener() {
+            @Override
+            public void onSuccessCallBack() {
+
+            }
+
+            @Override
+            public void onFailureCallBack() {
+
+            }
+        });
     }
 
     public void onStartTacking(){
@@ -89,6 +111,20 @@ public class LocationMonitoringService implements
 
                 QuickUtils.prefs.save(AUtils.LAT, String.valueOf(location.getLatitude()));
                 QuickUtils.prefs.save(AUtils.LONG, String.valueOf(location.getLongitude()));
+
+                if(updatedTime == 0)
+                {
+                    updatedTime = System.currentTimeMillis();
+
+                    mAdapter.shareLocation();
+                }
+
+                if((updatedTime + AUtils.TEN_MINUTES) <= System.currentTimeMillis())
+                {
+                    updatedTime = System.currentTimeMillis();
+
+                    mAdapter.shareLocation();
+                }
             }
         }
     }
