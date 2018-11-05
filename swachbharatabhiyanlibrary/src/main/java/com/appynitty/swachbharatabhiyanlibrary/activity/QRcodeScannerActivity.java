@@ -210,7 +210,11 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
             statusImage.setImageDrawable(getDrawable(R.drawable.ic_cancel_red));
             doneBtn.setText(getString(R.string.retry_txt));
             houseId.setText(null);
-            collectionStatus.setText(pojo.getMessage());
+            if(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID, AUtils.DEFAULT_LANGUAGE_ID).equals("2")){
+                collectionStatus.setText(pojo.getMessageMar());
+            }else{
+                collectionStatus.setText(pojo.getMessage());
+            }
             ownerName.setText(id.toUpperCase());
         }else if(responseStatus.equals(AUtils.STATUS_SUCCESS)){
             ownerName.setText(pojo.getName());
