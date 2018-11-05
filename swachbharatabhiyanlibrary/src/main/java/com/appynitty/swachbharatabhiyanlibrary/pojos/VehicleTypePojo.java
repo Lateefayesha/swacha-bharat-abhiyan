@@ -6,6 +6,8 @@ public class VehicleTypePojo {
 
     private String vtId;
 
+    private String descriptionMar;
+
     public String getDescription() {
         return description;
     }
@@ -22,11 +24,20 @@ public class VehicleTypePojo {
         this.vtId = vtId;
     }
 
+    public String getDescriptionMar() {
+        return descriptionMar;
+    }
+
+    public void setDescriptionMar(String descriptionMar) {
+        this.descriptionMar = descriptionMar;
+    }
+
     @Override
     public String toString() {
         return "VehicleTypePojo{" +
                 "description='" + description + '\'' +
                 ", vtId='" + vtId + '\'' +
+                ", descriptionMar='" + descriptionMar + '\'' +
                 '}';
     }
 }

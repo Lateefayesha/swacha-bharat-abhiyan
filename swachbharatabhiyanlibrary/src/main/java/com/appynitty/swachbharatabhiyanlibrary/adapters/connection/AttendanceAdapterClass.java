@@ -47,14 +47,33 @@ public class AttendanceAdapterClass {
                         {
                             mListener.onSuccessCallBack(1);
                         }
-                        Toasty.success(AUtils.mCurrentContext, "" + resultPojo.getMessage(), Toast.LENGTH_SHORT).show();
+
+                        String message = null;
+                        if(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID,AUtils.DEFAULT_LANGUAGE_ID).equals(AUtils.DEFAULT_LANGUAGE_ID))
+                        {
+                            message = resultPojo.getMessageMar();
+                        }
+                        else
+                        {
+                            message = resultPojo.getMessage();
+                        }
+                        Toasty.success(AUtils.mCurrentContext, "" + message, Toast.LENGTH_SHORT).show();
                     } else {
                         QuickUtils.prefs.save(AUtils.PREFS.IS_ON_DUTY, false);
                         if(!AUtils.isNull(mListener))
                         {
                             mListener.onFailureCallBack(1);
                         }
-                        Toasty.error(AUtils.mCurrentContext, "" + resultPojo.getMessage(), Toast.LENGTH_SHORT).show();
+                        String message = null;
+                        if(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID,AUtils.DEFAULT_LANGUAGE_ID).equals(AUtils.DEFAULT_LANGUAGE_ID))
+                        {
+                            message = resultPojo.getMessageMar();
+                        }
+                        else
+                        {
+                            message = resultPojo.getMessage();
+                        }
+                        Toasty.error(AUtils.mCurrentContext, "" + message, Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     QuickUtils.prefs.save(AUtils.PREFS.IS_ON_DUTY, false);
@@ -91,13 +110,32 @@ public class AttendanceAdapterClass {
                         {
                             mListener.onSuccessCallBack(2);
                         }
-                        Toasty.success(AUtils.mCurrentContext, "" + resultPojo.getMessage(), Toast.LENGTH_SHORT).show();
+                        String message = null;
+                        if(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID,AUtils.DEFAULT_LANGUAGE_ID).equals(AUtils.DEFAULT_LANGUAGE_ID))
+                        {
+                            message = resultPojo.getMessageMar();
+                        }
+                        else
+                        {
+                            message = resultPojo.getMessage();
+                        }
+
+                        Toasty.success(AUtils.mCurrentContext, "" + message, Toast.LENGTH_SHORT).show();
                     } else {
                         if(!AUtils.isNull(mListener))
                         {
                             mListener.onFailureCallBack(2);
                         }
-                        Toasty.error(AUtils.mCurrentContext, "" + resultPojo.getMessage(), Toast.LENGTH_SHORT).show();
+                        String message = null;
+                        if(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID,AUtils.DEFAULT_LANGUAGE_ID).equals(AUtils.DEFAULT_LANGUAGE_ID))
+                        {
+                            message = resultPojo.getMessageMar();
+                        }
+                        else
+                        {
+                            message = resultPojo.getMessage();
+                        }
+                        Toasty.error(AUtils.mCurrentContext, "" + message, Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     if(!AUtils.isNull(mListener))
