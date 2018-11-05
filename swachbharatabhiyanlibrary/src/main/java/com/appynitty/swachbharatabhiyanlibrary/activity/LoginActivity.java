@@ -21,6 +21,7 @@ import com.appynitty.swachbharatabhiyanlibrary.connection.SyncServer;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.LoginDetailsPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.LoginPojo;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
+import com.appynitty.swachbharatabhiyanlibrary.utils.LocaleHelper;
 import com.appynitty.swachbharatabhiyanlibrary.utils.MyAsyncTask;
 import com.mithsoft.lib.activity.BaseActivity;
 import com.mithsoft.lib.components.Toasty;
@@ -41,6 +42,15 @@ public class LoginActivity extends BaseActivity {
     private Button btnLogin = null;
 
     private LoginPojo loginPojo = null;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            super.attachBaseContext(LocaleHelper.onAttach(newBase));
+        } else {
+            super.attachBaseContext(newBase);
+        }
+    }
 
     @Override
     protected void generateId() {
@@ -95,6 +105,14 @@ public class LoginActivity extends BaseActivity {
 
                     if (!AUtils.isNull(loginDetailsPojo)) {
 
+                        String message = "";
+
+                        if(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID, AUtils.DEFAULT_LANGUAGE_ID).equals("2")){
+                            message = loginDetailsPojo.getMessageMar();
+                        }else{
+                            message = loginDetailsPojo.getMessage();
+                        }
+
                         if (loginDetailsPojo.getStatus().equals(AUtils.STATUS_SUCCESS)) {
 
                             QuickUtils.prefs.save(AUtils.PREFS.USER_ID, loginDetailsPojo.getUserId());
@@ -102,14 +120,14 @@ public class LoginActivity extends BaseActivity {
 
                             QuickUtils.prefs.save(AUtils.PREFS.IS_USER_LOGIN, true);
 
-                            Toasty.success(mContext, "" + loginDetailsPojo.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toasty.success(mContext, message, Toast.LENGTH_SHORT).show();
 
                             startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
                             LoginActivity.this.finish();
                         } else {
                             QuickUtils.prefs.save(AUtils.PREFS.IS_USER_LOGIN, false);
 
-                            Toasty.error(mContext, "" + loginDetailsPojo.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toasty.error(mContext, message, Toast.LENGTH_SHORT).show();
                         }
                     } else {
                         QuickUtils.prefs.save(AUtils.PREFS.IS_USER_LOGIN, false);

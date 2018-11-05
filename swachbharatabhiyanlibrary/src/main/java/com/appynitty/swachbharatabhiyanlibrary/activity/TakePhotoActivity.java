@@ -28,6 +28,7 @@ import android.widget.Toast;
 import com.appynitty.swachbharatabhiyanlibrary.R;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.ImagePojo;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
+import com.appynitty.swachbharatabhiyanlibrary.utils.LocaleHelper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mithsoft.lib.activity.BaseActivity;
@@ -62,6 +63,15 @@ public class TakePhotoActivity extends BaseActivity {
     private String afterImageFilePath = "";
 
     private ImagePojo imagePojo;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            super.attachBaseContext(LocaleHelper.onAttach(newBase));
+        } else {
+            super.attachBaseContext(newBase);
+        }
+    }
 
     @Override
     protected void generateId() {

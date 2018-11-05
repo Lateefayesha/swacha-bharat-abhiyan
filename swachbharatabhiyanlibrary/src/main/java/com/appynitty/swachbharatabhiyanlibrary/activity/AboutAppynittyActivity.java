@@ -1,6 +1,7 @@
 package com.appynitty.swachbharatabhiyanlibrary.activity;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -8,6 +9,7 @@ import android.webkit.WebView;
 
 import com.appynitty.swachbharatabhiyanlibrary.R;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
+import com.appynitty.swachbharatabhiyanlibrary.utils.LocaleHelper;
 import com.appynitty.swachbharatabhiyanlibrary.utils.WebviewInitialize;
 import com.mithsoft.lib.activity.BaseActivity;
 
@@ -20,6 +22,15 @@ public class AboutAppynittyActivity extends BaseActivity {
     private Toolbar toolbar;
     private WebView webView;
     private WebviewInitialize webviewInit;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            super.attachBaseContext(LocaleHelper.onAttach(newBase));
+        } else {
+            super.attachBaseContext(newBase);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

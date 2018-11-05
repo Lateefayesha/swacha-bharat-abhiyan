@@ -33,6 +33,7 @@ import com.appynitty.swachbharatabhiyanlibrary.pojos.GarbageCollectionPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.GcResultPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.ImagePojo;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
+import com.appynitty.swachbharatabhiyanlibrary.utils.LocaleHelper;
 import com.appynitty.swachbharatabhiyanlibrary.utils.MyAsyncTask;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -58,6 +59,15 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
     private View contentView;
     private boolean isActivityData;
     private ImagePojo imagePojo;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            super.attachBaseContext(LocaleHelper.onAttach(newBase));
+        } else {
+            super.attachBaseContext(newBase);
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

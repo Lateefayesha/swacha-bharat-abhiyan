@@ -14,6 +14,8 @@ public class LoginDetailsPojo {
 
     private String type;
 
+    private String messageMar;
+
     public String getMessage() {
         return message;
     }
@@ -62,6 +64,14 @@ public class LoginDetailsPojo {
         this.type = type;
     }
 
+    public String getMessageMar() {
+        return messageMar;
+    }
+
+    public void setMessageMar(String messageMar) {
+        this.messageMar = messageMar;
+    }
+
     @Override
     public String toString() {
         return "LoginPojo{" +
@@ -71,6 +81,7 @@ public class LoginDetailsPojo {
                 ", userPassword='" + userPassword + '\'' +
                 ", userLoginId='" + userLoginId + '\'' +
                 ", type='" + type + '\'' +
+                ", messageMar='" + messageMar + '\'' +
                 '}';
     }
 }
