@@ -31,6 +31,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.MediaType;
@@ -322,8 +323,11 @@ public class SyncServer {
             userLocationPojo.setLong(QuickUtils.prefs.getString(AUtils.LONG,""));
             userLocationPojo.setDatetime(AUtils.getSeverDateTime());
 
+            List<UserLocationPojo> userLocationPojoList = new ArrayList<>();
+
+            userLocationPojoList.add(userLocationPojo);
             resultPojo = service.saveUserLocation(QuickUtils.prefs.getString(AUtils.APP_ID, "1"), AUtils.CONTENT_TYPE,
-                    QuickUtils.prefs.getString(AUtils.PREFS.USER_ID, null),userLocationPojo).execute().body();
+                    QuickUtils.prefs.getString(AUtils.PREFS.USER_ID, null),userLocationPojoList).execute().body();
 
         } catch (Exception e) {
 

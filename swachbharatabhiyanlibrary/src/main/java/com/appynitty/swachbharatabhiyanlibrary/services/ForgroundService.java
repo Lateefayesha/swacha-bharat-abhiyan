@@ -1,11 +1,13 @@
 package com.appynitty.swachbharatabhiyanlibrary.services;
 
 import android.app.Activity;
+import android.app.IntentService;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.support.annotation.Nullable;
 import android.widget.Toast;
 
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
@@ -14,13 +16,14 @@ public class ForgroundService extends Service {
 
     LocationMonitoringService monitoringService;
 
-        @Override
+
+    @Override
         public IBinder onBind(Intent intent) {
             // TODO Auto-generated method stub
             return null;
         }
 
-        @Override
+    @Override
         public void onCreate() {
             //Toast.makeText(this, " MyService Created ", Toast.LENGTH_LONG).show();
             monitoringService = new LocationMonitoringService(this);
@@ -39,15 +42,17 @@ public class ForgroundService extends Service {
             };
 
             Handler H = new Handler(Looper.getMainLooper());
-            //H.setName(intent.getStringExtra(AUtils.LOCATION));
             H.post(r);
+
             return Service.START_STICKY;
         }
 
         @Override
         public void onDestroy() {
             //Toast.makeText(this, "MyService Stopped", Toast.LENGTH_LONG).show();
+
             monitoringService.onStopTracking();
+
         }
 
     }
