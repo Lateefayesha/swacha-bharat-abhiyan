@@ -226,6 +226,7 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
                 restartPreview();
                 if(responseStatus.equals(AUtils.STATUS_SUCCESS)){
                     imagePojo = null;
+                    QuickUtils.prefs.save(AUtils.PREFS.IMAGE_POJO, null);
                     finish();
                 }
             }

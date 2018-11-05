@@ -218,13 +218,13 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
                 if(QuickUtils.prefs.getBoolean(AUtils.PREFS.IS_ON_DUTY, false))
                     startActivity(new Intent(mContext, QRcodeScannerActivity.class));
                 else
-                    AUtils.showWarning(mContext, "Please Start Your Duty");
+                    AUtils.showWarning(mContext, getResources().getString(R.string.be_no_duty));
                 break;
             case 1:
                 if(QuickUtils.prefs.getBoolean(AUtils.PREFS.IS_ON_DUTY, false))
                     startActivity(new Intent(mContext, TakePhotoActivity.class));
                 else
-                    AUtils.showWarning(mContext, "Please Start Your Duty");
+                    AUtils.showWarning(mContext, getResources().getString(R.string.be_no_duty));
                 break;
             case 2:
                 startActivity(new Intent(mContext, HistoryPageActivity.class));
@@ -254,6 +254,14 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         Type type = new TypeToken<InPunchPojo>() {
         }.getType();
         inPunchPojo = new Gson().fromJson(QuickUtils.prefs.getString(AUtils.PREFS.IN_PUNCH_POJO, null), type);
+
+        if(QuickUtils.prefs.getBoolean(AUtils.PREFS.IS_ON_DUTY, false))
+        {
+            markAttendance.setChecked(true);
+        }
+        else {
+            markAttendance.setChecked(false);
+        }
     }
 
     private void performLogout() {
