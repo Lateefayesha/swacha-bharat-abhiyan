@@ -51,7 +51,7 @@ public class AUtils extends MsUtils {
 
     public static final String LANGUAGE_NAME = "LanguageName";
 
-    public static final String DEFAULT_LANGUAGE_NAME = "mi";
+    public static final String DEFAULT_LANGUAGE_NAME = "mr";
 
     public static final String CONTENT_TYPE = "application/json";
 
@@ -110,22 +110,27 @@ public class AUtils extends MsUtils {
             case 1:
                 languageStr = "en";
                 QuickUtils.prefs.save(AUtils.LANGUAGE_NAME,languageStr);
+                QuickUtils.prefs.save(AUtils.LANGUAGE_ID,String.valueOf(languageId));
                 break;
             case 2:
-                languageStr = "mi";
+                languageStr = "mr";
                 QuickUtils.prefs.save(AUtils.LANGUAGE_NAME,languageStr);
+                QuickUtils.prefs.save(AUtils.LANGUAGE_ID,String.valueOf(languageId));
                 break;
             case 3:
                 languageStr = "hi";
                 QuickUtils.prefs.save(AUtils.LANGUAGE_NAME,languageStr);
+                QuickUtils.prefs.save(AUtils.LANGUAGE_ID,String.valueOf(languageId));
                 break;
             case 4:
                 languageStr = "gu";
                 QuickUtils.prefs.save(AUtils.LANGUAGE_NAME,languageStr);
+                QuickUtils.prefs.save(AUtils.LANGUAGE_ID,String.valueOf(languageId));
                 break;
             case 5:
                 languageStr = "pa";
                 QuickUtils.prefs.save(AUtils.LANGUAGE_NAME,languageStr);
+                QuickUtils.prefs.save(AUtils.LANGUAGE_ID,String.valueOf(languageId));
                 break;
         }
 

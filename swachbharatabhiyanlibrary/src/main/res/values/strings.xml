@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Swach Bharat Abhiyan</string>
     <string name="title_activity_dashboard">Swach Bharat Swasth Bharat</string>
-    <string name="title_activity_qrcode_scanner">Scan QR Code</string>
+    <string name="title_activity_qrcode_scanner">Scan OR Code</string>
     <string name="title_activity_take_photo">Taking Photo</string>
     <string name="title_activity_profile_page">Profile</string>
     <string name="title_activity_history_page">Work History</string>
@@ -20,7 +20,7 @@
     <string name="submit_txt">Submit</string>
     <string name="dialog_title_txt_vehicle">Vehicle Types</string>
 
-    <string name="lodin_success">Login Successfully!</string>
+    <string name="lodin_success">Login Successfull!</string>
     <string name="login_error">Unable to Login. Please try again later!</string>
     <string name="serverError">Oops! We\'re having technical problems. Please try again later.</string>
 
@@ -45,8 +45,8 @@
     <string name="done_txt">Done</string>
     <string name="retry_txt">Retry</string>
     <string name="grant_permission_txt">Grant Permission</string>
-    <string name="emp_id_full">Employee ID :</string>
-    <string name="emp_id_short">Employee ID</string>
+    <string name="emp_id_full">Emp ID :</string>
+    <string name="emp_id_short">Emp ID</string>
     <string name="month_txt">Month</string>
     <string name="point_collection_txt">Point Collection</string>
     <string name="house_collection_txt">House Collection</string>

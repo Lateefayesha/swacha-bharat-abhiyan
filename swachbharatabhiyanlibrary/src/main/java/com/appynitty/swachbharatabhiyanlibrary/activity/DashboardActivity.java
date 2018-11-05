@@ -135,7 +135,8 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
     }
 
     private void initToolBar() {
-//        toolbar.setNavigationIcon(R.drawable.ic_action_name);
+        toolbar.setNavigationIcon(R.drawable.ic_action_icon_svg);
+        toolbar.setTitle(getResources().getString(R.string.app_name));
         setSupportActionBar(toolbar);
     }
 
@@ -241,11 +242,11 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
 
         List<MenuListPojo> menuPojoList = new ArrayList<MenuListPojo>();
 
-        menuPojoList.add(new MenuListPojo("Scan QR code", R.drawable.ic_qr_code));
-        menuPojoList.add(new MenuListPojo("Talking photo", R.drawable.ic_photograph));
+        menuPojoList.add(new MenuListPojo(getResources().getString(R.string.title_activity_qrcode_scanner), R.drawable.ic_qr_code));
+        menuPojoList.add(new MenuListPojo(getResources().getString(R.string.title_activity_take_photo), R.drawable.ic_photograph));
 
-        menuPojoList.add(new MenuListPojo("History", R.drawable.ic_history));
-        menuPojoList.add(new MenuListPojo("Profile", R.drawable.ic_id_card));
+        menuPojoList.add(new MenuListPojo(getResources().getString(R.string.title_activity_history_page), R.drawable.ic_history));
+        menuPojoList.add(new MenuListPojo(getResources().getString(R.string.title_activity_profile_page), R.drawable.ic_id_card));
 
         InflateMenuAdapter mainMenuAdaptor = new InflateMenuAdapter(DashboardActivity.this, menuPojoList);
         menuGridView.setAdapter(mainMenuAdaptor);
