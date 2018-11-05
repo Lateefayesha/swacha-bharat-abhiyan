@@ -135,7 +135,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
     }
 
     private void initToolBar() {
-        toolbar.setNavigationIcon(R.drawable.ic_action_icon_svg);
+        toolbar.setNavigationIcon(R.drawable.ic_action_icon);
         toolbar.setTitle(getResources().getString(R.string.app_name));
         setSupportActionBar(toolbar);
     }
