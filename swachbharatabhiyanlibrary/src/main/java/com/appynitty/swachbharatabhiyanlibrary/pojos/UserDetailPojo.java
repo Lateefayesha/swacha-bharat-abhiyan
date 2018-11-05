@@ -14,6 +14,8 @@ public class UserDetailPojo {
 
     private String mobileNumber;
 
+    private String nameMar;
+
     public String getProfileImage() {
         return profileImage;
     }
@@ -62,6 +64,14 @@ public class UserDetailPojo {
         this.mobileNumber = mobileNumber;
     }
 
+    public String getNameMar() {
+        return nameMar;
+    }
+
+    public void setNameMar(String nameMar) {
+        this.nameMar = nameMar;
+    }
+
     @Override
     public String toString() {
         return "UserDetailPojo{" +
@@ -71,6 +81,7 @@ public class UserDetailPojo {
                 ", userId='" + userId + '\'' +
                 ", type='" + type + '\'' +
                 ", mobileNumber='" + mobileNumber + '\'' +
+                ", nameMar='" + nameMar + '\'' +
                 '}';
     }
 }

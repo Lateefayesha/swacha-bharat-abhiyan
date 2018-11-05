@@ -19,6 +19,8 @@ import com.bumptech.glide.Glide;
 
 import java.util.Objects;
 
+import quickutils.core.QuickUtils;
+
 public class ProfilePageActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
@@ -136,7 +138,13 @@ public class ProfilePageActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-        userName.setText(userDetailPojo.getName());
+
+        if(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID, AUtils.DEFAULT_LANGUAGE_ID).equals("2")){
+            userName.setText(userDetailPojo.getNameMar());
+        }else{
+            userName.setText(userDetailPojo.getName());
+        }
+
         empId.setText(userDetailPojo.getUserId());
         contactNo.setText(userDetailPojo.getMobileNumber());
         address.setText(userDetailPojo.getAddress());
