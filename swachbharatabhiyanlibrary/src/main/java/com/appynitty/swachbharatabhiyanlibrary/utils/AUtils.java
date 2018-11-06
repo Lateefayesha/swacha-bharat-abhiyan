@@ -44,7 +44,7 @@ public class AUtils extends MsUtils {
 //    public static final String SERVER_URL = "http://115.115.153.117:7055/";
 
 
-    //    Genral Constant
+    //    General Constant
     public static final String STATUS_SUCCESS = "success";
 
     public static final String STATUS_ERROR = "error";
