@@ -122,11 +122,11 @@ public class SyncServer {
 
             if(vehicleId == 2){
                 resultPojo = service.saveGarbageCollectionH(QuickUtils.prefs.getString(AUtils.APP_ID, ""),
-                        userId, id, Lat, Long, beforeImage, afterImage, comment, imageFileMultiBody1,
+                        userId, id, Lat, Long, beforeImage, afterImage, comment, "", imageFileMultiBody1,
                         imageFileMultiBody2).execute().body();
             }else if(vehicleId == 1){
                 resultPojo = service.saveGarbageCollectionGP(QuickUtils.prefs.getString(AUtils.APP_ID, ""),
-                        userId, id, Lat, Long, beforeImage, afterImage, comment, imageFileMultiBody1,
+                        userId, id, Lat, Long, beforeImage, afterImage, comment, "", imageFileMultiBody1,
                         imageFileMultiBody2).execute().body();
             }
 

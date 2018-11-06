@@ -22,6 +22,7 @@ public interface GarbageCollectionWebService {
                                                @Part("beforeImage") RequestBody beforeImage,
                                                @Part("AfterImage") RequestBody afterImage,
                                                @Part("note") RequestBody comment,
+                                               @Part("vehicleNumber") RequestBody vehicleNumber,
                                                @Part MultipartBody.Part image1,
                                                @Part MultipartBody.Part image2);
 
@@ -36,6 +37,7 @@ public interface GarbageCollectionWebService {
                                               @Part("beforeImage") RequestBody beforeImage,
                                               @Part("AfterImage") RequestBody afterImage,
                                               @Part("note") RequestBody comment,
+                                              @Part("vehicleNumber") RequestBody vehicleNumber,
                                               @Part MultipartBody.Part image1,
                                               @Part MultipartBody.Part image2);
 }
