@@ -16,8 +16,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.appynitty.swachbharatabhiyanlibrary.R;
+import com.appynitty.swachbharatabhiyanlibrary.adapters.UI.DialogAdapter;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class PopUpDialog extends Dialog {
@@ -33,14 +35,15 @@ public class PopUpDialog extends Dialog {
     private EditText txtVehicleNo;
     private Button btnSubmit;
     private TextView lblTitle;
-    private ArrayAdapter<String> mAdapter;
-    private List<String> mList;
+    private DialogAdapter mAdapter;
+    private HashMap<Integer, Object> mList;
 
-    private String mReturnData,mVehicleNo;
+    private Object mReturnData;
+    private String mVehicleNo;
 
     private PopUpDialogListener mListener;
 
-    public PopUpDialog(Context context, String type, List<String> list, PopUpDialogListener listener) {
+    public PopUpDialog(Context context, String type, HashMap<Integer, Object> list, PopUpDialogListener listener) {
         super(context);
         // TODO Auto-generated constructor stub
         mContext = context;
@@ -92,9 +95,11 @@ public class PopUpDialog extends Dialog {
             lblTitle.setText(mContext.getResources().getString(R.string.change_language));
         }
 
-        mAdapter = new ArrayAdapter<String>(mContext, R.layout.dialog_adapter_layout,mList);
+        mAdapter = new DialogAdapter(mContext, mList, mType);
 
         mItemList.setAdapter(mAdapter);
+
+        txtVehicleNo.setSingleLine(true);
     }
 
     private void registerEvents() {
@@ -160,7 +165,7 @@ public class PopUpDialog extends Dialog {
     }
 
     public interface PopUpDialogListener {
-        void onPopUpDismissed(String type, String listItemSelected, @Nullable String vehicleNo);
+        void onPopUpDismissed(String type, Object listItemSelected, @Nullable String vehicleNo);
     }
 
 }

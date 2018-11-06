@@ -15,7 +15,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.appynitty.retrofitconnectionlibrary.pojos.ResultPojo;
 import com.appynitty.swachbharatabhiyanlibrary.R;
 import com.appynitty.swachbharatabhiyanlibrary.connection.SyncServer;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.LoginDetailsPojo;
@@ -57,7 +56,6 @@ public class LoginActivity extends BaseActivity {
 
         getPermission();
 
-        QuickUtils.prefs.save(AUtils.APP_ID, "1");
         mContext = LoginActivity.this;
         AUtils.mCurrentContext = mContext;
 

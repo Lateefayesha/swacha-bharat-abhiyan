@@ -48,7 +48,9 @@
             <EditText
                 android:id="@+id/txt_vehicle_no"
                 style="@style/MyEditTextStyleLight"
-                android:hint="@string/vehicle_no_txt" />
+                android:hint="@string/vehicle_no_txt"
+                android:maxLines="1"
+                android:maxLength="12"/>
 
         </android.support.design.widget.TextInputLayout>
 

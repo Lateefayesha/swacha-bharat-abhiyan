@@ -115,18 +115,20 @@ public class SyncServer {
                 afterImage = RequestBody.create(okhttp3.MultipartBody.FORM, garbageCollectionPojo.getAfterImage());
             }
 
+            RequestBody vehicleNo = RequestBody.create(okhttp3.MultipartBody.FORM, QuickUtils.prefs.getString(AUtils.VEHICLE_NO,""));
+
 
             GarbageCollectionWebService service = Connection.createService(GarbageCollectionWebService.class, AUtils.SERVER_URL);
 
-            int vehicleId = QuickUtils.prefs.getInt(AUtils.VEHICLE_ID, 0);
+            String vehicleId = QuickUtils.prefs.getString(AUtils.VEHICLE_ID, "0");
 
-            if(vehicleId == 2){
+            if(vehicleId.equals("2")){
                 resultPojo = service.saveGarbageCollectionH(QuickUtils.prefs.getString(AUtils.APP_ID, ""),
-                        userId, id, Lat, Long, beforeImage, afterImage, comment, "", imageFileMultiBody1,
+                        userId, id, Lat, Long, beforeImage, afterImage, comment, vehicleNo, imageFileMultiBody1,
                         imageFileMultiBody2).execute().body();
-            }else if(vehicleId == 1){
+            }else if(vehicleId.equals("1")){
                 resultPojo = service.saveGarbageCollectionGP(QuickUtils.prefs.getString(AUtils.APP_ID, ""),
-                        userId, id, Lat, Long, beforeImage, afterImage, comment, "", imageFileMultiBody1,
+                        userId, id, Lat, Long, beforeImage, afterImage, comment, vehicleNo, imageFileMultiBody1,
                         imageFileMultiBody2).execute().body();
             }
 
@@ -160,7 +162,7 @@ public class SyncServer {
             PunchWebService service = Connection.createService(PunchWebService.class, AUtils.SERVER_URL);
 
             inPunchPojo.setUserId(QuickUtils.prefs.getString(AUtils.PREFS.USER_ID,""));
-            inPunchPojo.setVtId(String.valueOf(QuickUtils.prefs.getInt(AUtils.VEHICLE_ID, 0)));
+            inPunchPojo.setVtId(String.valueOf(QuickUtils.prefs.getString(AUtils.VEHICLE_ID, "0")));
             inPunchPojo.setStartLat(QuickUtils.prefs.getString(AUtils.LAT,""));
             inPunchPojo.setStartLong(QuickUtils.prefs.getString(AUtils.LONG,""));
 

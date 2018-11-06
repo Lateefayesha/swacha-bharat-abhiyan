@@ -5,10 +5,8 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
-import android.widget.ImageView;
 
 import com.appynitty.swachbharatabhiyanlibrary.R;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
@@ -30,9 +28,11 @@ public class SplashScreenActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        QuickUtils.prefs.save(AUtils.APP_ID, "1");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
-        AUtils.changeLanguage(this, Integer.parseInt(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID, AUtils.DEFAULT_LANGUAGE_ID)));
 
         if(QuickUtils.prefs.getBoolean(AUtils.PREFS.IS_USER_LOGIN,false))
         {

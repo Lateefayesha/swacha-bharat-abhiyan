@@ -105,6 +105,8 @@ public class AUtils extends MsUtils {
 
     public static final long TEN_MINUTES = 10 * 60 * 1000;
 
+    public static final String VEHICLE_NO = "VehicleNumber";
+
 
     // Language Change of an application
     public static void changeLanguage(Activity context, int languageId) {
@@ -182,6 +184,7 @@ public class AUtils extends MsUtils {
         String USER_DETAIL_POJO = "UserDetailPull";
         String WORK_HISTORY_POJO_LIST = "WorkHistoryPullList";
         String WORK_HISTORY_DETAIL_POJO_LIST = "WorkHistoryDetailPullList";
+        String LANGUAGE_POJO_LIST = "LanguagePullList";
     }
 
     public static boolean isCameraPermissionGiven(final Context context)

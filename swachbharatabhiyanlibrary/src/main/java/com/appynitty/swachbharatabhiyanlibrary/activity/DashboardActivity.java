@@ -34,6 +34,7 @@ import com.appynitty.swachbharatabhiyanlibrary.connection.SyncServer;
 import com.appynitty.swachbharatabhiyanlibrary.custom_component.GlideCircleTransformation;
 import com.appynitty.swachbharatabhiyanlibrary.dialogs.PopUpDialog;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.InPunchPojo;
+import com.appynitty.swachbharatabhiyanlibrary.pojos.LanguagePojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.MenuListPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.OutPunchPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.UserDetailPojo;
@@ -48,6 +49,7 @@ import com.mithsoft.lib.components.Toasty;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import io.github.kobakei.materialfabspeeddial.FabSpeedDial;
@@ -255,13 +257,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         }.getType();
         inPunchPojo = new Gson().fromJson(QuickUtils.prefs.getString(AUtils.PREFS.IN_PUNCH_POJO, null), type);
 
-        if(QuickUtils.prefs.getBoolean(AUtils.PREFS.IS_ON_DUTY, false))
-        {
-            markAttendance.setChecked(true);
-        }
-        else {
-            markAttendance.setChecked(false);
-        }
+        checkDutyStatus();
     }
 
     private void performLogout() {
@@ -272,6 +268,13 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         QuickUtils.prefs.remove(AUtils.PREFS.VEHICLE_TYPE_POJO_LIST);
         QuickUtils.prefs.remove(AUtils.PREFS.USER_DETAIL_POJO);
         QuickUtils.prefs.remove(AUtils.PREFS.IS_ON_DUTY);
+        QuickUtils.prefs.remove(AUtils.PREFS.IMAGE_POJO);
+        QuickUtils.prefs.remove(AUtils.PREFS.WORK_HISTORY_DETAIL_POJO_LIST);
+        QuickUtils.prefs.remove(AUtils.PREFS.WORK_HISTORY_POJO_LIST);
+        QuickUtils.prefs.remove(AUtils.LAT);
+        QuickUtils.prefs.remove(AUtils.LONG);
+        QuickUtils.prefs.remove(AUtils.VEHICLE_NO);
+        QuickUtils.prefs.remove(AUtils.VEHICLE_ID);
 
         openLogin();
 
@@ -285,37 +288,70 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
 
     private void changeLanguage() {
 
-        List<String> mLanguage = new ArrayList<>();
-        mLanguage.add("English");
-        mLanguage.add("मराठी");
+        HashMap<Integer,Object> mLanguage = new HashMap<>();
 
-        PopUpDialog dialog = new PopUpDialog(DashboardActivity.this, AUtils.DIALOG_TYPE_LANGUAGE, mLanguage, this);
-        dialog.show();
+        List<LanguagePojo> mLanguagePojoList = new ArrayList<>();
 
+        LanguagePojo eng = new LanguagePojo();
+        eng.setLanguage("English");
+        eng.setLanguageId("1");
+
+        LanguagePojo mar = new LanguagePojo();
+        mar.setLanguageId("2");
+        mar.setLanguage("मराठी");
+
+        mLanguagePojoList.add(eng);
+        mLanguagePojoList.add(mar);
+
+        AUtils.changeLanguage(this, Integer.parseInt(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID, AUtils.DEFAULT_LANGUAGE_ID)));
+
+        if(!AUtils.isNull(mLanguagePojoList) && !mLanguagePojoList.isEmpty()) {
+            for (int i = 0; i < mLanguagePojoList.size(); i++) {
+                mLanguage.put(i, mLanguagePojoList.get(i));
+            }
+
+            PopUpDialog dialog = new PopUpDialog(DashboardActivity.this, AUtils.DIALOG_TYPE_LANGUAGE, mLanguage, this);
+            dialog.show();
+        }
     }
 
     @Override
-    public void onPopUpDismissed(String type, String listItemSelected, @Nullable String vehicleNo) {
+    public void onPopUpDismissed(String type, Object listItemSelected, @Nullable String vehicleNo) {
 
-        if (!AUtils.isNullString(listItemSelected)) {
+        if (!AUtils.isNull(listItemSelected)) {
             switch (type) {
                 case AUtils.DIALOG_TYPE_VEHICLE: {
                     onVehicleTypeDialogClose(listItemSelected, vehicleNo);
                 }
                 break;
                 case AUtils.DIALOG_TYPE_LANGUAGE: {
-                    if (listItemSelected.equals("English")) {
-                        changeLanguage(1);
-                    } else if (listItemSelected.equals("मराठी")) {
-                        changeLanguage(2);
-                    }
+
+                    onLanguageTypeDialogClose(listItemSelected);
                 }
                 break;
             }
-        } else {
-            markAttendance.setChecked(false);
+        }
+        else
+        {
+            switch (type) {
+                case AUtils.DIALOG_TYPE_VEHICLE: {
+                    if(QuickUtils.prefs.getBoolean(AUtils.PREFS.IS_ON_DUTY,false))
+                    {
+
+                    }
+                    else {
+                        markAttendance.setChecked(false);
+                    }
+                }
+                break;
+                case AUtils.DIALOG_TYPE_LANGUAGE: {
+
+                }
+                break;
+            }
         }
     }
+
 
     @Override
     protected void onResume() {
@@ -323,32 +359,9 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
 
         AUtils.mCurrentContext = mContext;
 
-        isOnDuty = QuickUtils.prefs.getBoolean(AUtils.PREFS.IS_ON_DUTY, false);
+        checkDutyStatus();
 
-        if (isOnDuty) {
-            markAttendance.setChecked(true);
 
-            attendanceStatus.setText(this.getResources().getString(R.string.status_on_duty));
-            attendanceStatus.setTextColor(this.getResources().getColor(R.color.colorONDutyGreen));
-
-            String vehicleName = "";
-
-            switch (QuickUtils.prefs.getInt(AUtils.VEHICLE_ID, 0)) {
-                case 2:
-                    vehicleName = "Van";
-                    break;
-                case 1:
-                    vehicleName = "Truck";
-                    break;
-            }
-
-            if (!AUtils.isNullString(inPunchPojo.getVehicleNumber())) {
-
-                vehicleStatus.setText(String.format("%s%s %s %s%s", this.getResources().getString(R.string.opening_round_bracket), vehicleName, this.getResources().getString(R.string.hyphen), inPunchPojo.getVehicleNumber(), this.getResources().getString(R.string.closing_round_bracket)));
-            } else {
-                vehicleStatus.setText(String.format("%s%s%s", this.getResources().getString(R.string.opening_round_bracket), vehicleName, this.getResources().getString(R.string.closing_round_bracket)));
-            }
-        }
     }
 
     public void changeLanguage(int type) {
@@ -367,15 +380,14 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
 
         if (isChecked) {
             if (isLocationPermission) {
-                List<String> mLanguage = new ArrayList<>();
+                HashMap<Integer, Object> mLanguage = new HashMap<>();
 
                 vehicleTypePojoList = mVehicleTypeAdapter.getVehicleTypePojoList();
 
                 if(!AUtils.isNull(vehicleTypePojoList) && !vehicleTypePojoList.isEmpty()) {
                     for (int i = 0; i < vehicleTypePojoList.size(); i++) {
-                        mLanguage.add(vehicleTypePojoList.get(i).getDescription());
+                        mLanguage.put(i, vehicleTypePojoList.get(i));
                     }
-
 
                     if (!isOnDuty) {
                         AUtils.mApplication.startLocationTracking();
@@ -411,20 +423,15 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
     }
 
 
-    private void onVehicleTypeDialogClose(String listItemSelected, String vehicleNo) {
+    private void onVehicleTypeDialogClose(Object listItemSelected, String vehicleNo) {
+
         if (AUtils.isNetWorkAvailable(this)) {
 
-            switch (listItemSelected) {
-                case "Van":
+            VehicleTypePojo vehicleTypePojo = (VehicleTypePojo) listItemSelected;
 
-                    QuickUtils.prefs.save(AUtils.VEHICLE_ID, 2);
-                    break;
+            QuickUtils.prefs.save(AUtils.VEHICLE_ID, vehicleTypePojo.getVtId());
 
-                case "Truck":
-
-                    QuickUtils.prefs.save(AUtils.VEHICLE_ID, 1);
-                    break;
-            }
+            QuickUtils.prefs.save(AUtils.VEHICLE_NO, vehicleNo);
 
             if (!AUtils.isNull(inPunchPojo)) {
                 inPunchPojo.setDaDate(AUtils.getSeverDate());
@@ -461,10 +468,12 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         String vehicleType = null;
 
         for (int i = 0; i < vehicleTypePojoList.size(); i++) {
-            int vID = Integer.parseInt(vehicleTypePojoList.get(i).getVtId());
-            if(QuickUtils.prefs.getInt(AUtils.VEHICLE_ID,0) == vID)
+            if(QuickUtils.prefs.getString(AUtils.VEHICLE_ID,"0").equals(vehicleTypePojoList.get(i).getVtId()))
             {
-                vehicleType = vehicleTypePojoList.get(i).getDescription();
+                if(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID,AUtils.DEFAULT_LANGUAGE_ID).equals(AUtils.DEFAULT_LANGUAGE_ID))
+                    vehicleType = vehicleTypePojoList.get(i).getDescriptionMar();
+                else
+                    vehicleType = vehicleTypePojoList.get(i).getDescription();
             }
         }
 
@@ -535,14 +544,14 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
     private void initUserDetails(){
         userDetailPojo = mUserDetailAdapter.getUserDetailPojo();
 
-        if(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID, AUtils.DEFAULT_LANGUAGE_ID).equals("2")){
-            userName.setText(userDetailPojo.getNameMar());
-        }else{
-            userName.setText(userDetailPojo.getName());
-        }
-
         if(!AUtils.isNull(userDetailPojo)){
-            userName.setText(userDetailPojo.getName());
+
+            if(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID, AUtils.DEFAULT_LANGUAGE_ID).equals("2")){
+                userName.setText(userDetailPojo.getNameMar());
+            }else{
+                userName.setText(userDetailPojo.getName());
+            }
+
             empId.setText(userDetailPojo.getUserId());
             if (!AUtils.isNullString(userDetailPojo.getProfileImage())) {
                 Glide.with(mContext).load(userDetailPojo.getProfileImage())
@@ -550,6 +559,50 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
                         .error(R.drawable.ic_user)
                         .bitmapTransform(new GlideCircleTransformation(getApplicationContext()))
                         .into(profilePic);
+            }
+        }
+    }
+
+    private void onLanguageTypeDialogClose(Object listItemSelected) {
+
+        LanguagePojo languagePojo = (LanguagePojo) listItemSelected;
+
+        if (languagePojo.getLanguage().equals("English")) {
+            changeLanguage(1);
+        } else if (languagePojo.getLanguage().equals("मराठी")) {
+            changeLanguage(2);
+        }
+    }
+
+
+
+    private void checkDutyStatus() {
+        isOnDuty = QuickUtils.prefs.getBoolean(AUtils.PREFS.IS_ON_DUTY, false);
+
+        if (isOnDuty) {
+            markAttendance.setChecked(true);
+
+            attendanceStatus.setText(this.getResources().getString(R.string.status_on_duty));
+            attendanceStatus.setTextColor(this.getResources().getColor(R.color.colorONDutyGreen));
+
+            String vehicleName = "";
+
+            for (int i = 0; i < vehicleTypePojoList.size(); i++) {
+
+                if(QuickUtils.prefs.getString(AUtils.VEHICLE_ID,"").equals(vehicleTypePojoList.get(i).getVtId()))
+                {
+                    if(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID,AUtils.DEFAULT_LANGUAGE_ID).equals(AUtils.DEFAULT_LANGUAGE_ID))
+                        vehicleName = vehicleTypePojoList.get(i).getDescriptionMar();
+                    else
+                        vehicleName = vehicleTypePojoList.get(i).getDescription();
+                }
+            }
+
+            if (!AUtils.isNullString(QuickUtils.prefs.getString(AUtils.VEHICLE_NO,""))) {
+
+                vehicleStatus.setText(String.format("%s%s %s %s%s", this.getResources().getString(R.string.opening_round_bracket), vehicleName, this.getResources().getString(R.string.hyphen), inPunchPojo.getVehicleNumber(), this.getResources().getString(R.string.closing_round_bracket)));
+            } else {
+                vehicleStatus.setText(String.format("%s%s%s", this.getResources().getString(R.string.opening_round_bracket), vehicleName, this.getResources().getString(R.string.closing_round_bracket)));
             }
         }
     }
