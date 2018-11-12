@@ -79,8 +79,8 @@ public class PopUpDialog extends Dialog {
         if(mType.equals(AUtils.DIALOG_TYPE_VEHICLE))
         {
 
-
             txtVehicleNo = findViewById(R.id.txt_vehicle_no);
+            txtVehicleNo.setSingleLine(true);
             btnSubmit = findViewById(R.id.btn_submit);
         }
     }
@@ -99,7 +99,7 @@ public class PopUpDialog extends Dialog {
 
         mItemList.setAdapter(mAdapter);
 
-        txtVehicleNo.setSingleLine(true);
+
     }
 
     private void registerEvents() {

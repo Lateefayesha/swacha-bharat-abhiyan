@@ -108,6 +108,7 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
     }
 
     protected void initToolbar(){
+        toolbar.setTitle(getResources().getString(R.string.title_activity_qrcode_scanner));
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
     }

@@ -25,12 +25,11 @@ public class ResultPojo {
         this.message = message;
     }
 
-    @Nullable
     public String getMessageMar() {
         return messageMar;
     }
 
-    public void setMessageMar(@Nullable String messageMar) {
+    public void setMessageMar(String messageMar) {
         this.messageMar = messageMar;
     }
 

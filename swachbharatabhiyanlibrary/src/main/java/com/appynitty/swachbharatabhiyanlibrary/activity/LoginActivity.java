@@ -7,9 +7,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,6 +21,8 @@ import android.widget.Toast;
 
 import com.appynitty.swachbharatabhiyanlibrary.R;
 import com.appynitty.swachbharatabhiyanlibrary.connection.SyncServer;
+import com.appynitty.swachbharatabhiyanlibrary.dialogs.PopUpDialog;
+import com.appynitty.swachbharatabhiyanlibrary.pojos.LanguagePojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.LoginDetailsPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.LoginPojo;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
@@ -25,12 +31,16 @@ import com.appynitty.swachbharatabhiyanlibrary.utils.MyAsyncTask;
 import com.mithsoft.lib.activity.BaseActivity;
 import com.mithsoft.lib.components.Toasty;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import quickutils.core.QuickUtils;
 
 /**
  * Created by Richali Pradhan Gupte on 24-10-2018.
  */
-public class LoginActivity extends BaseActivity {
+public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopUpDialogListener {
 
     public static final int PERMISSIONS_MULTIPLE_REQUEST = 123;
     private Context mContext = null;
@@ -39,6 +49,7 @@ public class LoginActivity extends BaseActivity {
     private EditText txtUserPwd = null;
 
     private Button btnLogin = null;
+    private Button btnChangeLang = null;
 
     private LoginPojo loginPojo = null;
 
@@ -52,6 +63,17 @@ public class LoginActivity extends BaseActivity {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        initComponents();
+    }
+
+    private void initComponents(){
+        generateId();
+        registerEvents();
+        initData();
+    }
+
     protected void generateId() {
 
         getPermission();
@@ -65,10 +87,10 @@ public class LoginActivity extends BaseActivity {
         txtUserPwd = findViewById(R.id.txt_password);
 
         btnLogin = findViewById(R.id.btn_login);
+        btnChangeLang = findViewById(R.id.btn_change_lang);
 
     }
 
-    @Override
     protected void registerEvents() {
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
@@ -77,9 +99,15 @@ public class LoginActivity extends BaseActivity {
                 onLogin();
             }
         });
+
+        btnChangeLang.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                changeLanguage();
+            }
+        });
     }
 
-    @Override
     protected void initData() {
 
     }
@@ -252,5 +280,64 @@ public class LoginActivity extends BaseActivity {
         } else {
             // write your logic code if permission already granted
         }
+    }
+
+    @Override
+    public void onPopUpDismissed(String type, Object listItemSelected, @Nullable String vehicleNo) {
+
+        if (!AUtils.isNull(listItemSelected)) {
+            switch (type) {
+                case AUtils.DIALOG_TYPE_LANGUAGE: {
+
+                    onLanguageTypeDialogClose(listItemSelected);
+                }
+                break;
+            }
+        }
+    }
+
+    private void onLanguageTypeDialogClose(Object listItemSelected) {
+
+        LanguagePojo languagePojo = (LanguagePojo) listItemSelected;
+
+        if (languagePojo.getLanguage().equals("English")) {
+            changeLanguage(1);
+        } else if (languagePojo.getLanguage().equals("मराठी")) {
+            changeLanguage(2);
+        }
+    }
+
+    private void changeLanguage(){
+        HashMap<Integer,Object> mLanguage = new HashMap<>();
+
+        List<LanguagePojo> mLanguagePojoList = new ArrayList<>();
+
+        LanguagePojo eng = new LanguagePojo();
+        eng.setLanguage("English");
+        eng.setLanguageId("1");
+
+        LanguagePojo mar = new LanguagePojo();
+        mar.setLanguageId("2");
+        mar.setLanguage("मराठी");
+
+        mLanguagePojoList.add(eng);
+        mLanguagePojoList.add(mar);
+
+        AUtils.changeLanguage(this, Integer.parseInt(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID, AUtils.DEFAULT_LANGUAGE_ID)));
+
+        if(!AUtils.isNull(mLanguagePojoList) && !mLanguagePojoList.isEmpty()) {
+            for (int i = 0; i < mLanguagePojoList.size(); i++) {
+                mLanguage.put(i, mLanguagePojoList.get(i));
+            }
+
+            PopUpDialog dialog = new PopUpDialog(LoginActivity.this, AUtils.DIALOG_TYPE_LANGUAGE, mLanguage, this);
+            dialog.show();
+        }
+    }
+
+    public void changeLanguage(int type) {
+
+        AUtils.changeLanguage(this, type);
+        initComponents();
     }
 }

@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -82,6 +83,7 @@ public class HistoryPageActivity extends AppCompatActivity {
     }
 
     private void initToolbar() {
+        toolbar.setTitle(getResources().getString(R.string.title_activity_history_page));
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
     }

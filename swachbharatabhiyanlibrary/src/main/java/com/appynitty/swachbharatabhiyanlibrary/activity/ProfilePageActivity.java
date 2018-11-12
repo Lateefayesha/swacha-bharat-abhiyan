@@ -77,6 +77,7 @@ public class ProfilePageActivity extends AppCompatActivity {
     }
 
     private void initToolbar() {
+        toolbar.setTitle(getResources().getString(R.string.title_activity_profile_page));
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
     }
@@ -132,6 +133,7 @@ public class ProfilePageActivity extends AppCompatActivity {
                 Glide.with(mContext).load(userDetailPojo.getProfileImage())
                         .placeholder(R.drawable.ic_user_white)
                         .error(R.drawable.ic_user_white)
+                        .centerCrop()
                         .bitmapTransform(new GlideCircleTransformation(getApplicationContext()))
                         .into(profilePic);
             }catch (Exception e){

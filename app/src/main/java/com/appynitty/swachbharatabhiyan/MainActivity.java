@@ -17,4 +17,9 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(MainActivity.this, SplashScreenActivity.class));
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        finish();
+    }
 }

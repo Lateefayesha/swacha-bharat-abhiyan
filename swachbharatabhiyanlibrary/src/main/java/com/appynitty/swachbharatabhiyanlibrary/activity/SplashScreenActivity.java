@@ -1,5 +1,6 @@
 package com.appynitty.swachbharatabhiyanlibrary.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -34,6 +35,8 @@ public class SplashScreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
+        setDefaultLanguage();
+
         if(QuickUtils.prefs.getBoolean(AUtils.PREFS.IS_USER_LOGIN,false))
         {
             loadDashboard();
@@ -42,6 +45,10 @@ public class SplashScreenActivity extends AppCompatActivity {
         }
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+    }
+
+    private void setDefaultLanguage() {
+        AUtils.changeLanguage(SplashScreenActivity.this, Integer.parseInt(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID, AUtils.DEFAULT_LANGUAGE_ID)));
     }
 
 

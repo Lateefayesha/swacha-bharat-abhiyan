@@ -1,6 +1,7 @@
 package com.appynitty.swachbharatabhiyanlibrary.connection;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.appynitty.retrofitconnectionlibrary.connection.Connection;
 import com.appynitty.retrofitconnectionlibrary.pojos.ResultPojo;
@@ -70,7 +71,7 @@ public class SyncServer {
 
     public GcResultPojo saveGarbageCollection(GarbageCollectionPojo garbageCollectionPojo) {
 
-        GcResultPojo resultPojo = null;
+        GcResultPojo gcResultPojo = null;
 
         try {
 
@@ -92,7 +93,8 @@ public class SyncServer {
                 imageFileMultiBody2 = MultipartBody.Part.createFormData("vmImage1", startImageFile.getName(), requestBody2);
             }
 
-            RequestBody id = RequestBody.create(okhttp3.MultipartBody.FORM, garbageCollectionPojo.getId());
+            String pointId = garbageCollectionPojo.getId();
+            RequestBody id = RequestBody.create(okhttp3.MultipartBody.FORM, pointId);
 
             RequestBody userId = RequestBody.create(okhttp3.MultipartBody.FORM, QuickUtils.prefs.getString(AUtils.PREFS.USER_ID,""));
             String lat = QuickUtils.prefs.getString(AUtils.LAT, "");
@@ -122,12 +124,22 @@ public class SyncServer {
 
             String vehicleId = QuickUtils.prefs.getString(AUtils.VEHICLE_ID, "0");
 
-            if(vehicleId.equals("2")){
-                resultPojo = service.saveGarbageCollectionH(QuickUtils.prefs.getString(AUtils.APP_ID, ""),
+//            if(vehicleId.equals("2")){
+//                gcResultPojo = service.saveGarbageCollectionH(QuickUtils.prefs.getString(AUtils.APP_ID, ""),
+//                        userId, id, Lat, Long, beforeImage, afterImage, comment, vehicleNo, imageFileMultiBody1,
+//                        imageFileMultiBody2).execute().body();
+//            }else if(vehicleId.equals("1")){
+//                gcResultPojo = service.saveGarbageCollectionGP(QuickUtils.prefs.getString(AUtils.APP_ID, ""),
+//                        userId, id, Lat, Long, beforeImage, afterImage, comment, vehicleNo, imageFileMultiBody1,
+//                        imageFileMultiBody2).execute().body();
+//            }
+
+            if(pointId.substring(0, 2).matches("HP")){
+                gcResultPojo = service.saveGarbageCollectionH(QuickUtils.prefs.getString(AUtils.APP_ID, ""),
                         userId, id, Lat, Long, beforeImage, afterImage, comment, vehicleNo, imageFileMultiBody1,
                         imageFileMultiBody2).execute().body();
-            }else if(vehicleId.equals("1")){
-                resultPojo = service.saveGarbageCollectionGP(QuickUtils.prefs.getString(AUtils.APP_ID, ""),
+            }else if(pointId.substring(0, 2).matches("GP")){
+                gcResultPojo = service.saveGarbageCollectionGP(QuickUtils.prefs.getString(AUtils.APP_ID, ""),
                         userId, id, Lat, Long, beforeImage, afterImage, comment, vehicleNo, imageFileMultiBody1,
                         imageFileMultiBody2).execute().body();
             }
@@ -136,7 +148,7 @@ public class SyncServer {
 
             e.printStackTrace();
         }
-        return resultPojo;
+        return gcResultPojo;
     }
 
     public static boolean saveImage(ImagePojo imagePojo)

@@ -320,6 +320,7 @@ public class TakePhotoActivity extends BaseActivity {
     }
 
     private void initToolbar() {
+        toolbar.setTitle(getResources().getString(R.string.title_activity_take_photo));
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
     }

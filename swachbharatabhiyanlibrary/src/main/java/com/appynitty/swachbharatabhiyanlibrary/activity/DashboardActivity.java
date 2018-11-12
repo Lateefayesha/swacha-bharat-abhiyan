@@ -554,11 +554,16 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
 
             empId.setText(userDetailPojo.getUserId());
             if (!AUtils.isNullString(userDetailPojo.getProfileImage())) {
-                Glide.with(mContext).load(userDetailPojo.getProfileImage())
-                        .placeholder(R.drawable.ic_user)
-                        .error(R.drawable.ic_user)
-                        .bitmapTransform(new GlideCircleTransformation(getApplicationContext()))
-                        .into(profilePic);
+                try {
+                    Glide.with(mContext).load(userDetailPojo.getProfileImage())
+                            .placeholder(R.drawable.ic_user)
+                            .error(R.drawable.ic_user)
+                            .centerCrop()
+                            .bitmapTransform(new GlideCircleTransformation(getApplicationContext()))
+                            .into(profilePic);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
             }
         }
     }

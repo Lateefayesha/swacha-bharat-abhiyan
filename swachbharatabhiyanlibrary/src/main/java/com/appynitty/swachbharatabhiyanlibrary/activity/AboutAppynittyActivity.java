@@ -51,6 +51,7 @@ public class AboutAppynittyActivity extends BaseActivity {
     }
 
     private void initToolBar() {
+        toolbar.setTitle(getResources().getString(R.string.about_appynitty));
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
     }
