@@ -40,7 +40,6 @@ public class ShareLocationAdapterClass {
             public void onFinished() {
                 if(!AUtils.isNull(resultPojo)) {
                     if (resultPojo.getStatus().equals(AUtils.STATUS_SUCCESS)) {
-                        QuickUtils.prefs.save(AUtils.PREFS.IS_ON_DUTY, false);
                         if(!AUtils.isNull(mListener))
                         {
                             mListener.onSuccessCallBack();

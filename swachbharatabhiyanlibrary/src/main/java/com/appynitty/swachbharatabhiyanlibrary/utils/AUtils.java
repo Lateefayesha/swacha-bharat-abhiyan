@@ -106,6 +106,8 @@ public class AUtils extends MsUtils {
 
     public static final String VEHICLE_NO = "VehicleNumber";
 
+    public static boolean IS_ONDUTY = false;
+
 
     // Language Change of an application
     public static void changeLanguage(Activity context, int languageId) {

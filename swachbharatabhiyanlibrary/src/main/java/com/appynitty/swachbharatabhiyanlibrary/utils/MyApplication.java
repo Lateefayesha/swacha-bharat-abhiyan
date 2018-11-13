@@ -64,12 +64,6 @@ public class MyApplication extends Application {
 
             }
         });
-
-
-        if(QuickUtils.prefs.getBoolean(AUtils.PREFS.IS_ON_DUTY, false))
-        {
-
-        }
     }
 
     @Override
