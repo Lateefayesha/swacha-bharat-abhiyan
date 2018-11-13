@@ -212,15 +212,16 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
     }
 
     private void setMenuClick(int position) {
+        isOnDuty = QuickUtils.prefs.getBoolean(AUtils.PREFS.IS_ON_DUTY,false);
         switch (position) {
             case 0:
-                if(QuickUtils.prefs.getBoolean(AUtils.PREFS.IS_ON_DUTY, false))
+                if(isOnDuty)
                     startActivity(new Intent(mContext, QRcodeScannerActivity.class));
                 else
                     AUtils.showWarning(mContext, getResources().getString(R.string.be_no_duty));
                 break;
             case 1:
-                if(QuickUtils.prefs.getBoolean(AUtils.PREFS.IS_ON_DUTY, false))
+                if(isOnDuty)
                     startActivity(new Intent(mContext, TakePhotoActivity.class));
                 else
                     AUtils.showWarning(mContext, getResources().getString(R.string.be_no_duty));
