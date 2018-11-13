@@ -31,10 +31,10 @@ import quickutils.core.QuickUtils;
 public class AUtils extends MsUtils {
 
     //    Local URL
-//    public static final String SERVER_URL = "http://192.168.200.4:6077/";
+    public static final String SERVER_URL = "http://192.168.200.4:6077/";
 
     //    Staging URL
-    public static final String SERVER_URL = "http://115.115.153.117:4088/";
+//    public static final String SERVER_URL = "http://115.115.153.117:4088/";
 
     //    Relese URL
 //    public static final String SERVER_URL = "http://115.115.153.117:7055/";
@@ -102,7 +102,7 @@ public class AUtils extends MsUtils {
 
     public static Context mCurrentContext;
 
-    public static final long TEN_MINUTES = 2 * 60 * 1000;
+    public static final long FIVE_MINUTES = 5 * 60 * 1000;
 
     public static final String VEHICLE_NO = "VehicleNumber";
 

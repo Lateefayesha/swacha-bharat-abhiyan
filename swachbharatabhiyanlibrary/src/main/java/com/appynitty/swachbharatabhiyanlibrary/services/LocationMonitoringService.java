@@ -76,6 +76,7 @@ public class LocationMonitoringService implements
 
     public void onStopTracking()
     {
+        LocationServices.FusedLocationApi.removeLocationUpdates(mLocationClient,this);
         mLocationClient.disconnect();
     }
 
@@ -122,7 +123,7 @@ public class LocationMonitoringService implements
                     mAdapter.shareLocation();
                 }
 
-                if((updatedTime + AUtils.TEN_MINUTES) <= System.currentTimeMillis())
+                if((updatedTime + AUtils.FIVE_MINUTES) <= System.currentTimeMillis())
                 {
                     updatedTime = System.currentTimeMillis();
 

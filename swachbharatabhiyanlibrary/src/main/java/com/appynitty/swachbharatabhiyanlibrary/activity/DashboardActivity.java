@@ -366,6 +366,8 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         AUtils.mCurrentContext = mContext;
 
         checkDutyStatus();
+
+        initUserDetails();
     }
 
     public void changeLanguage(int type) {

@@ -14,7 +14,11 @@ import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 
 public class ForgroundService extends Service {
 
-    LocationMonitoringService monitoringService;
+    private LocationMonitoringService monitoringService;
+
+    private Handler locationHandler;
+
+    private Runnable locationThread;
 
 
     @Override
@@ -34,15 +38,15 @@ public class ForgroundService extends Service {
             //Toast.makeText(this, " MyService Started", Toast.LENGTH_LONG).show();
             final int currentId = startId;
 
-            Runnable r = new Runnable() {
+            locationThread = new Runnable() {
                 public void run() {
 
                     monitoringService.onStartTacking();
                 }
             };
 
-            Handler H = new Handler(Looper.getMainLooper());
-            H.post(r);
+            locationHandler = new Handler(Looper.getMainLooper());
+            locationHandler.post(locationThread);
 
             return Service.START_STICKY;
         }
@@ -50,7 +54,7 @@ public class ForgroundService extends Service {
         @Override
         public void onDestroy() {
             //Toast.makeText(this, "MyService Stopped", Toast.LENGTH_LONG).show();
-
+            locationHandler.removeCallbacks(locationThread);
             monitoringService.onStopTracking();
 
         }
