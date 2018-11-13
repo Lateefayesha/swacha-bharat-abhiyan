@@ -61,5 +61,15 @@
     <string name="no_internet_error">No Internet Connection</string>
 
     <string name="be_no_duty">Please Mark Your Attendance First!</string>
+    <string name="off_duty_warning">Please End your Duty First</string>
+
+    <string name="logout_confirmation_title">Logout Confirmation</string>
+    <string name="logout_confirmation_msg">Are you sure, you want to Logout?</string>
+
+    <string name="offduty_confirmation_title">End Duty Confirmation</string>
+    <string name="offduty_confirmation_msg">Are you sure, you want to end your Duty?</string>
+
+    <string name="yes_txt">Yes</string>
+    <string name="no_text">No</string>
 
 </resources>

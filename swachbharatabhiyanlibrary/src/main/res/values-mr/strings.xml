@@ -52,4 +52,15 @@
     <string name="no_internet_error">इंटरनेट कनेक्शन नाही</string>
 
     <string name="be_no_duty">प्रथम आपली उपस्थिति लावा!</string>
+    <string name="off_duty_warning">प्रथम आपल्या ड्यूटी समाप्त करा</string>
+
+    <string name="logout_confirmation_title">लॉगआउट पुष्टीकरण</string>
+    <string name="logout_confirmation_msg">आपणास खात्री आहे की आपण लॉगआउट करू इच्छिता?</string>
+
+    <string name="offduty_confirmation_title">एन्ड ड्यूटी पुष्टीकरण</string>
+    <string name="offduty_confirmation_msg">आपण आपले ड्यूटी एन्ड करू इच्छिता?</string>
+
+    <string name="yes_txt">हो</string>
+    <string name="no_text">नाही</string>
+
 </resources>

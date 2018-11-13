@@ -149,10 +149,8 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
             public void onSuccessCallBack(int type) {
 
                 if (type == 1) {
-
                     onInPunchSuccess();
                 } else if (type == 2) {
-
                     onOutPunchSuccess();
                 }
             }
@@ -161,10 +159,9 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
             public void onFailureCallBack(int type) {
 
                 if (type == 1) {
-
                     markAttendance.setChecked(false);
                 } else if (type == 2) {
-
+                    markAttendance.setChecked(true);
                 }
             }
         });
@@ -261,23 +258,32 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
     }
 
     private void performLogout() {
+        AUtils.showConfirmationDialog(mContext, AUtils.CONFIRM_LOGOUT_DIALOG, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
 
-        QuickUtils.prefs.remove(AUtils.PREFS.IS_USER_LOGIN);
-        QuickUtils.prefs.remove(AUtils.PREFS.USER_ID);
-        QuickUtils.prefs.remove(AUtils.PREFS.USER_TYPE);
-        QuickUtils.prefs.remove(AUtils.PREFS.VEHICLE_TYPE_POJO_LIST);
-        QuickUtils.prefs.remove(AUtils.PREFS.USER_DETAIL_POJO);
-        QuickUtils.prefs.remove(AUtils.PREFS.IS_ON_DUTY);
-        QuickUtils.prefs.remove(AUtils.PREFS.IMAGE_POJO);
-        QuickUtils.prefs.remove(AUtils.PREFS.WORK_HISTORY_DETAIL_POJO_LIST);
-        QuickUtils.prefs.remove(AUtils.PREFS.WORK_HISTORY_POJO_LIST);
-        QuickUtils.prefs.remove(AUtils.LAT);
-        QuickUtils.prefs.remove(AUtils.LONG);
-        QuickUtils.prefs.remove(AUtils.VEHICLE_NO);
-        QuickUtils.prefs.remove(AUtils.VEHICLE_ID);
+                if(!isOnDuty){
+                    QuickUtils.prefs.remove(AUtils.PREFS.IS_USER_LOGIN);
+                    QuickUtils.prefs.remove(AUtils.PREFS.USER_ID);
+                    QuickUtils.prefs.remove(AUtils.PREFS.USER_TYPE);
+                    QuickUtils.prefs.remove(AUtils.PREFS.VEHICLE_TYPE_POJO_LIST);
+                    QuickUtils.prefs.remove(AUtils.PREFS.USER_DETAIL_POJO);
+                    QuickUtils.prefs.remove(AUtils.PREFS.IS_ON_DUTY);
+                    QuickUtils.prefs.remove(AUtils.PREFS.IMAGE_POJO);
+                    QuickUtils.prefs.remove(AUtils.PREFS.WORK_HISTORY_DETAIL_POJO_LIST);
+                    QuickUtils.prefs.remove(AUtils.PREFS.WORK_HISTORY_POJO_LIST);
+                    QuickUtils.prefs.remove(AUtils.LAT);
+                    QuickUtils.prefs.remove(AUtils.LONG);
+                    QuickUtils.prefs.remove(AUtils.VEHICLE_NO);
+                    QuickUtils.prefs.remove(AUtils.VEHICLE_ID);
 
-        openLogin();
-
+                    openLogin();
+                }else{
+                    Toasty.info(mContext, getResources().getString(R.string.off_duty_warning)).show();
+                }
+            }
+        }, null);
     }
 
     private void openLogin() {
@@ -360,14 +366,11 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         AUtils.mCurrentContext = mContext;
 
         checkDutyStatus();
-
-
     }
 
     public void changeLanguage(int type) {
 
         AUtils.changeLanguage(this, type);
-
 
         initComponents();
     }
@@ -407,9 +410,20 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         } else {
             if (isOnDuty) {
                 if (AUtils.isNetWorkAvailable(this)) {
-
                     try{
-                        mAttendanceAdapter.MarkOutPunch();
+                        AUtils.showConfirmationDialog(mContext, AUtils.CONFIRM_OFFDUTY_DIALOG, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                                mAttendanceAdapter.MarkOutPunch();
+                            }
+                        }, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                                markAttendance.setChecked(true);
+                            }
+                        });
                     }catch (Exception e){
                         e.printStackTrace();
                         markAttendance.setChecked(true);

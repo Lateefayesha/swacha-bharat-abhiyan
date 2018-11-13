@@ -2,32 +2,28 @@ package com.appynitty.swachbharatabhiyanlibrary.utils;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.location.Location;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.widget.Toast;
 
 import com.appynitty.swachbharatabhiyanlibrary.R;
-import com.appynitty.swachbharatabhiyanlibrary.activity.TakePhotoActivity;
 import com.mithsoft.lib.components.Toasty;
 import com.mithsoft.lib.utils.MsUtils;
 
-import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 
 import quickutils.core.QuickUtils;
@@ -35,10 +31,10 @@ import quickutils.core.QuickUtils;
 public class AUtils extends MsUtils {
 
     //    Local URL
-    public static final String SERVER_URL = "http://192.168.200.4:6077/";
+//    public static final String SERVER_URL = "http://192.168.200.4:6077/";
 
     //    Staging URL
-//    public static final String SERVER_URL = "http://115.115.153.117:4088/";
+    public static final String SERVER_URL = "http://115.115.153.117:4088/";
 
     //    Relese URL
 //    public static final String SERVER_URL = "http://115.115.153.117:7055/";
@@ -87,6 +83,9 @@ public class AUtils extends MsUtils {
     public static final String HISTORY_DETAILS = "HistoryDetails";
     public static final String HISTORY_DETAILS_DATE = "HistoryDetailsDate";
 
+    public static final String CONFIRM_LOGOUT_DIALOG = "confirmLogout";
+    public static final String CONFIRM_OFFDUTY_DIALOG = "confirmOffDuty";
+
     public static MyApplication mApplication;
 
     private static final String SERVER_DATE_FORMATE = "MM-dd-yyyy";
@@ -103,7 +102,7 @@ public class AUtils extends MsUtils {
 
     public static Context mCurrentContext;
 
-    public static final long TEN_MINUTES = 10 * 60 * 1000;
+    public static final long TEN_MINUTES = 2 * 60 * 1000;
 
     public static final String VEHICLE_NO = "VehicleNumber";
 
@@ -155,7 +154,7 @@ public class AUtils extends MsUtils {
     //app setting for permissions dialog
     public static void showPermissionDialog(Context context, String message, DialogInterface.OnClickListener okListener) {
 
-        new android.support.v7.app.AlertDialog.Builder(context)
+        new AlertDialog.Builder(context)
                 .setTitle("Need Permission")
                 .setMessage("App needs a permission to access " + message)
                 .setPositiveButton("Grant", okListener)
@@ -167,6 +166,41 @@ public class AUtils extends MsUtils {
                 })
                 .create()
                 .show();
+    }
+
+    public static void showConfirmationDialog(Context context, String type, DialogInterface.OnClickListener
+            positiveListener, @Nullable DialogInterface.OnClickListener negativeLisner){
+
+        String message = "";
+        String title = "";
+
+        if(type.equals(CONFIRM_LOGOUT_DIALOG)){
+            title = context.getResources().getString(R.string.logout_confirmation_title);
+            message = context.getResources().getString(R.string.logout_confirmation_msg);
+        }else if(type.equals(CONFIRM_OFFDUTY_DIALOG)){
+            title = context.getResources().getString(R.string.offduty_confirmation_title);
+            message = context.getResources().getString(R.string.offduty_confirmation_msg);
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle(title)
+                    .setMessage(message)
+                    .setCancelable(false)
+                    .setPositiveButton(context.getResources().getString(R.string.yes_txt), positiveListener);
+
+                if(negativeLisner != null){
+                    builder.setNegativeButton(context.getResources().getString(R.string.no_text), negativeLisner);
+                }else{
+                    builder.setNegativeButton(context.getResources().getString(R.string.no_text), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    });
+                }
+
+                builder.create()
+                    .show();
     }
 
     public interface PREFS {
