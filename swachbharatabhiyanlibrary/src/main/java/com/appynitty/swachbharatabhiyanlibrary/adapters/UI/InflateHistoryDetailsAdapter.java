@@ -58,10 +58,12 @@ public class InflateHistoryDetailsAdapter extends ArrayAdapter<WorkHistoryDetail
             WorkHistoryDetailPojo workHistoryDetailPojo = workHistoryDetailPojoList.get(position);
 
             if(workHistoryDetailPojo.getType().equals("2")){
-                holder.time.setBackground(context.getResources().getDrawable(R.drawable.rounded_pink_button));
+                holder.time.setBackgroundResource(R.drawable.rounded_pink_button);
                 holder.time.setPadding(0,0,0,0);
                 holder.id.setText(String.format("%s %s", context.getResources().getString(R.string.point_id_txt), workHistoryDetailPojo.getHouseNumber()));
             }else{
+                holder.time.setBackgroundResource(R.drawable.rounded_blue_button);
+                holder.time.setPadding(0,0,0,0);
                 holder.id.setText(String.format("%s %s", context.getResources().getString(R.string.house_id_txt), workHistoryDetailPojo.getHouseNumber()));
             }
 
