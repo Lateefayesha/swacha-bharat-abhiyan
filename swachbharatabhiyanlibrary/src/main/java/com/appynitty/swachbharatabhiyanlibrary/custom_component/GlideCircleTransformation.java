@@ -18,6 +18,7 @@ import com.bumptech.glide.load.resource.bitmap.BitmapResource;
  */
 public class GlideCircleTransformation implements Transformation {
     private BitmapPool mBitmapPool;
+    private Context mContext;
 
     public GlideCircleTransformation(Context context) {
         this(Glide.get(context).getBitmapPool());
@@ -54,7 +55,7 @@ public class GlideCircleTransformation implements Transformation {
         paint.setAntiAlias(true);
 
         float r = size / 2f;
-        canvas.drawCircle(r, r, r, paint);
+        canvas.drawCircle(r, r, r-20f, paint);
 
         return BitmapResource.obtain(bitmap, mBitmapPool);
     }

@@ -21,7 +21,8 @@
             android:layout_height="@dimen/dimen_120_dp"
             android:layout_gravity="center_horizontal"
             android:contentDescription="@string/title_activity_profile_page"
-            android:src="@drawable/ic_user_white" />
+            android:src="@drawable/ic_user_white"
+            android:background="@drawable/ic_icn_circle_white"/>
 
         <TextView
             android:id="@+id/profile_user_name"
@@ -30,7 +31,7 @@
             android:layout_marginTop="@dimen/padding_margin_layout_double"
             android:layout_marginBottom="@dimen/dim_30_dp"
             android:gravity="center_horizontal"
-            android:text="Rajan Balakrishna"
+            android:text="@string/hyphen"
             android:textColor="@color/white"
             android:textSize="@dimen/dimen_25_sp" />
 
@@ -92,7 +93,7 @@
                     android:gravity="center_vertical"
                     android:padding="@dimen/padding_margin_layout"
                     android:drawablePadding="@dimen/padding_margin_layout_double"
-                    android:text="1234567893"
+                    android:text="@string/hyphen"
                     android:layout_marginBottom="@dimen/padding_margin_layout"/>
 
                 <TextView
@@ -103,7 +104,7 @@
                     android:gravity="center_vertical"
                     android:padding="@dimen/padding_margin_layout"
                     android:drawablePadding="@dimen/padding_margin_layout_double"
-                    android:text="O Positive"
+                    android:text="@string/hyphen"
                     android:layout_marginBottom="@dimen/padding_margin_layout"/>
 
                 <LinearLayout
@@ -126,7 +127,7 @@
                         android:gravity="start"
                         android:paddingStart="@dimen/padding_margin_layout"
                         android:paddingEnd="@dimen/padding_margin_layout"
-                        android:text="sadsasdsadasdssadkasndksandklnsakdnsandknasdnsjakndkjsandjkasndjksankdjnaskjndjkasndjk"/>
+                        android:text="@string/hyphen"/>
 
                 </LinearLayout>
 
