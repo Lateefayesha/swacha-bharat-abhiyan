@@ -55,7 +55,7 @@ public class GlideCircleTransformation implements Transformation {
         paint.setAntiAlias(true);
 
         float r = size / 2f;
-        canvas.drawCircle(r, r, r-20f, paint);
+        canvas.drawCircle(r, r, r-10f, paint);
 
         return BitmapResource.obtain(bitmap, mBitmapPool);
     }

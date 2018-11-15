@@ -29,11 +29,20 @@
         android:layout_marginEnd="@dimen/dim_5_dp">
 
         <TextView
-            android:id="@+id/history_details_id"
+            android:id="@+id/history_details_name"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="@string/hyphen"
             android:textColor="@color/colorBlackGray"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/history_details_id"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/hyphen"
+            android:textColor="@color/colorDefault"
+            android:textSize="@dimen/dim_10_sp"
             android:textStyle="bold"/>
 
         <TextView

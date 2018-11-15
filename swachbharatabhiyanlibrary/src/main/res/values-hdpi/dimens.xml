@@ -19,6 +19,7 @@
     <dimen name="button_text_size">20sp</dimen>
 
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="timeline_margin_start">40dp</dimen>
 
     <dimen name="dim_30_dp">30dp</dimen>
     <dimen name="dim_40_dp">40dp</dimen>
