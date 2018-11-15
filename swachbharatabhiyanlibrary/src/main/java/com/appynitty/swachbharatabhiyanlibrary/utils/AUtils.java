@@ -31,10 +31,10 @@ import quickutils.core.QuickUtils;
 public class AUtils extends MsUtils {
 
     //    Local URL
-//    public static final String SERVER_URL = "http://192.168.200.4:6077/";
+    public static final String SERVER_URL = "http://192.168.200.4:6077/";
 
     //    Staging URL
-    public static final String SERVER_URL = "http://115.115.153.117:4088/";
+//    public static final String SERVER_URL = "http://115.115.153.117:4088/";
 
     //    Relese URL
 //    public static final String SERVER_URL = "http://115.115.153.117:7055/";
@@ -53,7 +53,7 @@ public class AUtils extends MsUtils {
     public static final String CONTENT_TYPE = "application/json";
 
     public static final String APP_ID = "AppId";
-
+    public static final String VERSION_CODE = "AppVersion";
 
     public static final String DIALOG_TYPE_VEHICLE = "DialogTypeVehicle";
     public static final String DIALOG_TYPE_LANGUAGE = "Dialog_Type_Language";
@@ -175,6 +175,8 @@ public class AUtils extends MsUtils {
 
         String message = "";
         String title = "";
+        String positiveText = context.getResources().getString(R.string.yes_txt);
+        String negativeText = context.getResources().getString(R.string.no_txt);
 
         if(type.equals(CONFIRM_LOGOUT_DIALOG)){
             title = context.getResources().getString(R.string.logout_confirmation_title);
@@ -182,18 +184,23 @@ public class AUtils extends MsUtils {
         }else if(type.equals(CONFIRM_OFFDUTY_DIALOG)){
             title = context.getResources().getString(R.string.offduty_confirmation_title);
             message = context.getResources().getString(R.string.offduty_confirmation_msg);
+        }else if(type.equals(VERSION_CODE)){
+            title = context.getResources().getString(R.string.update_title);
+            message = context.getResources().getString(R.string.update_message);
+            positiveText = context.getResources().getString(R.string.update_txt);
+            negativeText = context.getResources().getString(R.string.no_thanks_txt);
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setTitle(title)
                     .setMessage(message)
                     .setCancelable(false)
-                    .setPositiveButton(context.getResources().getString(R.string.yes_txt), positiveListener);
+                    .setPositiveButton(positiveText, positiveListener);
 
                 if(negativeLisner != null){
-                    builder.setNegativeButton(context.getResources().getString(R.string.no_text), negativeLisner);
+                    builder.setNegativeButton(negativeText, negativeLisner);
                 }else{
-                    builder.setNegativeButton(context.getResources().getString(R.string.no_text), new DialogInterface.OnClickListener() {
+                    builder.setNegativeButton(negativeText, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             dialogInterface.dismiss();

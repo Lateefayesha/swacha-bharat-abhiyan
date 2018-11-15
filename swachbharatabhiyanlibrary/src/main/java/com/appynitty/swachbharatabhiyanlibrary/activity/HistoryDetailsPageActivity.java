@@ -125,7 +125,7 @@ public class HistoryDetailsPageActivity extends AppCompatActivity {
         new MyAsyncTask(mContext, true, new MyAsyncTask.AsynTaskListener() {
             @Override
             public void doInBackgroundOpration(SyncServer syncServer) {
-                syncServer.pullWorkHistoryDetailListFromServer(historyDate);
+                Boolean isSuccess = syncServer.pullWorkHistoryDetailListFromServer(historyDate);
             }
 
             @Override

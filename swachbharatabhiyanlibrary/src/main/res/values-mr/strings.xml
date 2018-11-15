@@ -61,6 +61,6 @@
     <string name="offduty_confirmation_msg">आपण आपले ड्यूटी एन्ड करू इच्छिता?</string>
 
     <string name="yes_txt">हो</string>
-    <string name="no_text">नाही</string>
+    <string name="no_txt">नाही</string>
 
 </resources>

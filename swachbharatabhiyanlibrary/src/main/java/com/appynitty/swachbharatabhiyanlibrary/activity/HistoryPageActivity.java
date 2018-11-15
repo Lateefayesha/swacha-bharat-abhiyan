@@ -201,7 +201,7 @@ public class HistoryPageActivity extends AppCompatActivity {
         new MyAsyncTask(mContext, true, new MyAsyncTask.AsynTaskListener() {
             @Override
             public void doInBackgroundOpration(SyncServer syncServer) {
-                syncServer.pullWorkHistoryListFromServer(year, month);
+                Boolean isSuccess = syncServer.pullWorkHistoryListFromServer(year, month);
             }
 
             @Override

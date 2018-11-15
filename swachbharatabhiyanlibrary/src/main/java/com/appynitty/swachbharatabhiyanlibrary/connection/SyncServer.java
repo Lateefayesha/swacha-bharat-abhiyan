@@ -1,7 +1,6 @@
 package com.appynitty.swachbharatabhiyanlibrary.connection;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.appynitty.retrofitconnectionlibrary.connection.Connection;
 import com.appynitty.retrofitconnectionlibrary.pojos.ResultPojo;
@@ -26,6 +25,7 @@ import com.appynitty.swachbharatabhiyanlibrary.webservices.PunchWebService;
 import com.appynitty.swachbharatabhiyanlibrary.webservices.UserDetailsWebService;
 import com.appynitty.swachbharatabhiyanlibrary.webservices.UserLocationWebService;
 import com.appynitty.swachbharatabhiyanlibrary.webservices.VehicleTypeWebService;
+import com.appynitty.swachbharatabhiyanlibrary.webservices.VersionCheckWebService;
 import com.appynitty.swachbharatabhiyanlibrary.webservices.WorkHistoryWebService;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -63,7 +63,6 @@ public class SyncServer {
 
         } catch (Exception e) {
 
-            resultPojo = null;
             e.printStackTrace();
         }
         return resultPojo;
@@ -124,16 +123,6 @@ public class SyncServer {
 
             String vehicleId = QuickUtils.prefs.getString(AUtils.VEHICLE_ID, "0");
 
-//            if(vehicleId.equals("2")){
-//                gcResultPojo = service.saveGarbageCollectionH(QuickUtils.prefs.getString(AUtils.APP_ID, ""),
-//                        userId, id, Lat, Long, beforeImage, afterImage, comment, vehicleNo, imageFileMultiBody1,
-//                        imageFileMultiBody2).execute().body();
-//            }else if(vehicleId.equals("1")){
-//                gcResultPojo = service.saveGarbageCollectionGP(QuickUtils.prefs.getString(AUtils.APP_ID, ""),
-//                        userId, id, Lat, Long, beforeImage, afterImage, comment, vehicleNo, imageFileMultiBody1,
-//                        imageFileMultiBody2).execute().body();
-//            }
-
             if(pointId.substring(0, 2).matches("^[HhPp]+$")){
                 gcResultPojo = service.saveGarbageCollectionH(QuickUtils.prefs.getString(AUtils.APP_ID, ""),
                         userId, id, Lat, Long, beforeImage, afterImage, comment, vehicleNo, imageFileMultiBody1,
@@ -187,7 +176,6 @@ public class SyncServer {
 
         } catch (Exception e) {
 
-            resultPojo = null;
             e.printStackTrace();
         }
         return resultPojo;
@@ -209,7 +197,6 @@ public class SyncServer {
 
         } catch (Exception e) {
 
-            resultPojo = null;
             e.printStackTrace();
         }
         return resultPojo;
@@ -345,9 +332,30 @@ public class SyncServer {
 
         } catch (Exception e) {
 
-            resultPojo = null;
             e.printStackTrace();
         }
         return resultPojo;
+    }
+
+    public Boolean checkVersionUpdate(){
+
+        Boolean doUpdate = false;
+
+        VersionCheckWebService checkService = Connection.createService(VersionCheckWebService.class, AUtils.SERVER_URL);
+
+        try {
+            ResultPojo resultPojo = checkService.checkVersion(QuickUtils.prefs.getString(AUtils.APP_ID, "1"),
+                    QuickUtils.prefs.getInt(AUtils.VERSION_CODE, 0)).execute().body();
+
+            if (resultPojo != null) {
+                doUpdate = Boolean.parseBoolean(resultPojo.getStatus());
+            }
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+
+        return doUpdate;
     }
 }

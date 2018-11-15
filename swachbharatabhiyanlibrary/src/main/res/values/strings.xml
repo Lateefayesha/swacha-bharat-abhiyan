@@ -70,6 +70,12 @@
     <string name="offduty_confirmation_msg">Are you sure, you want to end your Duty?</string>
 
     <string name="yes_txt">Yes</string>
-    <string name="no_text">No</string>
+    <string name="no_txt">No</string>
+
+
+    <string name="update_txt" translatable="false">UPDATE</string>
+    <string name="no_thanks_txt" translatable="false">NO, THANKS</string>
+    <string name="update_title" translatable="false">New Version Available</string>
+    <string name="update_message" translatable="false">Please, update app to new version.</string>
 
 </resources>
