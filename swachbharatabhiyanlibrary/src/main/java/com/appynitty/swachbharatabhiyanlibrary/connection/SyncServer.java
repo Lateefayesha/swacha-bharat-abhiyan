@@ -134,11 +134,11 @@ public class SyncServer {
 //                        imageFileMultiBody2).execute().body();
 //            }
 
-            if(pointId.substring(0, 2).matches("HP")){
+            if(pointId.substring(0, 2).matches("^[HhPp]+$")){
                 gcResultPojo = service.saveGarbageCollectionH(QuickUtils.prefs.getString(AUtils.APP_ID, ""),
                         userId, id, Lat, Long, beforeImage, afterImage, comment, vehicleNo, imageFileMultiBody1,
                         imageFileMultiBody2).execute().body();
-            }else if(pointId.substring(0, 2).matches("GP")){
+            }else if(pointId.substring(0, 2).matches("^[GgPp]+$")){
                 gcResultPojo = service.saveGarbageCollectionGP(QuickUtils.prefs.getString(AUtils.APP_ID, ""),
                         userId, id, Lat, Long, beforeImage, afterImage, comment, vehicleNo, imageFileMultiBody1,
                         imageFileMultiBody2).execute().body();

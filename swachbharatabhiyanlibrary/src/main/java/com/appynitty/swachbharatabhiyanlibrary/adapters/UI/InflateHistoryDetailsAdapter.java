@@ -9,7 +9,6 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.appynitty.swachbharatabhiyanlibrary.R;
-import com.appynitty.swachbharatabhiyanlibrary.pojos.MenuListPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.WorkHistoryDetailPojo;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 
@@ -46,6 +45,7 @@ public class InflateHistoryDetailsAdapter extends ArrayAdapter<WorkHistoryDetail
             viewHolder.id = view.findViewById(R.id.history_details_id);
             viewHolder.vehicleNo = view.findViewById(R.id.history_details_vehicle);
             viewHolder.area = view.findViewById(R.id.history_details_area);
+            viewHolder.name = view.findViewById(R.id.history_details_name);
 
             view.setTag(viewHolder);
 
@@ -60,16 +60,17 @@ public class InflateHistoryDetailsAdapter extends ArrayAdapter<WorkHistoryDetail
             if(workHistoryDetailPojo.getType().equals("2")){
                 holder.time.setBackgroundResource(R.drawable.rounded_pink_button);
                 holder.time.setPadding(0,0,0,0);
-                holder.id.setText(String.format("%s %s", context.getResources().getString(R.string.point_id_txt), workHistoryDetailPojo.getHouseNumber()));
+                holder.id.setText(String.format("%s %s", context.getResources().getString(R.string.point_id_txt), workHistoryDetailPojo.getRefid()));
             }else{
                 holder.time.setBackgroundResource(R.drawable.rounded_blue_button);
                 holder.time.setPadding(0,0,0,0);
-                holder.id.setText(String.format("%s %s", context.getResources().getString(R.string.house_id_txt), workHistoryDetailPojo.getHouseNumber()));
+                holder.id.setText(String.format("%s %s", context.getResources().getString(R.string.house_id_txt), workHistoryDetailPojo.getRefid()));
             }
 
             holder.time.setText(workHistoryDetailPojo.getTime());
             holder.vehicleNo.setText(String.format("%s %s", context.getResources().getString(R.string.vehicle_number_txt), workHistoryDetailPojo.getVehicleNumber()));
-            holder.area.setText(workHistoryDetailPojo.getArea());
+            holder.area.setText(workHistoryDetailPojo.getAreaName());
+            holder.name.setText(workHistoryDetailPojo.getName());
         }
 
         return view;
@@ -81,6 +82,7 @@ public class InflateHistoryDetailsAdapter extends ArrayAdapter<WorkHistoryDetail
         private TextView id;
         private TextView vehicleNo;
         private TextView area;
+        private TextView name;
     }
 
 

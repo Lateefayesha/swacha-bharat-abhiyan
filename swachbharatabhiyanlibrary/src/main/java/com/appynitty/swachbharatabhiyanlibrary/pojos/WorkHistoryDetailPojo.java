@@ -4,13 +4,15 @@ public class WorkHistoryDetailPojo {
 
     private String time;
 
-    private String area;
+    private String Refid;
 
-    private String houseNumber;
-
-    private String type;
+    private String name;
 
     private String vehicleNumber;
+
+    private String areaName;
+
+    private String type;
 
     public String getTime() {
         return time;
@@ -20,20 +22,20 @@ public class WorkHistoryDetailPojo {
         this.time = time;
     }
 
-    public String getArea() {
-        return area;
+    public String getAreaName() {
+        return areaName;
     }
 
-    public void setArea(String area) {
-        this.area = area;
+    public void setAreaName(String areaName) {
+        this.areaName = areaName;
     }
 
-    public String getHouseNumber() {
-        return houseNumber;
+    public String getRefid() {
+        return Refid;
     }
 
-    public void setHouseNumber(String houseNumber) {
-        this.houseNumber = houseNumber;
+    public void setRefid(String refid) {
+        this.Refid = refid;
     }
 
     public String getType() {
@@ -52,14 +54,23 @@ public class WorkHistoryDetailPojo {
         this.vehicleNumber = vehicleNumber;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @Override
     public String toString() {
         return "WorkHistoryDetailPojo{" +
                 "time='" + time + '\'' +
-                ", area='" + area + '\'' +
-                ", houseNumber='" + houseNumber + '\'' +
+                ", areaName='" + areaName + '\'' +
+                ", Refid='" + Refid + '\'' +
                 ", type='" + type + '\'' +
                 ", vehicleNumber='" + vehicleNumber + '\'' +
+                ", name='" + name + '\'' +
                 '}';
     }
 }
