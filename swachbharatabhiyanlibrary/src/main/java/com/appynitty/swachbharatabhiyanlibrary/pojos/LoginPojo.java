@@ -6,6 +6,8 @@ public class LoginPojo {
 
     private String userLoginId;
 
+    private String imiNo;
+
     public String getUserPassword() {
         return userPassword;
     }
@@ -20,5 +22,13 @@ public class LoginPojo {
 
     public void setUserLoginId(String userLoginId) {
         this.userLoginId = userLoginId;
+    }
+
+    public String getImiNo() {
+        return imiNo;
+    }
+
+    public void setImiNo(String imiNo) {
+        this.imiNo = imiNo;
     }
 }

@@ -1,6 +1,7 @@
 package com.appynitty.swachbharatabhiyanlibrary.activity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,11 +10,13 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PersistableBundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.telephony.TelephonyManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -189,6 +192,11 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
         loginPojo.setUserId("");*/
         loginPojo.setUserLoginId(txtUserName.getText().toString());
         loginPojo.setUserPassword(txtUserPwd.getText().toString());
+        TelephonyManager telephonyManager = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
+
+        @SuppressLint("MissingPermission") String deviceid = telephonyManager.getDeviceId();
+
+        loginPojo.setImiNo(deviceid);
     }
 
     @Override
@@ -240,7 +248,9 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
                 .checkSelfPermission(LoginActivity.this,
                         Manifest.permission.ACCESS_COARSE_LOCATION) + ActivityCompat
                 .checkSelfPermission(LoginActivity.this,
-                        Manifest.permission.ACCESS_FINE_LOCATION)
+                        Manifest.permission.ACCESS_FINE_LOCATION) + ActivityCompat
+                .checkSelfPermission(LoginActivity.this,
+                        Manifest.permission.READ_PHONE_STATE)
                 != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale
                     (LoginActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) ||
@@ -249,7 +259,9 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
                     ActivityCompat.shouldShowRequestPermissionRationale
                             (LoginActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) ||
                     ActivityCompat.shouldShowRequestPermissionRationale
-                            (LoginActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION)) {
+                            (LoginActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) ||
+                    ActivityCompat.shouldShowRequestPermissionRationale
+                            (LoginActivity.this, Manifest.permission.READ_PHONE_STATE)) {
 
                 Snackbar.make(LoginActivity.this.findViewById(android.R.id.content),
                         "Please Grant Permissions to start using application",
@@ -262,7 +274,8 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
                                             new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
                                                     Manifest.permission.CAMERA,
                                                     Manifest.permission.ACCESS_COARSE_LOCATION,
-                                                    Manifest.permission.ACCESS_FINE_LOCATION},
+                                                    Manifest.permission.ACCESS_FINE_LOCATION,
+                                                    Manifest.permission.READ_PHONE_STATE},
                                             PERMISSIONS_MULTIPLE_REQUEST);
                                 }
                             }
@@ -273,7 +286,8 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
                             new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
                                     Manifest.permission.CAMERA,
                                     Manifest.permission.ACCESS_COARSE_LOCATION,
-                                    Manifest.permission.ACCESS_FINE_LOCATION},
+                                    Manifest.permission.ACCESS_FINE_LOCATION,
+                                    Manifest.permission.READ_PHONE_STATE},
                             PERMISSIONS_MULTIPLE_REQUEST);
                 }
             }
