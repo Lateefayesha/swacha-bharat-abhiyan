@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">स्वच्छ भारत अभियान</string>
     <string name="title_activity_dashboard">स्वच्छ भारत अभियान</string>
-    <string name="title_activity_qrcode_scanner">स्कॅन OR कोड</string>
+    <string name="title_activity_qrcode_scanner">स्कॅनिफाय कोड</string>
     <string name="title_activity_take_photo">फोटो घ्या</string>
     <string name="title_activity_profile_page">प्रोफाइल</string>
     <string name="title_activity_history_page">कामाचा इतिहास</string>
@@ -17,7 +17,7 @@
     <string name="forgot_password_txt">फॉरगेट पासवर्ड?</string>
     <string name="vehicle_no_txt">वाहन नंबर प्रविष्ट करा</string>
     <string name="submit_txt">सबमिट</string>
-    <string name="dialog_title_txt_vehicle">वाहन प्रकार</string>
+    <string name="dialog_title_txt_vehicle">घंटा गाडी प्रकार</string>
     <string name="lodin_success">लॉग इन पूर्ण झाले</string>
     <string name="login_error">लॉगिन करण्यास अक्षम. कृपया पुन्हा प्रयत्न करा!</string>
     <string name="serverError">टेकनिकल समस्या येत आहेत. कृपया पुन्हा प्रयत्न करा.</string>
@@ -26,9 +26,6 @@
     <string name="logout_txt">लॉगआउट</string>
     <string name="status_off_duty">ऑफ ड्यूटी</string>
     <string name="status_on_duty">ऑन ड्यूटी</string>
-    <string name="hyphen">-</string>
-    <string name="opening_round_bracket">(</string>
-    <string name="closing_round_bracket">)</string>
     <string name="house_number_hint">घर आयडी प्रविष्ट करा</string>
     <string name="take_before_photo">पूर्वीची फोटो</string>
     <string name="take_after_photo">नंतरची फोटो</string>
