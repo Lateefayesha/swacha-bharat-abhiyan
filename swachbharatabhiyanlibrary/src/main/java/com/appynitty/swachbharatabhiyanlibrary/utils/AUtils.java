@@ -31,13 +31,13 @@ import quickutils.core.QuickUtils;
 public class AUtils extends MsUtils {
 
     //    Local URL
-    public static final String SERVER_URL = "http://192.168.200.4:6077/";
+//    public static final String SERVER_URL = "http://192.168.200.4:6077/";
 
     //    Staging URL
 //    public static final String SERVER_URL = "http://115.115.153.117:4088/";
 
     //    Relese URL
-//    public static final String SERVER_URL = "http://115.115.153.117:7055/";
+    public static final String SERVER_URL = "http://115.115.153.117:4044/";
 
 
     //    General Constant
