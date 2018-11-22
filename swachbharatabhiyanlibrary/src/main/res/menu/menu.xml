@@ -19,6 +19,7 @@
     <item
         android:id="@+id/action_about_appynitty"
         android:icon="@drawable/icn_appynitty_white"
+        android:visible="false"
         android:title="@string/about_appynitty" />
 
     <item

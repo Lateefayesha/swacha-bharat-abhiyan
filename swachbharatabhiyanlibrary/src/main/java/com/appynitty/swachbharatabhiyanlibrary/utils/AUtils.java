@@ -6,6 +6,9 @@ import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v7.app.AlertDialog;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -109,9 +112,10 @@ public class AUtils extends MsUtils {
 
     public static final String VEHICLE_NO = "VehicleNumber";
 
-    private static boolean IS_ONDUTY = false;
+    //private static boolean IS_ONDUTY = false;
 
     private static final String TAG = "AUtils";
+
 
     public static boolean isIsOnduty() {
         return QuickUtils.prefs.getBoolean(PREFS.IS_ON_DUTY,false);
@@ -498,6 +502,12 @@ public class AUtils extends MsUtils {
                 Toast.LENGTH_SHORT,true,true).show();
     }
 
+    public static boolean isGPSEnable()
+    {
+        LocationManager manager = (LocationManager) mCurrentContext.getSystemService( Context.LOCATION_SERVICE );
+        return manager.isProviderEnabled( LocationManager.GPS_PROVIDER);
+    }
+
 
     public static boolean isMyServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) mApplication.getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
@@ -505,7 +515,7 @@ public class AUtils extends MsUtils {
             Log.d(TAG,service.toString());
             if (serviceClass.getName().equals(service.service.getClassName())) {
                 return true;
-            }           
+            }
         }
         return false;
     }

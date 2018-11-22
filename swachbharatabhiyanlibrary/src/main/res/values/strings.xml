@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Swach Bharat Abhiyan</string>
     <string name="title_activity_dashboard">Swach Bharat Swasth Bharat</string>
-    <string name="title_activity_qrcode_scanner">Scan OR Code</string>
+    <string name="title_activity_qrcode_scanner">Scaniffy Code</string>
     <string name="title_activity_take_photo">Taking Photo</string>
     <string name="title_activity_profile_page">Profile</string>
     <string name="title_activity_history_page">Work History</string>
@@ -18,9 +18,9 @@
 
     <string name="vehicle_no_txt">Enter Vehicle No.</string>
     <string name="submit_txt">Submit</string>
-    <string name="dialog_title_txt_vehicle">Vehicle Types</string>
+    <string name="dialog_title_txt_vehicle">Ghanta Gadi Types</string>
 
-    <string name="lodin_success">Login Successfull!</string>
+    <string name="lodin_success">Login Successful!</string>
     <string name="login_error">Unable to Login. Please try again later!</string>
     <string name="serverError">Oops! We\'re having technical problems. Please try again later.</string>
 
@@ -31,11 +31,8 @@
     <string name="status_off_duty">Off Duty</string>
     <string name="status_on_duty">On Duty</string>
 
-    <string name="house_number_hint">Enter House Number</string>
+    <string name="house_number_hint">Enter House ID/Garbage Point ID</string>
 
-    <string name="hyphen">-</string>
-    <string name="opening_round_bracket">(</string>
-    <string name="closing_round_bracket">)</string>
     <string name="take_before_photo">Take Before Photo</string>
     <string name="take_after_photo">Take After Photo</string>
     <string name="comments">Comments</string>
@@ -77,5 +74,9 @@
     <string name="no_thanks_txt" translatable="false">NO, THANKS</string>
     <string name="update_title" translatable="false">New Version Available</string>
     <string name="update_message" translatable="false">Please, update app to new version.</string>
+
+    <string name="hyphen" translatable="false">-</string>
+    <string name="opening_round_bracket" translatable="false">(</string>
+    <string name="closing_round_bracket" translatable="false">)</string>
 
 </resources>
