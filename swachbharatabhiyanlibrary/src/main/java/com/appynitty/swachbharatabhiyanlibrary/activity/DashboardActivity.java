@@ -39,6 +39,7 @@ import com.appynitty.swachbharatabhiyanlibrary.pojos.MenuListPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.OutPunchPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.UserDetailPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.VehicleTypePojo;
+import com.appynitty.swachbharatabhiyanlibrary.services.ForgroundService;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 import com.appynitty.swachbharatabhiyanlibrary.utils.LocaleHelper;
 import com.appynitty.swachbharatabhiyanlibrary.utils.MyAsyncTask;
@@ -158,8 +159,10 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
 
                 if (type == 1) {
                     markAttendance.setChecked(false);
+                    AUtils.setIsOnduty(false);
                 } else if (type == 2) {
                     markAttendance.setChecked(true);
+                    AUtils.setIsOnduty(true);
                 }
             }
         });
@@ -213,13 +216,13 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
 
         switch (position) {
             case 0:
-                if(AUtils.IS_ONDUTY)
+                if(AUtils.isIsOnduty())
                     startActivity(new Intent(mContext, QRcodeScannerActivity.class));
                 else
                     AUtils.showWarning(mContext, getResources().getString(R.string.be_no_duty));
                 break;
             case 1:
-                if(AUtils.IS_ONDUTY)
+                if(AUtils.isIsOnduty())
                     startActivity(new Intent(mContext, TakePhotoActivity.class));
                 else
                     AUtils.showWarning(mContext, getResources().getString(R.string.be_no_duty));
@@ -234,6 +237,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
     }
 
     private void initData() {
+
         initUserDetails();
         mVehicleTypeAdapter.getVehicleType();
         mUserDetailAdapter.getUserDetail();
@@ -262,14 +266,14 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
 
-                if(!AUtils.IS_ONDUTY){
+                if(!AUtils.isIsOnduty()){
                     QuickUtils.prefs.remove(AUtils.PREFS.IS_USER_LOGIN);
                     QuickUtils.prefs.remove(AUtils.PREFS.USER_ID);
                     QuickUtils.prefs.remove(AUtils.PREFS.USER_TYPE);
                     QuickUtils.prefs.remove(AUtils.PREFS.VEHICLE_TYPE_POJO_LIST);
                     QuickUtils.prefs.remove(AUtils.PREFS.USER_DETAIL_POJO);
                     //QuickUtils.prefs.remove(AUtils.PREFS.IS_ON_DUTY);
-                    AUtils.IS_ONDUTY = false;
+                    AUtils.setIsOnduty(false); //= false;
                     QuickUtils.prefs.remove(AUtils.PREFS.IMAGE_POJO);
                     QuickUtils.prefs.remove(AUtils.PREFS.WORK_HISTORY_DETAIL_POJO_LIST);
                     QuickUtils.prefs.remove(AUtils.PREFS.WORK_HISTORY_POJO_LIST);
@@ -341,7 +345,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         {
             switch (type) {
                 case AUtils.DIALOG_TYPE_VEHICLE: {
-                    if(AUtils.IS_ONDUTY)
+                    if(AUtils.isIsOnduty())
                     {
 
                     }
@@ -392,7 +396,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
                         mLanguage.put(i, vehicleTypePojoList.get(i));
                     }
 
-                    if (!AUtils.IS_ONDUTY) {
+                    if (!AUtils.isIsOnduty()) {
                         AUtils.mApplication.startLocationTracking();
 
                         PopUpDialog dialog = new PopUpDialog(DashboardActivity.this, AUtils.DIALOG_TYPE_VEHICLE, mLanguage, this);
@@ -408,7 +412,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
                 isLocationPermission = AUtils.isLocationPermissionGiven(DashboardActivity.this);
             }
         } else {
-            if (AUtils.IS_ONDUTY) {
+            if (AUtils.isIsOnduty()) {
                 if (AUtils.isNetWorkAvailable(this)) {
                     try{
                         AUtils.showConfirmationDialog(mContext, AUtils.CONFIRM_OFFDUTY_DIALOG, new DialogInterface.OnClickListener() {
@@ -500,6 +504,8 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
             vehicleStatus.setText(String.format("%s%s%s", this.getResources().getString(R.string.opening_round_bracket),
                     vehicleType, this.getResources().getString(R.string.closing_round_bracket)));
         }
+
+        AUtils.setIsOnduty(true);
     }
 
     private void onOutPunchSuccess(){
@@ -510,6 +516,8 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
 
         AUtils.mApplication.stopLocationTracking();
         markAttendance.setChecked(false);
+
+        AUtils.setIsOnduty(false);
     }
 
     private void getPermission() {
@@ -597,7 +605,12 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
 
     private void checkDutyStatus() {
 
-        if (AUtils.IS_ONDUTY) {
+        if (AUtils.isIsOnduty()) {
+
+            if(!AUtils.isMyServiceRunning(ForgroundService.class))
+            {
+                AUtils.mApplication.startLocationTracking();
+            }
             markAttendance.setChecked(true);
 
             attendanceStatus.setText(this.getResources().getString(R.string.status_on_duty));

@@ -2,6 +2,8 @@ package com.appynitty.swachbharatabhiyanlibrary.utils;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningServiceInfo;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
@@ -14,6 +16,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.appynitty.swachbharatabhiyanlibrary.R;
@@ -96,7 +99,7 @@ public class AUtils extends MsUtils {
     private static final String SEMI_MONTH_FORMATE = "MMM";
     private static final String DATE_VALUE_FORMATE = "dd";
 
-    private static final String SERVER_TIME_FORMATE = "HH:mm";
+    private static final String SERVER_TIME_FORMATE = "hh:mm a";
 
     private static final String SERVER_DATE_TIME_FORMATE = "MM-dd-yyyy HH:mm:ss";
 
@@ -106,8 +109,17 @@ public class AUtils extends MsUtils {
 
     public static final String VEHICLE_NO = "VehicleNumber";
 
-    public static boolean IS_ONDUTY = false;
+    private static boolean IS_ONDUTY = false;
 
+    private static final String TAG = "AUtils";
+
+    public static boolean isIsOnduty() {
+        return QuickUtils.prefs.getBoolean(PREFS.IS_ON_DUTY,false);
+    }
+
+    public static void setIsOnduty(boolean isOnduty) {
+        QuickUtils.prefs.save(PREFS.IS_ON_DUTY, isOnduty);
+    }
 
     // Language Change of an application
     public static void changeLanguage(Activity context, int languageId) {
@@ -484,5 +496,17 @@ public class AUtils extends MsUtils {
     {
         Toasty.custom(context,message, R.drawable.ic_error_outline_white_48dp,Color.parseColor("#C8FE973C"),
                 Toast.LENGTH_SHORT,true,true).show();
+    }
+
+
+    public static boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) mApplication.getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
+        for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            Log.d(TAG,service.toString());
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }           
+        }
+        return false;
     }
 }

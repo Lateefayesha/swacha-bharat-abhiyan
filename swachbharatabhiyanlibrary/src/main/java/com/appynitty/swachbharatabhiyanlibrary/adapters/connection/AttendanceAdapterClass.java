@@ -42,7 +42,6 @@ public class AttendanceAdapterClass {
             public void onFinished() {
                 if(!AUtils.isNull(resultPojo)) {
                     if (resultPojo.getStatus().equals(AUtils.STATUS_SUCCESS)) {
-                        AUtils.IS_ONDUTY = true;
                         if(!AUtils.isNull(mListener))
                         {
                             mListener.onSuccessCallBack(1);
@@ -59,7 +58,6 @@ public class AttendanceAdapterClass {
                         }
                         Toasty.success(AUtils.mCurrentContext, "" + message, Toast.LENGTH_SHORT).show();
                     } else {
-                        AUtils.IS_ONDUTY = false;
                         if(!AUtils.isNull(mListener))
                         {
                             mListener.onFailureCallBack(1);
@@ -76,7 +74,6 @@ public class AttendanceAdapterClass {
                         Toasty.error(AUtils.mCurrentContext, "" + message, Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    AUtils.IS_ONDUTY = false;
                     if(!AUtils.isNull(mListener))
                     {
                         mListener.onFailureCallBack(1);
@@ -105,7 +102,6 @@ public class AttendanceAdapterClass {
             public void onFinished() {
                 if(!AUtils.isNull(resultPojo)) {
                     if (resultPojo.getStatus().equals(AUtils.STATUS_SUCCESS)) {
-                        AUtils.IS_ONDUTY = false;
                         if(!AUtils.isNull(mListener))
                         {
                             mListener.onSuccessCallBack(2);
@@ -122,7 +118,6 @@ public class AttendanceAdapterClass {
 
                         Toasty.success(AUtils.mCurrentContext, "" + message, Toast.LENGTH_SHORT).show();
                     } else {
-                        AUtils.IS_ONDUTY = true;
                         if(!AUtils.isNull(mListener))
                         {
                             mListener.onFailureCallBack(2);
@@ -139,7 +134,6 @@ public class AttendanceAdapterClass {
                         Toasty.error(AUtils.mCurrentContext, "" + message, Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    AUtils.IS_ONDUTY = true;
                     if(!AUtils.isNull(mListener))
                     {
                         mListener.onFailureCallBack(2);
