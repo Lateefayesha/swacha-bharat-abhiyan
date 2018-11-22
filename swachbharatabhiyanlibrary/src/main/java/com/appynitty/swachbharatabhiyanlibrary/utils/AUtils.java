@@ -4,6 +4,9 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v7.app.AlertDialog;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -106,7 +109,7 @@ public class AUtils extends MsUtils {
 
     public static final String VEHICLE_NO = "VehicleNumber";
 
-    public static boolean IS_ONDUTY = false;
+    //public static boolean IS_ONDUTY = false;
 
 
     // Language Change of an application
@@ -484,5 +487,11 @@ public class AUtils extends MsUtils {
     {
         Toasty.custom(context,message, R.drawable.ic_error_outline_white_48dp,Color.parseColor("#C8FE973C"),
                 Toast.LENGTH_SHORT,true,true).show();
+    }
+
+    public static boolean isGPSEnable()
+    {
+        LocationManager manager = (LocationManager) mCurrentContext.getSystemService( Context.LOCATION_SERVICE );
+        return manager.isProviderEnabled( LocationManager.GPS_PROVIDER);
     }
 }
