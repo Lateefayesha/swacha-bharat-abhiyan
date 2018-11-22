@@ -387,26 +387,31 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
 
         if (isChecked) {
             if (isLocationPermission) {
-                HashMap<Integer, Object> mLanguage = new HashMap<>();
+                if(AUtils.isGPSEnable()) {
+                    HashMap<Integer, Object> mLanguage = new HashMap<>();
 
-                vehicleTypePojoList = mVehicleTypeAdapter.getVehicleTypePojoList();
+                    vehicleTypePojoList = mVehicleTypeAdapter.getVehicleTypePojoList();
 
-                if(!AUtils.isNull(vehicleTypePojoList) && !vehicleTypePojoList.isEmpty()) {
-                    for (int i = 0; i < vehicleTypePojoList.size(); i++) {
-                        mLanguage.put(i, vehicleTypePojoList.get(i));
-                    }
+                    if (!AUtils.isNull(vehicleTypePojoList) && !vehicleTypePojoList.isEmpty()) {
+                        for (int i = 0; i < vehicleTypePojoList.size(); i++) {
+                            mLanguage.put(i, vehicleTypePojoList.get(i));
+                        }
 
-                    if (!AUtils.isIsOnduty()) {
-                        AUtils.mApplication.startLocationTracking();
+                        if (!AUtils.isIsOnduty()) {
+                            AUtils.mApplication.startLocationTracking();
 
-                        PopUpDialog dialog = new PopUpDialog(DashboardActivity.this, AUtils.DIALOG_TYPE_VEHICLE, mLanguage, this);
-                        dialog.show();
+                            PopUpDialog dialog = new PopUpDialog(DashboardActivity.this, AUtils.DIALOG_TYPE_VEHICLE, mLanguage, this);
+                            dialog.show();
+                        }
+                    } else {
+                        mVehicleTypeAdapter.getVehicleType();
+                        markAttendance.setChecked(false);
+                        Toasty.error(mContext, mContext.getString(R.string.something_error), Toast.LENGTH_SHORT).show();
                     }
                 }
                 else {
-                    mVehicleTypeAdapter.getVehicleType();
                     markAttendance.setChecked(false);
-                    Toasty.error(mContext, mContext.getString(R.string.something_error), Toast.LENGTH_SHORT).show();
+                    AUtils.showGPSSettingsAlert(mContext);
                 }
             } else {
                 isLocationPermission = AUtils.isLocationPermissionGiven(DashboardActivity.this);
