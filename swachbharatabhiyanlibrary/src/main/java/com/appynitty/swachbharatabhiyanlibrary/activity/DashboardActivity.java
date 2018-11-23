@@ -623,6 +623,10 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
 
             String vehicleName = "";
 
+            if(AUtils.isNull(vehicleTypePojoList))
+            {
+                vehicleTypePojoList = mVehicleTypeAdapter.getVehicleTypePojoList();
+            }
             for (int i = 0; i < vehicleTypePojoList.size(); i++) {
 
                 if(QuickUtils.prefs.getString(AUtils.VEHICLE_ID,"").equals(vehicleTypePojoList.get(i).getVtId()))

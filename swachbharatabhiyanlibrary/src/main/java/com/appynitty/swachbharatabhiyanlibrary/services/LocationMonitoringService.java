@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
@@ -15,8 +14,6 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-
-import java.util.Calendar;
 
 import quickutils.core.QuickUtils;
 
@@ -124,7 +121,7 @@ public class LocationMonitoringService implements
                     mAdapter.shareLocation();
                 }
 
-                if((updatedTime + AUtils.FIVE_MINUTES) <= System.currentTimeMillis())
+                if((updatedTime + AUtils.LOCATION_INTERVAL_MINUTES) <= System.currentTimeMillis())
                 {
                     updatedTime = System.currentTimeMillis();
 

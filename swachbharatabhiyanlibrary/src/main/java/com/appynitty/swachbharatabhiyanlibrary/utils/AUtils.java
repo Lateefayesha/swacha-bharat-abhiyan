@@ -108,7 +108,7 @@ public class AUtils extends MsUtils {
 
     public static Context mCurrentContext;
 
-    public static final long FIVE_MINUTES = 5 * 60 * 1000;
+    public static final long LOCATION_INTERVAL_MINUTES = 10 * 60 * 1000;
 
     public static final String VEHICLE_NO = "VehicleNumber";
 
