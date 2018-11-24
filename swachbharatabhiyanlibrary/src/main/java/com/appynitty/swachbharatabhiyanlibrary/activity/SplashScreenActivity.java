@@ -38,7 +38,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash_screen);
 
         QuickUtils.prefs.save(AUtils.APP_ID, "1");
-        QuickUtils.prefs.save(AUtils.VERSION_CODE, BuildConfig.VERSION_CODE);
+        QuickUtils.prefs.save(AUtils.VERSION_CODE, 5);
 
         setDefaultLanguage();
 

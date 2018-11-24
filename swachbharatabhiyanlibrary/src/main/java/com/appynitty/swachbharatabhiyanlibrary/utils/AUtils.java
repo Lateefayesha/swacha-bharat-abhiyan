@@ -158,14 +158,22 @@ public class AUtils extends MsUtils {
         }
 
         Locale locale = new Locale(languageStr);
+
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            Locale.setDefault(Locale.Category.DISPLAY, locale);
+            Locale.setDefault(Locale.Category.FORMAT, locale);
         } else {
             Locale.setDefault(locale);
         }
+
         Configuration config = new Configuration();
-        config.locale = locale;
-        context.getApplicationContext().getResources().updateConfiguration(config, null);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+        {
+            config.setLocale(locale);
+            context.createConfigurationContext(config);
+        } else {
+            config.locale = locale;
+            context.getApplicationContext().getResources().updateConfiguration(config, null);
+        }
         context.onConfigurationChanged(config);
     }
 
