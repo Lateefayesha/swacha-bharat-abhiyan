@@ -378,7 +378,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
 
         AUtils.changeLanguage(this, type);
 
-        initComponents();
+        recreate();
     }
 
     private void onSwitchStatus(boolean isChecked) {

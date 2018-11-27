@@ -116,7 +116,6 @@ public class AUtils extends MsUtils {
 
     private static final String TAG = "AUtils";
 
-
     public static boolean isIsOnduty() {
         return QuickUtils.prefs.getBoolean(PREFS.IS_ON_DUTY,false);
     }
@@ -132,49 +131,27 @@ public class AUtils extends MsUtils {
         switch (languageId) {
             case 1:
                 languageStr = "en";
-                QuickUtils.prefs.save(AUtils.LANGUAGE_NAME,languageStr);
                 QuickUtils.prefs.save(AUtils.LANGUAGE_ID,String.valueOf(languageId));
                 break;
             case 2:
                 languageStr = "mr";
-                QuickUtils.prefs.save(AUtils.LANGUAGE_NAME,languageStr);
                 QuickUtils.prefs.save(AUtils.LANGUAGE_ID,String.valueOf(languageId));
                 break;
             case 3:
                 languageStr = "hi";
-                QuickUtils.prefs.save(AUtils.LANGUAGE_NAME,languageStr);
                 QuickUtils.prefs.save(AUtils.LANGUAGE_ID,String.valueOf(languageId));
                 break;
             case 4:
                 languageStr = "gu";
-                QuickUtils.prefs.save(AUtils.LANGUAGE_NAME,languageStr);
                 QuickUtils.prefs.save(AUtils.LANGUAGE_ID,String.valueOf(languageId));
                 break;
             case 5:
                 languageStr = "pa";
-                QuickUtils.prefs.save(AUtils.LANGUAGE_NAME,languageStr);
                 QuickUtils.prefs.save(AUtils.LANGUAGE_ID,String.valueOf(languageId));
                 break;
         }
 
-        Locale locale = new Locale(languageStr);
-
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            Locale.setDefault(Locale.Category.FORMAT, locale);
-        } else {
-            Locale.setDefault(locale);
-        }
-
-        Configuration config = new Configuration();
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-        {
-            config.setLocale(locale);
-            context.createConfigurationContext(config);
-        } else {
-            config.locale = locale;
-            context.getApplicationContext().getResources().updateConfiguration(config, null);
-        }
-        context.onConfigurationChanged(config);
+        LocaleHelper.setLocale(context,languageStr);
     }
 
     //app setting for permissions dialog
