@@ -83,4 +83,9 @@
     <string name="closing_round_bracket" translatable="false">)</string>
 
     <string name="area_validation">Please Select Valid Area.</string>
+    <string name="hp_validation">Please Select Valid House Number</string>
+    <string name="gp_validation">Please Select Valid Garbage Point.</string>
+    <string name="hp_area_validation">Please Select Valid Area and House Number.</string>
+    <string name="gp_area_validation">Please Select Valid Area and Garbage Point.</string>
+
 </resources>
