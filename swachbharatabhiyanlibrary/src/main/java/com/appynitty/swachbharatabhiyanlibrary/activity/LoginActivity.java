@@ -352,6 +352,6 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
     public void changeLanguage(int type) {
 
         AUtils.changeLanguage(this, type);
-        initComponents();
+        recreate();
     }
 }
