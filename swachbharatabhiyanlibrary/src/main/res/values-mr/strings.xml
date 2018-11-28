@@ -6,6 +6,7 @@
     <string name="title_activity_take_photo">फोटो घ्या</string>
     <string name="title_activity_profile_page">प्रोफाइल</string>
     <string name="title_activity_history_page">कामाचा इतिहास</string>
+    <string name="title_activity_broadcast_page">प्रसारण</string>
     <string name="change_language">भाषा बदला</string>
     <string name="rate_this_app">अँप रेट करा</string>
     <string name="share_the_app">अँपचा प्रसार करा</string>
