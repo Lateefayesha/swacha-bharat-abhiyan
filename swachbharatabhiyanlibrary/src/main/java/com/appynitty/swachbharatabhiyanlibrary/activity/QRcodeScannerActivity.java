@@ -664,19 +664,19 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
 
     private void inflateAutoComplete(String areaId){
         String areaType = getAreaType();
-        if(areaType.equals("1")){
+        if(areaType.equals(AUtils.HP_AREA_TYPE_ID)){
             fetchHpList(areaId);
         }
 
-        if(areaType.equals("2")){
+        if(areaType.equals(AUtils.GP_AREA_TYPE_ID)){
             fetchGpList(areaId);
         }
     }
 
     private String getAreaType(){
-        String areaType = "2";
+        String areaType = AUtils.GP_AREA_TYPE_ID;
         if(radioSelection.equals(AUtils.RADIO_SELECTED_HP)){
-            areaType = "1";
+            areaType = AUtils.HP_AREA_TYPE_ID;
         }
         return areaType;
     }

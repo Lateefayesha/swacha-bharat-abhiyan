@@ -118,6 +118,10 @@ public class AUtils extends MsUtils {
 
     private static final String TAG = "AUtils";
 
+    public static final String HP_AREA_TYPE_ID = "1";
+
+    public static final String GP_AREA_TYPE_ID = "2";
+
     public static boolean isIsOnduty() {
         return QuickUtils.prefs.getBoolean(PREFS.IS_ON_DUTY,false);
     }
