@@ -233,6 +233,9 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
             case 3:
                 startActivity(new Intent(mContext, ProfilePageActivity.class));
                 break;
+            case 4:
+                startActivity(new Intent(mContext, ProfilePageActivity.class));
+                break;
         }
     }
 
@@ -249,6 +252,8 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
 
         menuPojoList.add(new MenuListPojo(getResources().getString(R.string.title_activity_history_page), R.drawable.ic_history));
         menuPojoList.add(new MenuListPojo(getResources().getString(R.string.title_activity_profile_page), R.drawable.ic_id_card));
+
+        menuPojoList.add(new MenuListPojo(getResources().getString(R.string.title_activity_broadcast_page), R.drawable.ic_broadcast_icon));
 
         InflateMenuAdapter mainMenuAdaptor = new InflateMenuAdapter(DashboardActivity.this, menuPojoList);
         menuGridView.setAdapter(mainMenuAdaptor);
