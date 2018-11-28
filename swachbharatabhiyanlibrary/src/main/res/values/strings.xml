@@ -82,4 +82,5 @@
     <string name="opening_round_bracket" translatable="false">(</string>
     <string name="closing_round_bracket" translatable="false">)</string>
 
+    <string name="area_validation">Please Select Valid Area.</string>
 </resources>
