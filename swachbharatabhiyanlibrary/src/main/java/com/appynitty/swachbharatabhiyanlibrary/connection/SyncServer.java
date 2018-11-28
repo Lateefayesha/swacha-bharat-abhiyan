@@ -6,6 +6,9 @@ import com.appynitty.retrofitconnectionlibrary.connection.Connection;
 import com.appynitty.retrofitconnectionlibrary.pojos.ResultPojo;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.UserDetailAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.VehicleTypeAdapterClass;
+import com.appynitty.swachbharatabhiyanlibrary.pojos.CollectionAreaHousePojo;
+import com.appynitty.swachbharatabhiyanlibrary.pojos.CollectionAreaPointPojo;
+import com.appynitty.swachbharatabhiyanlibrary.pojos.CollectionAreaPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.GarbageCollectionPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.GcResultPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.ImagePojo;
@@ -19,6 +22,7 @@ import com.appynitty.swachbharatabhiyanlibrary.pojos.VehicleTypePojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.WorkHistoryDetailPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.WorkHistoryPojo;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
+import com.appynitty.swachbharatabhiyanlibrary.webservices.AreaHousePointService;
 import com.appynitty.swachbharatabhiyanlibrary.webservices.GarbageCollectionWebService;
 import com.appynitty.swachbharatabhiyanlibrary.webservices.LoginWebService;
 import com.appynitty.swachbharatabhiyanlibrary.webservices.PunchWebService;
@@ -357,5 +361,58 @@ public class SyncServer {
         }
 
         return doUpdate;
+    }
+
+    public List<CollectionAreaPojo> fetchCollectionArea(String areaType){
+
+        List<CollectionAreaPojo> areaPojoList = null;
+
+        try{
+
+            AreaHousePointService  areaHousePointService = Connection.createService(AreaHousePointService.class, AUtils.SERVER_URL);
+            areaPojoList = areaHousePointService.fetchCollectionArea(QuickUtils.prefs.getString(AUtils.APP_ID, ""), areaType)
+                    .execute().body();
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return areaPojoList;
+    }
+
+    public List<CollectionAreaHousePojo> fetchCollectionAreaHouse(String areaType, String areaId){
+
+        List<CollectionAreaHousePojo> areaPojoList = null;
+
+        try{
+
+            AreaHousePointService  areaHousePointService = Connection.createService(AreaHousePointService.class, AUtils.SERVER_URL);
+            areaPojoList = areaHousePointService.fetchCollectionAreaHouse(
+                    QuickUtils.prefs.getString(AUtils.APP_ID, ""), areaType, areaId)
+                    .execute().body();
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return areaPojoList;
+    }
+
+    public List<CollectionAreaPointPojo> fetchCollectionAreaPoint(String areaType, String areaId){
+
+        List<CollectionAreaPointPojo> areaPojoList = null;
+
+        try{
+
+            AreaHousePointService  areaHousePointService = Connection.createService(AreaHousePointService.class, AUtils.SERVER_URL);
+            areaPojoList = areaHousePointService.fetchCollectionAreaPoint(
+                    QuickUtils.prefs.getString(AUtils.APP_ID, ""), areaType, areaId)
+                    .execute().body();
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return areaPojoList;
     }
 }

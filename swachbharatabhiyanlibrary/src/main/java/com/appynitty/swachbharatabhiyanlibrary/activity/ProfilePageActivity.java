@@ -150,5 +150,6 @@ public class ProfilePageActivity extends AppCompatActivity {
         empId.setText(userDetailPojo.getUserId());
         contactNo.setText(userDetailPojo.getMobileNumber());
         address.setText(userDetailPojo.getAddress());
+        bloodGroup.setText(userDetailPojo.getBloodGroup());
     }
 }

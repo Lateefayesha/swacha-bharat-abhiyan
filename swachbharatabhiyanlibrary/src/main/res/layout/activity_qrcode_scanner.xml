@@ -22,26 +22,86 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
-            android:paddingTop="@dimen/dim_30_dp"
+            android:paddingTop="@dimen/padding_margin_layout"
             android:paddingBottom="@dimen/dim_20_dp"
             android:paddingStart="@dimen/padding_margin_layout"
-            android:paddingEnd="@dimen/padding_margin_layout">
+            android:paddingEnd="@dimen/padding_margin_layout"
+            android:orientation="vertical"
+            android:focusableInTouchMode="true">
+
+            <RadioGroup
+                android:id="@+id/collection_radio_group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_horizontal"
+                android:visibility="gone">
+
+                <RadioButton
+                    android:id="@+id/house_collection_radio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/house_collection_txt"
+                    android:layout_margin="@dimen/padding_margin_layout"
+                    android:textColor="@color/white"
+                    android:checked="true"
+                    android:buttonTint="@color/white"/>
+
+                <RadioButton
+                    android:id="@+id/point_collection_radio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/point_collection_txt"
+                    android:layout_margin="@dimen/padding_margin_layout"
+                    android:textColor="@color/white"
+                    android:buttonTint="@color/white"/>
+
+            </RadioGroup>
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:theme="@style/TextLabel">
+                android:id="@+id/txt_area_layout"
+                android:hint="@string/select_area_hint"
+                android:theme="@style/TextLabel2"
+                android:layout_marginBottom="@dimen/padding_margin_layout_double"
+                android:layout_marginTop="0dp"
+                android:backgroundTint="@color/white">
 
-                <EditText
-                    android:id="@+id/txt_house_no"
-                    style="@style/MyEditTextStyleDark"
-                    android:inputType="textCapWords"
-                    android:hint="@string/house_number_hint"
-                    android:textColorHint="@color/white"
+                <AutoCompleteTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:id="@+id/txt_area_auto"
                     android:textColor="@color/white"
                     android:layout_marginStart="@dimen/padding_margin_layout"
                     android:layout_marginEnd="@dimen/padding_margin_layout"
-                    android:textSize="@dimen/button_text_size"/>
+                    android:textSize="@dimen/dim_18_sp"
+                    android:maxLines="1"
+                    android:backgroundTint="@color/white"
+                    android:imeOptions="actionNext"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hp_gp_id_hint"
+                android:theme="@style/TextLabel2"
+                android:id="@+id/txt_id_layout"
+                android:backgroundTint="@color/white">
+
+                <AutoCompleteTextView
+                    android:id="@+id/txt_id_auto"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/padding_margin_layout"
+                    android:layout_marginEnd="@dimen/padding_margin_layout"
+                    android:textSize="@dimen/dim_18_sp"
+                    android:maxLines="1"
+                    android:textColor="@color/white"
+                    android:backgroundTint="@color/white"
+                    android:imeOptions="actionDone"/>
 
             </android.support.design.widget.TextInputLayout>
 
