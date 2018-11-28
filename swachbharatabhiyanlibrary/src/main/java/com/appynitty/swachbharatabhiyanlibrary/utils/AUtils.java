@@ -20,6 +20,8 @@ import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.appynitty.swachbharatabhiyanlibrary.R;
@@ -509,5 +511,19 @@ public class AUtils extends MsUtils {
             }
         }
         return false;
+    }
+
+    public static void showKeyboard(Activity activity) {
+        View view = activity.getCurrentFocus();
+        InputMethodManager methodManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        assert methodManager != null && view != null;
+        methodManager.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
+    }
+
+    public static void hideKeyboard(Activity activity) {
+        View view = activity.getCurrentFocus();
+        InputMethodManager methodManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        assert methodManager != null && view != null;
+        methodManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 }

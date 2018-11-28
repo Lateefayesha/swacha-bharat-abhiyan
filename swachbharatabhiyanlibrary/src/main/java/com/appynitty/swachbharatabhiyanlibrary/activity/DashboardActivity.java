@@ -228,10 +228,13 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
                     AUtils.showWarning(mContext, getResources().getString(R.string.be_no_duty));
                 break;
             case 2:
-                startActivity(new Intent(mContext, HistoryPageActivity.class));
+                if(AUtils.isIsOnduty())
+                    startActivity(new Intent(mContext, BroadcastActivity.class));
+                else
+                    AUtils.showWarning(mContext, getResources().getString(R.string.be_no_duty));
                 break;
             case 3:
-                startActivity(new Intent(mContext, ProfilePageActivity.class));
+                startActivity(new Intent(mContext, HistoryPageActivity.class));
                 break;
             case 4:
                 startActivity(new Intent(mContext, ProfilePageActivity.class));
@@ -250,10 +253,12 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         menuPojoList.add(new MenuListPojo(getResources().getString(R.string.title_activity_qrcode_scanner), R.drawable.ic_qr_code));
         menuPojoList.add(new MenuListPojo(getResources().getString(R.string.title_activity_take_photo), R.drawable.ic_photograph));
 
+        menuPojoList.add(new MenuListPojo(getResources().getString(R.string.title_activity_broadcast_page), R.drawable.ic_broadcast_icon));
         menuPojoList.add(new MenuListPojo(getResources().getString(R.string.title_activity_history_page), R.drawable.ic_history));
+
         menuPojoList.add(new MenuListPojo(getResources().getString(R.string.title_activity_profile_page), R.drawable.ic_id_card));
 
-        menuPojoList.add(new MenuListPojo(getResources().getString(R.string.title_activity_broadcast_page), R.drawable.ic_broadcast_icon));
+
 
         InflateMenuAdapter mainMenuAdaptor = new InflateMenuAdapter(DashboardActivity.this, menuPojoList);
         menuGridView.setAdapter(mainMenuAdaptor);
