@@ -37,13 +37,13 @@ import quickutils.core.QuickUtils;
 public class AUtils extends MsUtils {
 
     //    Local URL
-//    public static final String SERVER_URL = "http://192.168.200.4:6077/";
+    public static final String SERVER_URL = "http://192.168.200.4:6077/";
 
     //    Staging URL
 //    public static final String SERVER_URL = "http://115.115.153.117:4088/";
 
     //    Relese URL
-    public static final String SERVER_URL = "http://115.115.153.117:4044/";
+//    public static final String SERVER_URL = "http://115.115.153.117:4044/";
 
 
     //    General Constant
@@ -88,6 +88,8 @@ public class AUtils extends MsUtils {
     public static final String LOCATION = "LocationLatLog";
     public static final String HISTORY_DETAILS = "HistoryDetails";
     public static final String HISTORY_DETAILS_DATE = "HistoryDetailsDate";
+    public static final String RADIO_SELECTED_HP = "house_point";
+    public static final String RADIO_SELECTED_GP = "garbage_point";
 
     public static final String CONFIRM_LOGOUT_DIALOG = "confirmLogout";
     public static final String CONFIRM_OFFDUTY_DIALOG = "confirmOffDuty";

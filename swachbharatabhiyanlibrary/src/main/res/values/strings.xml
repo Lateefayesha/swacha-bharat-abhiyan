@@ -31,7 +31,10 @@
     <string name="status_off_duty">Off Duty</string>
     <string name="status_on_duty">On Duty</string>
 
-    <string name="house_number_hint">Enter House ID/Garbage Point ID</string>
+    <string name="select_area_hint">Select Area</string>
+    <string name="hp_gp_id_hint">Enter House ID/Garbage Point ID</string>
+    <string name="house_number_hint">Enter House Number</string>
+    <string name="gp_id_hint">Enter Garbage Point ID</string>
 
     <string name="take_before_photo">Take Before Photo</string>
     <string name="take_after_photo">Take After Photo</string>
@@ -68,7 +71,6 @@
 
     <string name="yes_txt">Yes</string>
     <string name="no_txt">No</string>
-
 
     <string name="update_txt" translatable="false">UPDATE</string>
     <string name="no_thanks_txt" translatable="false">NO, THANKS</string>

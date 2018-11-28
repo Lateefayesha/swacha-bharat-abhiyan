@@ -16,6 +16,8 @@ public class UserDetailPojo {
 
     private String nameMar;
 
+    private String bloodGroup;
+
     public String getProfileImage() {
         return profileImage;
     }
@@ -72,6 +74,14 @@ public class UserDetailPojo {
         this.nameMar = nameMar;
     }
 
+    public String getBloodGroup() {
+        return bloodGroup;
+    }
+
+    public void setBloodGroup(String bloodGroup) {
+        this.bloodGroup = bloodGroup;
+    }
+
     @Override
     public String toString() {
         return "UserDetailPojo{" +
@@ -82,6 +92,7 @@ public class UserDetailPojo {
                 ", type='" + type + '\'' +
                 ", mobileNumber='" + mobileNumber + '\'' +
                 ", nameMar='" + nameMar + '\'' +
+                ", bloodGroup='" + bloodGroup + '\'' +
                 '}';
     }
 }

@@ -26,7 +26,12 @@
     <string name="logout_txt">लॉगआउट</string>
     <string name="status_off_duty">ऑफ ड्यूटी</string>
     <string name="status_on_duty">ऑन ड्यूटी</string>
-    <string name="house_number_hint">घर आयडी/कचरा पॉइंट आयडी प्रविष्ट करा</string>
+
+    <string name="select_area_hint">क्षेत्र निवडा</string>
+    <string name="hp_gp_id_hint">घर आयडी/कचरा पॉइंट आयडी प्रविष्ट करा</string>
+    <string name="house_number_hint">घर क्रमांक प्रविष्ट करा</string>
+    <string name="gp_id_hint">कचरा पॉइंट आयडी प्रविष्ट करा</string>
+
     <string name="take_before_photo">पूर्वीची फोटो</string>
     <string name="take_after_photo">नंतरची फोटो</string>
     <string name="comments">टिप्पण्या</string>

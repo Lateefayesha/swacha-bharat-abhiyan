@@ -12,23 +12,32 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.appynitty.swachbharatabhiyanlibrary.R;
 import com.appynitty.swachbharatabhiyanlibrary.connection.SyncServer;
+import com.appynitty.swachbharatabhiyanlibrary.pojos.CollectionAreaHousePojo;
+import com.appynitty.swachbharatabhiyanlibrary.pojos.CollectionAreaPointPojo;
+import com.appynitty.swachbharatabhiyanlibrary.pojos.CollectionAreaPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.GarbageCollectionPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.GcResultPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.ImagePojo;
@@ -40,12 +49,16 @@ import com.google.gson.reflect.TypeToken;
 import com.mithsoft.lib.components.Toasty;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 
 import io.github.kobakei.materialfabspeeddial.FabSpeedDial;
 import me.dm7.barcodescanner.zbar.Result;
 import me.dm7.barcodescanner.zbar.ZBarScannerView;
 import quickutils.core.QuickUtils;
+import quickutils.core.categories.view;
 
 public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScannerView.ResultHandler {
 
@@ -54,11 +67,21 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
     private Toolbar toolbar;
     private ZBarScannerView scannerView;
     private FabSpeedDial fabSpeedDial;
-    private EditText houseNoEditText;
+    private AutoCompleteTextView areaAutoComplete;
+    private TextInputLayout idIpLayout;
+    private AutoCompleteTextView idAutoComplete;
+    private RadioGroup collectionRadioGroup;
+    private String radioSelection;
     private Button submitBtn, permissionBtn;
     private View contentView;
     private boolean isActivityData;
     private ImagePojo imagePojo;
+    private Boolean isScanQr;
+    private HashMap<String, String> areaHash;
+    private HashMap<String, String> idHash;
+    private List<CollectionAreaPojo> areaPojoList;
+    private List<CollectionAreaHousePojo> hpPojoList;
+    private List<CollectionAreaPointPojo> gpPojoList;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -90,13 +113,29 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
         AUtils.mCurrentContext = mContext;
 
         fabSpeedDial = findViewById(R.id.flash_toggle);
-        houseNoEditText = findViewById(R.id.txt_house_no);
+
+        areaAutoComplete = findViewById(R.id.txt_area_auto);
+        areaAutoComplete.setThreshold(0);
+        areaAutoComplete.setDropDownBackgroundResource(R.color.white);
+        areaAutoComplete.setSingleLine();
+
+        idAutoComplete = findViewById(R.id.txt_id_auto);
+        idAutoComplete.setThreshold(0);
+        idAutoComplete.setDropDownBackgroundResource(R.color.white);
+        idAutoComplete.setSingleLine();
+
+        idIpLayout = findViewById(R.id.txt_id_layout);
+        collectionRadioGroup = findViewById(R.id.collection_radio_group);
+        radioSelection = AUtils.RADIO_SELECTED_HP;
+
         submitBtn = findViewById(R.id.submit_button);
         permissionBtn = findViewById(R.id.grant_permission);
         contentView = findViewById(R.id.scanner_view);
 
         imagePojo = null;
+        areaPojoList = null;
         isActivityData = false;
+        isScanQr = true;
 
         ViewGroup contentFrame = (ViewGroup) findViewById(R.id.qr_scanner);
         scannerView = new ZBarScannerView(mContext);
@@ -115,35 +154,88 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
 
     protected void registerEvents() {
 
-        houseNoEditText.addTextChangedListener(new TextWatcher() {
+        submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                if(editable.toString().equals("")){
-                    startCamera();
-                    contentView.setVisibility(View.VISIBLE);
-                    submitBtn.setVisibility(View.GONE);
-                }else{
-                    stopCamera();
-                    contentView.setVisibility(View.GONE);
-                    submitBtn.setVisibility(View.VISIBLE);
+            public void onClick(View view) {
+                String id = idAutoComplete.getText().toString();
+                if(idHash.containsKey(id)){
+                    submitQRcode(idHash.get(id));
                 }
             }
         });
 
-        submitBtn.setOnClickListener(new View.OnClickListener() {
+        collectionRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
-            public void onClick(View view) {
-                submitQRcode(houseNoEditText.getText().toString());
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                int radioGroupId = radioGroup.getCheckedRadioButtonId();
+
+                if (radioGroupId == R.id.house_collection_radio) {
+                    idIpLayout.setHint(getResources().getString(R.string.house_number_hint));
+                    radioSelection = AUtils.RADIO_SELECTED_HP;
+                    fetchAreaList(true);
+                }
+
+                if (radioGroupId == R.id.point_collection_radio){
+                    idIpLayout.setHint(getResources().getString(R.string.gp_id_hint));
+                    radioSelection = AUtils.RADIO_SELECTED_GP;
+                    fetchAreaList(true);
+                }
+            }
+        });
+
+        idAutoComplete.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean isFocused) {
+                if (isFocused && isScanQr)
+                    hideQR();
+                else {
+                    idAutoComplete.clearListSelection();
+                }
+            }
+        });
+
+        idAutoComplete.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+            }
+        });
+
+        areaAutoComplete.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean isFocused) {
+                if(isFocused){
+                    areaAutoComplete.showDropDown();
+                }
+            }
+        });
+
+        areaAutoComplete.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                String area = areaAutoComplete.getText().toString();
+                if(areaHash.containsKey(area))
+                    inflateAutoComplete(areaHash.get(area));
+                else
+                    Toasty.error(mContext, "Please Select Valid Area").show();
+            }
+        });
+
+        areaAutoComplete.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                if(actionId == EditorInfo.IME_ACTION_NEXT){
+                    String area = areaAutoComplete.getText().toString();
+                    if(areaHash.containsKey(area)){
+                        inflateAutoComplete(areaHash.get(area));
+                        return true;
+                    }else {
+                        areaAutoComplete.requestFocus();
+                        Toasty.error(mContext, "Please Select Valid Area").show();
+                    }
+                }
+                return false;
             }
         });
 
@@ -172,6 +264,7 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
     protected void initData() {
 
         checkCameraPermission();
+        fetchAreaList(false);
 
         Intent intent = getIntent();
         if(intent.hasExtra(AUtils.REQUEST_CODE)){
@@ -185,7 +278,7 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
     }
 
     private void submitQRcode(String houseid) {
-        startAsyncTask(houseid);
+        startSubmitQRAsyncTask(houseid);
     }
 
     private void showPopup(String id, GcResultPojo pojo){
@@ -258,6 +351,37 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
         }else{
             contentView.setVisibility(View.GONE);
             permissionBtn.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void scanQR(){
+        isScanQr = true;
+        startCamera();
+        contentView.setVisibility(View.VISIBLE);
+        submitBtn.setVisibility(View.GONE);
+        collectionRadioGroup.setVisibility(View.GONE);
+        areaAutoComplete.setVisibility(View.GONE);
+        areaAutoComplete.setText("");
+        idAutoComplete.clearFocus();
+        idAutoComplete.setText("");
+        idIpLayout.setHint(getResources().getString(R.string.hp_gp_id_hint));
+    }
+
+    private void hideQR(){
+        isScanQr= false;
+        stopCamera();
+        contentView.setVisibility(View.GONE);
+        submitBtn.setVisibility(View.VISIBLE);
+        collectionRadioGroup.setVisibility(View.VISIBLE);
+        areaAutoComplete.setVisibility(View.VISIBLE);
+        areaAutoComplete.requestFocusFromTouch();
+        areaAutoComplete.setSelected(true);
+
+        if(radioSelection.equals(AUtils.RADIO_SELECTED_HP)) {
+            idIpLayout.setHint(getResources().getString(R.string.house_number_hint));
+        }
+        else{
+            idIpLayout.setHint(getResources().getString(R.string.gp_id_hint));
         }
     }
 
@@ -387,7 +511,74 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
         startPreview();
     }
 
-    private void startAsyncTask(final String houseNo){
+    private void fetchAreaList(Boolean isProgress) {
+        new MyAsyncTask(mContext, isProgress, new MyAsyncTask.AsynTaskListener() {
+
+            @Override
+            public void doInBackgroundOpration(SyncServer syncServer) {
+
+                areaPojoList = syncServer.fetchCollectionArea(getAreaType());
+            }
+
+            @Override
+            public void onFinished() {
+                if(!AUtils.isNull(areaPojoList)){
+                    areaAutoComplete.clearListSelection();
+                    areaAutoComplete.requestFocus();
+                    idAutoComplete.clearListSelection();
+                    inflateAreaAutoComplete(areaPojoList);
+                }else{
+                    Toasty.error(mContext, getResources().getString(R.string.serverError)).show();
+                }
+            }
+        }).execute();
+    }
+
+    private void fetchHpList(final String areaId) {
+        new MyAsyncTask(mContext, true, new MyAsyncTask.AsynTaskListener() {
+
+            @Override
+            public void doInBackgroundOpration(SyncServer syncServer) {
+
+                hpPojoList = syncServer.fetchCollectionAreaHouse(getAreaType(), areaId);
+            }
+
+            @Override
+            public void onFinished() {
+                if(!AUtils.isNull(hpPojoList)){
+                    inflateHpAutoComplete(hpPojoList);
+                }else{
+                    Toasty.error(mContext, getResources().getString(R.string.serverError)).show();
+                }
+            }
+        }).execute();
+    }
+
+    private void fetchGpList(final String areaId) {
+        new MyAsyncTask(mContext, true, new MyAsyncTask.AsynTaskListener() {
+
+            @Override
+            public void doInBackgroundOpration(SyncServer syncServer) {
+                String areaType = "2";
+                if(radioSelection.equals(AUtils.RADIO_SELECTED_HP)){
+                    areaType = "1";
+                }
+
+                gpPojoList = syncServer.fetchCollectionAreaPoint(areaType, areaId);
+            }
+
+            @Override
+            public void onFinished() {
+                if(!AUtils.isNull(gpPojoList)){
+                    inflateGpAutoComplete(gpPojoList);
+                }else{
+                    Toasty.error(mContext, getResources().getString(R.string.serverError)).show();
+                }
+            }
+        }).execute();
+    }
+
+    private void startSubmitQRAsyncTask(final String houseNo){
 
         stopCamera();
         new MyAsyncTask(mContext, true, new MyAsyncTask.AsynTaskListener() {
@@ -418,5 +609,83 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
                 }
             }
         }).execute();
+    }
+
+    private void inflateAreaAutoComplete(List<CollectionAreaPojo> pojoList){
+
+        areaHash = new HashMap<>();
+        ArrayList<String> keyList = new ArrayList<>();
+        for(CollectionAreaPojo pojo : pojoList){
+            areaHash.put(pojo.getArea(), pojo.getId());
+            keyList.add(pojo.getArea().trim());
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_dropdown_item_1line, keyList);
+        areaAutoComplete.setThreshold(0);
+        areaAutoComplete.setAdapter(adapter);
+        if(!areaAutoComplete.isFocused()){
+            areaAutoComplete.requestFocus();
+        }
+        areaAutoComplete.showDropDown();
+
+    }
+
+    private void inflateHpAutoComplete(List<CollectionAreaHousePojo> pojoList){
+
+        idHash = new HashMap<>();
+        ArrayList<String> keyList = new ArrayList<>();
+        for(CollectionAreaHousePojo pojo : pojoList){
+            idHash.put(pojo.getHouseNumber(), pojo.getHouseid());
+            keyList.add(pojo.getHouseNumber().trim());
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_dropdown_item_1line, keyList);
+        idAutoComplete.setThreshold(0);
+        idAutoComplete.setAdapter(adapter);
+        idAutoComplete.requestFocus();
+        idAutoComplete.showDropDown();
+    }
+
+    private void inflateGpAutoComplete(List<CollectionAreaPointPojo> pojoList){
+
+        idHash = new HashMap<>();
+        ArrayList<String> keyList = new ArrayList<>();
+        for(CollectionAreaPointPojo pojo : pojoList){
+            idHash.put(pojo.getGpName(), pojo.getGpId());
+            keyList.add(pojo.getGpName().trim());
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_dropdown_item_1line, keyList);
+        idAutoComplete.setThreshold(0);
+        idAutoComplete.setAdapter(adapter);
+        idAutoComplete.requestFocus();
+        idAutoComplete.showDropDown();
+    }
+
+    private void inflateAutoComplete(String areaId){
+        String areaType = getAreaType();
+        if(areaType.equals("1")){
+            fetchHpList(areaId);
+        }
+
+        if(areaType.equals("2")){
+            fetchGpList(areaId);
+        }
+    }
+
+    private String getAreaType(){
+        String areaType = "2";
+        if(radioSelection.equals(AUtils.RADIO_SELECTED_HP)){
+            areaType = "1";
+        }
+        return areaType;
+    }
+    @Override
+    public void onBackPressed() {
+        if(!isScanQr){
+            scanQR();
+        }else {
+            super.onBackPressed();
+        }
     }
 }
