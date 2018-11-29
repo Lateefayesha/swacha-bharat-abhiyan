@@ -12,23 +12,33 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.appynitty.swachbharatabhiyanlibrary.R;
 import com.appynitty.swachbharatabhiyanlibrary.connection.SyncServer;
+import com.appynitty.swachbharatabhiyanlibrary.pojos.CollectionAreaHousePojo;
+import com.appynitty.swachbharatabhiyanlibrary.pojos.CollectionAreaPointPojo;
+import com.appynitty.swachbharatabhiyanlibrary.pojos.CollectionAreaPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.GarbageCollectionPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.GcResultPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.ImagePojo;
@@ -40,25 +50,28 @@ import com.google.gson.reflect.TypeToken;
 import com.mithsoft.lib.components.Toasty;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 
 import io.github.kobakei.materialfabspeeddial.FabSpeedDial;
 import me.dm7.barcodescanner.zbar.Result;
 import me.dm7.barcodescanner.zbar.ZBarScannerView;
 import quickutils.core.QuickUtils;
+import quickutils.core.categories.view;
 
 public class BroadcastActivity extends AppCompatActivity {
 
-    private final static String TAG = "QRcodeScannerActivity";
+    private final static String TAG = "BroadcastActivity";
     private Context mContext;
     private Toolbar toolbar;
-    private ZBarScannerView scannerView;
-    private FabSpeedDial fabSpeedDial;
-    private EditText houseNoEditText;
-    private Button submitBtn, permissionBtn;
-    private View contentView;
-    private boolean isActivityData;
-    private ImagePojo imagePojo;
+    private AutoCompleteTextView areaAutoComplete;
+    private Button submitBtn;
+
+    private HashMap<String, String> areaHash;
+
+    private List<CollectionAreaPojo> areaPojoList;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -83,87 +96,56 @@ public class BroadcastActivity extends AppCompatActivity {
     }
 
     protected void generateId() {
-        setContentView(R.layout.activity_qrcode_scanner);
+        setContentView(R.layout.activity_broadcast);
         toolbar = findViewById(R.id.toolbar);
 
         mContext = BroadcastActivity.this;
         AUtils.mCurrentContext = mContext;
 
-        fabSpeedDial = findViewById(R.id.flash_toggle);
-        houseNoEditText = findViewById(R.id.txt_house_no);
+        areaAutoComplete = findViewById(R.id.txt_area_auto);
+        areaAutoComplete.setThreshold(0);
+        areaAutoComplete.setDropDownBackgroundResource(R.color.white);
+        areaAutoComplete.setSingleLine();
+
         submitBtn = findViewById(R.id.submit_button);
-        permissionBtn = findViewById(R.id.grant_permission);
-        contentView = findViewById(R.id.scanner_view);
 
-        imagePojo = null;
-        isActivityData = false;
-
-        ViewGroup contentFrame = (ViewGroup) findViewById(R.id.qr_scanner);
-        scannerView = new ZBarScannerView(mContext);
-        scannerView.setLaserColor(getResources().getColor(R.color.colorPrimary));
-        scannerView.setBorderColor(getResources().getColor(R.color.colorPrimary));
-        contentFrame.addView(scannerView);
+        areaPojoList = null;
 
         initToolbar();
     }
 
     protected void initToolbar(){
-        toolbar.setTitle(getResources().getString(R.string.title_activity_qrcode_scanner));
+        toolbar.setTitle(getResources().getString(R.string.title_activity_broadcast_page));
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
     }
 
     protected void registerEvents() {
 
-        houseNoEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                if(editable.toString().equals("")){
-                    startCamera();
-                    contentView.setVisibility(View.VISIBLE);
-                    submitBtn.setVisibility(View.GONE);
-                }else{
-                    stopCamera();
-                    contentView.setVisibility(View.GONE);
-                    submitBtn.setVisibility(View.VISIBLE);
-                }
-            }
-        });
-
         submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                submitQRcode(houseNoEditText.getText().toString());
-            }
-        });
-
-        permissionBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                checkCameraPermission();
-            }
-        });
-
-        fabSpeedDial.getMainFab().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(scannerView.getFlash()){
-                    scannerView.setFlash(false);
-                    fabSpeedDial.getMainFab().setImageDrawable(getResources().getDrawable(R.drawable.ic_flash_on_indicator));
-                }else{
-                    scannerView.setFlash(true);
-                    fabSpeedDial.getMainFab().setImageDrawable(getResources().getDrawable(R.drawable.ic_flash_off));
+                if(isAreaValid())
+                {
+                    broadcastMessageAsyncTask(areaHash.get(areaAutoComplete.getText().toString()));
                 }
+            }
+        });
+
+        areaAutoComplete.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean isFocused) {
+                if(isFocused){
+                    AUtils.showKeyboard((Activity)mContext);
+                }
+            }
+        });
+
+        areaAutoComplete.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                String area = areaAutoComplete.getText().toString();
             }
         });
 
@@ -171,187 +153,7 @@ public class BroadcastActivity extends AppCompatActivity {
 
     protected void initData() {
 
-        checkCameraPermission();
-
-        Intent intent = getIntent();
-        if(intent.hasExtra(AUtils.REQUEST_CODE)){
-            Type type = new TypeToken<ImagePojo>(){}.getType();
-            imagePojo = new Gson().fromJson(QuickUtils.prefs.getString(AUtils.PREFS.IMAGE_POJO, null), type);
-
-            if(!AUtils.isNull(imagePojo)){
-                isActivityData = true;
-            }
-        }
-    }
-
-    private void submitQRcode(String houseid) {
-        startAsyncTask(houseid);
-    }
-
-    private void showPopup(String id, GcResultPojo pojo){
-
-        final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setCancelable(false);
-        View view = View.inflate(mContext, R.layout.layout_qr_result, null);
-        builder.setView(view);
-        final AlertDialog dialog = builder.create();
-        if(!dialog.isShowing()){
-            dialog.show();
-        }
-
-        final String responseStatus = pojo.getStatus();
-
-        TextView ownerName = view.findViewById(R.id.house_owner_name);
-        TextView houseId = view.findViewById(R.id.house_id);
-        TextView collectionStatus = view.findViewById(R.id.collection_status);
-        ImageView statusImage = view.findViewById(R.id.response_image);
-        Button doneBtn = view.findViewById(R.id.done_btn);
-
-        if(responseStatus.equals(AUtils.STATUS_ERROR)){
-            statusImage.setImageDrawable(getDrawable(R.drawable.ic_cancel_red));
-            doneBtn.setText(getString(R.string.retry_txt));
-            houseId.setText(null);
-            if(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID, AUtils.DEFAULT_LANGUAGE_ID).equals("2")){
-                collectionStatus.setText(pojo.getMessageMar());
-            }else{
-                collectionStatus.setText(pojo.getMessage());
-            }
-            ownerName.setText(id.toUpperCase());
-        }else if(responseStatus.equals(AUtils.STATUS_SUCCESS)){
-            ownerName.setText(pojo.getName());
-            houseId.setText(id);
-
-            Type type = new TypeToken<ImagePojo>() {
-            }.getType();
-
-            imagePojo = new Gson().fromJson(
-                    QuickUtils.prefs.getString(AUtils.PREFS.IMAGE_POJO , null), type);
-        }
-
-        doneBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.cancel();
-            }
-        });
-
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialogInterface) {
-                restartPreview();
-                if(responseStatus.equals(AUtils.STATUS_SUCCESS)){
-                    imagePojo = null;
-                    QuickUtils.prefs.save(AUtils.PREFS.IMAGE_POJO, null);
-                    finish();
-                }
-            }
-        });
-
-    }
-
-    private void checkCameraPermission() {
-        if(AUtils.isCameraPermissionGiven(mContext)){
-            startPreview();
-            contentView.setVisibility(View.VISIBLE);
-            permissionBtn.setVisibility(View.GONE);
-            checkLocationPermission();
-        }else{
-            contentView.setVisibility(View.GONE);
-            permissionBtn.setVisibility(View.VISIBLE);
-        }
-    }
-
-    @SuppressLint("MissingPermission")
-    private void checkLocationPermission() {
-
-        if (AUtils.isLocationPermissionGiven(mContext)) {
-            //You already have the permission, just go ahead.
-            LocationManager locationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
-
-            boolean GpsStatus = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-
-            if (!GpsStatus) {
-                startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-            }else{
-                AUtils.saveLocation(locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER));
-            }
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == AUtils.MY_PERMISSIONS_REQUEST_CAMERA) {
-            //check if all permissions are granted
-            boolean allgranted = false;
-            for (int grantResult : grantResults) {
-                if (grantResult == PackageManager.PERMISSION_GRANTED) {
-                    allgranted = true;
-                } else {
-                    allgranted = false;
-                    break;
-                }
-            }
-
-            if (allgranted) {
-                checkCameraPermission();
-            } else if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) mContext, Manifest.permission.CAMERA)) {
-
-                AUtils.showPermissionDialog(mContext, "CAMERA", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            requestPermissions(new String[]{Manifest.permission.CAMERA}, AUtils.MY_PERMISSIONS_REQUEST_CAMERA);
-                        }
-                    }
-                });
-            }
-        } else if (requestCode == AUtils.MY_PERMISSIONS_REQUEST_LOCATION) {
-            //check if all permissions are granted
-            boolean allgranted = false;
-            for (int i = 0; i < grantResults.length; i++) {
-                if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                    allgranted = true;
-                } else {
-                    allgranted = false;
-                    break;
-                }
-            }
-
-            if (allgranted) {
-                checkLocationPermission();
-            }else if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) mContext, Manifest.permission.ACCESS_FINE_LOCATION)) {
-
-                AUtils.showPermissionDialog(mContext, "Location Service", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, AUtils.MY_PERMISSIONS_REQUEST_LOCATION);
-                        }
-                    }
-                });
-            }
-
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        startPreview();
-    }
-
-    @Override
-    protected void onPause() {
-        stopPreview();
-        super.onPause();
-    }
-
-    public void handleResult(Result result) {
-        submitQRcode(result.getContents());
-//        restartPreview();
+        fetchAreaList();
     }
 
     @Override
@@ -364,59 +166,72 @@ public class BroadcastActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void startPreview(){
-        scannerView.startCamera();
-        scannerView.resumeCameraPreview(this);
-    }
-
-    private void stopPreview(){
-        scannerView.stopCameraPreview();
-        scannerView.stopCamera();
-    }
-
-    private void startCamera(){
-        scannerView.startCamera();
-    }
-
-    private void stopCamera(){
-        scannerView.stopCamera();
-    }
-
-    private void restartPreview() {
-        stopPreview();
-        startPreview();
-    }
-
-    private void startAsyncTask(final String houseNo){
-
-        stopCamera();
+    private void fetchAreaList() {
         new MyAsyncTask(mContext, true, new MyAsyncTask.AsynTaskListener() {
-            GcResultPojo resultPojo = null;
+
             @Override
             public void doInBackgroundOpration(SyncServer syncServer) {
 
-                GarbageCollectionPojo garbageCollectionPojo = new GarbageCollectionPojo();
-                garbageCollectionPojo.setId(houseNo);
-                if(isActivityData){
-                    garbageCollectionPojo.setAfterImage(imagePojo.getAfterImage());
-                    garbageCollectionPojo.setBeforeImage(imagePojo.getBeforeImage());
-                    garbageCollectionPojo.setComment(imagePojo.getComment());
-                    garbageCollectionPojo.setImage1(imagePojo.getImage1());
-                    garbageCollectionPojo.setImage2(imagePojo.getImage2());
-                }
-
-                resultPojo = syncServer.saveGarbageCollection(garbageCollectionPojo);
+                areaPojoList = syncServer.fetchCollectionArea(AUtils.HP_AREA_TYPE_ID);
             }
 
             @Override
             public void onFinished() {
-                if(!AUtils.isNull(resultPojo)){
-                    showPopup(houseNo, resultPojo);
+                if(!AUtils.isNull(areaPojoList)){
+                    inflateAreaAutoComplete(areaPojoList);
                 }else{
-                    restartPreview();
-                    Toasty.error(mContext, "" + mContext.getString(R.string.serverError), Toast.LENGTH_SHORT).show();
+                    Toasty.error(mContext, getResources().getString(R.string.serverError)).show();
                 }
             }
         }).execute();
+    }
+
+    private void broadcastMessageAsyncTask(final String areaID){
+
+        new MyAsyncTask(mContext, false, new MyAsyncTask.AsynTaskListener() {
+            @Override
+            public void doInBackgroundOpration(SyncServer syncServer) {
+                syncServer.pullAreaBroadcastFromServer(areaID);
+
+                Toasty.success(mContext, mContext.getResources().getString(R.string.sending_msg), Toast.LENGTH_SHORT);
+
+                finish();
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        }).execute();
+    }
+
+    private void inflateAreaAutoComplete(List<CollectionAreaPojo> pojoList){
+
+        areaHash = new HashMap<>();
+        ArrayList<String> keyList = new ArrayList<>();
+        for(CollectionAreaPojo pojo : pojoList){
+            areaHash.put(pojo.getArea(), pojo.getId());
+            keyList.add(pojo.getArea().trim());
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_dropdown_item_1line, keyList);
+        areaAutoComplete.setThreshold(0);
+        areaAutoComplete.setAdapter(adapter);
+        if(!areaAutoComplete.isFocused()){
+            areaAutoComplete.requestFocus();
+        }
+
+    }
+
+    private boolean isAreaValid()
+    {
+        String area = areaAutoComplete.getText().toString();
+        if(areaHash.containsKey(area)) {
+            return true;
+        }
+        else {
+            Toasty.error(mContext, mContext.getResources().getString(R.string.area_validation)).show();
+            return false;
+        }
     }
 }

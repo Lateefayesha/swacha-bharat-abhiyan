@@ -22,6 +22,7 @@ import com.appynitty.swachbharatabhiyanlibrary.pojos.VehicleTypePojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.WorkHistoryDetailPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.WorkHistoryPojo;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
+import com.appynitty.swachbharatabhiyanlibrary.webservices.AreaBroadcastWebService;
 import com.appynitty.swachbharatabhiyanlibrary.webservices.AreaHousePointService;
 import com.appynitty.swachbharatabhiyanlibrary.webservices.GarbageCollectionWebService;
 import com.appynitty.swachbharatabhiyanlibrary.webservices.LoginWebService;
@@ -414,5 +415,21 @@ public class SyncServer {
         }
 
         return areaPojoList;
+    }
+
+    public void pullAreaBroadcastFromServer(String areaID) {
+
+        ResultPojo resultPojo = null;
+
+        try {
+
+            AreaBroadcastWebService service = Connection.createService(AreaBroadcastWebService.class, AUtils.SERVER_URL);
+            resultPojo = service.pullAreaBroadcast(QuickUtils.prefs.getString(AUtils.APP_ID, ""),
+                    areaID).execute().body();
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
     }
 }

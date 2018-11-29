@@ -67,6 +67,7 @@
     <string name="no_txt">नाही</string>
 
     <string name="area_validation">कृपया वैध क्षेत्र निवडा.</string>
+    <string name="sending_msg">संदेश पाठवित आहे ...</string>
     <string name="hp_validation">कृपया वैध घर क्रमांक निवडा</string>
     <string name="gp_validation">कृपया वैध कचरा पॉइंट निवडा</string>
     <string name="hp_area_validation">कृपया वैध क्षेत्र आणि घर क्रमांक निवडा.</string>
