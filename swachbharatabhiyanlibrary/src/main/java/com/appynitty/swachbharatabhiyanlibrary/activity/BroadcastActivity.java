@@ -128,6 +128,8 @@ public class BroadcastActivity extends AppCompatActivity {
                 if(isAreaValid())
                 {
                     broadcastMessageAsyncTask(areaHash.get(areaAutoComplete.getText().toString()));
+                    Toasty.success(mContext, mContext.getResources().getString(R.string.sending_msg), Toast.LENGTH_SHORT).show();
+                    finish();
                 }
             }
         });
@@ -192,10 +194,6 @@ public class BroadcastActivity extends AppCompatActivity {
             @Override
             public void doInBackgroundOpration(SyncServer syncServer) {
                 syncServer.pullAreaBroadcastFromServer(areaID);
-
-                Toasty.success(mContext, mContext.getResources().getString(R.string.sending_msg), Toast.LENGTH_SHORT);
-
-                finish();
             }
 
             @Override
@@ -210,7 +208,7 @@ public class BroadcastActivity extends AppCompatActivity {
         areaHash = new HashMap<>();
         ArrayList<String> keyList = new ArrayList<>();
         for(CollectionAreaPojo pojo : pojoList){
-            areaHash.put(pojo.getArea(), pojo.getId());
+            areaHash.put(pojo.getArea().toLowerCase(), pojo.getId());
             keyList.add(pojo.getArea().trim());
         }
 
@@ -225,7 +223,7 @@ public class BroadcastActivity extends AppCompatActivity {
 
     private boolean isAreaValid()
     {
-        String area = areaAutoComplete.getText().toString();
+        String area = areaAutoComplete.getText().toString().toLowerCase();
         if(areaHash.containsKey(area)) {
             return true;
         }
