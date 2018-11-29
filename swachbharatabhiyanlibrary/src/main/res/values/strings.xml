@@ -84,4 +84,6 @@
 
     <string name="area_validation">Please Select Valid Area.</string>
     <string name="sending_msg">Sending Messages...</string>
+
+    <string name="try_after_sometime">Please try after sometime!</string>
 </resources>
