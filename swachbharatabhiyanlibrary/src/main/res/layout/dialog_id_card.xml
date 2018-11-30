@@ -86,7 +86,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/hyphen"
-                        android:textSize="@dimen/dimen_25_sp"
+                        android:textSize="@dimen/dim_18_sp"
                         android:textColor="@color/black"/>
 
                     <LinearLayout
@@ -101,7 +101,7 @@
                             android:id="@+id/user_emp_id_lbl"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="50"
+                            android:layout_weight="60"
                             android:text="@string/emp_id_full"
                             android:textColor="@color/colorDefault"/>
 
@@ -109,7 +109,7 @@
                             android:id="@+id/emp_id"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="50"
+                            android:layout_weight="40"
                             android:text="@string/hyphen"
                             android:layout_marginStart="@dimen/padding_margin_layout" />
 
