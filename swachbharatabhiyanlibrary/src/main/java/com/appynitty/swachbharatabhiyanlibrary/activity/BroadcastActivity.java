@@ -127,7 +127,7 @@ public class BroadcastActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if(isAreaValid())
                 {
-                    broadcastMessageAsyncTask(areaHash.get(areaAutoComplete.getText().toString()));
+                    broadcastMessageAsyncTask(areaHash.get(areaAutoComplete.getText().toString().toLowerCase()));
                     Toasty.success(mContext, mContext.getResources().getString(R.string.sending_msg), Toast.LENGTH_SHORT).show();
                     finish();
                 }

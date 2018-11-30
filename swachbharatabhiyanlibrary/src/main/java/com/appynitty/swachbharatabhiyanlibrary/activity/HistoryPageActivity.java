@@ -147,6 +147,7 @@ public class HistoryPageActivity extends AppCompatActivity {
 
     private void initData() {
         initSpinner();
+
         if(AUtils.isNetWorkAvailable(mContext)){
             noInternetErrorLayout.setVisibility(View.GONE);
             fetchHistory(String.valueOf(AUtils.getCurrentYear()),
@@ -165,14 +166,14 @@ public class HistoryPageActivity extends AppCompatActivity {
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(mContext,
                 R.layout.layout_simple_white_textview, AUtils.getMonthSpinnerList());
         monthSpinner.setAdapter(spinnerAdapter);
-        monthSpinner.setSelection(AUtils.getCurrentMonth());
+        monthSpinner.setSelection(AUtils.getCurrentMonth(), true);
     }
 
     public void setYearSpinner(Spinner yearSpinner) {
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(mContext,
                 R.layout.layout_simple_white_textview, AUtils.getYearSpinnerList());
         yearSpinner.setAdapter(spinnerAdapter);
-        yearSpinner.setSelection(1);
+        yearSpinner.setSelection(1, true);
     }
 
     private void setHistoryData() {

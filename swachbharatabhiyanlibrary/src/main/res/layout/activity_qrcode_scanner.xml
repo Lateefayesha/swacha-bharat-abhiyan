@@ -78,8 +78,7 @@
                     android:layout_marginEnd="@dimen/padding_margin_layout"
                     android:textSize="@dimen/dim_18_sp"
                     android:maxLines="1"
-                    android:backgroundTint="@color/white"
-                    android:imeOptions="actionNext"/>
+                    android:backgroundTint="@color/white"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -100,8 +99,7 @@
                     android:textSize="@dimen/dim_18_sp"
                     android:maxLines="1"
                     android:textColor="@color/white"
-                    android:backgroundTint="@color/white"
-                    android:imeOptions="actionDone"/>
+                    android:backgroundTint="@color/white"/>
 
             </android.support.design.widget.TextInputLayout>
 

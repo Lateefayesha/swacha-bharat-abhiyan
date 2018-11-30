@@ -24,6 +24,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -157,10 +158,23 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
         submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String id = idAutoComplete.getText().toString();
-                if(idHash.containsKey(id)){
-                    submitQRcode(idHash.get(id));
+
+                try{
+                    Boolean areaValid = isAutoCompleteValid(areaAutoComplete, areaHash);
+                    Boolean idValid = isAutoCompleteValid(idAutoComplete, idHash);
+
+                    if(areaValid && idValid){
+                        submitQRcode(idHash.get(idAutoComplete.getText().toString().toLowerCase()));
+                    }else{
+                        if(getAreaType().equals(AUtils.HP_AREA_TYPE_ID))
+                            Toasty.error(mContext, mContext.getResources().getString(R.string.hp_area_validation)).show();
+                        else
+                            Toasty.error(mContext, mContext.getResources().getString(R.string.gp_area_validation)).show();
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
+
             }
         });
 
@@ -168,6 +182,10 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                 int radioGroupId = radioGroup.getCheckedRadioButtonId();
+
+                areaAutoComplete.setText("");
+                idAutoComplete.setText("");
+                AUtils.showKeyboard((Activity) mContext);
 
                 if (radioGroupId == R.id.house_collection_radio) {
                     idIpLayout.setHint(getResources().getString(R.string.house_number_hint));
@@ -186,9 +204,13 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
         idAutoComplete.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean isFocused) {
-                if (isFocused && isScanQr)
+                if(isFocused)
+                    AUtils.showKeyboard((Activity) mContext);
+
+                if (isFocused && isScanQr) {
                     hideQR();
-                else {
+                    AUtils.showKeyboard((Activity) mContext);
+                }else {
                     idAutoComplete.clearListSelection();
                 }
             }
@@ -197,16 +219,10 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
         idAutoComplete.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-            }
-        });
-
-        areaAutoComplete.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean isFocused) {
-                if(isFocused){
-                    areaAutoComplete.showDropDown();
-                }
+                if(isAutoCompleteValid(idAutoComplete, idHash))
+                    AUtils.hideKeyboard((Activity) mContext);
+                else
+                    Toasty.error(mContext, mContext.getResources().getString(R.string.area_validation)).show();
             }
         });
 
@@ -214,11 +230,10 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                String area = areaAutoComplete.getText().toString();
-                if(areaHash.containsKey(area))
-                    inflateAutoComplete(areaHash.get(area));
+                if(isAutoCompleteValid(areaAutoComplete, areaHash))
+                    inflateAutoComplete(areaHash.get(areaAutoComplete.getText().toString().toLowerCase()));
                 else
-                    Toasty.error(mContext, "Please Select Valid Area").show();
+                    Toasty.error(mContext, mContext.getResources().getString(R.string.area_validation)).show();
             }
         });
 
@@ -226,13 +241,35 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
                 if(actionId == EditorInfo.IME_ACTION_NEXT){
-                    String area = areaAutoComplete.getText().toString();
-                    if(areaHash.containsKey(area)){
-                        inflateAutoComplete(areaHash.get(area));
-                        return true;
+                    if(isAutoCompleteValid(areaAutoComplete, areaHash)){
+                        inflateAutoComplete(areaHash.get(areaAutoComplete.getText().toString().toLowerCase()));
+                        return false;
                     }else {
                         areaAutoComplete.requestFocus();
-                        Toasty.error(mContext, "Please Select Valid Area").show();
+                        Toasty.error(mContext, mContext.getResources().getString(R.string.area_validation)).show();
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
+
+        idAutoComplete.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+
+                if(actionId == EditorInfo.IME_ACTION_DONE){
+                    if(isAutoCompleteValid(idAutoComplete, idHash)){
+                        AUtils.hideKeyboard((Activity) mContext);
+                        return false;
+                    }else {
+                        idAutoComplete.requestFocus();
+                        if(getAreaType().equals(AUtils.HP_AREA_TYPE_ID))
+                            Toasty.error(mContext, mContext.getResources().getString(R.string.hp_validation)).show();
+                        else
+                            Toasty.error(mContext, mContext.getResources().getString(R.string.gp_validation)).show();
+
+                        return true;
                     }
                 }
                 return false;
@@ -605,7 +642,7 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
                     showPopup(houseNo, resultPojo);
                 }else{
                     restartPreview();
-                    Toasty.error(mContext, "" + mContext.getString(R.string.serverError), Toast.LENGTH_SHORT).show();
+                    Toasty.error(mContext, mContext.getString(R.string.serverError), Toast.LENGTH_SHORT).show();
                 }
             }
         }).execute();
@@ -616,7 +653,7 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
         areaHash = new HashMap<>();
         ArrayList<String> keyList = new ArrayList<>();
         for(CollectionAreaPojo pojo : pojoList){
-            areaHash.put(pojo.getArea(), pojo.getId());
+            areaHash.put(pojo.getArea().toLowerCase()/**/, pojo.getId());
             keyList.add(pojo.getArea().trim());
         }
 
@@ -626,7 +663,7 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
         if(!areaAutoComplete.isFocused()){
             areaAutoComplete.requestFocus();
         }
-        areaAutoComplete.showDropDown();
+//        areaAutoComplete.showDropDown();
 
     }
 
@@ -635,7 +672,7 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
         idHash = new HashMap<>();
         ArrayList<String> keyList = new ArrayList<>();
         for(CollectionAreaHousePojo pojo : pojoList){
-            idHash.put(pojo.getHouseNumber(), pojo.getHouseid());
+            idHash.put(pojo.getHouseNumber().toLowerCase(), pojo.getHouseid());
             keyList.add(pojo.getHouseNumber().trim());
         }
 
@@ -643,7 +680,6 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
         idAutoComplete.setThreshold(0);
         idAutoComplete.setAdapter(adapter);
         idAutoComplete.requestFocus();
-        idAutoComplete.showDropDown();
     }
 
     private void inflateGpAutoComplete(List<CollectionAreaPointPojo> pojoList){
@@ -651,7 +687,7 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
         idHash = new HashMap<>();
         ArrayList<String> keyList = new ArrayList<>();
         for(CollectionAreaPointPojo pojo : pojoList){
-            idHash.put(pojo.getGpName(), pojo.getGpId());
+            idHash.put(pojo.getGpName().toLowerCase(), pojo.getGpId());
             keyList.add(pojo.getGpName().trim());
         }
 
@@ -659,7 +695,6 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
         idAutoComplete.setThreshold(0);
         idAutoComplete.setAdapter(adapter);
         idAutoComplete.requestFocus();
-        idAutoComplete.showDropDown();
     }
 
     private void inflateAutoComplete(String areaId){
@@ -680,6 +715,16 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
         }
         return areaType;
     }
+
+    private Boolean isAutoCompleteValid(AutoCompleteTextView autoCompleteTextView, HashMap<String, String> hashMap){
+        try {
+            return hashMap.containsKey(autoCompleteTextView.getText().toString().toLowerCase());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     @Override
     public void onBackPressed() {
         if(!isScanQr){

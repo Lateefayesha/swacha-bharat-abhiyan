@@ -39,10 +39,10 @@ import quickutils.core.QuickUtils;
 public class AUtils extends MsUtils {
 
     //    Local URL
-    public static final String SERVER_URL = "http://192.168.200.4:6077/";
+//    public static final String SERVER_URL = "http://192.168.200.4:6077/";
 
     //    Staging URL
-//    public static final String SERVER_URL = "http://115.115.153.117:4088/";
+    public static final String SERVER_URL = "http://115.115.153.117:4088/";
 
     //    Relese URL
 //    public static final String SERVER_URL = "http://115.115.153.117:4044/";
@@ -514,16 +514,24 @@ public class AUtils extends MsUtils {
     }
 
     public static void showKeyboard(Activity activity) {
-        View view = activity.getCurrentFocus();
-        InputMethodManager methodManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-        assert methodManager != null && view != null;
-        methodManager.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
+        try{
+            View view = activity.getCurrentFocus();
+            InputMethodManager methodManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            methodManager.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     public static void hideKeyboard(Activity activity) {
-        View view = activity.getCurrentFocus();
-        InputMethodManager methodManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-        assert methodManager != null && view != null;
-        methodManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        try{
+            View view = activity.getCurrentFocus();
+            InputMethodManager methodManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (view != null) {
+                methodManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }
