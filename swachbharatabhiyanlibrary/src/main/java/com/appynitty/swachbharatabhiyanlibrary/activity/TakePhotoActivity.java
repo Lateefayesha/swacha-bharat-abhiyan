@@ -47,6 +47,8 @@ public class TakePhotoActivity extends BaseActivity {
     private static final int REQUEST_CAMERA = 22;
     private static final int SELECT_FILE = 33;
 
+    private static int imageViewNo = 0;
+
 
     private Context mContext;
     private Toolbar toolbar;
@@ -55,8 +57,6 @@ public class TakePhotoActivity extends BaseActivity {
     private ImageView beforeImage;
     private ImageView afterImage;
     private CardView openQR;
-
-    private int imageViewNo = 0;
 
     private String resumeFilePath = "";
     private String beforeImageFilePath = "";
