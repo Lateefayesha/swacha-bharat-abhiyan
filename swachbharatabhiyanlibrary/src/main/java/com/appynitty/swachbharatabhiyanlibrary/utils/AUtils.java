@@ -440,7 +440,7 @@ public class AUtils extends MsUtils {
 
     public static Integer getCurrentMonth(){
         Calendar currMonth = Calendar.getInstance();
-        currMonth.add(Calendar.MONTH, 1);
+        currMonth.add(Calendar.MONTH, 0);
         return currMonth.get(Calendar.MONTH);
     }
 

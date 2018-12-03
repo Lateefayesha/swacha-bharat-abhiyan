@@ -166,7 +166,7 @@ public class HistoryPageActivity extends AppCompatActivity {
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(mContext,
                 R.layout.layout_simple_white_textview, AUtils.getMonthSpinnerList());
         monthSpinner.setAdapter(spinnerAdapter);
-        monthSpinner.setSelection(AUtils.getCurrentMonth(), true);
+        monthSpinner.setSelection((AUtils.getCurrentMonth()+1), true);
     }
 
     public void setYearSpinner(Spinner yearSpinner) {

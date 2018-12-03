@@ -83,7 +83,7 @@
     <string name="closing_round_bracket" translatable="false">)</string>
 
     <string name="area_validation">Please Select Valid Area.</string>
-    <string name="sending_msg">Sending Messages...</string>
+    <string name="sending_msg">Sending Messages…</string>
 
     <string name="try_after_sometime">Please try after sometime!</string>
     <string name="hp_validation">Please Select Valid House Number</string>
