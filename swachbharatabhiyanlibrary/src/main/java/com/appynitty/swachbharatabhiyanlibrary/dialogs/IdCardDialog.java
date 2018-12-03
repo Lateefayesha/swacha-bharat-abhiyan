@@ -1,13 +1,11 @@
 package com.appynitty.swachbharatabhiyanlibrary.dialogs;
 
-import android.app.ActionBar;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,8 +13,6 @@ import com.appynitty.swachbharatabhiyanlibrary.R;
 import com.appynitty.swachbharatabhiyanlibrary.custom_component.GlideCircleTransformation;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 import com.bumptech.glide.Glide;
-
-import java.util.HashMap;
 
 public class IdCardDialog extends Dialog {
 
@@ -49,7 +45,6 @@ public class IdCardDialog extends Dialog {
         this.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         WindowManager.LayoutParams params = this.getWindow().getAttributes();
         params.height = 959;
-
 
         this.getWindow().setAttributes(params);
 

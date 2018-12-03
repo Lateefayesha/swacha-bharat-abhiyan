@@ -75,4 +75,5 @@
     <string name="hp_area_validation">कृपया वैध क्षेत्र आणि घर क्रमांक निवडा.</string>
     <string name="gp_area_validation">कृपया वैध क्षेत्र आणि कचरा पॉइंट</string>
 
+    <string name="app_id_title">स्वच्छ भारत अभियान</string>
 </resources>
