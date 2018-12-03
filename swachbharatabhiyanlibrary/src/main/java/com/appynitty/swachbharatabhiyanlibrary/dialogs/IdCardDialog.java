@@ -74,8 +74,8 @@ public class IdCardDialog extends Dialog {
         {
             try{
                 Glide.with(mContext).load(mProfileUrl)
-                        .placeholder(R.drawable.ic_user)
-                        .error(R.drawable.ic_user)
+                        .placeholder(R.drawable.ic_user_white)
+                        .error(R.drawable.ic_user_white)
                         .centerCrop()
                         .bitmapTransform(new GlideCircleTransformation(mContext.getApplicationContext()))
                         .into(imgProfilePic);
