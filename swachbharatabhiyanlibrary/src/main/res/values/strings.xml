@@ -91,4 +91,5 @@
     <string name="hp_area_validation">Please Select Valid Area and House Number.</string>
     <string name="gp_area_validation">Please Select Valid Area and Garbage Point.</string>
 
+    <string name="app_id_title">Swach Bharat Abhiyan</string>
 </resources>
