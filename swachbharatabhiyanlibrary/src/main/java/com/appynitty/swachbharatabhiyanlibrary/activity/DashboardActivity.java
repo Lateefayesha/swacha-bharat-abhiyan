@@ -390,6 +390,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
                     }
                     else {
                         markAttendance.setChecked(false);
+                        AUtils.mApplication.stopLocationTracking();
                     }
                 }
                 break;
