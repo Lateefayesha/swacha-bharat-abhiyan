@@ -1,13 +1,9 @@
 package com.appynitty.swachbharatabhiyanlibrary.services;
 
-import android.app.Activity;
-import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -15,10 +11,8 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
-import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
-import android.widget.Toast;
 
 import com.appynitty.swachbharatabhiyanlibrary.R;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
@@ -69,9 +63,7 @@ public class ForgroundService extends Service {
         locationHandler = new Handler(Looper.getMainLooper());
         locationHandler.post(locationThread);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForegroundForOreo();
-        }
+        startLocationForeground();
 
         return Service.START_STICKY;
     }
@@ -81,11 +73,21 @@ public class ForgroundService extends Service {
         //Toast.makeText(this, "MyService Stopped", Toast.LENGTH_LONG).show();
         locationHandler.removeCallbacks(locationThread);
         monitoringService.onStopTracking();
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+        {
+            stopForeground(STOP_FOREGROUND_REMOVE);
+        }
 
+        if(QuickUtils.prefs.getBoolean(AUtils.PREFS.IS_ON_DUTY,false))
+        {
+            Intent broadcastIntent = new Intent(this, RestarterBroadcastReceiver.class);
+
+            sendBroadcast(broadcastIntent);
+        }
     }
 
-    @RequiresApi(26)
-    private void startForegroundForOreo() {
+    private void startLocationForeground() {
+
 
         String channelId = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
                 ? this.createNotificationChannel("my_service", "My Background Service")
@@ -96,7 +98,9 @@ public class ForgroundService extends Service {
 
         Notification notification = notificationBuilder
                 .setOngoing(true)
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle("Location Tracking.")
+                .setContentText("Please don't kill the app from background. Thank you!!")
+                .setSmallIcon(R.drawable.ic_noti_icon)
                 .setPriority(-2)
                 .setCategory("service")
                 .build();

@@ -4,8 +4,10 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -52,7 +54,6 @@ public class AUtils extends MsUtils {
     public static final String STATUS_SUCCESS = "success";
 
     public static final String STATUS_ERROR = "error";
-    public static final String STATUS_EXPIRED = "expired";
 
     public static final String LANGUAGE_NAME = "LanguageName";
 
@@ -87,8 +88,6 @@ public class AUtils extends MsUtils {
     public static final int LOCATION_INTERVAL = 10000;
     public static final int FASTEST_LOCATION_INTERVAL = 5000;
 
-    public static final String LOCATION = "LocationLatLog";
-    public static final String HISTORY_DETAILS = "HistoryDetails";
     public static final String HISTORY_DETAILS_DATE = "HistoryDetailsDate";
     public static final String RADIO_SELECTED_HP = "house_point";
     public static final String RADIO_SELECTED_GP = "garbage_point";
@@ -100,7 +99,6 @@ public class AUtils extends MsUtils {
 
     private static final String SERVER_DATE_FORMATE = "MM-dd-yyyy";
 
-    private static final String HISTORY_DATE_FORMATE = "dd-MM-yyyy";
     private static final String TITLE_DATE_FORMATE = "dd MMM yyyy";
 
     private static final String SEMI_MONTH_FORMATE = "MMM";
@@ -115,8 +113,6 @@ public class AUtils extends MsUtils {
     public static final long LOCATION_INTERVAL_MINUTES = 10 * 60 * 1000;
 
     public static final String VEHICLE_NO = "VehicleNumber";
-
-    //private static boolean IS_ONDUTY = false;
 
     private static final String TAG = "AUtils";
 
@@ -533,5 +529,23 @@ public class AUtils extends MsUtils {
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    public static void showDialog(Context context, String Title, String Message, DialogInterface.OnClickListener
+            positiveListener, DialogInterface.OnClickListener negativeLisner){
+
+        String message = Message;
+        String title = Title;
+        String positiveText = context.getResources().getString(R.string.yes_txt);
+        String negativeText = context.getResources().getString(R.string.no_txt);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(title)
+                .setMessage(message)
+                .setCancelable(false)
+                .setPositiveButton(positiveText, positiveListener)
+                .setNegativeButton(negativeText, negativeLisner)
+                .create()
+                .show();
     }
 }
