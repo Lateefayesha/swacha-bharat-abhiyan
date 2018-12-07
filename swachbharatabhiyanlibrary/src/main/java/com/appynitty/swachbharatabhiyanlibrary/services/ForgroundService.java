@@ -85,7 +85,7 @@ public class ForgroundService extends Service {
     }
 
     @RequiresApi(26)
-    private final void startForegroundForOreo() {
+    private void startForegroundForOreo() {
 
         String channelId = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
                 ? this.createNotificationChannel("my_service", "My Background Service")
@@ -105,7 +105,7 @@ public class ForgroundService extends Service {
     }
 
     @RequiresApi(26)
-    private final String createNotificationChannel(String channelId, String channelName) {
+    private String createNotificationChannel(String channelId, String channelName) {
 
         NotificationChannel chan = new NotificationChannel(channelId, (CharSequence)channelName,
                 NotificationManager.IMPORTANCE_NONE);
