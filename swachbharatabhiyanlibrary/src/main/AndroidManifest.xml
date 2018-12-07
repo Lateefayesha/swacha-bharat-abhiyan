@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:allowBackup="true"
@@ -64,7 +65,16 @@
             android:theme="@style/SBA.AppTheme.NoActionBar"
             android:windowSoftInputMode="stateVisible"/>
 
-        <service android:name=".services.ForgroundService" />
+        <service android:name=".services.ForgroundService"
+            android:enabled="true" />
+
+        <receiver
+            android:name=".services.RestarterBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true"
+            android:label="RestartServiceWhenStopped">
+        </receiver>
+
 
     </application>
 
