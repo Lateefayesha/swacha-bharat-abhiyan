@@ -65,6 +65,7 @@
 
     <string name="yes_txt">हो</string>
     <string name="no_txt">नाही</string>
+    <string name="ok_txt">ठीक आहे</string>
 
     <string name="area_validation">कृपया वैध क्षेत्र निवडा.</string>
     <string name="sending_msg">संदेश पाठवित आहे …</string>

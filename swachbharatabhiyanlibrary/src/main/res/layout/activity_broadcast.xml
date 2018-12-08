@@ -36,8 +36,7 @@
                 android:hint="@string/select_area_hint"
                 android:theme="@style/TextLabel2"
                 android:layout_marginBottom="@dimen/padding_margin_layout_double"
-                android:layout_marginTop="0dp"
-                android:backgroundTint="@color/white">
+                android:layout_marginTop="0dp">
 
                 <AutoCompleteTextView
                     android:layout_width="match_parent"
@@ -48,7 +47,6 @@
                     android:layout_marginEnd="@dimen/padding_margin_layout"
                     android:textSize="@dimen/dim_18_sp"
                     android:maxLines="1"
-                    android:backgroundTint="@color/white"
                     android:imeOptions="actionDone"
                     android:focusableInTouchMode="true"/>
 

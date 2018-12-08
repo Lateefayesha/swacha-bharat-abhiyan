@@ -98,7 +98,6 @@ public class ForgroundService extends Service {
 
         Notification notification = notificationBuilder
                 .setOngoing(true)
-                .setContentTitle("Location Tracking.")
                 .setContentText("Please don't kill the app from background. Thank you!!")
                 .setSmallIcon(R.drawable.ic_noti_icon)
                 .setPriority(-2)
