@@ -49,4 +49,6 @@
     <dimen name="title_text_size">24sp</dimen>
     <dimen name="dim_10_sp">10sp</dimen>
 
+    <dimen name="dim_540_dp">480dp</dimen>
+
 </resources>
