@@ -44,7 +44,7 @@ public class IdCardDialog extends Dialog {
         setContentView(R.layout.dialog_id_card);
         this.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         WindowManager.LayoutParams params = this.getWindow().getAttributes();
-        params.height = 959;
+        params.height = (int) mContext.getResources().getDimension(R.dimen.dim_540_dp);
 
         this.getWindow().setAttributes(params);
 
