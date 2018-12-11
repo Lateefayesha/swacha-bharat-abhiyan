@@ -88,7 +88,9 @@
         <!--<item name="android:maxLines">1</item>-->
     </style>
 
-    <style name="TextLabel2" parent="AppTheme">
+    <style name="TextLabel2" parent="SBA.AppTheme">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:backgroundTint">@android:color/white</item>
         <!-- Hint color and label color in FALSE state -->
         <item name="android:textColorHint">@android:color/white</item>
         <!-- Label color in TRUE state and bar color FALSE and TRUE State -->

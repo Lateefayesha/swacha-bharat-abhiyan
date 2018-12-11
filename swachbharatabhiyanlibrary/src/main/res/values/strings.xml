@@ -72,6 +72,7 @@
 
     <string name="yes_txt">Yes</string>
     <string name="no_txt">No</string>
+    <string name="ok_txt">OK</string>
 
     <string name="update_txt" translatable="false">UPDATE</string>
     <string name="no_thanks_txt" translatable="false">NO, THANKS</string>

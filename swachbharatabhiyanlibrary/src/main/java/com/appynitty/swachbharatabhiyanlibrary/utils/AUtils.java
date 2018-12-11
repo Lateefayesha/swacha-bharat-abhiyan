@@ -11,6 +11,9 @@ import android.content.Intent;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.PowerManager;
+import android.provider.Settings;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AlertDialog;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -44,10 +47,10 @@ public class AUtils extends MsUtils {
 //    public static final String SERVER_URL = "http://192.168.200.4:6077/";
 
     //    Staging URL
-    public static final String SERVER_URL = "http://115.115.153.117:4088/";
+//    public static final String SERVER_URL = "http://115.115.153.117:4088/";
 
     //    Relese URL
-//    public static final String SERVER_URL = "http://115.115.153.117:4044/";
+    public static final String SERVER_URL = "http://115.115.153.117:4044/";
 
 
     //    General Constant
@@ -531,21 +534,64 @@ public class AUtils extends MsUtils {
         }
     }
 
-    public static void showDialog(Context context, String Title, String Message, DialogInterface.OnClickListener
+    public static void showDialog(Context context, @Nullable String Title, @Nullable String Message, DialogInterface.OnClickListener
             positiveListener, DialogInterface.OnClickListener negativeLisner){
 
-        String message = Message;
-        String title = Title;
         String positiveText = context.getResources().getString(R.string.yes_txt);
         String negativeText = context.getResources().getString(R.string.no_txt);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle(title)
-                .setMessage(message)
-                .setCancelable(false)
+        builder.setCancelable(false)
                 .setPositiveButton(positiveText, positiveListener)
-                .setNegativeButton(negativeText, negativeLisner)
+                .setNegativeButton(negativeText, negativeLisner);
+
+        if(!AUtils.isNull(Title)){
+            builder.setTitle(Title);
+        }
+
+        if(!AUtils.isNull(Message)){
+            builder.setMessage(Message);
+        }
+
+        builder.create()
+                .show();
+    }
+
+    public static void showDialog(Context context, @Nullable String Title, @Nullable String Message, DialogInterface.OnClickListener
+            positiveListener){
+
+        String positiveText = context.getResources().getString(R.string.ok_txt);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+        if(!AUtils.isNull(Title)){
+            builder.setTitle(Title);
+        }
+
+        if(!AUtils.isNull(Message)){
+            builder.setMessage(Message);
+        }
+
+        builder.setCancelable(false)
+                .setPositiveButton(positiveText, positiveListener)
                 .create()
                 .show();
+    }
+
+    @RequiresApi(23)
+    public static void changeBatteryOptimization(final Context context){
+        String packageName = context.getPackageName();
+        PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+
+        if(!powerManager.isIgnoringBatteryOptimizations(packageName)){
+            showDialog(context, null, "App require non optimized battery saver, \n Click 'OK' > Select All apps from dropdown > Find and click the app > Select 'Don't Optimise' > click 'DONE' > return to app",
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                            context.startActivity(new Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS));
+                        }
+                    });
+        }
     }
 }
