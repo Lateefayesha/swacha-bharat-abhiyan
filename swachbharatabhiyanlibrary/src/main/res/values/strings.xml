@@ -94,5 +94,5 @@
 
     <string name="app_id_title">Swach Bharat Abhiyan</string>
 
-    <string name="vehicle_no_validation" translatable="false">abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 </string>
+    <string name="vehicle_no_validation" translatable="false">abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-/ </string>
 </resources>
