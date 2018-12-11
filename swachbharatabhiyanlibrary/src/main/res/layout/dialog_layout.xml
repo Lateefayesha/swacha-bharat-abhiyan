@@ -50,7 +50,8 @@
                 style="@style/MyEditTextStyleLight"
                 android:hint="@string/vehicle_no_txt"
                 android:maxLines="1"
-                android:maxLength="12"/>
+                android:maxLength="12"
+                android:digits="@string/vehicle_no_validation"/>
 
         </android.support.design.widget.TextInputLayout>
 

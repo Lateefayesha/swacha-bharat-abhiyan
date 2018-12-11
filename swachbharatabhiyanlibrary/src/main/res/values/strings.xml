@@ -92,4 +92,6 @@
     <string name="gp_area_validation">Please Select Valid Area and Garbage Point.</string>
 
     <string name="app_id_title">Swach Bharat Abhiyan</string>
+
+    <string name="vehicle_no_validation" translatable="false">abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 </string>
 </resources>
