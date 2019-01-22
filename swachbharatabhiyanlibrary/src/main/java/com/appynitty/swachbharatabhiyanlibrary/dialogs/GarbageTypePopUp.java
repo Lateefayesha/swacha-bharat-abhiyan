@@ -70,7 +70,6 @@ public class GarbageTypePopUp extends Dialog {
         rb_no = findViewById(R.id.rb_no_garbage);
 
        txtComent = findViewById(R.id.txt_garbage_comments);
-        txtComent.setSingleLine(true);
 
        btnSubmit = findViewById(R.id.btn_garbage_submit);
     }
