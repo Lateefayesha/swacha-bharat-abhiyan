@@ -95,4 +95,13 @@
     <string name="app_id_title">Swach Bharat Abhiyan</string>
 
     <string name="vehicle_no_validation" translatable="false">abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-/ </string>
+
+    <string name="bifurcate_garbage">Bifurcated Garbage</string>
+    <string name="mixed_garbage">Mixed Garbage</string>
+    <string name="no_garbage">Garbage not Received</string>
+    <string name="bifurcate_title">Bifurcated Details</string>
+
+    <string name="garbage_error">Please select bifurcation type!</string>
+
+    <string name="qr_error">Invalid Scaniffy Code.</string>
 </resources>

@@ -14,6 +14,8 @@ public class GarbageCollectionPojo {
 
     private String comment;
 
+    private int garbageType;
+
     public String getImage2() {
         return image2;
     }
@@ -62,15 +64,23 @@ public class GarbageCollectionPojo {
         this.comment = comment;
     }
 
+    public int getGarbageType() {
+        return garbageType;
+    }
+
+    public void setGarbageType(int garbageType) {
+        this.garbageType = garbageType;
+    }
+
     @Override
     public String toString() {
-        return "GarbageCollectionPojo{" +
-                ", image2='" + image2 + '\'' +
-                ", image1='" + image1 + '\'' +
-                ", AfterImage='" + AfterImage + '\'' +
-                ", beforeImage='" + beforeImage + '\'' +
-                ", id='" + id + '\'' +
-                ", comment='" + comment + '\'' +
-                '}';
+        return "GarbageCollectionPojo{"
+                + "image2='" + image2 + '\''
+                + ", image1='" + image1 + '\''
+                + ", AfterImage='" + AfterImage + '\''
+                + ", beforeImage='" + beforeImage + '\''
+                + ", id='" + id + '\''
+                + ", comment='" + comment + '\''
+                + ", garbageType=" + garbageType + '}';
     }
 }

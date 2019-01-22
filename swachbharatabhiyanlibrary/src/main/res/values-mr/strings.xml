@@ -77,4 +77,13 @@
     <string name="gp_area_validation">कृपया वैध क्षेत्र आणि कचरा पॉइंट</string>
 
     <string name="app_id_title">स्वच्छ भारत अभियान</string>
+
+    <string name="bifurcate_garbage">विभाजित कचरा</string>
+    <string name="mixed_garbage">मिश्रित कचरा</string>
+    <string name="no_garbage">कचरा प्राप्त झाला नाही</string>
+    <string name="bifurcate_title">विभाजन तपशील</string>
+
+    <string name="garbage_error">कृपया विभाजन प्रकार निवडा!</string>
+
+    <string name="qr_error">अवैध स्कॅनिफाय कोड.</string>
 </resources>
