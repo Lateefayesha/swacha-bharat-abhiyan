@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:layout_margin="5dp">
 
     <TextView
@@ -36,6 +36,12 @@
             android:checked="false"
             android:textColor="@color/colorGrayList"
             android:textSize="@dimen/settings_text_size"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/bifurcate_garbage_hint"
+            android:textSize="@dimen/dim_12_sp"
+            android:layout_marginLeft="33dp"/>
 
         <RadioButton
             android:id="@+id/rb_mixed_garbage"
@@ -60,20 +66,26 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dim_20_dp"
-        android:layout_marginBottom="@dimen/padding_margin_layout_double">
+        android:layout_marginBottom="@dimen/dim_20_dp">
 
         <EditText
             android:id="@+id/txt_garbage_comments"
             style="@style/MyEditTextStyleLight"
             android:hint="@string/comments"
-            android:maxLines="1"/>
+            android:maxLines="10"
+            android:gravity="top"
+            android:overScrollMode="always"
+            android:scrollbarStyle="insideInset"
+            android:scrollbars="vertical"/>
 
     </android.support.design.widget.TextInputLayout>
 
     <Button
-    style="@style/MyButtonStyle"
-    android:layout_width="match_parent"
-    android:id="@+id/btn_garbage_submit"
-    android:text="@string/submit_txt"
-    />
+        style="@style/MyButtonStyle"
+        android:layout_width="match_parent"
+        android:id="@+id/btn_garbage_submit"
+        android:text="@string/submit_txt"
+        android:layout_marginRight="@dimen/dim_80_dp"
+        android:layout_marginLeft="@dimen/dim_80_dp"
+        android:layout_marginBottom="@dimen/dim_10_dp"/>
 </LinearLayout>
