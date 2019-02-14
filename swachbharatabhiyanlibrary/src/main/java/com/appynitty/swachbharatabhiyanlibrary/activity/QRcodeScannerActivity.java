@@ -342,6 +342,7 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
         final String responseStatus = pojo.getStatus();
 
         TextView ownerName = view.findViewById(R.id.house_owner_name);
+        TextView ownerMobile = view.findViewById(R.id.house_owner_mobile);
         TextView houseId = view.findViewById(R.id.house_id);
         TextView collectionStatus = view.findViewById(R.id.collection_status);
         ImageView statusImage = view.findViewById(R.id.response_image);
@@ -357,8 +358,21 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
                 collectionStatus.setText(pojo.getMessage());
             }
             ownerName.setText(id.toUpperCase());
+            ownerMobile.setText(null);
         }else if(responseStatus.equals(AUtils.STATUS_SUCCESS)){
-            ownerName.setText(pojo.getName());
+            if(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID, AUtils.DEFAULT_LANGUAGE_ID).equals("2")){
+                ownerName.setText(pojo.getNameMar());
+            }else{
+                ownerName.setText(pojo.getName());
+            }
+
+            if(id.substring(0, 2).matches("^[HhPp]+$")){
+                ownerMobile.setText(pojo.getMobile());
+            }
+            else if(id.substring(0, 2).matches("^[GgPp]+$")){
+                ownerMobile.setVisibility(View.GONE);
+            }
+
             houseId.setText(id);
 
             Type type = new TypeToken<ImagePojo>() {

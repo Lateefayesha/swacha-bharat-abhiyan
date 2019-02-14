@@ -138,6 +138,7 @@ public class BroadcastActivity extends AppCompatActivity {
             @Override
             public void onFocusChange(View view, boolean isFocused) {
                 if(isFocused){
+                    areaAutoComplete.showDropDown();
                     AUtils.showKeyboard((Activity)mContext);
                 }
             }

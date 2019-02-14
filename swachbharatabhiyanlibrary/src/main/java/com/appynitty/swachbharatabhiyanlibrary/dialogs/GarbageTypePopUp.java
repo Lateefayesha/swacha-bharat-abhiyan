@@ -38,6 +38,8 @@ public class GarbageTypePopUp extends Dialog {
 
     private GarbageTypePopUp.GarbagePopUpDialogListener mListener;
 
+    private boolean isSubmit = false;
+
     public GarbageTypePopUp(Context context, String houseId, GarbageTypePopUp.GarbagePopUpDialogListener listener) {
         super(context);
         // TODO Auto-generated constructor stub
@@ -128,16 +130,21 @@ public class GarbageTypePopUp extends Dialog {
     private void onSubmitClick()
     {
         mComment = txtComent.getText().toString();
-        if(mGarbageType != -1)
+        if(mGarbageType != -1) {
             this.dismiss();
-        else {
+            isSubmit = true;
+        }else {
             AUtils.showWarning(mContext,mContext.getResources().getString(R.string.garbage_error));
         }
     }
 
     private void popUpDismiss()
     {
-        mListener.onGarbagePopUpDismissed(mHouseId, mGarbageType, mComment);
+        if(isSubmit) {
+            mListener.onGarbagePopUpDismissed(mHouseId, mGarbageType, mComment);
+        } else {
+            mListener.onGarbagePopUpDismissed(mHouseId, -1, mComment);
+        }
     }
 
     public interface GarbagePopUpDialogListener {

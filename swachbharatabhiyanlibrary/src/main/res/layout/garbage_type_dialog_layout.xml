@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
@@ -41,7 +42,9 @@
             android:layout_height="wrap_content"
             android:text="@string/bifurcate_garbage_hint"
             android:textSize="@dimen/dim_12_sp"
-            android:layout_marginLeft="33dp"/>
+            android:layout_marginLeft="33dp"
+            android:layout_marginBottom="@dimen/dim_10_dp"
+            android:gravity="start|top|left"/>
 
         <RadioButton
             android:id="@+id/rb_mixed_garbage"
@@ -50,7 +53,8 @@
             android:text="@string/mixed_garbage"
             android:checked="false"
             android:textColor="@color/colorGrayList"
-            android:textSize="@dimen/settings_text_size"/>
+            android:textSize="@dimen/settings_text_size"
+            android:layout_marginBottom="@dimen/dim_10_dp"/>
 
         <RadioButton
             android:id="@+id/rb_no_garbage"
