@@ -114,18 +114,22 @@ public class LocationMonitoringService implements
                 QuickUtils.prefs.save(AUtils.LAT, String.valueOf(location.getLatitude()));
                 QuickUtils.prefs.save(AUtils.LONG, String.valueOf(location.getLongitude()));
 
-                if(updatedTime == 0)
-                {
-                    updatedTime = System.currentTimeMillis();
+                if(QuickUtils.prefs.getBoolean(AUtils.PREFS.IS_ON_DUTY,false)) {
+                    if (updatedTime == 0) {
+                        updatedTime = System.currentTimeMillis();
 
-                    mAdapter.shareLocation();
-                }
+                        mAdapter.shareLocation();
 
-                if((updatedTime + AUtils.LOCATION_INTERVAL_MINUTES) <= System.currentTimeMillis())
-                {
-                    updatedTime = System.currentTimeMillis();
+                        Log.d(TAG, "updated Time ==== " + updatedTime);
+                    }
 
-                    mAdapter.shareLocation();
+                    if ((updatedTime + AUtils.LOCATION_INTERVAL_MINUTES) <= System.currentTimeMillis()) {
+                        updatedTime = System.currentTimeMillis();
+
+                        mAdapter.shareLocation();
+
+                        Log.d(TAG, "updated Time ==== " + updatedTime);
+                    }
                 }
             }
         }
