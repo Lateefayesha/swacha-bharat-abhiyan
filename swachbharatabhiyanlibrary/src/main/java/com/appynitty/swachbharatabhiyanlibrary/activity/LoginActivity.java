@@ -2,17 +2,11 @@ package com.appynitty.swachbharatabhiyanlibrary.activity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -33,7 +27,6 @@ import com.appynitty.swachbharatabhiyanlibrary.pojos.LoginPojo;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 import com.appynitty.swachbharatabhiyanlibrary.utils.LocaleHelper;
 import com.appynitty.swachbharatabhiyanlibrary.utils.MyAsyncTask;
-import com.mithsoft.lib.activity.BaseActivity;
 import com.mithsoft.lib.components.Toasty;
 
 import java.util.ArrayList;
@@ -57,7 +50,6 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
     private Button btnChangeLang = null;
 
     private LoginPojo loginPojo = null;
-    private Snackbar mSnackbar;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -72,18 +64,6 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initComponents();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        AUtils.mApplication.activityResumed();// On Resume notify the Application
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        AUtils.mApplication.activityPaused();// On Pause notify the Application
     }
 
     @Override
@@ -128,6 +108,18 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
     }
 
     @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        if(AUtils.isNetWorkAvailable(this))
+        {
+            AUtils.hideSnackBar();
+        }
+        else {
+            AUtils.showSnackBar(this);
+        }
+    }
+
+    @Override
     public void onPopUpDismissed(String type, Object listItemSelected, @Nullable String vehicleNo) {
 
         if (!AUtils.isNull(listItemSelected)) {
@@ -155,23 +147,6 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
         AUtils.mCurrentContext = mContext;
 
         setContentView(R.layout.activity_login_layout);
-
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-
-        // Check internet connection and accrding to state change the
-        // text of activity by calling method
-        if (networkInfo != null && networkInfo.isConnected()) {
-            if(mSnackbar.isShown())
-            {
-                mSnackbar.dismiss();
-            }
-        } else {
-            View view = this.findViewById(R.id.parent);
-            mSnackbar = Snackbar.make(view, "\u00A9"+"  "+ getResources().getString(R.string.no_internet_error), Snackbar.LENGTH_INDEFINITE);
-
-            mSnackbar.show();
-        }
 
         txtUserName = findViewById(R.id.txt_user_name);
         txtUserPwd = findViewById(R.id.txt_password);

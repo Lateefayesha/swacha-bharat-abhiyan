@@ -14,6 +14,7 @@ import android.net.NetworkInfo;
 import android.os.PowerManager;
 import android.provider.Settings;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -25,8 +26,10 @@ import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.appynitty.swachbharatabhiyanlibrary.R;
@@ -129,8 +132,12 @@ public class AUtils extends MsUtils {
 
     public static final String GP_AREA_TYPE_ID = "2";
 
+    private static Snackbar mSnackbar;
+
+    public final static String CONNECTIVITY_ACTION = "android.net.conn.CONNECTIVITY_CHANGE";
+
     public static boolean isIsOnduty() {
-        return QuickUtils.prefs.getBoolean(PREFS.IS_ON_DUTY,false);
+        return QuickUtils.prefs.getBoolean(PREFS.IS_ON_DUTY, false);
     }
 
     public static void setIsOnduty(boolean isOnduty) {
@@ -144,27 +151,27 @@ public class AUtils extends MsUtils {
         switch (languageId) {
             case 1:
                 languageStr = "en";
-                QuickUtils.prefs.save(AUtils.LANGUAGE_ID,String.valueOf(languageId));
+                QuickUtils.prefs.save(AUtils.LANGUAGE_ID, String.valueOf(languageId));
                 break;
             case 2:
                 languageStr = "mr";
-                QuickUtils.prefs.save(AUtils.LANGUAGE_ID,String.valueOf(languageId));
+                QuickUtils.prefs.save(AUtils.LANGUAGE_ID, String.valueOf(languageId));
                 break;
             case 3:
                 languageStr = "hi";
-                QuickUtils.prefs.save(AUtils.LANGUAGE_ID,String.valueOf(languageId));
+                QuickUtils.prefs.save(AUtils.LANGUAGE_ID, String.valueOf(languageId));
                 break;
             case 4:
                 languageStr = "gu";
-                QuickUtils.prefs.save(AUtils.LANGUAGE_ID,String.valueOf(languageId));
+                QuickUtils.prefs.save(AUtils.LANGUAGE_ID, String.valueOf(languageId));
                 break;
             case 5:
                 languageStr = "pa";
-                QuickUtils.prefs.save(AUtils.LANGUAGE_ID,String.valueOf(languageId));
+                QuickUtils.prefs.save(AUtils.LANGUAGE_ID, String.valueOf(languageId));
                 break;
         }
 
-        LocaleHelper.setLocale(context,languageStr);
+        LocaleHelper.setLocale(context, languageStr);
     }
 
     //app setting for permissions dialog
@@ -184,8 +191,7 @@ public class AUtils extends MsUtils {
                 .show();
     }
 
-    public static void showConfirmationDialog(Context context, String type, DialogInterface.OnClickListener
-            positiveListener, @Nullable DialogInterface.OnClickListener negativeLisner){
+    public static void showConfirmationDialog(Context context, String type, DialogInterface.OnClickListener positiveListener, @Nullable DialogInterface.OnClickListener negativeLisner) {
 
         String message = "";
         String title = "";
@@ -245,8 +251,7 @@ public class AUtils extends MsUtils {
         String LANGUAGE_POJO_LIST = "LanguagePullList";
     }
 
-    public static boolean isCameraPermissionGiven(final Context context)
-    {
+    public static boolean isCameraPermissionGiven(final Context context) {
 
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale((Activity)context, Manifest.permission.CAMERA)) {
@@ -258,7 +263,7 @@ public class AUtils extends MsUtils {
 
                         dialog.cancel();
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            ((Activity)context).requestPermissions(new String[]{Manifest.permission.CAMERA}, AUtils.MY_PERMISSIONS_REQUEST_CAMERA);
+                            ((Activity) context).requestPermissions(new String[]{Manifest.permission.CAMERA}, AUtils.MY_PERMISSIONS_REQUEST_CAMERA);
                         }
                     }
                 });
@@ -279,23 +284,21 @@ public class AUtils extends MsUtils {
             } else {
                 //just request the permission
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    ((Activity)context).requestPermissions(new String[]{Manifest.permission.CAMERA}, AUtils.MY_PERMISSIONS_REQUEST_CAMERA);
+                    ((Activity) context).requestPermissions(new String[]{Manifest.permission.CAMERA}, AUtils.MY_PERMISSIONS_REQUEST_CAMERA);
                 }
             }
 
             QuickUtils.prefs.save(Manifest.permission.CAMERA, true);
             return false;
-        }
-        else {
+        } else {
             return true;
         }
     }
 
-    public static boolean isStoragePermissionGiven(final Context context)
-    {
+    public static boolean isStoragePermissionGiven(final Context context) {
 
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale((Activity)context, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) context, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 //Show Information about why you need the permission
 
                 AUtils.showPermissionDialog(context, "EXTERNAL STORAGE", new DialogInterface.OnClickListener() {
@@ -304,7 +307,7 @@ public class AUtils extends MsUtils {
 
                         dialog.cancel();
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            ((Activity)context).requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, AUtils.MY_PERMISSIONS_REQUEST_STORAGE);
+                            ((Activity) context).requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, AUtils.MY_PERMISSIONS_REQUEST_STORAGE);
                         }
                     }
                 });
@@ -325,20 +328,18 @@ public class AUtils extends MsUtils {
             } else {
                 //just request the permission
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    ((Activity)context).requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, AUtils.MY_PERMISSIONS_REQUEST_STORAGE);
+                    ((Activity) context).requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, AUtils.MY_PERMISSIONS_REQUEST_STORAGE);
                 }
             }
 
             QuickUtils.prefs.save(Manifest.permission.WRITE_EXTERNAL_STORAGE, true);
             return false;
-        }
-        else {
+        } else {
             return true;
         }
     }
 
-    public static boolean isLocationPermissionGiven(final Context context)
-    {
+    public static boolean isLocationPermissionGiven(final Context context) {
 
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) context, Manifest.permission.ACCESS_FINE_LOCATION)) {
@@ -350,7 +351,7 @@ public class AUtils extends MsUtils {
 
                         dialog.cancel();
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            ((Activity)context).requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, AUtils.MY_PERMISSIONS_REQUEST_LOCATION);
+                            ((Activity) context).requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, AUtils.MY_PERMISSIONS_REQUEST_LOCATION);
                         }
                     }
                 });
@@ -371,25 +372,23 @@ public class AUtils extends MsUtils {
             } else {
                 //just request the permission
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    ((Activity)context).requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, AUtils.MY_PERMISSIONS_REQUEST_LOCATION);
+                    ((Activity) context).requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, AUtils.MY_PERMISSIONS_REQUEST_LOCATION);
                 }
             }
 
             QuickUtils.prefs.save(Manifest.permission.ACCESS_FINE_LOCATION, true);
             return false;
-        }
-        else {
+        } else {
             return true;
         }
     }
 
-    public static void runOnUIThread(Runnable r)
-    {
+    public static void runOnUIThread(Runnable r) {
         new Handler(Looper.getMainLooper()).post(r);
     }
 
-    public static void saveLocation(Location location){
-        if(!AUtils.isNull(location)){
+    public static void saveLocation(Location location) {
+        if (!AUtils.isNull(location)) {
             Double latti = location.getLatitude();
             Double longi = location.getLongitude();
 
@@ -410,7 +409,7 @@ public class AUtils extends MsUtils {
         return format.format(Calendar.getInstance().getTime());
     }
 
-    public static ArrayList<String> getMonthSpinnerList(){
+    public static ArrayList<String> getMonthSpinnerList() {
         ArrayList<String> spinnerList = new ArrayList<>();
 
         spinnerList.add("Select Month");
@@ -425,11 +424,11 @@ public class AUtils extends MsUtils {
         return spinnerList;
     }
 
-    public static ArrayList<String> getYearSpinnerList(){
+    public static ArrayList<String> getYearSpinnerList() {
         ArrayList<String> spinnerList = new ArrayList<>();
 
         spinnerList.add("Select Year");
-        for(int i = 0; i > -5; i--){
+        for (int i = 0; i > -5; i--) {
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.YEAR, i);
             spinnerList.add(String.valueOf(calendar.get(Calendar.YEAR)));
@@ -444,74 +443,71 @@ public class AUtils extends MsUtils {
         return format.format(Calendar.getInstance().getTime());
     }
 
-    public static Integer getCurrentMonth(){
+    public static Integer getCurrentMonth() {
         Calendar currMonth = Calendar.getInstance();
         currMonth.add(Calendar.MONTH, 0);
         return currMonth.get(Calendar.MONTH);
     }
 
-    public static Integer getCurrentYear(){
+    public static Integer getCurrentYear() {
         Calendar currYear = Calendar.getInstance();
         currYear.add(Calendar.YEAR, 0);
         return currYear.get(Calendar.YEAR);
     }
 
-    public static String getTitleDateFormat(String date){
+    public static String getTitleDateFormat(String date) {
 
         SimpleDateFormat serverFormat = new SimpleDateFormat(SERVER_DATE_FORMATE, Locale.ENGLISH);
         SimpleDateFormat titleDateFormat = new SimpleDateFormat(TITLE_DATE_FORMATE, Locale.ENGLISH);
 
         try {
-            return  titleDateFormat.format(serverFormat.parse(date));
+            return titleDateFormat.format(serverFormat.parse(date));
         } catch (ParseException e) {
             e.printStackTrace();
             return "";
         }
     }
 
-    public static String extractDate(String date){
+    public static String extractDate(String date) {
 
         SimpleDateFormat serverFormat = new SimpleDateFormat(SERVER_DATE_FORMATE, Locale.ENGLISH);
         SimpleDateFormat titleDateFormat = new SimpleDateFormat(DATE_VALUE_FORMATE, Locale.ENGLISH);
 
         try {
-            return  titleDateFormat.format(serverFormat.parse(date));
+            return titleDateFormat.format(serverFormat.parse(date));
         } catch (ParseException e) {
             e.printStackTrace();
             return "";
         }
     }
 
-    public static String extractMonth(String date){
+    public static String extractMonth(String date) {
 
         SimpleDateFormat serverFormat = new SimpleDateFormat(SERVER_DATE_FORMATE, Locale.ENGLISH);
         SimpleDateFormat titleDateFormat = new SimpleDateFormat(SEMI_MONTH_FORMATE, Locale.ENGLISH);
 
         try {
-            return  titleDateFormat.format(serverFormat.parse(date));
+            return titleDateFormat.format(serverFormat.parse(date));
         } catch (ParseException e) {
             e.printStackTrace();
             return "";
         }
     }
 
-    public static void showWarning(Context context, String message)
-    {
-        Toasty.custom(context,message, R.drawable.ic_error_outline_white_48dp,Color.parseColor("#C8FE973C"),
-                Toast.LENGTH_SHORT,true,true).show();
+    public static void showWarning(Context context, String message) {
+        Toasty.custom(context, message, R.drawable.ic_error_outline_white_48dp, Color.parseColor("#C8FE973C"), Toast.LENGTH_SHORT, true, true).show();
     }
 
-    public static boolean isGPSEnable()
-    {
-        LocationManager manager = (LocationManager) mCurrentContext.getSystemService( Context.LOCATION_SERVICE );
-        return manager.isProviderEnabled( LocationManager.GPS_PROVIDER);
+    public static boolean isGPSEnable() {
+        LocationManager manager = (LocationManager) mCurrentContext.getSystemService(Context.LOCATION_SERVICE);
+        return manager.isProviderEnabled(LocationManager.GPS_PROVIDER);
     }
 
 
     public static boolean isMyServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) mApplication.getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
         for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            Log.d(TAG,service.toString());
+            Log.d(TAG, service.toString());
             if (serviceClass.getName().equals(service.service.getClassName())) {
                 return true;
             }
@@ -520,23 +516,23 @@ public class AUtils extends MsUtils {
     }
 
     public static void showKeyboard(Activity activity) {
-        try{
+        try {
             View view = activity.getCurrentFocus();
             InputMethodManager methodManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
             methodManager.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public static void hideKeyboard(Activity activity) {
-        try{
+        try {
             View view = activity.getCurrentFocus();
             InputMethodManager methodManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
             if (view != null) {
                 methodManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -548,57 +544,68 @@ public class AUtils extends MsUtils {
         String negativeText = context.getResources().getString(R.string.no_txt);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setCancelable(false)
-                .setPositiveButton(positiveText, positiveListener)
-                .setNegativeButton(negativeText, negativeLisner);
+        builder.setCancelable(false).setPositiveButton(positiveText, positiveListener).setNegativeButton(negativeText, negativeLisner);
 
-        if(!AUtils.isNull(Title)){
+        if (!AUtils.isNull(Title)) {
             builder.setTitle(Title);
         }
 
-        if(!AUtils.isNull(Message)){
+        if (!AUtils.isNull(Message)) {
             builder.setMessage(Message);
         }
 
-        builder.create()
-                .show();
+        builder.create().show();
     }
 
-    public static void showDialog(Context context, @Nullable String Title, @Nullable String Message, DialogInterface.OnClickListener
-            positiveListener){
+    public static void showDialog(Context context, @Nullable String Title, @Nullable String Message, DialogInterface.OnClickListener positiveListener) {
 
         String positiveText = context.getResources().getString(R.string.ok_txt);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
-        if(!AUtils.isNull(Title)){
+        if (!AUtils.isNull(Title)) {
             builder.setTitle(Title);
         }
 
-        if(!AUtils.isNull(Message)){
+        if (!AUtils.isNull(Message)) {
             builder.setMessage(Message);
         }
 
-        builder.setCancelable(false)
-                .setPositiveButton(positiveText, positiveListener)
-                .create()
-                .show();
+        builder.setCancelable(false).setPositiveButton(positiveText, positiveListener).create().show();
     }
 
     @RequiresApi(23)
-    public static void changeBatteryOptimization(final Context context){
+    public static void changeBatteryOptimization(final Context context) {
         String packageName = context.getPackageName();
         PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
 
-        if(!powerManager.isIgnoringBatteryOptimizations(packageName)){
-            showDialog(context, null, "App require non optimized battery saver, \n Click 'OK' > Select All apps from dropdown > Find and click the app > Select 'Don't Optimise' > click 'DONE' > return to app",
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            dialogInterface.dismiss();
-                            context.startActivity(new Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS));
-                        }
-                    });
+        if (!powerManager.isIgnoringBatteryOptimizations(packageName)) {
+            showDialog(context, null, "App require non optimized battery saver, \n Click 'OK' > Select All apps from dropdown > Find and click the app > Select 'Don't Optimise' > click 'DONE' > return to app", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                    context.startActivity(new Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS));
+                }
+            });
         }
     }
+
+    public static void hideSnackBar()
+    {
+        if(mSnackbar != null && mSnackbar.isShown())
+        {
+            mSnackbar.dismiss();
+        }
+    }
+
+    public static void showSnackBar(Activity activity)
+    {
+        View view = activity.findViewById(R.id.parent);
+        mSnackbar = Snackbar.make(view, "", Snackbar.LENGTH_INDEFINITE);
+        Snackbar.SnackbarLayout v = (Snackbar.SnackbarLayout) mSnackbar.getView();
+        View layout = LayoutInflater.from(mCurrentContext).inflate(R.layout.snackbar_custom_layout, null);
+        v.addView(layout, 0);
+        mSnackbar.show();
+    }
 }
+

@@ -2,6 +2,9 @@ package com.appynitty.swachbharatabhiyanlibrary.utils;
 
 import android.app.Activity;
 import android.app.Application;
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -11,13 +14,13 @@ import android.widget.FrameLayout;
 
 import com.appynitty.swachbharatabhiyanlibrary.services.ForgroundService;
 import com.appynitty.swachbharatabhiyanlibrary.services.LocationMonitoringService;
+import com.appynitty.swachbharatabhiyanlibrary.services.NetworkSchedulerService;
 
 import quickutils.core.QuickUtils;
 
 public class MyApplication extends Application {
 
-    public static boolean activityVisible; // Variable that will check the
-                                           // current activity state
+    public static boolean activityVisible;
 
     @Override
     public void onCreate() {
@@ -39,22 +42,23 @@ public class MyApplication extends Application {
 
             @Override
             public void onActivityStarted(Activity activity) {
-
+                Intent startServiceIntent = new Intent(activity, NetworkSchedulerService.class);
+                startService(startServiceIntent);
             }
 
             @Override
             public void onActivityResumed(Activity activity) {
-
+                activityVisible = true;
             }
 
             @Override
             public void onActivityPaused(Activity activity) {
-
+                activityVisible = false;
             }
 
             @Override
             public void onActivityStopped(Activity activity) {
-
+                stopService(new Intent(activity, NetworkSchedulerService.class));
             }
 
             @Override
@@ -67,6 +71,8 @@ public class MyApplication extends Application {
 
             }
         });
+
+        scheduleJob();
     }
 
     @Override
@@ -95,18 +101,20 @@ public class MyApplication extends Application {
         stopService(new Intent(this, ForgroundService.class));
     }
 
+    private void scheduleJob() {
+        JobInfo myJob = new JobInfo.Builder(0, new ComponentName(this, NetworkSchedulerService.class))
+                .setRequiresCharging(true)
+                .setMinimumLatency(1000)
+                .setOverrideDeadline(2000)
+                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+                .setPersisted(true)
+                .build();
+
+        JobScheduler jobScheduler = (JobScheduler) getSystemService(Context.JOB_SCHEDULER_SERVICE);
+        jobScheduler.schedule(myJob);
+    }
+
     public static boolean isActivityVisible() {
         return activityVisible; // return true or false
     }
-
-    public static void activityResumed() {
-        activityVisible = true;// this will set true when activity resumed
-
-    }
-
-    public static void activityPaused() {
-        activityVisible = false;// this will set false when activity paused
-
-    }
-
 }

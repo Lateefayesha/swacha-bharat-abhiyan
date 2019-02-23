@@ -66,7 +66,6 @@ public class TakePhotoActivity extends BaseActivity {
     private String afterImageFilePath = "";
 
     private ImagePojo imagePojo;
-    private Snackbar mSnackbar;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -93,36 +92,7 @@ public class TakePhotoActivity extends BaseActivity {
 
         openQR = findViewById(R.id.open_qr);
 
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-
-        // Check internet connection and accrding to state change the
-        // text of activity by calling method
-        if (networkInfo != null && networkInfo.isConnected()) {
-            if(mSnackbar.isShown())
-            {
-                mSnackbar.dismiss();
-            }
-        } else {
-            View view = this.findViewById(R.id.parent);
-            mSnackbar = Snackbar.make(view, "\u00A9"+"  "+ getResources().getString(R.string.no_internet_error), Snackbar.LENGTH_INDEFINITE);
-
-            mSnackbar.show();
-        }
-
         initToolbar();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        AUtils.mApplication.activityResumed();// On Resume notify the Application
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        AUtils.mApplication.activityPaused();// On Pause notify the Application
     }
 
     @Override
@@ -337,6 +307,18 @@ public class TakePhotoActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        if(AUtils.isNetWorkAvailable(this))
+        {
+            AUtils.hideSnackBar();
+        }
+        else {
+            AUtils.showSnackBar(this);
+        }
     }
 
     private void openQRClicked() {

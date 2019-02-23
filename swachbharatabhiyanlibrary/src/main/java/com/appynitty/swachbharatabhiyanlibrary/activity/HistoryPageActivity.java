@@ -45,7 +45,6 @@ public class HistoryPageActivity extends AppCompatActivity {
     private GridView historyGrid;
     private List<WorkHistoryPojo> historyPojoList;
     private LinearLayout noDataErrorLayout, noInternetErrorLayout;
-    private Snackbar mSnackbar;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -64,18 +63,6 @@ public class HistoryPageActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        AUtils.mApplication.activityResumed();// On Resume notify the Application
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        AUtils.mApplication.activityPaused();// On Pause notify the Application
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case android.R.id.home:
@@ -91,25 +78,20 @@ public class HistoryPageActivity extends AppCompatActivity {
         initData();
     }
 
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        if(AUtils.isNetWorkAvailable(this))
+        {
+            AUtils.hideSnackBar();
+        }
+        else {
+            AUtils.showSnackBar(this);
+        }
+    }
+
     private void generateId() {
         setContentView(R.layout.activity_history_page);
-
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-
-        // Check internet connection and accrding to state change the
-        // text of activity by calling method
-        if (networkInfo != null && networkInfo.isConnected()) {
-            if(mSnackbar.isShown())
-            {
-                mSnackbar.dismiss();
-            }
-        } else {
-            View view = this.findViewById(R.id.parent);
-            mSnackbar = Snackbar.make(view, "\u00A9"+"  "+ getResources().getString(R.string.no_internet_error), Snackbar.LENGTH_INDEFINITE);
-
-            mSnackbar.show();
-        }
 
         toolbar = findViewById(R.id.toolbar);
 

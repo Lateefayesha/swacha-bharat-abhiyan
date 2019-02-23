@@ -1,20 +1,15 @@
 package com.appynitty.swachbharatabhiyanlibrary.activity;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -29,26 +24,22 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.appynitty.retrofitconnectionlibrary.pojos.ResultPojo;
 import com.appynitty.swachbharatabhiyanlibrary.R;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.UI.InflateMenuAdapter;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.AttendanceAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.UserDetailAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.VehicleTypeAdapterClass;
-import com.appynitty.swachbharatabhiyanlibrary.connection.SyncServer;
 import com.appynitty.swachbharatabhiyanlibrary.custom_component.GlideCircleTransformation;
 import com.appynitty.swachbharatabhiyanlibrary.dialogs.IdCardDialog;
 import com.appynitty.swachbharatabhiyanlibrary.dialogs.PopUpDialog;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.InPunchPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.LanguagePojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.MenuListPojo;
-import com.appynitty.swachbharatabhiyanlibrary.pojos.OutPunchPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.UserDetailPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.VehicleTypePojo;
 import com.appynitty.swachbharatabhiyanlibrary.services.ForgroundService;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 import com.appynitty.swachbharatabhiyanlibrary.utils.LocaleHelper;
-import com.appynitty.swachbharatabhiyanlibrary.utils.MyAsyncTask;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -92,8 +83,6 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
     private VehicleTypeAdapterClass mVehicleTypeAdapter;
 
     private UserDetailAdapterClass mUserDetailAdapter;
-
-    private Snackbar mSnackbar;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -145,14 +134,6 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         checkDutyStatus();
 
         initUserDetails();
-
-        AUtils.mApplication.activityResumed();// On Resume notify the Application
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        AUtils.mApplication.activityPaused();// On Pause notify the Application
     }
 
     @Override
@@ -231,6 +212,18 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         }
     }
 
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        if(AUtils.isNetWorkAvailable(this))
+        {
+            AUtils.hideSnackBar();
+        }
+        else {
+            AUtils.showSnackBar(this);
+        }
+    }
+
     private void initComponents() {
 
         getPermission();
@@ -243,23 +236,6 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
     private void generateId() {
 
         setContentView(R.layout.activity_dashboard);
-
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-
-        // Check internet connection and accrding to state change the
-        // text of activity by calling method
-        if (networkInfo != null && networkInfo.isConnected()) {
-            if(mSnackbar.isShown())
-            {
-                mSnackbar.dismiss();
-            }
-        } else {
-            View view = this.findViewById(R.id.parent);
-            mSnackbar = Snackbar.make(view, "\u00A9"+"  "+ getResources().getString(R.string.no_internet_error), Snackbar.LENGTH_INDEFINITE);
-
-            mSnackbar.show();
-        }
 
         mContext = DashboardActivity.this;
         AUtils.mCurrentContext = mContext;

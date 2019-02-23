@@ -105,4 +105,6 @@
     <string name="garbage_error">Please select bifurcation type!</string>
 
     <string name="qr_error">Invalid Scaniffy Code.</string>
+
+    <string name="warning_uni_code" translatable="false">⚠</string>
 </resources>

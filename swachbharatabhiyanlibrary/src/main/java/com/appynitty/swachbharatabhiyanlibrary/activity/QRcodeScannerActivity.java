@@ -8,27 +8,21 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -41,7 +35,6 @@ import android.widget.Toast;
 import com.appynitty.swachbharatabhiyanlibrary.R;
 import com.appynitty.swachbharatabhiyanlibrary.connection.SyncServer;
 import com.appynitty.swachbharatabhiyanlibrary.dialogs.GarbageTypePopUp;
-import com.appynitty.swachbharatabhiyanlibrary.dialogs.PopUpDialog;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.CollectionAreaHousePojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.CollectionAreaPointPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.CollectionAreaPojo;
@@ -65,7 +58,6 @@ import io.github.kobakei.materialfabspeeddial.FabSpeedDial;
 import me.dm7.barcodescanner.zbar.Result;
 import me.dm7.barcodescanner.zbar.ZBarScannerView;
 import quickutils.core.QuickUtils;
-import quickutils.core.categories.view;
 
 public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScannerView.ResultHandler, GarbageTypePopUp.GarbagePopUpDialogListener {
 
@@ -89,7 +81,6 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
     private List<CollectionAreaPojo> areaPojoList;
     private List<CollectionAreaHousePojo> hpPojoList;
     private List<CollectionAreaPointPojo> gpPojoList;
-    private Snackbar mSnackbar;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -206,6 +197,18 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
         }
     }
 
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        if(AUtils.isNetWorkAvailable(this))
+        {
+            AUtils.hideSnackBar();
+        }
+        else {
+            AUtils.showSnackBar(this);
+        }
+    }
+
     private void initComponents() {
         generateId();
         registerEvents();
@@ -218,23 +221,6 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
 
         mContext = QRcodeScannerActivity.this;
         AUtils.mCurrentContext = mContext;
-
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-
-        // Check internet connection and accrding to state change the
-        // text of activity by calling method
-        if (networkInfo != null && networkInfo.isConnected()) {
-            if(mSnackbar.isShown())
-            {
-                mSnackbar.dismiss();
-            }
-        } else {
-            View view = this.findViewById(R.id.parent);
-            mSnackbar = Snackbar.make(view, "\u00A9"+"  "+ getResources().getString(R.string.no_internet_error), Snackbar.LENGTH_INDEFINITE);
-
-            mSnackbar.show();
-        }
 
         fabSpeedDial = findViewById(R.id.flash_toggle);
 
