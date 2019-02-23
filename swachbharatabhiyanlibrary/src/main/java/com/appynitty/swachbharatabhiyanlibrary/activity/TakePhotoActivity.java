@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -15,6 +17,7 @@ import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
@@ -63,6 +66,7 @@ public class TakePhotoActivity extends BaseActivity {
     private String afterImageFilePath = "";
 
     private ImagePojo imagePojo;
+    private Snackbar mSnackbar;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -89,7 +93,36 @@ public class TakePhotoActivity extends BaseActivity {
 
         openQR = findViewById(R.id.open_qr);
 
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+
+        // Check internet connection and accrding to state change the
+        // text of activity by calling method
+        if (networkInfo != null && networkInfo.isConnected()) {
+            if(mSnackbar.isShown())
+            {
+                mSnackbar.dismiss();
+            }
+        } else {
+            View view = this.findViewById(R.id.parent);
+            mSnackbar = Snackbar.make(view, "\u00A9"+"  "+ getResources().getString(R.string.no_internet_error), Snackbar.LENGTH_INDEFINITE);
+
+            mSnackbar.show();
+        }
+
         initToolbar();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        AUtils.mApplication.activityResumed();// On Resume notify the Application
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        AUtils.mApplication.activityPaused();// On Pause notify the Application
     }
 
     @Override

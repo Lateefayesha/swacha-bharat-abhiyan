@@ -8,11 +8,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
@@ -86,6 +89,7 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
     private List<CollectionAreaPojo> areaPojoList;
     private List<CollectionAreaHousePojo> hpPojoList;
     private List<CollectionAreaPointPojo> gpPojoList;
+    private Snackbar mSnackbar;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -103,6 +107,105 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
         initComponents();
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == AUtils.MY_PERMISSIONS_REQUEST_CAMERA) {
+            //check if all permissions are granted
+            boolean allgranted = false;
+            for (int grantResult : grantResults) {
+                if (grantResult == PackageManager.PERMISSION_GRANTED) {
+                    allgranted = true;
+                } else {
+                    allgranted = false;
+                    break;
+                }
+            }
+
+            if (allgranted) {
+                checkCameraPermission();
+            } else if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) mContext, Manifest.permission.CAMERA)) {
+
+                AUtils.showPermissionDialog(mContext, "CAMERA", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            requestPermissions(new String[]{Manifest.permission.CAMERA}, AUtils.MY_PERMISSIONS_REQUEST_CAMERA);
+                        }
+                    }
+                });
+            }
+        } else if (requestCode == AUtils.MY_PERMISSIONS_REQUEST_LOCATION) {
+            //check if all permissions are granted
+            boolean allgranted = false;
+            for (int i = 0; i < grantResults.length; i++) {
+                if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                    allgranted = true;
+                } else {
+                    allgranted = false;
+                    break;
+                }
+            }
+
+            if (allgranted) {
+                checkLocationPermission();
+            }else if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) mContext, Manifest.permission.ACCESS_FINE_LOCATION)) {
+
+                AUtils.showPermissionDialog(mContext, "Location Service", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, AUtils.MY_PERMISSIONS_REQUEST_LOCATION);
+                        }
+                    }
+                });
+            }
+
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startPreview();
+    }
+
+    @Override
+    protected void onPause() {
+        stopPreview();
+        super.onPause();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                onBackPressed();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(!isScanQr){
+            scanQR();
+        }else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public void onGarbagePopUpDismissed(String houseID, int garbageType, @Nullable String comment) {
+        if(garbageType != -1)
+            startSubmitQRAsyncTask(houseID, garbageType, comment);
+        else {
+            restartPreview();
+        }
+    }
+
     private void initComponents() {
         generateId();
         registerEvents();
@@ -115,6 +218,23 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
 
         mContext = QRcodeScannerActivity.this;
         AUtils.mCurrentContext = mContext;
+
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+
+        // Check internet connection and accrding to state change the
+        // text of activity by calling method
+        if (networkInfo != null && networkInfo.isConnected()) {
+            if(mSnackbar.isShown())
+            {
+                mSnackbar.dismiss();
+            }
+        } else {
+            View view = this.findViewById(R.id.parent);
+            mSnackbar = Snackbar.make(view, "\u00A9"+"  "+ getResources().getString(R.string.no_internet_error), Snackbar.LENGTH_INDEFINITE);
+
+            mSnackbar.show();
+        }
 
         fabSpeedDial = findViewById(R.id.flash_toggle);
 
@@ -463,90 +583,9 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == AUtils.MY_PERMISSIONS_REQUEST_CAMERA) {
-            //check if all permissions are granted
-            boolean allgranted = false;
-            for (int grantResult : grantResults) {
-                if (grantResult == PackageManager.PERMISSION_GRANTED) {
-                    allgranted = true;
-                } else {
-                    allgranted = false;
-                    break;
-                }
-            }
-
-            if (allgranted) {
-                checkCameraPermission();
-            } else if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) mContext, Manifest.permission.CAMERA)) {
-
-                AUtils.showPermissionDialog(mContext, "CAMERA", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            requestPermissions(new String[]{Manifest.permission.CAMERA}, AUtils.MY_PERMISSIONS_REQUEST_CAMERA);
-                        }
-                    }
-                });
-            }
-        } else if (requestCode == AUtils.MY_PERMISSIONS_REQUEST_LOCATION) {
-            //check if all permissions are granted
-            boolean allgranted = false;
-            for (int i = 0; i < grantResults.length; i++) {
-                if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                    allgranted = true;
-                } else {
-                    allgranted = false;
-                    break;
-                }
-            }
-
-            if (allgranted) {
-                checkLocationPermission();
-            }else if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) mContext, Manifest.permission.ACCESS_FINE_LOCATION)) {
-
-                AUtils.showPermissionDialog(mContext, "Location Service", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, AUtils.MY_PERMISSIONS_REQUEST_LOCATION);
-                        }
-                    }
-                });
-            }
-
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        startPreview();
-    }
-
-    @Override
-    protected void onPause() {
-        stopPreview();
-        super.onPause();
-    }
-
     public void handleResult(Result result) {
         submitQRcode(result.getContents());
 //        restartPreview();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case android.R.id.home:
-                onBackPressed();
-                break;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     private void startPreview(){
@@ -572,10 +611,13 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
         startPreview();
     }
 
-    private void validateTypeOfCollection(String houseid)
-    {
-        GarbageTypePopUp dialog = new GarbageTypePopUp(QRcodeScannerActivity.this, houseid, this);
-        dialog.show();
+    private void validateTypeOfCollection(String houseid) {
+        if(QuickUtils.prefs.getBoolean(AUtils.PREFS.IS_GT_FEATURE,false)) {
+            GarbageTypePopUp dialog = new GarbageTypePopUp(QRcodeScannerActivity.this, houseid, this);
+            dialog.show();
+        } else {
+            startSubmitQRAsyncTask(houseid, 0, null);
+        }
     }
 
     private void fetchAreaList(Boolean isProgress) {
@@ -755,23 +797,5 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
             e.printStackTrace();
         }
         return false;
-    }
-
-    @Override
-    public void onBackPressed() {
-        if(!isScanQr){
-            scanQR();
-        }else {
-            super.onBackPressed();
-        }
-    }
-
-    @Override
-    public void onGarbagePopUpDismissed(String houseID, int garbageType, @Nullable String comment) {
-        if(garbageType != -1)
-            startSubmitQRAsyncTask(houseID, garbageType, comment);
-        else {
-            restartPreview();
-        }
     }
 }

@@ -16,6 +16,8 @@ public class LoginDetailsPojo {
 
     private String messageMar;
 
+    private boolean gtFeatures;
+
     public String getMessage() {
         return message;
     }
@@ -72,16 +74,23 @@ public class LoginDetailsPojo {
         this.messageMar = messageMar;
     }
 
+    public boolean getGtFeatures() {
+        return gtFeatures;
+    }
+
+    public void setGtFeatures(boolean gtFeatures) {
+        this.gtFeatures = gtFeatures;
+    }
+
     @Override
     public String toString() {
-        return "LoginPojo{" +
-                "message='" + message + '\'' +
-                ", status='" + status + '\'' +
-                ", userId='" + userId + '\'' +
-                ", userPassword='" + userPassword + '\'' +
-                ", userLoginId='" + userLoginId + '\'' +
-                ", type='" + type + '\'' +
-                ", messageMar='" + messageMar + '\'' +
-                '}';
+        return "LoginDetailsPojo{" + "message='" + message + '\''
+                                   + ", status='" + status + '\''
+                                   + ", userId='" + userId + '\''
+                                   + ", userPassword='" + userPassword + '\''
+                                   + ", userLoginId='" + userLoginId + '\''
+                                   + ", type='" + type + '\''
+                                   + ", messageMar='" + messageMar + '\''
+                                   + ", gtFeatures='" + gtFeatures + '\'' + '}';
     }
 }

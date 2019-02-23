@@ -123,7 +123,7 @@ public class SyncServer {
 
             RequestBody vehicleNo = RequestBody.create(okhttp3.MultipartBody.FORM, QuickUtils.prefs.getString(AUtils.VEHICLE_NO,""));
 
-            RequestBody garbageType = RequestBody.create(okhttp3.MultipartBody.FORM, String.valueOf(garbageCollectionPojo.getGarbageType()));
+            //RequestBody garbageType = RequestBody.create(okhttp3.MultipartBody.FORM, String.valueOf(garbageCollectionPojo.getGarbageType()));
 
 
             GarbageCollectionWebService service = Connection.createService(GarbageCollectionWebService.class, AUtils.SERVER_URL);
@@ -133,7 +133,7 @@ public class SyncServer {
             if(pointId.substring(0, 2).matches("^[HhPp]+$")){
                 gcResultPojo = service.saveGarbageCollectionH(QuickUtils.prefs.getString(AUtils.APP_ID, ""),
                         userId, id, Lat, Long, beforeImage, afterImage, comment, vehicleNo, imageFileMultiBody1,
-                        imageFileMultiBody2, garbageType).execute().body();
+                        imageFileMultiBody2/*, garbageType*/).execute().body();
             }else if(pointId.substring(0, 2).matches("^[GgPp]+$")){
                 gcResultPojo = service.saveGarbageCollectionGP(QuickUtils.prefs.getString(AUtils.APP_ID, ""),
                         userId, id, Lat, Long, beforeImage, afterImage, comment, vehicleNo, imageFileMultiBody1,

@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PersistableBundle;
@@ -55,6 +57,7 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
     private Button btnChangeLang = null;
 
     private LoginPojo loginPojo = null;
+    private Snackbar mSnackbar;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -71,6 +74,73 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
         initComponents();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        AUtils.mApplication.activityResumed();// On Resume notify the Application
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        AUtils.mApplication.activityPaused();// On Pause notify the Application
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode) {
+            case PERMISSIONS_MULTIPLE_REQUEST:
+
+                boolean allgranted = false;
+                for (int i = 0; i < grantResults.length; i++) {
+                    if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                        allgranted = true;
+                    } else {
+                        allgranted = false;
+                        break;
+                    }
+                }
+
+                if (allgranted) {
+
+                    // write your logic here
+                } else {
+                    Snackbar.make(LoginActivity.this.findViewById(android.R.id.content),
+                            "Please Grant Permissions to upload profile photo",
+                            Snackbar.LENGTH_INDEFINITE).setAction("ENABLE",
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                        requestPermissions(
+                                                new String[]{Manifest.permission
+                                                        .READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA},
+                                                PERMISSIONS_MULTIPLE_REQUEST);
+                                    }
+                                }
+                            }).show();
+                }
+
+                break;
+        }
+    }
+
+    @Override
+    public void onPopUpDismissed(String type, Object listItemSelected, @Nullable String vehicleNo) {
+
+        if (!AUtils.isNull(listItemSelected)) {
+            switch (type) {
+                case AUtils.DIALOG_TYPE_LANGUAGE: {
+
+                    onLanguageTypeDialogClose(listItemSelected);
+                }
+                break;
+            }
+        }
+    }
+
     private void initComponents(){
         generateId();
         registerEvents();
@@ -85,6 +155,23 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
         AUtils.mCurrentContext = mContext;
 
         setContentView(R.layout.activity_login_layout);
+
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+
+        // Check internet connection and accrding to state change the
+        // text of activity by calling method
+        if (networkInfo != null && networkInfo.isConnected()) {
+            if(mSnackbar.isShown())
+            {
+                mSnackbar.dismiss();
+            }
+        } else {
+            View view = this.findViewById(R.id.parent);
+            mSnackbar = Snackbar.make(view, "\u00A9"+"  "+ getResources().getString(R.string.no_internet_error), Snackbar.LENGTH_INDEFINITE);
+
+            mSnackbar.show();
+        }
 
         txtUserName = findViewById(R.id.txt_user_name);
         txtUserPwd = findViewById(R.id.txt_password);
@@ -147,6 +234,8 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
                             QuickUtils.prefs.save(AUtils.PREFS.USER_ID, loginDetailsPojo.getUserId());
                             QuickUtils.prefs.save(AUtils.PREFS.USER_TYPE, loginDetailsPojo.getType());
 
+                            QuickUtils.prefs.save(AUtils.PREFS.IS_GT_FEATURE, (boolean)loginDetailsPojo.getGtFeatures());
+
                             QuickUtils.prefs.save(AUtils.PREFS.IS_USER_LOGIN, true);
 
                             Toasty.success(mContext, message, Toast.LENGTH_SHORT).show();
@@ -197,47 +286,6 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
         @SuppressLint("MissingPermission") String deviceid = telephonyManager.getDeviceId();
 
         loginPojo.setImiNo(deviceid);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        switch (requestCode) {
-            case PERMISSIONS_MULTIPLE_REQUEST:
-
-                boolean allgranted = false;
-                for (int i = 0; i < grantResults.length; i++) {
-                    if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                        allgranted = true;
-                    } else {
-                        allgranted = false;
-                        break;
-                    }
-                }
-
-                if (allgranted) {
-
-                    // write your logic here
-                } else {
-                    Snackbar.make(LoginActivity.this.findViewById(android.R.id.content),
-                            "Please Grant Permissions to upload profile photo",
-                            Snackbar.LENGTH_INDEFINITE).setAction("ENABLE",
-                            new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                        requestPermissions(
-                                                new String[]{Manifest.permission
-                                                        .READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA},
-                                                PERMISSIONS_MULTIPLE_REQUEST);
-                                    }
-                                }
-                            }).show();
-                }
-
-                break;
-        }
     }
 
     private void getPermission() {
@@ -293,20 +341,6 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
             }
         } else {
             // write your logic code if permission already granted
-        }
-    }
-
-    @Override
-    public void onPopUpDismissed(String type, Object listItemSelected, @Nullable String vehicleNo) {
-
-        if (!AUtils.isNull(listItemSelected)) {
-            switch (type) {
-                case AUtils.DIALOG_TYPE_LANGUAGE: {
-
-                    onLanguageTypeDialogClose(listItemSelected);
-                }
-                break;
-            }
         }
     }
 

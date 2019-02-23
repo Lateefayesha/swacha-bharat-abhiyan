@@ -39,6 +39,6 @@ public interface GarbageCollectionWebService {
                                               @Part("note") RequestBody comment,
                                               @Part("vehicleNumber") RequestBody vehicleNumber,
                                               @Part MultipartBody.Part image1,
-                                              @Part MultipartBody.Part image2,
-                                              @Part("garbageType") RequestBody garbageType);
+                                              @Part MultipartBody.Part image2/*,
+                                              @Part("garbageType") RequestBody garbageType*/);
 }

@@ -6,12 +6,15 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -90,6 +93,8 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
 
     private UserDetailAdapterClass mUserDetailAdapter;
 
+    private Snackbar mSnackbar;
+
     @Override
     protected void attachBaseContext(Context newBase) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -103,15 +108,6 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initComponents();
-    }
-
-    private void initComponents() {
-
-        getPermission();
-
-        generateId();
-        registerEvents();
-        initData();
     }
 
     @Override
@@ -140,9 +136,130 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        AUtils.mCurrentContext = mContext;
+
+        checkDutyStatus();
+
+        initUserDetails();
+
+        AUtils.mApplication.activityResumed();// On Resume notify the Application
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        AUtils.mApplication.activityPaused();// On Pause notify the Application
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == AUtils.MY_PERMISSIONS_REQUEST_LOCATION) {
+            //check if all permissions are granted
+            boolean allgranted = false;
+            for (int i = 0; i < grantResults.length; i++) {
+                if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                    allgranted = true;
+                } else {
+                    allgranted = false;
+                    break;
+                }
+            }
+
+            if (allgranted) {
+                isLocationPermission = allgranted;
+            } else if (ActivityCompat.shouldShowRequestPermissionRationale(DashboardActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+
+                AUtils.showPermissionDialog(mContext, "Location Service", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, AUtils.MY_PERMISSIONS_REQUEST_LOCATION);
+                        }
+                    }
+                });
+            } else {
+                if (isSwitchOn) {
+                    markAttendance.setChecked(false);
+                }
+            }
+
+        }
+    }
+
+    @Override
+    public void onPopUpDismissed(String type, Object listItemSelected, @Nullable String vehicleNo) {
+
+        if (!AUtils.isNull(listItemSelected)) {
+            switch (type) {
+                case AUtils.DIALOG_TYPE_VEHICLE: {
+                    onVehicleTypeDialogClose(listItemSelected, vehicleNo);
+                }
+                break;
+                case AUtils.DIALOG_TYPE_LANGUAGE: {
+
+                    onLanguageTypeDialogClose(listItemSelected);
+                }
+                break;
+            }
+        }
+        else
+        {
+            switch (type) {
+                case AUtils.DIALOG_TYPE_VEHICLE: {
+                    if(AUtils.isIsOnduty())
+                    {
+
+                    }
+                    else {
+                        markAttendance.setChecked(false);
+                        AUtils.mApplication.stopLocationTracking();
+                    }
+                }
+                break;
+                case AUtils.DIALOG_TYPE_LANGUAGE: {
+
+                }
+                break;
+            }
+        }
+    }
+
+    private void initComponents() {
+
+        getPermission();
+
+        generateId();
+        registerEvents();
+        initData();
+    }
+
     private void generateId() {
 
         setContentView(R.layout.activity_dashboard);
+
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+
+        // Check internet connection and accrding to state change the
+        // text of activity by calling method
+        if (networkInfo != null && networkInfo.isConnected()) {
+            if(mSnackbar.isShown())
+            {
+                mSnackbar.dismiss();
+            }
+        } else {
+            View view = this.findViewById(R.id.parent);
+            mSnackbar = Snackbar.make(view, "\u00A9"+"  "+ getResources().getString(R.string.no_internet_error), Snackbar.LENGTH_INDEFINITE);
+
+            mSnackbar.show();
+        }
 
         mContext = DashboardActivity.this;
         AUtils.mCurrentContext = mContext;
@@ -364,56 +481,6 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         }
     }
 
-    @Override
-    public void onPopUpDismissed(String type, Object listItemSelected, @Nullable String vehicleNo) {
-
-        if (!AUtils.isNull(listItemSelected)) {
-            switch (type) {
-                case AUtils.DIALOG_TYPE_VEHICLE: {
-                    onVehicleTypeDialogClose(listItemSelected, vehicleNo);
-                }
-                break;
-                case AUtils.DIALOG_TYPE_LANGUAGE: {
-
-                    onLanguageTypeDialogClose(listItemSelected);
-                }
-                break;
-            }
-        }
-        else
-        {
-            switch (type) {
-                case AUtils.DIALOG_TYPE_VEHICLE: {
-                    if(AUtils.isIsOnduty())
-                    {
-
-                    }
-                    else {
-                        markAttendance.setChecked(false);
-                        AUtils.mApplication.stopLocationTracking();
-                    }
-                }
-                break;
-                case AUtils.DIALOG_TYPE_LANGUAGE: {
-
-                }
-                break;
-            }
-        }
-    }
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        AUtils.mCurrentContext = mContext;
-
-        checkDutyStatus();
-
-        initUserDetails();
-    }
-
     public void changeLanguage(int type) {
 
         AUtils.changeLanguage(this, type);
@@ -485,7 +552,6 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         }
     }
 
-
     private void onVehicleTypeDialogClose(Object listItemSelected, String vehicleNo) {
 
         if (AUtils.isNetWorkAvailable(this)) {
@@ -523,8 +589,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         }
     }
 
-    private void onInPunchSuccess()
-    {
+    private void onInPunchSuccess() {
         attendanceStatus.setText(this.getResources().getString(R.string.status_on_duty));
         attendanceStatus.setTextColor(this.getResources().getColor(R.color.colorONDutyGreen));
 
@@ -570,44 +635,6 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         isLocationPermission = AUtils.isLocationPermissionGiven(DashboardActivity.this);
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if (requestCode == AUtils.MY_PERMISSIONS_REQUEST_LOCATION) {
-            //check if all permissions are granted
-            boolean allgranted = false;
-            for (int i = 0; i < grantResults.length; i++) {
-                if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                    allgranted = true;
-                } else {
-                    allgranted = false;
-                    break;
-                }
-            }
-
-            if (allgranted) {
-                isLocationPermission = allgranted;
-            } else if (ActivityCompat.shouldShowRequestPermissionRationale(DashboardActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-
-                AUtils.showPermissionDialog(mContext, "Location Service", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, AUtils.MY_PERMISSIONS_REQUEST_LOCATION);
-                        }
-                    }
-                });
-            } else {
-                if (isSwitchOn) {
-                    markAttendance.setChecked(false);
-                }
-            }
-
-        }
-    }
-
     private void initUserDetails(){
         userDetailPojo = mUserDetailAdapter.getUserDetailPojo();
 
@@ -645,8 +672,6 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
             changeLanguage(2);
         }
     }
-
-
 
     private void checkDutyStatus() {
 

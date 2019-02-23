@@ -8,10 +8,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
@@ -68,6 +71,7 @@ public class BroadcastActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private AutoCompleteTextView areaAutoComplete;
     private Button submitBtn;
+    private Snackbar mSnackbar;
 
     private HashMap<String, String> areaHash;
 
@@ -89,6 +93,28 @@ public class BroadcastActivity extends AppCompatActivity {
         initComponents();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        AUtils.mApplication.activityResumed();// On Resume notify the Application
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        AUtils.mApplication.activityPaused();// On Pause notify the Application
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                onBackPressed();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private void initComponents() {
         generateId();
         registerEvents();
@@ -97,6 +123,24 @@ public class BroadcastActivity extends AppCompatActivity {
 
     protected void generateId() {
         setContentView(R.layout.activity_broadcast);
+
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+
+        // Check internet connection and accrding to state change the
+        // text of activity by calling method
+        if (networkInfo != null && networkInfo.isConnected()) {
+            if(mSnackbar.isShown())
+            {
+                mSnackbar.dismiss();
+            }
+        } else {
+            View view = this.findViewById(R.id.parent);
+            mSnackbar = Snackbar.make(view, "\u00A9"+"  "+ getResources().getString(R.string.no_internet_error), Snackbar.LENGTH_INDEFINITE);
+
+            mSnackbar.show();
+        }
+
         toolbar = findViewById(R.id.toolbar);
 
         mContext = BroadcastActivity.this;
@@ -159,16 +203,6 @@ public class BroadcastActivity extends AppCompatActivity {
         fetchAreaList();
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case android.R.id.home:
-                onBackPressed();
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     private void fetchAreaList() {
         new MyAsyncTask(mContext, true, new MyAsyncTask.AsynTaskListener() {
 
@@ -222,8 +256,7 @@ public class BroadcastActivity extends AppCompatActivity {
 
     }
 
-    private boolean isAreaValid()
-    {
+    private boolean isAreaValid() {
         String area = areaAutoComplete.getText().toString().toLowerCase();
         if(areaHash.containsKey(area)) {
             return true;
