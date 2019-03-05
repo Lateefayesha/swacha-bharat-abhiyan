@@ -33,6 +33,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.appynitty.swachbharatabhiyanlibrary.R;
+import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.AreaHouseAdapterClass;
+import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.AreaPointAdapterClass;
+import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.CollectionAreaAdapterClass;
+import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.GarbageCollectionAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.connection.SyncServer;
 import com.appynitty.swachbharatabhiyanlibrary.dialogs.GarbageTypePopUp;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.CollectionAreaHousePojo;
@@ -81,6 +85,13 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
     private List<CollectionAreaPojo> areaPojoList;
     private List<CollectionAreaHousePojo> hpPojoList;
     private List<CollectionAreaPointPojo> gpPojoList;
+
+    private AreaHouseAdapterClass mHpAdapter;
+    private AreaPointAdapterClass mGpAdapter;
+    private CollectionAreaAdapterClass mAreaAdapter;
+    private GarbageCollectionAdapterClass mAdapter;
+
+    GarbageCollectionPojo garbageCollectionPojo;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -222,6 +233,11 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
         mContext = QRcodeScannerActivity.this;
         AUtils.mCurrentContext = mContext;
 
+        mAdapter = new GarbageCollectionAdapterClass();
+        mGpAdapter = new AreaPointAdapterClass();
+        mHpAdapter = new AreaHouseAdapterClass();
+        mAreaAdapter = new CollectionAreaAdapterClass();
+
         fabSpeedDial = findViewById(R.id.flash_toggle);
 
         areaAutoComplete = findViewById(R.id.txt_area_auto);
@@ -299,13 +315,13 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
                 if (radioGroupId == R.id.house_collection_radio) {
                     idIpLayout.setHint(getResources().getString(R.string.house_number_hint));
                     radioSelection = AUtils.RADIO_SELECTED_HP;
-                    fetchAreaList(true);
+                    mAreaAdapter.fetchAreaList(getAreaType(),true);
                 }
 
                 if (radioGroupId == R.id.point_collection_radio){
                     idIpLayout.setHint(getResources().getString(R.string.gp_id_hint));
                     radioSelection = AUtils.RADIO_SELECTED_GP;
-                    fetchAreaList(true);
+                    mAreaAdapter.fetchAreaList(getAreaType(),true);
                 }
             }
         });
@@ -405,12 +421,63 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
             }
         });
 
+        mAreaAdapter.setCollectionAreaListener(new CollectionAreaAdapterClass.CollectionAreaListener() {
+            @Override
+            public void onSuccessCallBack() {
+                areaAutoComplete.clearListSelection();
+                areaAutoComplete.requestFocus();
+                idAutoComplete.clearListSelection();
+                inflateAreaAutoComplete(mAreaAdapter.getAreaPojoList());
+            }
+
+            @Override
+            public void onFailureCallBack() {
+                Toasty.error(mContext, getResources().getString(R.string.serverError)).show();
+            }
+        });
+
+        mHpAdapter.setAreaHouseListener(new AreaHouseAdapterClass.AreaHouseListener() {
+            @Override
+            public void onSuccessCallBack() {
+                inflateHpAutoComplete(mHpAdapter.getHpPojoList());
+            }
+
+            @Override
+            public void onFailureCallBack() {
+                Toasty.error(mContext, getResources().getString(R.string.serverError)).show();
+            }
+        });
+
+        mGpAdapter.setAreaPointListener(new AreaPointAdapterClass.AreaPointListener() {
+            @Override
+            public void onSuccessCallBack() {
+                inflateGpAutoComplete(mGpAdapter.getGpPojoList());
+            }
+
+            @Override
+            public void onFailureCallBack() {
+                Toasty.error(mContext, getResources().getString(R.string.serverError)).show();
+            }
+        });
+
+        mAdapter.setGarbageCollectionListener(new GarbageCollectionAdapterClass.GarbageCollectionListener() {
+            @Override
+            public void onSuccessCallBack() {
+                showPopup(getGarbageCollectionPojo().getId(), mAdapter.getResultPojo());
+            }
+
+            @Override
+            public void onFailureCallBack() {
+                restartPreview();
+                Toasty.error(mContext, mContext.getString(R.string.serverError), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     protected void initData() {
 
         checkCameraPermission();
-        fetchAreaList(false);
+        mAreaAdapter.fetchAreaList(getAreaType(),false);
 
         Intent intent = getIntent();
         if(intent.hasExtra(AUtils.REQUEST_CODE)){
@@ -606,106 +673,12 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
         }
     }
 
-    private void fetchAreaList(Boolean isProgress) {
-        new MyAsyncTask(mContext, isProgress, new MyAsyncTask.AsynTaskListener() {
-
-            @Override
-            public void doInBackgroundOpration(SyncServer syncServer) {
-
-                areaPojoList = syncServer.fetchCollectionArea(getAreaType());
-            }
-
-            @Override
-            public void onFinished() {
-                if(!AUtils.isNull(areaPojoList)){
-                    areaAutoComplete.clearListSelection();
-                    areaAutoComplete.requestFocus();
-                    idAutoComplete.clearListSelection();
-                    inflateAreaAutoComplete(areaPojoList);
-                }else{
-                    Toasty.error(mContext, getResources().getString(R.string.serverError)).show();
-                }
-            }
-        }).execute();
-    }
-
-    private void fetchHpList(final String areaId) {
-        new MyAsyncTask(mContext, true, new MyAsyncTask.AsynTaskListener() {
-
-            @Override
-            public void doInBackgroundOpration(SyncServer syncServer) {
-
-                hpPojoList = syncServer.fetchCollectionAreaHouse(getAreaType(), areaId);
-            }
-
-            @Override
-            public void onFinished() {
-                if(!AUtils.isNull(hpPojoList)){
-                    inflateHpAutoComplete(hpPojoList);
-                }else{
-                    Toasty.error(mContext, getResources().getString(R.string.serverError)).show();
-                }
-            }
-        }).execute();
-    }
-
-    private void fetchGpList(final String areaId) {
-        new MyAsyncTask(mContext, true, new MyAsyncTask.AsynTaskListener() {
-
-            @Override
-            public void doInBackgroundOpration(SyncServer syncServer) {
-                String areaType = "2";
-                if(radioSelection.equals(AUtils.RADIO_SELECTED_HP)){
-                    areaType = "1";
-                }
-
-                gpPojoList = syncServer.fetchCollectionAreaPoint(areaType, areaId);
-            }
-
-            @Override
-            public void onFinished() {
-                if(!AUtils.isNull(gpPojoList)){
-                    inflateGpAutoComplete(gpPojoList);
-                }else{
-                    Toasty.error(mContext, getResources().getString(R.string.serverError)).show();
-                }
-            }
-        }).execute();
-    }
 
     private void startSubmitQRAsyncTask(final String houseNo, @Nullable final int garbageType, @Nullable final String comment){
 
         stopCamera();
-        new MyAsyncTask(mContext, true, new MyAsyncTask.AsynTaskListener() {
-            GcResultPojo resultPojo = null;
-            @Override
-            public void doInBackgroundOpration(SyncServer syncServer) {
-
-                GarbageCollectionPojo garbageCollectionPojo = new GarbageCollectionPojo();
-                garbageCollectionPojo.setId(houseNo);
-                garbageCollectionPojo.setGarbageType(garbageType);
-                garbageCollectionPojo.setComment(comment);
-                if(isActivityData){
-                    garbageCollectionPojo.setAfterImage(imagePojo.getAfterImage());
-                    garbageCollectionPojo.setBeforeImage(imagePojo.getBeforeImage());
-                    garbageCollectionPojo.setComment(imagePojo.getComment());
-                    garbageCollectionPojo.setImage1(imagePojo.getImage1());
-                    garbageCollectionPojo.setImage2(imagePojo.getImage2());
-                }
-
-                resultPojo = syncServer.saveGarbageCollection(garbageCollectionPojo);
-            }
-
-            @Override
-            public void onFinished() {
-                if(!AUtils.isNull(resultPojo)){
-                    showPopup(houseNo, resultPojo);
-                }else{
-                    restartPreview();
-                    Toasty.error(mContext, mContext.getString(R.string.serverError), Toast.LENGTH_SHORT).show();
-                }
-            }
-        }).execute();
+        setGarbageCollectionPojo(houseNo,garbageType,comment);
+        mAdapter.submitQR(garbageCollectionPojo);
     }
 
     private void inflateAreaAutoComplete(List<CollectionAreaPojo> pojoList){
@@ -760,11 +733,11 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
     private void inflateAutoComplete(String areaId){
         String areaType = getAreaType();
         if(areaType.equals(AUtils.HP_AREA_TYPE_ID)){
-            fetchHpList(areaId);
+            mHpAdapter.fetchHpList(areaId);
         }
 
         if(areaType.equals(AUtils.GP_AREA_TYPE_ID)){
-            fetchGpList(areaId);
+            mGpAdapter.fetchGpList(areaId);
         }
     }
 
@@ -776,12 +749,30 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
         return areaType;
     }
 
-    private Boolean isAutoCompleteValid(AutoCompleteTextView autoCompleteTextView, HashMap<String, String> hashMap){
+    private Boolean isAutoCompleteValid(AutoCompleteTextView autoCompleteTextView, HashMap<String, String> hashMap) {
         try {
             return hashMap.containsKey(autoCompleteTextView.getText().toString().toLowerCase());
         }catch (Exception e){
             e.printStackTrace();
         }
         return false;
+    }
+
+    private void setGarbageCollectionPojo(String houseNo, @Nullable final int garbageType, @Nullable final String comment) {
+        garbageCollectionPojo = new GarbageCollectionPojo();
+        garbageCollectionPojo.setId(houseNo);
+        garbageCollectionPojo.setGarbageType(garbageType);
+        garbageCollectionPojo.setComment(comment);
+        if(isActivityData){
+            garbageCollectionPojo.setAfterImage(imagePojo.getAfterImage());
+            garbageCollectionPojo.setBeforeImage(imagePojo.getBeforeImage());
+            garbageCollectionPojo.setComment(imagePojo.getComment());
+            garbageCollectionPojo.setImage1(imagePojo.getImage1());
+            garbageCollectionPojo.setImage2(imagePojo.getImage2());
+        }
+    }
+
+    private GarbageCollectionPojo getGarbageCollectionPojo() {
+        return garbageCollectionPojo;
     }
 }

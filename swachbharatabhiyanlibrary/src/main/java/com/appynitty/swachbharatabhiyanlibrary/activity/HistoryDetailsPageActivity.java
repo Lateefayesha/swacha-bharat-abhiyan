@@ -18,6 +18,8 @@ import android.widget.Toast;
 import com.appynitty.swachbharatabhiyanlibrary.R;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.UI.InflateHistoryAdapter;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.UI.InflateHistoryDetailsAdapter;
+import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.HistoryAdapterClass;
+import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.HistoryDetailsAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.connection.SyncServer;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.WorkHistoryDetailPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.WorkHistoryPojo;
@@ -44,6 +46,8 @@ public class HistoryDetailsPageActivity extends AppCompatActivity {
     private String historyDate;
     private View lineView;
     private LinearLayout noDataErrorLayout;
+
+    private HistoryDetailsAdapterClass mAdapter;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -73,6 +77,7 @@ public class HistoryDetailsPageActivity extends AppCompatActivity {
 
     private void initComponents() {
         generateId();
+        registerEvents();
         initData();
     }
 
@@ -96,11 +101,27 @@ public class HistoryDetailsPageActivity extends AppCompatActivity {
         mContext = HistoryDetailsPageActivity.this;
         AUtils.mCurrentContext = mContext;
 
+        mAdapter = new HistoryDetailsAdapterClass();
+
         detailsGrid = findViewById(R.id.history_detail_grid);
         lineView = findViewById(R.id.line_view);
         noDataErrorLayout = findViewById(R.id.show_error_data);
 
         initToolbar();
+    }
+
+    private void registerEvents() {
+        mAdapter.setHistoryDetailsListener(new HistoryDetailsAdapterClass.HistoryDetailsListener() {
+            @Override
+            public void onSuccessCallBack() {
+                setHistoryDetails();
+            }
+
+            @Override
+            public void onFailureCallBack() {
+
+            }
+        });
     }
 
     private void initToolbar() {
@@ -118,14 +139,11 @@ public class HistoryDetailsPageActivity extends AppCompatActivity {
     }
 
     private void initData() {
-        fetchHistoryDetails();
+        mAdapter.fetchHistoryDetails(historyDate);
     }
 
     private void setHistoryDetails() {
-        Type type = new TypeToken<List<WorkHistoryDetailPojo>>(){}.getType();
-        workHistoryDetailPojoList = new Gson().fromJson(
-                QuickUtils.prefs.getString(AUtils.PREFS.WORK_HISTORY_DETAIL_POJO_LIST, null),
-                type);
+        workHistoryDetailPojoList = mAdapter.getWorkHistoryDetailTypePojoList();
 
         if(!AUtils.isNull(workHistoryDetailPojoList)){
             noDataErrorLayout.setVisibility(View.GONE);
@@ -135,19 +153,5 @@ public class HistoryDetailsPageActivity extends AppCompatActivity {
         }else{
             noDataErrorLayout.setVisibility(View.VISIBLE);
         }
-    }
-
-    private void fetchHistoryDetails() {
-        new MyAsyncTask(mContext, true, new MyAsyncTask.AsynTaskListener() {
-            @Override
-            public void doInBackgroundOpration(SyncServer syncServer) {
-                Boolean isSuccess = syncServer.pullWorkHistoryDetailListFromServer(historyDate);
-            }
-
-            @Override
-            public void onFinished() {
-                setHistoryDetails();
-            }
-        }).execute();
     }
 }

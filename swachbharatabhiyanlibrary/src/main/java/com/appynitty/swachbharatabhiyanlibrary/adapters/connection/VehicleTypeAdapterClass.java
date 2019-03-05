@@ -72,6 +72,11 @@ public class VehicleTypeAdapterClass {
                 }
 
             }
+
+            @Override
+            public void onInternetLost() {
+
+            }
         }).execute();
     }
 
