@@ -64,6 +64,7 @@ public class MyAsyncTask extends AsyncTask {
 
             if (isShowPrgressDialog) {
                 AUtils.showWarning(context, context.getString(R.string.noInternet));
+                asynTaskListener.onInternetLost();
             }
         }
     }
@@ -73,5 +74,6 @@ public class MyAsyncTask extends AsyncTask {
         void doInBackgroundOpration(SyncServer syncServer);
 
         void onFinished();
+        void onInternetLost();
     }
 }

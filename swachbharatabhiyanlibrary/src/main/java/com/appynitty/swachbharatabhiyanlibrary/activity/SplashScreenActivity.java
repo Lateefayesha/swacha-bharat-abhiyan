@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
 
 import com.appynitty.swachbharatabhiyanlibrary.R;
+import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.VersionDetailsAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.connection.SyncServer;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 import com.appynitty.swachbharatabhiyanlibrary.utils.LocaleHelper;
@@ -18,6 +19,8 @@ import com.appynitty.swachbharatabhiyanlibrary.utils.MyAsyncTask;
 import quickutils.core.QuickUtils;
 
 public class SplashScreenActivity extends AppCompatActivity {
+
+    VersionDetailsAdapterClass mAdapter;
 
     @Override
     protected void attachBaseContext(Context base) {
@@ -37,14 +40,45 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         AUtils.mCurrentContext = this;
 
+        mAdapter = new VersionDetailsAdapterClass();
+
         QuickUtils.prefs.save(AUtils.APP_ID, "1");
         QuickUtils.prefs.save(AUtils.VERSION_CODE, 7);
 
         setDefaultLanguage();
 
-        checkVersionDetails();
+        mAdapter.checkVersionDetails();
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        mAdapter.setVersionDetailsListener(new VersionDetailsAdapterClass.VersionDetailsListener() {
+            @Override
+            public void onSuccessCallBack() {
+                AUtils.showConfirmationDialog(SplashScreenActivity.this, AUtils.VERSION_CODE, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                        AUtils.rateApp(SplashScreenActivity.this);
+                    }
+                }, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                        finish();
+                    }
+                });
+            }
+
+            @Override
+            public void onFailureCallBack() {
+                if(QuickUtils.prefs.getBoolean(AUtils.PREFS.IS_USER_LOGIN,false))
+                {
+                    loadDashboard();
+                }  else {
+                    loadLogin();
+                }
+            }
+        });
     }
 
     @Override
@@ -89,44 +123,4 @@ public class SplashScreenActivity extends AppCompatActivity {
             }
         }, AUtils.SPLASH_SCREEN_TIME);
     }
-
-    private void checkVersionDetails() {
-
-        new MyAsyncTask(SplashScreenActivity.this, false, new MyAsyncTask.AsynTaskListener() {
-            Boolean doUpdate = false;
-            @Override
-            public void doInBackgroundOpration(SyncServer syncServer) {
-                doUpdate = syncServer.checkVersionUpdate();
-            }
-
-            @Override
-            public void onFinished() {
-                if(doUpdate){
-                    AUtils.showConfirmationDialog(SplashScreenActivity.this, AUtils.VERSION_CODE, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            dialogInterface.cancel();
-                            AUtils.rateApp(SplashScreenActivity.this);
-                        }
-                    }, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            dialogInterface.cancel();
-                            finish();
-                        }
-                    });
-                }else{
-                    if(QuickUtils.prefs.getBoolean(AUtils.PREFS.IS_USER_LOGIN,false))
-                    {
-                        loadDashboard();
-                    }  else {
-                        loadLogin();
-                    }
-                }
-            }
-        }).execute();
-
-    }
-
-
 }

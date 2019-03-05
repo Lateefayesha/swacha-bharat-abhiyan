@@ -57,6 +57,11 @@ public class ShareLocationAdapterClass {
                     }
                 }
             }
+
+            @Override
+            public void onInternetLost() {
+
+            }
         }).execute();
     }
 

@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.appynitty.swachbharatabhiyanlibrary.R;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.UI.InflateHistoryAdapter;
+import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.HistoryAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.connection.SyncServer;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.WorkHistoryPojo;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
@@ -45,6 +46,8 @@ public class HistoryPageActivity extends AppCompatActivity {
     private GridView historyGrid;
     private List<WorkHistoryPojo> historyPojoList;
     private LinearLayout noDataErrorLayout, noInternetErrorLayout;
+
+    private HistoryAdapterClass mAdapter;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -98,6 +101,8 @@ public class HistoryPageActivity extends AppCompatActivity {
         mContext = HistoryPageActivity.this;
         AUtils.mCurrentContext = mContext;
 
+        mAdapter = new HistoryAdapterClass();
+
         monthSpinner = findViewById(R.id.spinner_month);
         yearSpinner = findViewById(R.id.spinner_year);
         historyGrid = findViewById(R.id.grid_history);
@@ -126,7 +131,7 @@ public class HistoryPageActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
                 if(position > 0 && yearSpinner.getSelectedItemPosition() > 0){
-                    fetchHistory(
+                    mAdapter.fetchHistory(
                             yearSpinner.getSelectedItem().toString(),
                             String.valueOf(position)
                     );
@@ -145,7 +150,7 @@ public class HistoryPageActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
                 if(position > 0 && monthSpinner.getSelectedItemPosition() > 0){
-                    fetchHistory(
+                    mAdapter.fetchHistory(
                             yearSpinner.getSelectedItem().toString(),
                             String.valueOf(monthSpinner.getSelectedItemPosition())
                     );
@@ -159,6 +164,18 @@ public class HistoryPageActivity extends AppCompatActivity {
 
             }
         });
+
+        mAdapter.setHistoryListener(new HistoryAdapterClass.HistoryListener() {
+            @Override
+            public void onSuccessCallBack() {
+                setHistoryData();
+            }
+
+            @Override
+            public void onFailureCallBack() {
+
+            }
+        });
     }
 
     private void initData() {
@@ -166,7 +183,7 @@ public class HistoryPageActivity extends AppCompatActivity {
 
         if(AUtils.isNetWorkAvailable(mContext)){
             noInternetErrorLayout.setVisibility(View.GONE);
-            fetchHistory(String.valueOf(AUtils.getCurrentYear()),
+            mAdapter.fetchHistory(String.valueOf(AUtils.getCurrentYear()),
                     String.valueOf(AUtils.getCurrentMonth()));
         }else{
             noInternetErrorLayout.setVisibility(View.VISIBLE);
@@ -212,20 +229,6 @@ public class HistoryPageActivity extends AppCompatActivity {
     private void initGrid(){
         InflateHistoryAdapter adapter = new InflateHistoryAdapter(mContext, historyPojoList);
         historyGrid.setAdapter(adapter);
-    }
-
-    private void fetchHistory(final String year, final String month) {
-        new MyAsyncTask(mContext, true, new MyAsyncTask.AsynTaskListener() {
-            @Override
-            public void doInBackgroundOpration(SyncServer syncServer) {
-                Boolean isSuccess = syncServer.pullWorkHistoryListFromServer(year, month);
-            }
-
-            @Override
-            public void onFinished() {
-                setHistoryData();
-            }
-        }).execute();
     }
 
     private void showHistoryDetails(int position) {

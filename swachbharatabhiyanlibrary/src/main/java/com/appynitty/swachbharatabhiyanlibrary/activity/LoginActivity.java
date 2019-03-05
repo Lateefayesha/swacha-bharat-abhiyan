@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.appynitty.swachbharatabhiyanlibrary.R;
+import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.LoginAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.connection.SyncServer;
 import com.appynitty.swachbharatabhiyanlibrary.dialogs.PopUpDialog;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.LanguagePojo;
@@ -50,6 +51,8 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
     private Button btnChangeLang = null;
 
     private LoginPojo loginPojo = null;
+
+    private LoginAdapterClass mAdapter;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -146,6 +149,8 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
         mContext = LoginActivity.this;
         AUtils.mCurrentContext = mContext;
 
+        mAdapter = new LoginAdapterClass();
+
         setContentView(R.layout.activity_login_layout);
 
         txtUserName = findViewById(R.id.txt_user_name);
@@ -171,6 +176,52 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
                 changeLanguage();
             }
         });
+
+        mAdapter.setLoginListener(new LoginAdapterClass.LoginListener() {
+            @Override
+            public void onSuccessCallBack() {
+                String message = "";
+
+                if(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID, AUtils.DEFAULT_LANGUAGE_ID).equals("2")){
+                    message = mAdapter.getLoginDetailsPojo().getMessageMar();
+                }else{
+                    message = mAdapter.getLoginDetailsPojo().getMessage();
+                }
+
+                QuickUtils.prefs.save(AUtils.PREFS.USER_ID, mAdapter.getLoginDetailsPojo().getUserId());
+                QuickUtils.prefs.save(AUtils.PREFS.USER_TYPE, mAdapter.getLoginDetailsPojo().getType());
+
+                QuickUtils.prefs.save(AUtils.PREFS.IS_GT_FEATURE, (boolean)mAdapter.getLoginDetailsPojo().getGtFeatures());
+
+                QuickUtils.prefs.save(AUtils.PREFS.IS_USER_LOGIN, true);
+
+                Toasty.success(mContext, message, Toast.LENGTH_SHORT).show();
+
+                startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
+                LoginActivity.this.finish();
+            }
+
+            @Override
+            public void onSuccessFailureCallBack() {
+                String message = "";
+
+                if(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID, AUtils.DEFAULT_LANGUAGE_ID).equals("2")){
+                    message = mAdapter.getLoginDetailsPojo().getMessageMar();
+                }else{
+                    message = mAdapter.getLoginDetailsPojo().getMessage();
+                }
+
+                QuickUtils.prefs.save(AUtils.PREFS.IS_USER_LOGIN, false);
+
+                Toasty.error(mContext, message, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailureCallBack() {
+                QuickUtils.prefs.save(AUtils.PREFS.IS_USER_LOGIN, false);
+                Toasty.error(mContext, "" + mContext.getString(R.string.serverError), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     protected void initData() {
@@ -182,53 +233,7 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
         if (validateForm()) {
             getFormData();
 
-            new MyAsyncTask(mContext, true, new MyAsyncTask.AsynTaskListener() {
-                public LoginDetailsPojo loginDetailsPojo = null;
-
-                @Override
-                public void doInBackgroundOpration(SyncServer syncServer) {
-
-                    loginDetailsPojo = syncServer.saveLoginDetails(loginPojo);
-                }
-
-                @Override
-                public void onFinished() {
-
-                    if (!AUtils.isNull(loginDetailsPojo)) {
-
-                        String message = "";
-
-                        if(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID, AUtils.DEFAULT_LANGUAGE_ID).equals("2")){
-                            message = loginDetailsPojo.getMessageMar();
-                        }else{
-                            message = loginDetailsPojo.getMessage();
-                        }
-
-                        if (loginDetailsPojo.getStatus().equals(AUtils.STATUS_SUCCESS)) {
-
-                            QuickUtils.prefs.save(AUtils.PREFS.USER_ID, loginDetailsPojo.getUserId());
-                            QuickUtils.prefs.save(AUtils.PREFS.USER_TYPE, loginDetailsPojo.getType());
-
-                            QuickUtils.prefs.save(AUtils.PREFS.IS_GT_FEATURE, (boolean)loginDetailsPojo.getGtFeatures());
-
-                            QuickUtils.prefs.save(AUtils.PREFS.IS_USER_LOGIN, true);
-
-                            Toasty.success(mContext, message, Toast.LENGTH_SHORT).show();
-
-                            startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
-                            LoginActivity.this.finish();
-                        } else {
-                            QuickUtils.prefs.save(AUtils.PREFS.IS_USER_LOGIN, false);
-
-                            Toasty.error(mContext, message, Toast.LENGTH_SHORT).show();
-                        }
-                    } else {
-                        QuickUtils.prefs.save(AUtils.PREFS.IS_USER_LOGIN, false);
-                        Toasty.error(mContext, "" + mContext.getString(R.string.serverError), Toast.LENGTH_SHORT).show();
-                    }
-
-                }
-            }).execute();
+            mAdapter.onLogin(loginPojo);
         }
 
     }

@@ -38,6 +38,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.appynitty.swachbharatabhiyanlibrary.R;
+import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.AreaHouseAdapterClass;
+import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.BroadcastMessageAdapterClass;
+import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.CollectionAreaAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.connection.SyncServer;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.CollectionAreaHousePojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.CollectionAreaPointPojo;
@@ -75,6 +78,9 @@ public class BroadcastActivity extends AppCompatActivity {
     private HashMap<String, String> areaHash;
 
     private List<CollectionAreaPojo> areaPojoList;
+
+    private CollectionAreaAdapterClass mAreaAdapter;
+    private BroadcastMessageAdapterClass mAdapter;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -128,6 +134,9 @@ public class BroadcastActivity extends AppCompatActivity {
         mContext = BroadcastActivity.this;
         AUtils.mCurrentContext = mContext;
 
+        mAreaAdapter = new CollectionAreaAdapterClass();
+        mAdapter = new BroadcastMessageAdapterClass();
+
         areaAutoComplete = findViewById(R.id.txt_area_auto);
         areaAutoComplete.setThreshold(0);
         areaAutoComplete.setDropDownBackgroundResource(R.color.white);
@@ -153,7 +162,7 @@ public class BroadcastActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if(isAreaValid())
                 {
-                    broadcastMessageAsyncTask(areaHash.get(areaAutoComplete.getText().toString().toLowerCase()));
+                    mAdapter.sendBroadcastMessage(areaHash.get(areaAutoComplete.getText().toString().toLowerCase()));
                     Toasty.success(mContext, mContext.getResources().getString(R.string.sending_msg), Toast.LENGTH_SHORT).show();
                     finish();
                 }
@@ -178,46 +187,34 @@ public class BroadcastActivity extends AppCompatActivity {
             }
         });
 
+        mAreaAdapter.setCollectionAreaListener(new CollectionAreaAdapterClass.CollectionAreaListener() {
+            @Override
+            public void onSuccessCallBack() {
+                inflateAreaAutoComplete(mAreaAdapter.getAreaPojoList());
+            }
+
+            @Override
+            public void onFailureCallBack() {
+                Toasty.error(mContext, getResources().getString(R.string.serverError)).show();
+            }
+        });
+
+        mAdapter.setBroadcastMessageListener(new BroadcastMessageAdapterClass.BroadcastMessageListener() {
+            @Override
+            public void onSuccessCallBack() {
+
+            }
+
+            @Override
+            public void onFailureCallBack() {
+
+            }
+        });
     }
 
     protected void initData() {
 
-        fetchAreaList();
-    }
-
-    private void fetchAreaList() {
-        new MyAsyncTask(mContext, true, new MyAsyncTask.AsynTaskListener() {
-
-            @Override
-            public void doInBackgroundOpration(SyncServer syncServer) {
-
-                areaPojoList = syncServer.fetchCollectionArea(AUtils.HP_AREA_TYPE_ID);
-            }
-
-            @Override
-            public void onFinished() {
-                if(!AUtils.isNull(areaPojoList)){
-                    inflateAreaAutoComplete(areaPojoList);
-                }else{
-                    Toasty.error(mContext, getResources().getString(R.string.serverError)).show();
-                }
-            }
-        }).execute();
-    }
-
-    private void broadcastMessageAsyncTask(final String areaID){
-
-        new MyAsyncTask(mContext, false, new MyAsyncTask.AsynTaskListener() {
-            @Override
-            public void doInBackgroundOpration(SyncServer syncServer) {
-                syncServer.pullAreaBroadcastFromServer(areaID);
-            }
-
-            @Override
-            public void onFinished() {
-
-            }
-        }).execute();
+        mAreaAdapter.fetchAreaList(AUtils.HP_AREA_TYPE_ID, true);
     }
 
     private void inflateAreaAutoComplete(List<CollectionAreaPojo> pojoList){

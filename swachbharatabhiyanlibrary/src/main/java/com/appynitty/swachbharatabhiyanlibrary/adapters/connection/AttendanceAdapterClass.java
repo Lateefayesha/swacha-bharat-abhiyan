@@ -81,6 +81,11 @@ public class AttendanceAdapterClass {
                     Toasty.error(AUtils.mCurrentContext, "" + AUtils.mCurrentContext.getString(R.string.serverError), Toast.LENGTH_SHORT).show();
                 }
             }
+
+            @Override
+            public void onInternetLost() {
+
+            }
         }).execute();
     }
 
@@ -140,6 +145,11 @@ public class AttendanceAdapterClass {
                     }
                     Toasty.error(AUtils.mCurrentContext, "" + AUtils.mCurrentContext.getString(R.string.serverError), Toast.LENGTH_SHORT).show();
                 }
+            }
+
+            @Override
+            public void onInternetLost() {
+
             }
         }).execute();
     }

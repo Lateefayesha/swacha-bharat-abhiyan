@@ -75,6 +75,11 @@ public class UserDetailAdapterClass {
                 }
 
             }
+
+            @Override
+            public void onInternetLost() {
+
+            }
         }).execute();
     }
 
