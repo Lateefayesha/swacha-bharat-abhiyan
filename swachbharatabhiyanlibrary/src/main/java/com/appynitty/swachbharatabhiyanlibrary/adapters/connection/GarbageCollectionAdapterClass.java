@@ -44,7 +44,7 @@ public class GarbageCollectionAdapterClass {
 
             @Override
             public void onFinished() {
-                if(!AUtils.isNull(resultPojo)){
+                if(!AUtils.isNull(getResultPojo())){
                     mListener.onSuccessCallBack();
                 }else{
                     mListener.onFailureCallBack();
