@@ -173,7 +173,7 @@ public class HistoryPageActivity extends AppCompatActivity {
 
             @Override
             public void onFailureCallBack() {
-
+                setHistoryData();
             }
         });
     }
@@ -211,10 +211,7 @@ public class HistoryPageActivity extends AppCompatActivity {
 
     private void setHistoryData() {
         noInternetErrorLayout.setVisibility(View.GONE);
-        Type type = new TypeToken<List<WorkHistoryPojo>>(){}.getType();
-        historyPojoList = new Gson().fromJson(
-                QuickUtils.prefs.getString(AUtils.PREFS.WORK_HISTORY_POJO_LIST, null),
-                type);
+        historyPojoList = mAdapter.getworkHistoryTypePojoList();
 
         if(!AUtils.isNull(historyPojoList) && !historyPojoList.isEmpty()){
             historyGrid.setVisibility(View.VISIBLE);

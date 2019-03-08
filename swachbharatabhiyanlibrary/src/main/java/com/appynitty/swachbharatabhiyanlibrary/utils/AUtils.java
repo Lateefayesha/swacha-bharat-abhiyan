@@ -59,8 +59,13 @@ public class AUtils extends MsUtils {
 //    public static final String SERVER_URL = "http://202.65.157.253:4044/";
 
     //    New Relese Backup URL
-    public static final String SERVER_URL = "http://115.115.153.117:4044/";
+//    public static final String SERVER_URL = "http://115.115.153.117:4044/";
 
+    //    New Relese Backup URL 202
+//    public static final String SERVER_URL = "http://yoccreports.in:4044/";
+
+    //    New Relese URL
+    public static final String SERVER_URL = "https://ghantagadi.in:444/";
 
     //    General Constant
     public static final String STATUS_SUCCESS = "success";
