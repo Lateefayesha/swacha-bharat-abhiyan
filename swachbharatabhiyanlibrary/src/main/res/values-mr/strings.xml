@@ -84,7 +84,7 @@
     <string name="bifurcate_title">विलगिकरण प्रकार</string>
     <string name="bifurcate_garbage_hint">(ओला/सुका/घातक)</string>
 
-    <string name="garbage_error">कृपया विभाजन प्रकार निवडा!</string>
+    <string name="garbage_error">कृपया विलगिकरण प्रकार निवडा!</string>
 
     <string name="qr_error">अवैध स्कॅनिफाय कोड.</string>
 </resources>
