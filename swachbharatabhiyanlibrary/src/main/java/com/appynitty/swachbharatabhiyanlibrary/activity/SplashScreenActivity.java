@@ -43,7 +43,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         mAdapter = new VersionDetailsAdapterClass();
 
         QuickUtils.prefs.save(AUtils.APP_ID, "1");
-        QuickUtils.prefs.save(AUtils.VERSION_CODE, 7);
+        QuickUtils.prefs.save(AUtils.VERSION_CODE, 9);
 
         setDefaultLanguage();
 
