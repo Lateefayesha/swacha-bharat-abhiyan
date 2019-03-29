@@ -43,7 +43,7 @@ public class CollectionAreaAdapterClass {
                 if(!AUtils.isNull(areaPojoList)){
                     mListener.onSuccessCallBack();
                 }else{
-                    mListener.onSuccessCallBack();
+                    mListener.onFailureCallBack();
                 }
             }
 
