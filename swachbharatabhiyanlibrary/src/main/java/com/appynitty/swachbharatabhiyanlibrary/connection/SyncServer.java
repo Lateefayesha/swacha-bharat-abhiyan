@@ -6,6 +6,7 @@ import com.appynitty.retrofitconnectionlibrary.connection.Connection;
 import com.appynitty.retrofitconnectionlibrary.pojos.ResultPojo;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.UserDetailAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.VehicleTypeAdapterClass;
+import com.appynitty.swachbharatabhiyanlibrary.pojos.CheckAttendancePojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.CollectionAreaHousePojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.CollectionAreaPointPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.CollectionAreaPojo;
@@ -18,12 +19,14 @@ import com.appynitty.swachbharatabhiyanlibrary.pojos.LoginPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.OutPunchPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.UserDetailPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.UserLocationPojo;
+import com.appynitty.swachbharatabhiyanlibrary.pojos.UserLocationResultPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.VehicleTypePojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.WorkHistoryDetailPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.WorkHistoryPojo;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 import com.appynitty.swachbharatabhiyanlibrary.webservices.AreaBroadcastWebService;
 import com.appynitty.swachbharatabhiyanlibrary.webservices.AreaHousePointService;
+import com.appynitty.swachbharatabhiyanlibrary.webservices.CheckAttendanceWebService;
 import com.appynitty.swachbharatabhiyanlibrary.webservices.GarbageCollectionWebService;
 import com.appynitty.swachbharatabhiyanlibrary.webservices.LoginWebService;
 import com.appynitty.swachbharatabhiyanlibrary.webservices.PunchWebService;
@@ -318,9 +321,9 @@ public class SyncServer {
         return false;
     }
 
-    public ResultPojo saveUserLocation() {
+    public UserLocationResultPojo saveUserLocation() {
 
-        ResultPojo resultPojo = null;
+        UserLocationResultPojo resultPojo = null;
         try {
 
             UserLocationWebService service = Connection.createService(UserLocationWebService.class, AUtils.SERVER_URL);
@@ -433,5 +436,23 @@ public class SyncServer {
 
             e.printStackTrace();
         }
+    }
+
+    public CheckAttendancePojo checkAttendance(){
+
+        CheckAttendancePojo checkAttendancePojo = null;
+
+        CheckAttendanceWebService checkAttendanceWebService = Connection.createService(CheckAttendanceWebService.class, AUtils.SERVER_URL);
+
+        try {
+            checkAttendancePojo = checkAttendanceWebService.CheckAttendance(QuickUtils.prefs.getString(AUtils.APP_ID, ""),
+                    QuickUtils.prefs.getString(AUtils.PREFS.USER_ID, "")).execute().body();
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+
+        return checkAttendancePojo;
     }
 }

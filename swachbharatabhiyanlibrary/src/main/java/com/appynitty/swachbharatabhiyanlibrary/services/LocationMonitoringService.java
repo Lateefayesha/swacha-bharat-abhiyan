@@ -32,16 +32,21 @@ public class LocationMonitoringService implements
     long updatedTime = 0;
 
 
-    public LocationMonitoringService (Context context)
+    public LocationMonitoringService (final Context context)
     {
         mContext = context;
 
         mAdapter = new ShareLocationAdapterClass();
 
         mAdapter.setShareLocationListener(new ShareLocationAdapterClass.ShareLocationListener() {
-            @Override
-            public void onSuccessCallBack() {
 
+            @Override
+            public void onSuccessCallBack(boolean isAttendanceOff) {
+                if(isAttendanceOff)
+                {
+                    AUtils.setIsOnduty(false);
+                    AUtils.mApplication.stopLocationTracking();
+                }
             }
 
             @Override

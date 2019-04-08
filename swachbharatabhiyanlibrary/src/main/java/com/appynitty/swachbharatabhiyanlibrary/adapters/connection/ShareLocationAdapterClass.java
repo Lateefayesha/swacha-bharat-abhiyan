@@ -7,6 +7,7 @@ import com.appynitty.swachbharatabhiyanlibrary.R;
 import com.appynitty.swachbharatabhiyanlibrary.connection.SyncServer;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.InPunchPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.OutPunchPojo;
+import com.appynitty.swachbharatabhiyanlibrary.pojos.UserLocationResultPojo;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 import com.appynitty.swachbharatabhiyanlibrary.utils.MyAsyncTask;
 import com.mithsoft.lib.components.Toasty;
@@ -28,7 +29,7 @@ public class ShareLocationAdapterClass {
     public void shareLocation() {
 
         new MyAsyncTask(AUtils.mApplication.getApplicationContext(), false, new MyAsyncTask.AsynTaskListener() {
-            ResultPojo resultPojo = null;
+            UserLocationResultPojo resultPojo = null;
             @Override
             public void doInBackgroundOpration(SyncServer syncServer) {
 
@@ -42,7 +43,7 @@ public class ShareLocationAdapterClass {
                     if (resultPojo.getStatus().equals(AUtils.STATUS_SUCCESS)) {
                         if(!AUtils.isNull(mListener))
                         {
-                            mListener.onSuccessCallBack();
+                            mListener.onSuccessCallBack(resultPojo.getIsAttendenceOff());
                         }
                     } else {
                         if(!AUtils.isNull(mListener))
@@ -66,7 +67,7 @@ public class ShareLocationAdapterClass {
     }
 
     public interface ShareLocationListener {
-        void onSuccessCallBack();
+        void onSuccessCallBack(boolean isAttendanceOff);
         void onFailureCallBack();
     }
 }

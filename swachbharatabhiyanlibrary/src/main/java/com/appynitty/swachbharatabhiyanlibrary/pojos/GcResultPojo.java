@@ -8,6 +8,7 @@ public class GcResultPojo {
     private String status;
     private String message;
     private String messageMar;
+    private boolean isAttendenceOff;
 
     public String getName() {
         return name;
@@ -57,6 +58,14 @@ public class GcResultPojo {
         this.messageMar = messageMar;
     }
 
+    public boolean isAttendenceOff() {
+        return isAttendenceOff;
+    }
+
+    public void setAttendenceOff(boolean attendenceOff) {
+        isAttendenceOff = attendenceOff;
+    }
+
     @Override
     public String toString() {
         return "GcResultPojo{" + "name='" + name + '\''
@@ -64,6 +73,7 @@ public class GcResultPojo {
                                + ", mobile='" + mobile + '\''
                                + ", status='" + status + '\''
                                + ", message='" + message + '\''
-                               + ", messageMar='" + messageMar + '\'' + '}';
+                               + ", messageMar='" + messageMar + '\''
+                               + ", isAttendenceOff='" + isAttendenceOff + '\''+ '}';
     }
 }

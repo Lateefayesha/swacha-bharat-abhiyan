@@ -27,6 +27,7 @@ import android.widget.Toast;
 import com.appynitty.swachbharatabhiyanlibrary.R;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.UI.InflateMenuAdapter;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.AttendanceAdapterClass;
+import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.CheckAttendanceAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.UserDetailAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.VehicleTypeAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.custom_component.GlideCircleTransformation;
@@ -77,6 +78,8 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
 
     private boolean isLocationPermission = false;
     private boolean isSwitchOn = false;
+
+    private CheckAttendanceAdapterClass mCheckAttendanceAdapter;
 
     private AttendanceAdapterClass mAttendanceAdapter;
 
@@ -240,6 +243,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         mContext = DashboardActivity.this;
         AUtils.mCurrentContext = mContext;
 
+        mCheckAttendanceAdapter = new CheckAttendanceAdapterClass();
         mAttendanceAdapter = new AttendanceAdapterClass();
         mVehicleTypeAdapter = new VehicleTypeAdapterClass();
         mUserDetailAdapter = new UserDetailAdapterClass();
@@ -265,6 +269,34 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
 
     private void registerEvents() {
 
+        mCheckAttendanceAdapter.setCheckAttendanceListener(new CheckAttendanceAdapterClass.CheckAttendanceListener() {
+            @Override
+            public void onSuccessCallBack(boolean isAttendanceOff, String message, String messageMar) {
+                if(isAttendanceOff)
+                {
+                    onOutPunchSuccess();
+                    if(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID,AUtils.DEFAULT_LANGUAGE_ID).equals(AUtils.DEFAULT_LANGUAGE_ID)) {
+                        Toasty.info(mContext, messageMar,Toast.LENGTH_LONG).show();
+                    }
+                    else {
+                        Toasty.info(mContext, message,Toast.LENGTH_LONG).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailureCallBack() {
+                if(!QuickUtils.prefs.getBoolean(AUtils.PREFS.IS_ON_DUTY,false))
+                {
+                    onInPunchSuccess();
+                }
+            }
+
+            @Override
+            public void onNetworkFailureCallBack() {
+                Toasty.error(mContext,getResources().getString(R.string.serverError), Toast.LENGTH_LONG).show();
+            }
+        });
         mAttendanceAdapter.setAttendanceListener(new AttendanceAdapterClass.AttendanceListener() {
             @Override
             public void onSuccessCallBack(int type) {
@@ -367,6 +399,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
     private void initData() {
 
         initUserDetails();
+        mCheckAttendanceAdapter.checkAttendance();
         mVehicleTypeAdapter.getVehicleType();
         mUserDetailAdapter.getUserDetail();
 
