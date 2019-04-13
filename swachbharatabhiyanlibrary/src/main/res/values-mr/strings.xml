@@ -87,4 +87,8 @@
     <string name="garbage_error">कृपया विलगिकरण प्रकार निवडा!</string>
 
     <string name="qr_error">अवैध स्कॅनिफाय कोड.</string>
+
+    <string name="setting">सेटिंग</string>
+    <string name="show_bifurcation_type">विलगिकरण प्रकार दाखवणे</string>
+
 </resources>

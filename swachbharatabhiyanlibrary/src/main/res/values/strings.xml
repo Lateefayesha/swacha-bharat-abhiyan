@@ -107,4 +107,8 @@
     <string name="qr_error">Invalid Scaniffy Code.</string>
 
     <string name="warning_uni_code" translatable="false">⚠</string>
+
+    <string name="setting">Setting</string>
+
+    <string name="show_bifurcation_type">Show Bifurcation Type</string>
 </resources>

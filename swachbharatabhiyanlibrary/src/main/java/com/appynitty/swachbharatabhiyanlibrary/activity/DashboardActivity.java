@@ -334,8 +334,8 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
             public void onMenuItemClick(FloatingActionButton miniFab, @Nullable TextView label, int itemId) {
                 if (itemId == R.id.action_change_language) {
                     changeLanguage();
-                } else if (itemId == R.id.action_about_appynitty) {
-                    startActivity(new Intent(mContext, AboutAppynittyActivity.class));
+                } else if (itemId == R.id.action_setting) {
+                    startActivity(new Intent(mContext, SettingsActivity.class));
                 } else if (itemId == R.id.action_rate_app) {
                     AUtils.rateApp(mContext);
                 } else if (itemId == R.id.action_share_app) {

@@ -38,7 +38,7 @@
             android:label="@string/title_activity_dashboard"
             android:theme="@style/SBA.AppTheme.NoActionBar" />
         <activity
-            android:name=".activity.AboutAppynittyActivity"
+            android:name=".activity.SettingsActivity"
             android:label="@string/about_appynitty"
             android:theme="@style/SBA.AppTheme.NoActionBar" />
         <activity

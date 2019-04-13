@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.AboutAppynittyActivity"
+    tools:context=".activity.SettingsActivity"
     android:id="@+id/parent">
 
     <android.support.design.widget.AppBarLayout
@@ -21,10 +21,6 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <WebView
-        android:layout_marginTop="?attr/actionBarSize"
-        android:id="@+id/webview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+    <include layout="@layout/content_settings"/>
 
 </android.support.design.widget.CoordinatorLayout>

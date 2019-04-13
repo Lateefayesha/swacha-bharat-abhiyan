@@ -1,15 +1,13 @@
 package com.appynitty.swachbharatabhiyanlibrary.activity;
 
 import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
 import android.webkit.WebView;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 
 import com.appynitty.swachbharatabhiyanlibrary.R;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
@@ -19,13 +17,15 @@ import com.mithsoft.lib.activity.BaseActivity;
 
 import java.util.Objects;
 
-public class AboutAppynittyActivity extends BaseActivity {
+import quickutils.core.QuickUtils;
 
-    private static final String TAG = "AboutAppynittyActivity";
+public class SettingsActivity extends BaseActivity {
+
+    private static final String TAG = "SettingsActivity";
     private Context mContext;
     private Toolbar toolbar;
-    private WebView webView;
-    private WebviewInitialize webviewInit;
+
+    private Switch switchBifurcation;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -44,14 +44,13 @@ public class AboutAppynittyActivity extends BaseActivity {
     @Override
     protected void generateId() {
 
-        setContentView(R.layout.activity_about_appynitty);
+        setContentView(R.layout.activity_settings);
 
-        mContext = AboutAppynittyActivity.this;
+        mContext = SettingsActivity.this;
         AUtils.mCurrentContext = mContext;
 
         toolbar = findViewById(R.id.toolbar);
-        webView = findViewById(R.id.webview);
-        webviewInit = new WebviewInitialize(mContext, webView);
+        switchBifurcation = findViewById(R.id.switch_bifurcation);
 
         initToolBar();
     }
@@ -68,22 +67,28 @@ public class AboutAppynittyActivity extends BaseActivity {
     }
 
     @Override
-    protected void registerEvents() {}
+    protected void registerEvents() {
+        switchBifurcation.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
+                QuickUtils.prefs.save(AUtils.PREFS.IS_GT_FEATURE, checked);
+            }
+        });
+    }
 
     @Override
     protected void initData() {
-        webviewInit.InitiateDefaultWebview("http://www.appynitty.com/");
+        boolean isGtFearture = QuickUtils.prefs.getBoolean(AUtils.PREFS.IS_GT_FEATURE, false);
+        switchBifurcation.setChecked(isGtFearture);
     }
 
     @Override
     public void onBackPressed() {
-        if(!webviewInit.webviewGoBack()){
-            super.onBackPressed();
-        }
+        super.onBackPressed();
     }
 
     private void initToolBar() {
-        toolbar.setTitle(getResources().getString(R.string.about_appynitty));
+        toolbar.setTitle(getResources().getString(R.string.setting));
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
     }

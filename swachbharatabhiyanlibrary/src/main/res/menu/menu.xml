@@ -17,10 +17,9 @@
         android:title="@string/rate_this_app"/>
 
     <item
-        android:id="@+id/action_about_appynitty"
-        android:icon="@drawable/icn_appynitty_white"
-        android:visible="false"
-        android:title="@string/about_appynitty" />
+        android:id="@+id/action_setting"
+        android:icon="@drawable/ic_settings_white"
+        android:title="@string/setting" />
 
     <item
         android:id="@+id/action_share_app"
