@@ -47,7 +47,7 @@ import quickutils.core.QuickUtils;
 public class AUtils extends MsUtils {
 
     //    Local URL
-    public static final String SERVER_URL = "http://192.168.200.4:6077/";
+//    public static final String SERVER_URL = "http://192.168.200.4:6077/";
 
     //    Staging URL
 //    public static final String SERVER_URL = "http://sbaappynitty.co.in:4088/";
@@ -65,7 +65,7 @@ public class AUtils extends MsUtils {
 //    public static final String SERVER_URL = "http://yoccreports.in:4044/";
 
     //    New Relese URL
-//    public static final String SERVER_URL = "https://ghantagadi.in:444/";
+    public static final String SERVER_URL = "https://ghantagadi.in:444/";
 
     //    General Constant
     public static final String STATUS_SUCCESS = "success";

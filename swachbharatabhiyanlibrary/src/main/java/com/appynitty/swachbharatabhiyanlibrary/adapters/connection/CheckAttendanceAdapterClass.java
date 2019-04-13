@@ -30,7 +30,7 @@ public class CheckAttendanceAdapterClass {
     }
 
     public void checkAttendance() {
-        new MyAsyncTask(AUtils.mCurrentContext, true, new MyAsyncTask.AsynTaskListener() {
+        new MyAsyncTask(AUtils.mCurrentContext, false, new MyAsyncTask.AsynTaskListener() {
 
             @Override
             public void doInBackgroundOpration(SyncServer syncServer) {

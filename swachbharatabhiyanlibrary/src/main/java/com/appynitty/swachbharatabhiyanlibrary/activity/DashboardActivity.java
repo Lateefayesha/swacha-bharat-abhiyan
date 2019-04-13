@@ -39,6 +39,7 @@ import com.appynitty.swachbharatabhiyanlibrary.pojos.MenuListPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.UserDetailPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.VehicleTypePojo;
 import com.appynitty.swachbharatabhiyanlibrary.services.ForgroundService;
+import com.appynitty.swachbharatabhiyanlibrary.services.LocationMonitoringService;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 import com.appynitty.swachbharatabhiyanlibrary.utils.LocaleHelper;
 import com.bumptech.glide.Glide;
@@ -134,8 +135,6 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
 
         AUtils.mCurrentContext = mContext;
 
-        checkDutyStatus();
-
         initUserDetails();
     }
 
@@ -225,6 +224,12 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         else {
             AUtils.showSnackBar(this);
         }
+
+        if(!AUtils.isNull(mCheckAttendanceAdapter))
+        {
+            mCheckAttendanceAdapter.checkAttendance();
+        }
+        checkDutyStatus();
     }
 
     private void initComponents() {
@@ -272,6 +277,8 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         mCheckAttendanceAdapter.setCheckAttendanceListener(new CheckAttendanceAdapterClass.CheckAttendanceListener() {
             @Override
             public void onSuccessCallBack(boolean isAttendanceOff, String message, String messageMar) {
+
+                
                 if(isAttendanceOff)
                 {
                     onOutPunchSuccess();
@@ -297,6 +304,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
                 Toasty.error(mContext,getResources().getString(R.string.serverError), Toast.LENGTH_LONG).show();
             }
         });
+
         mAttendanceAdapter.setAttendanceListener(new AttendanceAdapterClass.AttendanceListener() {
             @Override
             public void onSuccessCallBack(int type) {
@@ -633,7 +641,11 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
 
         vehicleStatus.setText("");
 
-        AUtils.mApplication.stopLocationTracking();
+        boolean isservicerunning = AUtils.isMyServiceRunning(ForgroundService.class);
+
+        if(isservicerunning)
+            AUtils.mApplication.stopLocationTracking();
+
         markAttendance.setChecked(false);
 
         AUtils.setIsOnduty(false);

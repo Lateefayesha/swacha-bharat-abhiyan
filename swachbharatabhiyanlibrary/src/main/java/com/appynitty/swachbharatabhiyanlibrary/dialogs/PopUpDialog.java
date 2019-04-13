@@ -24,8 +24,6 @@ import java.util.List;
 
 public class PopUpDialog extends Dialog {
 
-    public Dialog d;
-
     private Context mContext;
     private String mType;
 

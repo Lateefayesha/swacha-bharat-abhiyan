@@ -463,7 +463,15 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
         mAdapter.setGarbageCollectionListener(new GarbageCollectionAdapterClass.GarbageCollectionListener() {
             @Override
             public void onSuccessCallBack() {
-                showPopup(getGarbageCollectionPojo().getId(), mAdapter.getResultPojo());
+                if(mAdapter.getResultPojo().isAttendenceOff())
+                {
+                    AUtils.setIsOnduty(false);
+                    AUtils.mApplication.stopLocationTracking();
+                    QRcodeScannerActivity.this.finish();
+                }
+                else {
+                    showPopup(getGarbageCollectionPojo().getId(), mAdapter.getResultPojo());
+                }
             }
 
             @Override
