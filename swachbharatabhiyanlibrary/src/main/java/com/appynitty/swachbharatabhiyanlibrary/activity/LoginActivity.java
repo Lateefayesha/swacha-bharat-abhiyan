@@ -197,7 +197,9 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
 
                 Toasty.success(mContext, message, Toast.LENGTH_SHORT).show();
 
-                startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
+                Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
+                intent.putExtra(AUtils.isFromLogin, true);
+                startActivity(intent);
                 LoginActivity.this.finish();
             }
 

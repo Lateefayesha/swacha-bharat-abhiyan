@@ -104,6 +104,8 @@ public class AUtils extends MsUtils {
     public static final String CONFIRM_LOGOUT_DIALOG = "confirmLogout";
     public static final String CONFIRM_OFFDUTY_DIALOG = "confirmOffDuty";
 
+    public static final String isFromLogin = "isFromLogin";
+
     public static MyApplication mApplication;
 
     private static final String SERVER_DATE_FORMATE = "MM-dd-yyyy";

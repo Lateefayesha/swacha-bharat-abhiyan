@@ -80,6 +80,8 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
     private boolean isLocationPermission = false;
     private boolean isSwitchOn = false;
 
+    private boolean isFromLogin;
+
     private CheckAttendanceAdapterClass mCheckAttendanceAdapter;
 
     private AttendanceAdapterClass mAttendanceAdapter;
@@ -134,6 +136,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         super.onResume();
 
         AUtils.mCurrentContext = mContext;
+        checkIsFromLogin();
 
         initUserDetails();
     }
@@ -225,7 +228,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
             AUtils.showSnackBar(this);
         }
 
-        if(!AUtils.isNull(mCheckAttendanceAdapter))
+        if(!AUtils.isNull(mCheckAttendanceAdapter) && !isFromLogin)
         {
             mCheckAttendanceAdapter.checkAttendance();
         }
@@ -247,6 +250,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
 
         mContext = DashboardActivity.this;
         AUtils.mCurrentContext = mContext;
+        checkIsFromLogin();
 
         mCheckAttendanceAdapter = new CheckAttendanceAdapterClass();
         mAttendanceAdapter = new AttendanceAdapterClass();
@@ -407,7 +411,10 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
     private void initData() {
 
         initUserDetails();
-        mCheckAttendanceAdapter.checkAttendance();
+        if(!isFromLogin){
+            mCheckAttendanceAdapter.checkAttendance();
+        }
+
         mVehicleTypeAdapter.getVehicleType();
         mUserDetailAdapter.getUserDetail();
 
@@ -731,5 +738,20 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
                 vehicleStatus.setText(String.format("%s%s%s", this.getResources().getString(R.string.opening_round_bracket), vehicleName, this.getResources().getString(R.string.closing_round_bracket)));
             }
         }
+    }
+
+    private void checkIsFromLogin(){
+
+        if(getIntent().hasExtra(AUtils.isFromLogin)){
+            isFromLogin = getIntent().getBooleanExtra(AUtils.isFromLogin, true);
+        }else{
+            isFromLogin = false;
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        getIntent().removeExtra(AUtils.isFromLogin);
     }
 }
