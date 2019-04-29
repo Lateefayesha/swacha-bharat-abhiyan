@@ -411,9 +411,6 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
     private void initData() {
 
         initUserDetails();
-        if(!isFromLogin){
-            mCheckAttendanceAdapter.checkAttendance();
-        }
 
         mVehicleTypeAdapter.getVehicleType();
         mUserDetailAdapter.getUserDetail();
