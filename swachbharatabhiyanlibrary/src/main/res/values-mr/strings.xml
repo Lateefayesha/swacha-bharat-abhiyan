@@ -7,6 +7,8 @@
     <string name="title_activity_profile_page">प्रोफाइल</string>
     <string name="title_activity_history_page">कामाचा इतिहास</string>
     <string name="title_activity_broadcast_page">प्रसारण</string>
+    <string name="title_activity_dump_yard_weight">डंप यार्ड तपशील</string>
+
     <string name="change_language">भाषा बदला</string>
     <string name="rate_this_app">अँप रेट करा</string>
     <string name="share_the_app">अँपचा प्रसार करा</string>
@@ -32,6 +34,7 @@
     <string name="hp_gp_id_hint">घर आयडी/कचरा पॉइंट आयडी प्रविष्ट करा</string>
     <string name="house_number_hint">घर क्रमांक प्रविष्ट करा</string>
     <string name="gp_id_hint">कचरा पॉइंट आयडी प्रविष्ट करा</string>
+    <string name="dy_id_hint">डंप यार्ड आयडी प्रविष्ट करा</string>
 
     <string name="take_before_photo">पूर्वीची फोटो</string>
     <string name="take_after_photo">नंतरची फोटो</string>
@@ -46,6 +49,7 @@
     <string name="month_txt">महिना</string>
     <string name="house_collection_txt">घर संकलन</string>
     <string name="point_collection_txt">पॉइंट संकलन</string>
+    <string name="dump_yard_txt">डंप यार्ड संकलन</string>
     <string name="house_id_txt">घर आयडी :</string>
     <string name="point_id_txt">पॉइंट आयडी :</string>
     <string name="vehicle_number_txt">वाहन नंबर :</string>
@@ -73,8 +77,11 @@
     <string name="try_after_sometime">कृपया काही वेळानंतर प्रयत्न करा!</string>
     <string name="hp_validation">कृपया वैध घर क्रमांक निवडा</string>
     <string name="gp_validation">कृपया वैध कचरा पॉइंट निवडा</string>
+    <string name="dy_validation">कृपया वैध डंप यार्ड निवडा</string>
+
     <string name="hp_area_validation">कृपया वैध क्षेत्र आणि घर क्रमांक निवडा.</string>
-    <string name="gp_area_validation">कृपया वैध क्षेत्र आणि कचरा पॉइंट</string>
+    <string name="gp_area_validation">कृपया वैध क्षेत्र आणि कचरा पॉइंट निवडा.</string>
+    <string name="dy_area_validation">कृपया वैध क्षेत्र आणि डंप यार्ड निवडा.</string>
 
     <string name="app_id_title">स्वच्छ भारत अभियान</string>
 
@@ -90,5 +97,12 @@
 
     <string name="setting">सेटिंग</string>
     <string name="show_bifurcation_type">विलगिकरण प्रकार दाखवणे</string>
+
+    <string name="total_weight">एकूण वजन</string>
+    <string name="total_dry_weight">एकूण सूक्ष्म वजन</string>
+    <string name="total_wet_weight">एकूण ओले वजन</string>
+
+    <string name="plz_ent_all_fields">कृपया वरील सर्व फील्ड प्रविष्ट करा</string>
+    <string name="plz_ent_only_number">कृपया फक्त संख्या प्रविष्ट करा</string>
 
 </resources>

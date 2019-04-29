@@ -41,4 +41,23 @@ public interface GarbageCollectionWebService {
                                               @Part MultipartBody.Part image1,
                                               @Part MultipartBody.Part image2,
                                               @Part("garbageType") RequestBody garbageType);
+
+
+    @Multipart
+    @POST("api/Save/DumpYardCollection")
+    Call<GcResultPojo> saveGarbageCollectionDy(@Header("appId") String appId,
+                                              @Part("userId") RequestBody userId,
+                                              @Part("dyId") RequestBody houseId,
+                                              @Part("Lat") RequestBody Lat,
+                                              @Part("Long") RequestBody Long,
+                                              @Part("beforeImage") RequestBody beforeImage,
+                                              @Part("AfterImage") RequestBody afterImage,
+                                              @Part("note") RequestBody comment,
+                                              @Part("vehicleNumber") RequestBody vehicleNumber,
+                                              @Part MultipartBody.Part image1,
+                                              @Part MultipartBody.Part image2,
+                                              @Part("garbageType") RequestBody garbageType,
+                                              @Part("totalGcWeight") RequestBody weightTotal,
+                                              @Part("totalDryWeight") RequestBody weightDry,
+                                              @Part("totalWetWeight") RequestBody weightWet);
 }

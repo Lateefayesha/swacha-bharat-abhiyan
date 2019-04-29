@@ -16,6 +16,12 @@ public class GarbageCollectionPojo {
 
     private int garbageType;
 
+    private int weightTotal;
+
+    private int weightTotalDry;
+
+    private int weightTotalWet;
+
     public String getImage2() {
         return image2;
     }
@@ -72,6 +78,30 @@ public class GarbageCollectionPojo {
         this.garbageType = garbageType;
     }
 
+    public int getWeightTotal() {
+        return weightTotal;
+    }
+
+    public void setWeightTotal(int weightTotal) {
+        this.weightTotal = weightTotal;
+    }
+
+    public int getWeightTotalDry() {
+        return weightTotalDry;
+    }
+
+    public void setWeightTotalDry(int weightTotalDry) {
+        this.weightTotalDry = weightTotalDry;
+    }
+
+    public int getWeightTotalWet() {
+        return weightTotalWet;
+    }
+
+    public void setWeightTotalWet(int weightTotalWet) {
+        this.weightTotalWet = weightTotalWet;
+    }
+
     @Override
     public String toString() {
         return "GarbageCollectionPojo{"
@@ -81,6 +111,9 @@ public class GarbageCollectionPojo {
                 + ", beforeImage='" + beforeImage + '\''
                 + ", id='" + id + '\''
                 + ", comment='" + comment + '\''
+                + ", weightTotal='" + weightTotal + '\''
+                + ", weightTotalDry='" + weightTotalDry + '\''
+                + ", weightTotalWet='" + weightTotalWet + '\''
                 + ", garbageType=" + garbageType + '}';
     }
 }

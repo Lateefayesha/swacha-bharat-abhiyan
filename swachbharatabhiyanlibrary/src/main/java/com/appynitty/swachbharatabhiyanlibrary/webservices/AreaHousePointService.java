@@ -3,6 +3,7 @@ package com.appynitty.swachbharatabhiyanlibrary.webservices;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.CollectionAreaHousePojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.CollectionAreaPointPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.CollectionAreaPojo;
+import com.appynitty.swachbharatabhiyanlibrary.pojos.CollectionDumpYardPointPojo;
 
 import java.util.List;
 
@@ -28,5 +29,10 @@ public interface AreaHousePointService {
     Call<List<CollectionAreaPointPojo>> fetchCollectionAreaPoint(@Header("appId") String appId,
                                                                  @Header("type") String collectionType,
                                                                  @Header("areaId") String areaId);
+
+    @GET("api/Get/DumpYardPoint")
+    Call<List<CollectionDumpYardPointPojo>> fetchCollectionDyPoint(@Header("appId") String appId,
+                                                                   @Header("type") String collectionType,
+                                                                   @Header("areaId") String areaId);
 
 }

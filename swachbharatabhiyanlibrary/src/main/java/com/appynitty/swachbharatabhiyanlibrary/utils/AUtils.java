@@ -47,13 +47,13 @@ import quickutils.core.QuickUtils;
 public class AUtils extends MsUtils {
 
     //    Local URL
-//    public static final String SERVER_URL = "http://192.168.200.4:6077/";
+    public static final String SERVER_URL = "http://192.168.200.4:6077/";
 
     //    Staging URL
 //    public static final String SERVER_URL = "https://ghantagadi.in:444/";
 
     //    Relese URL
-    public static final String SERVER_URL = "https://ghantagadi.in:444/";
+//    public static final String SERVER_URL = "https://ghantagadi.in:444/";
 
     //    Relese Backup URL
 //    public static final String SERVER_URL = "http://202.65.157.253:4044/";
@@ -100,11 +100,13 @@ public class AUtils extends MsUtils {
     public static final String HISTORY_DETAILS_DATE = "HistoryDetailsDate";
     public static final String RADIO_SELECTED_HP = "house_point";
     public static final String RADIO_SELECTED_GP = "garbage_point";
+    public static final String RADIO_SELECTED_DY = "garbage_dump_yard";
 
     public static final String CONFIRM_LOGOUT_DIALOG = "confirmLogout";
     public static final String CONFIRM_OFFDUTY_DIALOG = "confirmOffDuty";
 
     public static final String isFromLogin = "isFromLogin";
+    public static final String dumpYardId = "dumpYardId";
 
     public static MyApplication mApplication;
 
@@ -130,6 +132,8 @@ public class AUtils extends MsUtils {
     public static final String HP_AREA_TYPE_ID = "1";
 
     public static final String GP_AREA_TYPE_ID = "2";
+
+    public static final String DY_AREA_TYPE_ID = "3";
 
     private static Snackbar mSnackbar;
 
@@ -248,6 +252,14 @@ public class AUtils extends MsUtils {
         String WORK_HISTORY_POJO_LIST = "WorkHistoryPullList";
         String WORK_HISTORY_DETAIL_POJO_LIST = "WorkHistoryDetailPullList";
         String LANGUAGE_POJO_LIST = "LanguagePullList";
+    }
+
+    public interface DUMPDATA {
+        String dumpDataMap = "dump_data_map";
+        String dumpYardId = "dump_yard_id";
+        String weightTotal = "total_weight";
+        String weightTotalDry = "total_weight_dry";
+        String weightTotalWet = "total_weight_wet";
     }
 
     public static boolean isCameraPermissionGiven(final Context context) {

@@ -42,6 +42,7 @@
                     android:id="@+id/house_collection_radio"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="5"
                     android:text="@string/house_collection_txt"
                     android:layout_margin="@dimen/padding_margin_layout"
                     android:textColor="@color/white"
@@ -52,7 +53,18 @@
                     android:id="@+id/point_collection_radio"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="3"
                     android:text="@string/point_collection_txt"
+                    android:layout_margin="@dimen/padding_margin_layout"
+                    android:textColor="@color/white"
+                    android:buttonTint="@color/white"/>
+
+                <RadioButton
+                    android:id="@+id/dump_yard_radio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="7"
+                    android:text="@string/dump_yard_txt"
                     android:layout_margin="@dimen/padding_margin_layout"
                     android:textColor="@color/white"
                     android:buttonTint="@color/white"/>

@@ -10,6 +10,7 @@ import com.appynitty.swachbharatabhiyanlibrary.pojos.CheckAttendancePojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.CollectionAreaHousePojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.CollectionAreaPointPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.CollectionAreaPojo;
+import com.appynitty.swachbharatabhiyanlibrary.pojos.CollectionDumpYardPointPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.GarbageCollectionPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.GcResultPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.ImagePojo;
@@ -128,6 +129,20 @@ public class SyncServer {
 
             RequestBody garbageType = RequestBody.create(okhttp3.MultipartBody.FORM, String.valueOf(garbageCollectionPojo.getGarbageType()));
 
+            RequestBody weightTotal = null;
+            if(!AUtils.isNull(garbageCollectionPojo.getWeightTotal())){
+                weightTotal = RequestBody.create(okhttp3.MultipartBody.FORM, String.valueOf(garbageCollectionPojo.getWeightTotal()));
+            }
+
+            RequestBody weightTotalDry = null;
+            if(!AUtils.isNull(garbageCollectionPojo.getWeightTotalDry())){
+                weightTotalDry = RequestBody.create(okhttp3.MultipartBody.FORM, String.valueOf(garbageCollectionPojo.getWeightTotalDry()));
+            }
+
+            RequestBody weightTotalWet = null;
+            if(!AUtils.isNull(garbageCollectionPojo.getWeightTotalWet())){
+                weightTotalWet = RequestBody.create(okhttp3.MultipartBody.FORM, String.valueOf(garbageCollectionPojo.getWeightTotalWet()));
+            }
 
             GarbageCollectionWebService service = Connection.createService(GarbageCollectionWebService.class, AUtils.SERVER_URL);
 
@@ -141,6 +156,10 @@ public class SyncServer {
                 gcResultPojo = service.saveGarbageCollectionGP(QuickUtils.prefs.getString(AUtils.APP_ID, ""),
                         userId, id, Lat, Long, beforeImage, afterImage, comment, vehicleNo, imageFileMultiBody1,
                         imageFileMultiBody2).execute().body();
+            }else if(pointId.substring(0, 2).matches("^[DdYy]+$")){
+                gcResultPojo = service.saveGarbageCollectionDy(QuickUtils.prefs.getString(AUtils.APP_ID, ""),
+                        userId, id, Lat, Long, beforeImage, afterImage, comment, vehicleNo, imageFileMultiBody1,
+                        imageFileMultiBody2, garbageType, weightTotal, weightTotalDry, weightTotalWet).execute().body();
             }
 
         } catch (Exception e) {
@@ -412,6 +431,24 @@ public class SyncServer {
 
             AreaHousePointService  areaHousePointService = Connection.createService(AreaHousePointService.class, AUtils.SERVER_URL);
             areaPojoList = areaHousePointService.fetchCollectionAreaPoint(
+                    QuickUtils.prefs.getString(AUtils.APP_ID, ""), areaType, areaId)
+                    .execute().body();
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return areaPojoList;
+    }
+
+    public List<CollectionDumpYardPointPojo> fetchCollectionDyPoint(String areaType, String areaId){
+
+        List<CollectionDumpYardPointPojo> areaPojoList = null;
+
+        try{
+
+            AreaHousePointService  areaHousePointService = Connection.createService(AreaHousePointService.class, AUtils.SERVER_URL);
+            areaPojoList = areaHousePointService.fetchCollectionDyPoint(
                     QuickUtils.prefs.getString(AUtils.APP_ID, ""), areaType, areaId)
                     .execute().body();
 
