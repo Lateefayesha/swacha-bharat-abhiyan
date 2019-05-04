@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.BatteryManager;
 import android.os.PowerManager;
 import android.provider.Settings;
 import android.support.annotation.RequiresApi;
@@ -617,6 +618,11 @@ public class AUtils extends MsUtils {
         View layout = LayoutInflater.from(mCurrentContext).inflate(R.layout.snackbar_custom_layout, null);
         v.addView(layout, 0);
         mSnackbar.show();
+    }
+
+    public static int getBatteryStatus(){
+        BatteryManager batteryManager = (BatteryManager) mCurrentContext.getSystemService(Context.BATTERY_SERVICE);
+        return batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY);
     }
 }
 

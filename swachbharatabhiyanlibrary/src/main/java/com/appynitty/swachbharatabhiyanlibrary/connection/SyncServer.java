@@ -150,15 +150,15 @@ public class SyncServer {
 
             if(pointId.substring(0, 2).matches("^[HhPp]+$")){
                 gcResultPojo = service.saveGarbageCollectionH(QuickUtils.prefs.getString(AUtils.APP_ID, ""),
-                        userId, id, Lat, Long, beforeImage, afterImage, comment, vehicleNo, imageFileMultiBody1,
+                        AUtils.getBatteryStatus(), userId, id, Lat, Long, beforeImage, afterImage, comment, vehicleNo, imageFileMultiBody1,
                         imageFileMultiBody2, garbageType).execute().body();
             }else if(pointId.substring(0, 2).matches("^[GgPp]+$")){
                 gcResultPojo = service.saveGarbageCollectionGP(QuickUtils.prefs.getString(AUtils.APP_ID, ""),
-                        userId, id, Lat, Long, beforeImage, afterImage, comment, vehicleNo, imageFileMultiBody1,
+                        AUtils.getBatteryStatus(), userId, id, Lat, Long, beforeImage, afterImage, comment, vehicleNo, imageFileMultiBody1,
                         imageFileMultiBody2).execute().body();
             }else if(pointId.substring(0, 2).matches("^[DdYy]+$")){
                 gcResultPojo = service.saveGarbageCollectionDy(QuickUtils.prefs.getString(AUtils.APP_ID, ""),
-                        userId, id, Lat, Long, beforeImage, afterImage, comment, vehicleNo, imageFileMultiBody1,
+                        AUtils.getBatteryStatus(), userId, id, Lat, Long, beforeImage, afterImage, comment, vehicleNo, imageFileMultiBody1,
                         imageFileMultiBody2, garbageType, weightTotal, weightTotalDry, weightTotalWet).execute().body();
             }
 
@@ -201,7 +201,7 @@ public class SyncServer {
             QuickUtils.prefs.save(AUtils.PREFS.IN_PUNCH_POJO, gson.toJson(inPunchPojo, type));
 
             resultPojo = service.saveInPunchDetails(QuickUtils.prefs.getString(AUtils.APP_ID, "1"), AUtils.CONTENT_TYPE,
-                    inPunchPojo).execute().body();
+                    AUtils.getBatteryStatus(), inPunchPojo).execute().body();
 
         } catch (Exception e) {
 
@@ -222,7 +222,7 @@ public class SyncServer {
             outPunchPojo.setEndLong(QuickUtils.prefs.getString(AUtils.LONG,""));
 
             resultPojo = service.saveOutPunchDetails(QuickUtils.prefs.getString(AUtils.APP_ID, "1"), AUtils.CONTENT_TYPE,
-                    outPunchPojo).execute().body();
+                    AUtils.getBatteryStatus(), outPunchPojo).execute().body();
 
         } catch (Exception e) {
 
@@ -357,7 +357,7 @@ public class SyncServer {
 
             userLocationPojoList.add(userLocationPojo);
             resultPojo = service.saveUserLocation(QuickUtils.prefs.getString(AUtils.APP_ID, "1"), AUtils.CONTENT_TYPE,
-                    QuickUtils.prefs.getString(AUtils.PREFS.USER_ID, null),userLocationPojoList).execute().body();
+                    QuickUtils.prefs.getString(AUtils.PREFS.USER_ID, null),AUtils.getBatteryStatus(), userLocationPojoList).execute().body();
 
         } catch (Exception e) {
 

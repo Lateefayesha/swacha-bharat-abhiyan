@@ -22,10 +22,9 @@
                 android:id="@+id/txt_dry_weight"
                 style="@style/MyEditTextStyleLight"
                 android:hint="@string/total_dry_weight"
-                android:inputType="number" />
+                android:inputType="numberDecimal" />
 
         </android.support.design.widget.TextInputLayout>
-
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
@@ -35,7 +34,7 @@
                 android:id="@+id/txt_wet_weight"
                 style="@style/MyEditTextStyleLight"
                 android:hint="@string/total_wet_weight"
-                android:inputType="number" />
+                android:inputType="numberDecimal" />
 
         </android.support.design.widget.TextInputLayout>
 
@@ -47,9 +46,32 @@
                 android:id="@+id/txt_total_weight"
                 style="@style/MyEditTextStyleLight"
                 android:hint="@string/total_weight"
-                android:inputType="number" />
+                android:inputType="numberDecimal" />
 
         </android.support.design.widget.TextInputLayout>
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="2"
+            android:orientation="horizontal" android:visibility="gone">
+            <RadioButton
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="KG"
+                android:button="@null"
+                android:background="@drawable/radio_selector"
+                android:checked="true"/>
+            <RadioButton
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="TONS"
+                android:button="@null"
+                android:background="@drawable/radio_selector"
+                android:checked="false"/>
+        </RadioGroup>
 
         <Button
             style="@style/MyButtonStyle"

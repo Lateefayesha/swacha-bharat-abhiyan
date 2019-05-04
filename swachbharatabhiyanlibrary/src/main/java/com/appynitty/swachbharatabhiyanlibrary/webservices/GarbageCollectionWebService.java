@@ -15,6 +15,7 @@ public interface GarbageCollectionWebService {
     @Multipart
     @POST("api/Save/GarbageCollection")
     Call<GcResultPojo> saveGarbageCollectionGP(@Header("appId") String appId,
+                                               @Header("batteryStatus") int batteryStatus,
                                                @Part("userId") RequestBody userId,
                                                @Part("gpId") RequestBody gpId,
                                                @Part("Lat") RequestBody Lat,
@@ -30,6 +31,7 @@ public interface GarbageCollectionWebService {
     @Multipart
     @POST("api/Save/GarbageCollection")
     Call<GcResultPojo> saveGarbageCollectionH(@Header("appId") String appId,
+                                              @Header("batteryStatus") int batteryStatus,
                                               @Part("userId") RequestBody userId,
                                               @Part("houseId") RequestBody houseId,
                                               @Part("Lat") RequestBody Lat,
@@ -46,6 +48,7 @@ public interface GarbageCollectionWebService {
     @Multipart
     @POST("api/Save/DumpYardCollection")
     Call<GcResultPojo> saveGarbageCollectionDy(@Header("appId") String appId,
+                                              @Header("batteryStatus") int batteryStatus,
                                               @Part("userId") RequestBody userId,
                                               @Part("dyId") RequestBody houseId,
                                               @Part("Lat") RequestBody Lat,

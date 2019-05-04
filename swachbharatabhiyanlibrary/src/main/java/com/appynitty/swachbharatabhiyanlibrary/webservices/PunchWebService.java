@@ -16,10 +16,12 @@ public interface PunchWebService {
     @POST("api/Save/UserAttendenceIn")
     Call<ResultPojo> saveInPunchDetails(@Header("appId") String appId,
                                         @Header("Content-Type") String content_type,
+                                        @Header("batteryStatus") int batteryStatus,
                                         @Body InPunchPojo loginPojo);
 
     @POST("api/Save/UserAttendenceOut")
     Call<ResultPojo> saveOutPunchDetails(@Header("appId") String appId,
                                         @Header("Content-Type") String content_type,
+                                         @Header("batteryStatus") int batteryStatus,
                                         @Body OutPunchPojo outPojo);
 }

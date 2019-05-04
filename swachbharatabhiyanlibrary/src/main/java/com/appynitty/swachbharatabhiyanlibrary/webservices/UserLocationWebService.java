@@ -19,5 +19,6 @@ public interface UserLocationWebService {
     Call<UserLocationResultPojo> saveUserLocation(@Header("appId") String appId,
                                                   @Header("Content-Type") String content_type,
                                                   @Header("userId") String userId,
+                                                  @Header("batteryStatus") int batteryStatus,
                                                   @Body List<UserLocationPojo> userLocationPojoList);
 }
