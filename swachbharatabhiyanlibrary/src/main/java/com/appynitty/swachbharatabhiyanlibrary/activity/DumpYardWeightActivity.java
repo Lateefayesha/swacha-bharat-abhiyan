@@ -109,9 +109,9 @@ public class DumpYardWeightActivity extends AppCompatActivity {
             Toasty.error(mContext, mContext.getString(R.string.plz_ent_all_fields)).show();
             return false;
         }else if(
-            !AUtils.isNumber(editTotal.getText().toString()) ||
-            !AUtils.isNumber(editDryTotal.getText().toString()) ||
-            !AUtils.isNumber(editWetTotal.getText().toString())
+            !AUtils.isNumeric(editTotal.getText().toString()) ||
+            !AUtils.isNumeric(editDryTotal.getText().toString()) ||
+            !AUtils.isNumeric(editWetTotal.getText().toString())
         ){
             Toasty.error(mContext, mContext.getString(R.string.plz_ent_only_number)).show();
             return false;
