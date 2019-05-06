@@ -1,216 +1,254 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".activity.DumpYardWeightActivity"
-    tools:showIn="@layout/activity_dump_yard_weight">
+    tools:showIn="@layout/activity_dump_yard_weight"
+    android:orientation="vertical">
 
-    <RelativeLayout
+    <ScrollView
+        android:layout_weight="0.8"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_gravity="center_horizontal">
+        android:layout_height="match_parent"
+        android:id="@+id/layout_scroll">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="@drawable/white_background_bottom_border"
-            android:padding="@dimen/dim_16_dp"
-            android:id="@+id/layout_dy_id"
-            android:layout_marginBottom="@dimen/dim_50_dp">
+            android:orientation="vertical"
+            android:layout_gravity="center_horizontal">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/dump_yard_id_txt"/>
+                android:orientation="horizontal"
+                android:background="@drawable/white_background_bottom_border"
+                android:padding="@dimen/login_margin"
+                android:id="@+id/layout_dy_id"
+                android:layout_marginBottom="@dimen/dim_50_dp">
 
-            <TextView
-                android:id="@+id/txt_house_id"
-                android:layout_width="wrap_content"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/dump_yard_id_txt"/>
+
+                <TextView
+                    android:id="@+id/txt_house_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAllCaps="true"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:layout_marginStart="@dimen/dim_5_dp"
+                    android:text="@string/hyphen"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_dry_weight"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAllCaps="true"
-                android:textColor="@color/black"
-                android:textSize="18sp"
-                android:layout_marginStart="@dimen/dim_5_dp"
-                android:text="@string/hyphen"/>
+                android:orientation="horizontal"
+                android:layout_below="@id/layout_dy_id"
+                android:gravity="center_vertical"
+                android:weightSum="5">
 
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/label_dry_weight"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/total_dry_weight"
+                    android:layout_marginEnd="@dimen/login_margin"
+                    android:textDirection="rtl"/>
 
+                <EditText
+                    android:id="@+id/txt_dry_weight"
+                    android:layout_weight="1"
+                    android:layout_width="@dimen/dimen_100_dp"
+                    android:layout_height="wrap_content"
+                    style="@style/CustomEditTextStyleLight"
+                    android:inputType="numberDecimal"/>
 
-        <TextView
-            android:id="@+id/label_dry_weight"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/total_dry_weight"
-            android:layout_below="@id/layout_dy_id"
-            android:layout_marginStart="@dimen/dim_16_dp"
-            android:textDirection="rtl"/>
+                <RadioGroup
+                    android:id="@+id/radio_dry_weight"
+                    android:layout_weight="1"
+                    android:layout_width="@dimen/dim_80_dp"
+                    android:layout_height="wrap_content"
+                    android:weightSum="2"
+                    android:orientation="horizontal"
+                    android:checkedButton="@id/radio_dry_kg"
+                    android:layout_marginStart="@dimen/dim_10_dp">
 
-        <EditText
-            android:id="@+id/txt_dry_weight"
-            android:layout_width="@dimen/dimen_100_dp"
-            android:layout_height="wrap_content"
-            style="@style/CustomEditTextStyleLight"
-            android:inputType="numberDecimal"
-            android:layout_below="@id/layout_dy_id"
-            android:layout_alignBaseline="@id/label_dry_weight"
-            android:layout_toEndOf="@id/label_wet_weight"/>
+                    <RadioButton
+                        android:id="@+id/radio_dry_kg"
+                        android:layout_width="0dp"
+                        android:gravity="center_horizontal"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@color/white"
+                        android:padding="@dimen/dim_2_dp"
+                        android:text="@string/unit_kg"
+                        android:button="@null"
+                        android:background="@drawable/radio_selector"/>
 
-        <RadioGroup
-            android:id="@+id/radio_dry_weight"
-            android:layout_width="@dimen/dim_80_dp"
-            android:layout_height="wrap_content"
-            android:weightSum="2"
-            android:orientation="horizontal"
-            android:checkedButton="@id/radio_dry_kg"
-            android:layout_below="@id/layout_dy_id"
-            android:layout_toEndOf="@id/txt_dry_weight"
-            android:layout_marginStart="@dimen/dim_10_dp">
+                    <RadioButton
+                        android:id="@+id/radio_dry_ton"
+                        android:layout_width="0dp"
+                        android:gravity="center_horizontal"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@color/white"
+                        android:padding="@dimen/dim_2_dp"
+                        android:text="@string/unit_ton"
+                        android:button="@null"
+                        android:background="@drawable/radio_selector"/>
+                </RadioGroup>
 
-            <RadioButton
-                android:id="@+id/radio_dry_kg"
-                android:layout_width="0dp"
-                android:gravity="center_horizontal"
+                <ImageButton
+                    android:id="@+id/btn_take_dry_photo"
+                    android:layout_weight="1"
+                    android:layout_width="@dimen/dim_40_dp"
+                    android:layout_height="@dimen/dim_40_dp"
+                    android:layout_marginStart="@dimen/dim_10_dp"
+                    android:background="@color/colorPrimary"
+                    android:contentDescription="@string/title_activity_dump_yard_weight"
+                    android:padding="@dimen/dim_5_dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_photo_camera_light_gray_50dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_wet_weight"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="KG"
-                android:button="@null"
-                android:background="@drawable/radio_selector"/>
-            <RadioButton
-                android:id="@+id/radio_dry_ton"
-                android:layout_width="0dp"
-                android:gravity="center_horizontal"
+                android:layout_below="@id/layout_dry_weight"
+                android:layout_marginStart="0dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:weightSum="5">
+
+                <TextView
+                    android:id="@+id/label_wet_weight"
+                    android:layout_weight="0.9"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/total_wet_weight"
+                    android:layout_marginEnd="@dimen/login_margin"
+                    android:textDirection="rtl"/>
+
+                <EditText
+                    android:id="@+id/txt_wet_weight"
+                    android:layout_weight="1"
+                    android:layout_width="@dimen/dimen_100_dp"
+                    android:layout_height="wrap_content"
+                    style="@style/CustomEditTextStyleLight"
+                    android:inputType="numberDecimal"/>
+
+                <RadioGroup
+                    android:id="@+id/radio_wet_weight"
+                    android:layout_weight="1"
+                    android:layout_width="@dimen/dim_80_dp"
+                    android:layout_height="wrap_content"
+                    android:weightSum="2"
+                    android:orientation="horizontal"
+                    android:checkedButton="@id/radio_wet_kg"
+                    android:layout_marginStart="@dimen/dim_10_dp">
+
+                    <RadioButton
+                        android:id="@+id/radio_wet_kg"
+                        android:layout_width="0dp"
+                        android:gravity="center_horizontal"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@color/white"
+                        android:padding="@dimen/dim_2_dp"
+                        android:text="@string/unit_kg"
+                        android:button="@null"
+                        android:background="@drawable/radio_selector" />
+
+                    <RadioButton
+                        android:id="@+id/radio_wet_ton"
+                        android:layout_width="0dp"
+                        android:gravity="center_horizontal"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@color/white"
+                        android:padding="@dimen/dim_2_dp"
+                        android:text="@string/unit_ton"
+                        android:button="@null"
+                        android:background="@drawable/radio_selector"/>
+                </RadioGroup>
+
+                <ImageButton
+                    android:id="@+id/btn_take_wet_photo"
+                    android:layout_weight="1"
+                    android:layout_width="@dimen/dim_40_dp"
+                    android:layout_height="@dimen/dim_40_dp"
+                    android:layout_marginStart="@dimen/dim_10_dp"
+                    android:background="@color/colorPrimary"
+                    android:contentDescription="@string/title_activity_dump_yard_weight"
+                    android:padding="@dimen/dim_5_dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_photo_camera_light_gray_50dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_total_weight"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="TON"
-                android:button="@null"
-                android:background="@drawable/radio_selector"/>
-        </RadioGroup>
+                android:layout_below="@id/layout_wet_weight"
+                android:layout_marginStart="0dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:weightSum="5">
 
-        <ImageButton
-            android:layout_width="30dp"
-            android:layout_height="20dp"
-            android:scaleType="fitCenter"
-            android:padding="@dimen/dim_2_dp"
-            android:layout_below="@id/layout_dy_id"
-            android:layout_alignEnd="@id/radio_dry_weight"
-            android:background="@color/colorPrimary"
-            android:src="@drawable/ic_photo_camera_light_gray_50dp"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="@dimen/dim_20_dp"/>
+                <TextView
+                    android:id="@+id/label_total_weight"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/total_weight"
+                    android:layout_marginEnd="@dimen/login_margin"
+                    android:textDirection="rtl" />
+
+                <EditText
+                    android:id="@+id/txt_total_weight"
+                    android:layout_weight="0.4"
+                    android:layout_width="@dimen/dimen_100_dp"
+                    android:layout_height="wrap_content"
+                    style="@style/CustomEditTextStyleLight"
+                    android:inputType="numberDecimal"
+                    android:enabled="false"/>
+
+                <TextView
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/unit_ton"
+                    android:layout_marginStart="@dimen/dim_10_dp"/>
+
+            </LinearLayout>
 
 
-        <TextView
-            android:id="@+id/label_wet_weight"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/total_wet_weight"
-            android:layout_below="@id/txt_dry_weight"
-            android:layout_marginStart="@dimen/dim_16_dp"
-            android:layout_marginEnd="@dimen/dim_10_dp"
-            android:layout_marginTop="@dimen/dim_20_dp"
-            android:textDirection="rtl"/>
+        </RelativeLayout>
 
-        <EditText
-            android:id="@+id/txt_wet_weight"
-            android:layout_width="@dimen/dimen_100_dp"
-            android:layout_height="wrap_content"
-            style="@style/CustomEditTextStyleLight"
-            android:inputType="numberDecimal"
-            android:layout_below="@id/txt_dry_weight"
-            android:layout_alignBaseline="@id/label_wet_weight"
-            android:layout_toEndOf="@id/label_wet_weight"/>
+    </ScrollView>
 
-        <RadioGroup
-            android:id="@+id/radio_wet_weight"
-            android:layout_width="@dimen/dim_80_dp"
-            android:layout_height="wrap_content"
-            android:weightSum="2"
-            android:orientation="horizontal"
-            android:checkedButton="@id/radio_wet_kg"
-            android:layout_below="@id/txt_dry_weight"
-            android:layout_toEndOf="@id/txt_wet_weight"
-            android:layout_marginStart="@dimen/dim_10_dp"
-            android:layout_marginTop="@dimen/dim_20_dp">
-            <RadioButton
-                android:id="@+id/radio_wet_kg"
-                android:layout_width="0dp"
-                android:gravity="center_horizontal"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textColor="@color/white"
-                android:text="KG"
-                android:button="@null"
-                android:background="@drawable/radio_selector"/>
-            <RadioButton
-                android:id="@+id/radio_wet_ton"
-                android:layout_width="0dp"
-                android:gravity="center_horizontal"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textColor="@color/white"
-                android:text="TON"
-                android:button="@null"
-                android:background="@drawable/radio_selector"/>
-        </RadioGroup>
+    <Button
+        android:layout_weight="0.1"
+        style="@style/MyButtonStyle"
+        android:id="@+id/btn_submit_dump"
+        android:text="@string/submit_txt"
+        android:layout_marginBottom="@dimen/dim_10_dp"
+        android:layout_marginTop="@dimen/dim_10_dp"
+        android:layout_marginStart="70dp"
+        android:layout_marginEnd="70dp"
+        android:layout_gravity="bottom"/>
 
-        <ImageButton
-            android:layout_width="30dp"
-            android:layout_height="20dp"
-            android:scaleType="fitCenter"
-            android:padding="@dimen/dim_2_dp"
-            android:layout_below="@id/txt_dry_weight"
-            android:layout_alignEnd="@id/txt_wet_weight"
-            android:background="@color/colorPrimary"
-            android:src="@drawable/ic_photo_camera_light_gray_50dp"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="@dimen/dim_20_dp"
-            android:layout_marginTop="@dimen/dim_20_dp"/>
-
-        <TextView
-            android:id="@+id/label_total_weight"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/txt_wet_weight"
-            android:layout_marginStart="@dimen/dim_16_dp"
-            android:layout_marginTop="@dimen/dim_20_dp"
-            android:text="@string/total_weight"
-            android:layout_alignEnd="@id/label_wet_weight"
-            android:textDirection="rtl" />
-
-        <EditText
-            android:id="@+id/txt_total_weight"
-            style="@style/CustomEditTextStyleLight"
-            android:layout_width="@dimen/dimen_100_dp"
-            android:layout_height="wrap_content"
-            android:inputType="numberDecimal"
-            android:layout_toEndOf="@id/label_wet_weight"
-            android:layout_alignBaseline="@id/label_total_weight"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="KG"
-            android:layout_below="@id/radio_wet_weight"
-            android:layout_toEndOf="@id/txt_total_weight"
-            android:layout_marginTop="@dimen/dim_20_dp"
-            android:layout_alignBaseline="@id/txt_total_weight"
-            android:layout_marginStart="@dimen/dim_10_dp"/>
-
-        <Button
-            style="@style/MyButtonStyle"
-            android:id="@+id/btn_submit_dump"
-            android:text="@string/submit_txt"
-            android:layout_marginTop="30dp"
-            android:layout_marginStart="70dp"
-            android:layout_marginEnd="70dp"
-            android:layout_below="@id/label_total_weight"
-            android:layout_alignParentBottom="true"/>
-
-    </RelativeLayout>
-
-</ScrollView>
+</LinearLayout>

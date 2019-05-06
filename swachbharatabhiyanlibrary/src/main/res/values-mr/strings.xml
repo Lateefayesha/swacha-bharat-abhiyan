@@ -101,9 +101,9 @@
     <string name="setting">सेटिंग</string>
     <string name="show_bifurcation_type">विलगिकरण प्रकार दाखवणे</string>
 
-    <string name="total_weight">एकूण वजन</string>
-    <string name="total_dry_weight">एकूण सूक्ष्म वजन</string>
-    <string name="total_wet_weight">एकूण ओले वजन</string>
+    <string name="total_weight">एकूण\nवजन</string>
+    <string name="total_dry_weight">एकूण\nसुका वजन</string>
+    <string name="total_wet_weight">एकूण\nओले वजन</string>
 
     <string name="plz_ent_all_fields">कृपया वरील सर्व फील्ड प्रविष्ट करा</string>
     <string name="plz_ent_only_number">कृपया फक्त संख्या प्रविष्ट करा</string>
