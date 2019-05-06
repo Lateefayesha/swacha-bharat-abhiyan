@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.appynitty.swachbharatabhiyanlibrary.R;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
@@ -27,6 +28,7 @@ public class DumpYardWeightActivity extends AppCompatActivity {
     private Intent intent;
     private Button btnSubmitDumpDetails;
 
+    private TextView textDumpYardId;
     private EditText editDryTotal, editWetTotal, editTotal;
 
     @Override
@@ -68,6 +70,7 @@ public class DumpYardWeightActivity extends AppCompatActivity {
 
         intent = getIntent();
 
+        textDumpYardId = findViewById(R.id.txt_house_id);
         editTotal = findViewById(R.id.txt_total_weight);
         editDryTotal = findViewById(R.id.txt_dry_weight);
         editWetTotal = findViewById(R.id.txt_wet_weight);
@@ -89,6 +92,7 @@ public class DumpYardWeightActivity extends AppCompatActivity {
     private void initData(){
         if(intent.hasExtra(AUtils.dumpYardId)){
             dumpYardId = intent.getStringExtra(AUtils.dumpYardId);
+            textDumpYardId.setText(dumpYardId);
         }
     }
 

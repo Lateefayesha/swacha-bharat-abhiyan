@@ -56,6 +56,7 @@
     <string name="dump_yard_txt">Dump Yard Collection</string>
     <string name="house_id_txt">House ID :</string>
     <string name="point_id_txt">Point ID :</string>
+    <string name="dump_yard_id_txt">Dump Yard ID :</string>
     <string name="vehicle_number_txt">Vehicle No :</string>
 
     <string name="select_month_year_warn">Please Select Proper Month / Year</string>
