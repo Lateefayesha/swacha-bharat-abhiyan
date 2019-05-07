@@ -81,7 +81,8 @@
                     android:weightSum="2"
                     android:orientation="horizontal"
                     android:checkedButton="@id/radio_dry_kg"
-                    android:layout_marginStart="@dimen/dim_10_dp">
+                    android:layout_marginStart="@dimen/dim_10_dp"
+                    android:background="@drawable/radio_group_border">
 
                     <RadioButton
                         android:id="@+id/radio_dry_kg"
@@ -89,11 +90,12 @@
                         android:gravity="center_horizontal"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:textColor="@color/white"
+                        android:textColor="@color/radio_text_color_selector"
                         android:padding="@dimen/dim_2_dp"
                         android:text="@string/unit_kg"
                         android:button="@null"
-                        android:background="@drawable/radio_selector"/>
+                        android:checked="true"
+                        android:background="@drawable/radio_selector" />
 
                     <RadioButton
                         android:id="@+id/radio_dry_ton"
@@ -101,7 +103,7 @@
                         android:gravity="center_horizontal"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:textColor="@color/white"
+                        android:textColor="@color/radio_text_color_selector"
                         android:padding="@dimen/dim_2_dp"
                         android:text="@string/unit_ton"
                         android:button="@null"
@@ -156,6 +158,7 @@
                     android:layout_height="wrap_content"
                     android:weightSum="2"
                     android:orientation="horizontal"
+                    android:background="@drawable/radio_group_border"
                     android:checkedButton="@id/radio_wet_kg"
                     android:layout_marginStart="@dimen/dim_10_dp">
 
@@ -165,7 +168,7 @@
                         android:gravity="center_horizontal"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:textColor="@color/white"
+                        android:textColor="@color/radio_text_color_selector"
                         android:padding="@dimen/dim_2_dp"
                         android:text="@string/unit_kg"
                         android:button="@null"
@@ -177,7 +180,7 @@
                         android:gravity="center_horizontal"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:textColor="@color/white"
+                        android:textColor="@color/radio_text_color_selector"
                         android:padding="@dimen/dim_2_dp"
                         android:text="@string/unit_ton"
                         android:button="@null"
