@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -32,14 +33,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.appynitty.swachbharatabhiyanlibrary.R;
+import com.appynitty.swachbharatabhiyanlibrary.pojos.ImagePojo;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 import com.appynitty.swachbharatabhiyanlibrary.utils.LocaleHelper;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.mithsoft.lib.components.Toasty;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Objects;
+
+import quickutils.core.QuickUtils;
 
 public class DumpYardWeightActivity extends AppCompatActivity {
 
@@ -52,14 +59,16 @@ public class DumpYardWeightActivity extends AppCompatActivity {
     private Intent intent;
     private Button btnSubmitDumpDetails;
 
-    private TextView textDumpYardId;
-    private EditText editDryTotal, editWetTotal, editTotal;
+    private TextView textDumpYardId, editTotal;
+    private EditText editDryTotal, editWetTotal;
     private ImageView btnTakeDryPhoto, btnTakeWetPhoto;
     RadioButton radioButtonDryKg, radioButtonWetKg, radioButtonDryTon, radioButtonWetTon;
     RadioGroup radioGroupDry, radioGroupWet;
 
     private String dryImageFilePath = "";
     private String wetImageFilePath = "";
+
+    private ImagePojo imagePojo;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -407,6 +416,24 @@ public class DumpYardWeightActivity extends AppCompatActivity {
             dumpYardId = intent.getStringExtra(AUtils.dumpYardId);
             textDumpYardId.setText(dumpYardId);
         }
+
+        Type type = new TypeToken<ImagePojo>() {
+        }.getType();
+
+        imagePojo = new Gson().fromJson(
+                QuickUtils.prefs.getString(AUtils.PREFS.IMAGE_POJO , null), type);
+
+
+        if (!AUtils.isNull(imagePojo)) {
+
+            if(!AUtils.isNullString(imagePojo.getImage1())) {
+                btnTakeDryPhoto.setImageURI(Uri.parse(imagePojo.getImage1()));
+                dryImageFilePath = imagePojo.getImage1();
+            } else if(!AUtils.isNullString(imagePojo.getImage2())) {
+                btnTakeWetPhoto.setImageURI(Uri.parse(imagePojo.getImage2()));
+                wetImageFilePath = imagePojo.getImage2();
+            }
+        }
     }
 
     private void calculateTotalWeight(){
@@ -477,8 +504,12 @@ public class DumpYardWeightActivity extends AppCompatActivity {
     }
 
     private void submitDumpDetailData(){
+
+        getFormData();
+
         Intent intent = new Intent();
         intent.putExtra(AUtils.DUMPDATA.dumpDataMap, getIntentMap());
+        intent.putExtra(AUtils.REQUEST_CODE, AUtils.MY_RESULT_REQUEST_QR);
         setResult(RESULT_OK, intent);
         finish();
     }
@@ -494,6 +525,30 @@ public class DumpYardWeightActivity extends AppCompatActivity {
         return map;
     }
 
+    private boolean getFormData() {
 
+        imagePojo = new ImagePojo();
+
+        if (!AUtils.isNullString(dryImageFilePath)) {
+            imagePojo.setImage1(dryImageFilePath);
+            imagePojo.setBeforeImage("DRY");
+        }
+        if (!AUtils.isNullString(wetImageFilePath)) {
+            imagePojo.setImage2(wetImageFilePath);
+            imagePojo.setAfterImage("WET");
+        }
+
+        if (!AUtils.isNull(imagePojo)) {
+
+            Type type = new TypeToken<ImagePojo>() {
+            }.getType();
+            QuickUtils.prefs.save(AUtils.PREFS.IMAGE_POJO, new Gson().toJson(imagePojo, type));
+
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
 
 }
