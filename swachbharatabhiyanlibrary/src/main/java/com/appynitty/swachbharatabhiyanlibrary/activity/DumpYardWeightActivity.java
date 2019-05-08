@@ -25,6 +25,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -43,6 +44,7 @@ import java.util.Objects;
 public class DumpYardWeightActivity extends AppCompatActivity {
 
     private static final int REQUEST_CAMERA = 22;
+    private static int imageViewNo = 0;
 
     private Context mContext;
     private Toolbar toolbar;
@@ -52,9 +54,12 @@ public class DumpYardWeightActivity extends AppCompatActivity {
 
     private TextView textDumpYardId;
     private EditText editDryTotal, editWetTotal, editTotal;
-    private ImageButton btnTakeDryPhoto, btnTakeWetPhoto;
+    private ImageView btnTakeDryPhoto, btnTakeWetPhoto;
     RadioButton radioButtonDryKg, radioButtonWetKg, radioButtonDryTon, radioButtonWetTon;
     RadioGroup radioGroupDry, radioGroupWet;
+
+    private String dryImageFilePath = "";
+    private String wetImageFilePath = "";
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -175,6 +180,7 @@ public class DumpYardWeightActivity extends AppCompatActivity {
         btnTakeDryPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                imageViewNo = 1;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     // Do something for marshmallow and above versions
                     isCameraPermissionGiven();
@@ -188,6 +194,7 @@ public class DumpYardWeightActivity extends AppCompatActivity {
         btnTakeWetPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                imageViewNo = 2;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     // Do something for marshmallow and above versions
                     isCameraPermissionGiven();
@@ -381,17 +388,17 @@ public class DumpYardWeightActivity extends AppCompatActivity {
             Toasty.error(mContext, "Unable to add image", Toast.LENGTH_SHORT).show();
         }
 
-//        switch (imageViewNo) {
-//
-//            case 1:
-//                beforeImage.setImageBitmap(thumbnail);
-//                beforeImageFilePath = destination.getAbsolutePath();
-//                break;
-//            case 2:
-//                afterImage.setImageBitmap(thumbnail);
-//                afterImageFilePath = destination.getAbsolutePath();
-//                break;
-//        }
+        switch (imageViewNo) {
+
+            case 1:
+                btnTakeDryPhoto.setImageBitmap(thumbnail);
+                dryImageFilePath = destination.getAbsolutePath();
+                break;
+            case 2:
+                btnTakeWetPhoto.setImageBitmap(thumbnail);
+                wetImageFilePath = destination.getAbsolutePath();
+                break;
+        }
 
     }
 

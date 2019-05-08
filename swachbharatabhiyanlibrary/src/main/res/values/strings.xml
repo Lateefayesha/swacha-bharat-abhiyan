@@ -119,9 +119,9 @@
 
     <string name="show_bifurcation_type">Show Bifurcation Type</string>
 
-    <string name="total_weight">Total\nWeight</string>
-    <string name="total_dry_weight">Total\nDry Weight</string>
-    <string name="total_wet_weight">Total\nWet Weight</string>
+    <string name="total_weight">Total Weight</string>
+    <string name="total_dry_weight">Total Dry Weight</string>
+    <string name="total_wet_weight">Total Wet Weight</string>
 
     <string name="unit_kg" translatable="false">Kg</string>
     <string name="unit_ton" translatable="false">Ton</string>
