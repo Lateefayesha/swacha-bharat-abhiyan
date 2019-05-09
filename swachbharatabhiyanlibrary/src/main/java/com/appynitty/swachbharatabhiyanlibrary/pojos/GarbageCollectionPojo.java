@@ -16,11 +16,11 @@ public class GarbageCollectionPojo {
 
     private int garbageType;
 
-    private int weightTotal;
+    private double weightTotal;
 
-    private int weightTotalDry;
+    private double weightTotalDry;
 
-    private int weightTotalWet;
+    private double weightTotalWet;
 
     public String getImage2() {
         return image2;
@@ -78,27 +78,27 @@ public class GarbageCollectionPojo {
         this.garbageType = garbageType;
     }
 
-    public int getWeightTotal() {
+    public double getWeightTotal() {
         return weightTotal;
     }
 
-    public void setWeightTotal(int weightTotal) {
+    public void setWeightTotal(double weightTotal) {
         this.weightTotal = weightTotal;
     }
 
-    public int getWeightTotalDry() {
+    public double getWeightTotalDry() {
         return weightTotalDry;
     }
 
-    public void setWeightTotalDry(int weightTotalDry) {
+    public void setWeightTotalDry(double weightTotalDry) {
         this.weightTotalDry = weightTotalDry;
     }
 
-    public int getWeightTotalWet() {
+    public double getWeightTotalWet() {
         return weightTotalWet;
     }
 
-    public void setWeightTotalWet(int weightTotalWet) {
+    public void setWeightTotalWet(double weightTotalWet) {
         this.weightTotalWet = weightTotalWet;
     }
 

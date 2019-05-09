@@ -741,10 +741,23 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+
+        AUtils.mCurrentContext = mContext;
+
         if(requestCode == DUMP_YARD_DETAILS_REQUEST_CODE && resultCode == RESULT_OK){
 
             try{
                 HashMap<String, String> map = (HashMap<String, String>) data.getSerializableExtra(AUtils.DUMPDATA.dumpDataMap);
+
+                if(data.hasExtra(AUtils.REQUEST_CODE)){
+                    Type type = new TypeToken<ImagePojo>(){}.getType();
+                    imagePojo = new Gson().fromJson(QuickUtils.prefs.getString(AUtils.PREFS.IMAGE_POJO, null), type);
+
+                    if(!AUtils.isNull(imagePojo)){
+                        isActivityData = true;
+                    }
+                }
+
                 startSubmitQRAsyncTask(map);
             }catch (Exception e){
                 e.printStackTrace();
@@ -876,9 +889,9 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
         try{
             garbageCollectionPojo = new GarbageCollectionPojo();
             garbageCollectionPojo.setId(map.get(AUtils.DUMPDATA.dumpYardId));
-            garbageCollectionPojo.setWeightTotal(Integer.parseInt(Objects.requireNonNull(map.get(AUtils.DUMPDATA.weightTotal))));
-            garbageCollectionPojo.setWeightTotalDry(Integer.parseInt(Objects.requireNonNull(map.get(AUtils.DUMPDATA.weightTotalDry))));
-            garbageCollectionPojo.setWeightTotalWet(Integer.parseInt(Objects.requireNonNull(map.get(AUtils.DUMPDATA.weightTotalWet))));
+            garbageCollectionPojo.setWeightTotal(Double.parseDouble(Objects.requireNonNull(map.get(AUtils.DUMPDATA.weightTotal))));
+            garbageCollectionPojo.setWeightTotalDry(Double.parseDouble(Objects.requireNonNull(map.get(AUtils.DUMPDATA.weightTotalDry))));
+            garbageCollectionPojo.setWeightTotalWet(Double.parseDouble(Objects.requireNonNull(map.get(AUtils.DUMPDATA.weightTotalWet))));
             garbageCollectionPojo.setGarbageType(-1);
             garbageCollectionPojo.setComment(null);
             if(isActivityData){
