@@ -142,7 +142,13 @@ public class DumpYardWeightActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                calculateTotalWeight();
+                if(s.toString().equals("."))
+                {
+                    editDryTotal.setText("0.");
+                    editDryTotal.setSelection(2);
+                }
+                else
+                    calculateTotalWeight();
             }
         });
 
@@ -159,7 +165,13 @@ public class DumpYardWeightActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                calculateTotalWeight();
+                if(s.toString().equals("."))
+                {
+                    editWetTotal.setText("0.");
+                    editWetTotal.setSelection(2);
+                }
+                else
+                    calculateTotalWeight();
             }
         });
 
@@ -437,38 +449,38 @@ public class DumpYardWeightActivity extends AppCompatActivity {
     }
 
     private void calculateTotalWeight(){
-        float total = 0f;
+        double total = 0;
 
-        float dryInTons = getDryWeightInTons();
-        float wetInTons = getWetWeightInTons();
+        double dryInTons = getDryWeightInTons();
+        double wetInTons = getWetWeightInTons();
 
         total = dryInTons + wetInTons;
 
         editTotal.setText(String.valueOf(total));
     }
 
-    private float getDryWeightInTons(){
-        float returnValue = 0f;
+    private double getDryWeightInTons(){
+        double returnValue = 0f;
         String dryWt = editDryTotal.getText().toString();
         if(!AUtils.isNull(dryWt)){
             if(radioButtonDryKg.isChecked()){
-                returnValue = Float.parseFloat(dryWt) / 1000;
+                returnValue = Double.parseDouble(dryWt) / 1000;
             }else if(radioButtonDryTon.isChecked()){
-                returnValue = Float.parseFloat(dryWt);
+                returnValue = Double.parseDouble(dryWt);
             }
         }
 
         return returnValue;
     }
 
-    private float getWetWeightInTons(){
-        float returnValue = 0f;
+    private double getWetWeightInTons(){
+        double returnValue = 0f;
         String wetWt = editWetTotal.getText().toString();
         if(!AUtils.isNull(wetWt)){
             if(radioButtonWetKg.isChecked()){
-                returnValue = Float.parseFloat(wetWt) / 1000;
+                returnValue = Double.parseDouble(wetWt) / 1000;
             }else if(radioButtonWetTon.isChecked()){
-                returnValue = Float.parseFloat(wetWt);
+                returnValue = Double.parseDouble(wetWt);
             }
         }
 
