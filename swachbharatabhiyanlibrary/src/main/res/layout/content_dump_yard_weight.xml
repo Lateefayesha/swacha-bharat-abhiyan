@@ -65,7 +65,7 @@
                     android:layout_marginStart="@dimen/dim_10_dp"
                     android:background="@color/colorDivider"
                     android:contentDescription="@string/title_activity_dump_yard_weight"
-                    android:scaleType="fitCenter"
+                    android:scaleType="center"
                     android:src="@drawable/ic_photo_camera_light_gray_50dp"
                     android:layout_marginEnd="@dimen/dim_10_dp"/>
 
@@ -149,7 +149,7 @@
                     android:layout_marginStart="@dimen/dim_10_dp"
                     android:background="@color/colorDivider"
                     android:contentDescription="@string/title_activity_dump_yard_weight"
-                    android:scaleType="fitCenter"
+                    android:scaleType="center"
                     android:src="@drawable/ic_photo_camera_light_gray_50dp"
                     android:layout_marginEnd="@dimen/dim_10_dp"/>
 
@@ -223,7 +223,8 @@
                 android:layout_marginStart="0dp"
                 android:layout_marginTop="@dimen/dim_20_dp"
                 android:orientation="horizontal"
-                android:gravity="center">
+                android:gravity="center"
+                android:layout_marginBottom="@dimen/dim_20_dp">
 
                 <TextView
                     android:id="@+id/label_total_weight"
@@ -254,18 +255,21 @@
 
             </LinearLayout>
 
+            <Button
+                style="@style/MyButtonStyle"
+                android:layout_below="@id/layout_total_weight"
+                android:layout_alignParentBottom="true"
+                android:id="@+id/btn_submit_dump"
+                android:text="@string/submit_txt"
+                android:layout_marginStart="70dp"
+                android:layout_marginEnd="70dp"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="@dimen/dim_10_dp"/>
+
         </RelativeLayout>
 
     </ScrollView>
 
-    <Button
-        style="@style/MyButtonStyle"
-        android:id="@+id/btn_submit_dump"
-        android:text="@string/submit_txt"
-        android:layout_marginBottom="@dimen/dim_50_dp"
-        android:layout_marginTop="@dimen/dim_50_dp"
-        android:layout_marginStart="70dp"
-        android:layout_marginEnd="70dp"
-        android:layout_gravity="bottom"/>
+
 
 </LinearLayout>
