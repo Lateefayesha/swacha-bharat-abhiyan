@@ -101,6 +101,24 @@
                     android:textColor="@color/colorPinkLight"
                     android:text="@string/hyphen"/>
 
+                <TextView
+                    android:id="@+id/dy_collection_lbl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorDefault"
+                    android:textSize="@dimen/dim_12_sp"
+                    android:layout_below="@id/gp_collection"
+                    android:layout_marginTop="@dimen/padding_margin_layout"
+                    android:text="@string/dump_yard_txt"/>
+
+                <TextView
+                    android:id="@+id/dy_collection"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/dy_collection_lbl"
+                    android:textSize="@dimen/primery_text_size"
+                    android:textColor="@color/colorOrange"
+                    android:text="@string/hyphen"/>
 
             </RelativeLayout>
 

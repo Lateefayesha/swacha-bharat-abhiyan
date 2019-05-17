@@ -59,7 +59,6 @@ public interface GarbageCollectionWebService {
                                               @Part("vehicleNumber") RequestBody vehicleNumber,
                                               @Part MultipartBody.Part image1,
                                               @Part MultipartBody.Part image2,
-                                              @Part("garbageType") RequestBody garbageType,
                                               @Part("totalGcWeight") RequestBody weightTotal,
                                               @Part("totalDryWeight") RequestBody weightDry,
                                               @Part("totalWetWeight") RequestBody weightWet);

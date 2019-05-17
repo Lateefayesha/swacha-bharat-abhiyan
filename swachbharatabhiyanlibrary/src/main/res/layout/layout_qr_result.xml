@@ -75,7 +75,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/padding_margin_layout_double"
-                android:background="@drawable/rounded_orange_button"
+                android:background="@drawable/rounded_primary_button"
                 android:text="@string/done_txt"
                 android:textColor="@color/white"
                 android:textSize="@dimen/button_text_size"/>

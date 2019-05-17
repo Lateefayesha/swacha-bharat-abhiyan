@@ -83,7 +83,7 @@
     <style name="MyButtonStyle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@drawable/rounded_orange_button</item>
+        <item name="android:background">@drawable/rounded_primary_button</item>
         <item name="android:textColor">@android:color/white</item>
     </style>
 

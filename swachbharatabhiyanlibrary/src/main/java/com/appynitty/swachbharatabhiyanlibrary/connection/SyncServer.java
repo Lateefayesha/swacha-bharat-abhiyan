@@ -159,7 +159,7 @@ public class SyncServer {
             }else if(pointId.substring(0, 2).matches("^[DdYy]+$")){
                 gcResultPojo = service.saveGarbageCollectionDy(QuickUtils.prefs.getString(AUtils.APP_ID, ""),
                         AUtils.getBatteryStatus(), userId, id, Lat, Long, beforeImage, afterImage, comment, vehicleNo, imageFileMultiBody1,
-                        imageFileMultiBody2, garbageType, weightTotal, weightTotalDry, weightTotalWet).execute().body();
+                        imageFileMultiBody2, weightTotal, weightTotalDry, weightTotalWet).execute().body();
             }
 
         } catch (Exception e) {
