@@ -84,6 +84,9 @@ public class HistoryPageActivity extends AppCompatActivity {
     @Override
     protected void onPostResume() {
         super.onPostResume();
+
+        AUtils.mCurrentContext = mContext;
+
         if(AUtils.isNetWorkAvailable(this))
         {
             AUtils.hideSnackBar();

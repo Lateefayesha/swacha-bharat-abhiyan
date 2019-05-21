@@ -47,6 +47,7 @@ public class InflateHistoryAdapter extends ArrayAdapter<WorkHistoryPojo> {
             viewHolder.month = view.findViewById(R.id.history_month_txt);
             viewHolder.houseCollection = view.findViewById(R.id.house_collection);
             viewHolder.gpCollection = view.findViewById(R.id.gp_collection);
+            viewHolder.dyCollection = view.findViewById(R.id.dy_collection);
             view.setTag(viewHolder);
 
         } else {
@@ -60,6 +61,7 @@ public class InflateHistoryAdapter extends ArrayAdapter<WorkHistoryPojo> {
             holder.month.setText(String.valueOf(AUtils.extractMonth(workHistoryPojo.getDate())));
             holder.houseCollection.setText(workHistoryPojo.getHouseCollection());
             holder.gpCollection.setText(workHistoryPojo.getPointCollection());
+            holder.dyCollection.setText(workHistoryPojo.getDumpYardCollection());
         }
 
         return view;
@@ -71,6 +73,7 @@ public class InflateHistoryAdapter extends ArrayAdapter<WorkHistoryPojo> {
         private TextView month;
         private TextView houseCollection;
         private TextView gpCollection;
+        private TextView dyCollection;
     }
 
 

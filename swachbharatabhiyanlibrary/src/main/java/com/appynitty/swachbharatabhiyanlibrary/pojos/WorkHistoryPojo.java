@@ -8,6 +8,8 @@ public class WorkHistoryPojo {
 
     private String pointCollection;
 
+    private String DumpYardCollection;
+
     public String getHouseCollection() {
         return houseCollection;
     }
@@ -32,12 +34,20 @@ public class WorkHistoryPojo {
         this.pointCollection = pointCollection;
     }
 
+    public String getDumpYardCollection() {
+        return DumpYardCollection;
+    }
+
+    public void setDumpYardCollection(String dumpYardCollection) {
+        DumpYardCollection = dumpYardCollection;
+    }
+
     @Override
     public String toString() {
-        return "WorkHistoryPojo{" +
-                "houseCollection='" + houseCollection + '\'' +
-                ", date='" + date + '\'' +
-                ", pointCollection='" + pointCollection + '\'' +
-                '}';
+        return "WorkHistoryPojo{"
+                + "houseCollection='" + houseCollection + '\''
+                + ", date='" + date + '\''
+                + ", pointCollection='" + pointCollection + '\''
+                + ", DumpYardCollection='" + DumpYardCollection + '\'' + '}';
     }
 }
