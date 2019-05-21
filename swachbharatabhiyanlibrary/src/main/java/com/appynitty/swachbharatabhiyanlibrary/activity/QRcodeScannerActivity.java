@@ -714,7 +714,7 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
             GarbageTypePopUp dialog = new GarbageTypePopUp(QRcodeScannerActivity.this, houseid, this);
             dialog.show();
         } else {
-            startSubmitQRAsyncTask(houseid, 0, null);
+            startSubmitQRAsyncTask(houseid, 3, null);
         }
     }
 
