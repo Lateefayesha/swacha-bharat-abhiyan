@@ -11,7 +11,7 @@
             <RelativeLayout
                 android:id="@+id/relative_bg"
                 android:layout_width="match_parent"
-                android:layout_height="180dp"
+                android:layout_height="190dp"
                 android:background="@drawable/ic_login_vector"
                 android:orientation="vertical">
 

@@ -90,6 +90,8 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
 
     private UserDetailAdapterClass mUserDetailAdapter;
 
+    private boolean isFromAttendanceChecked = false;
+
     @Override
     protected void attachBaseContext(Context newBase) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -285,6 +287,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
                 
                 if(isAttendanceOff)
                 {
+                    isFromAttendanceChecked = true;
                     onOutPunchSuccess();
                     if(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID,AUtils.DEFAULT_LANGUAGE_ID).equals(AUtils.DEFAULT_LANGUAGE_ID)) {
                         Toasty.info(mContext, messageMar,Toast.LENGTH_LONG).show();
@@ -548,6 +551,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
             if (AUtils.isIsOnduty()) {
                 if (AUtils.isNetWorkAvailable(this)) {
                     try{
+                        if(!isFromAttendanceChecked) {
                         AUtils.showConfirmationDialog(mContext, AUtils.CONFIRM_OFFDUTY_DIALOG, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
@@ -560,7 +564,9 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
                                 dialogInterface.dismiss();
                                 markAttendance.setChecked(true);
                             }
-                        });
+                        }); } else {
+                            isFromAttendanceChecked = false;
+                        }
                     }catch (Exception e){
                         e.printStackTrace();
                         markAttendance.setChecked(true);

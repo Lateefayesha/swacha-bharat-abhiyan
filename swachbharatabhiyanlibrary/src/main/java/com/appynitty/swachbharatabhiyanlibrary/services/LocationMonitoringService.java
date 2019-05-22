@@ -79,7 +79,7 @@ public class LocationMonitoringService implements
 
     public void onStopTracking()
     {
-        LocationServices.FusedLocationApi.removeLocationUpdates(mLocationClient,this);
+//        LocationServices.FusedLocationApi.removeLocationUpdates(mLocationClient,this);
         mLocationClient.disconnect();
     }
 
