@@ -589,6 +589,9 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
             }
             else if(id.substring(0, 2).matches("^[GgPp]+$")){
                 ownerMobile.setVisibility(View.GONE);
+            }else if(id.substring(0, 2).matches("^[DdYy]+$")){
+                ownerMobile.setVisibility(View.GONE);
+                collectionStatus.setText(getResources().getString(R.string.garbage_deposit_completed));
             }
 
             houseId.setText(id);

@@ -45,6 +45,7 @@
 
     <string name="plz_capture_img">Please capture any one image</string>
     <string name="garbage_collection_completed">Garbage Collection Completed</string>
+    <string name="garbage_deposit_completed">Garbage Deposition Completed</string>
     <string name="done_txt">Done</string>
     <string name="retry_txt">Retry</string>
     <string name="grant_permission_txt">Grant Permission</string>
@@ -53,7 +54,7 @@
     <string name="month_txt">Month</string>
     <string name="point_collection_txt">Point Collection</string>
     <string name="house_collection_txt">House Collection</string>
-    <string name="dump_yard_txt">Dump Yard Collection</string>
+    <string name="dump_yard_txt">Dump Yard Trip</string>
     <string name="house_id_txt">House ID :</string>
     <string name="point_id_txt">Point ID :</string>
     <string name="dump_yard_id_txt">Dump Yard ID :</string>

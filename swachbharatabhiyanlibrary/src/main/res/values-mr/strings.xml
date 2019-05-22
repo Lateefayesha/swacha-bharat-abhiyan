@@ -41,6 +41,7 @@
     <string name="comments">टिप्पण्या</string>
     <string name="plz_capture_img">कृपया कोणताही एक फोटो कॅप्चर करा</string>
     <string name="garbage_collection_completed">कचरा संकलन पूर्ण झाले</string>
+    <string name="garbage_deposit_completed">कचरा जमा प्रक्रिया पूर्ण झाले</string>
     <string name="done_txt">पूर्ण झाले</string>
     <string name="retry_txt">पुन्हा प्रयत्न करा</string>
     <string name="grant_permission_txt">परवानगी देया</string>
@@ -49,7 +50,7 @@
     <string name="month_txt">महिना</string>
     <string name="house_collection_txt">घर संकलन</string>
     <string name="point_collection_txt">पॉइंट संकलन</string>
-    <string name="dump_yard_txt">डंप यार्ड संकलन</string>
+    <string name="dump_yard_txt">डंप यार्ड ट्रीप</string>
 
     <string name="house_id_txt">घर आयडी :</string>
     <string name="point_id_txt">पॉइंट आयडी :</string>
