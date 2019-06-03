@@ -1,6 +1,6 @@
 package com.appynitty.swachbharatabhiyanlibrary.webservices;
 
-import com.appynitty.swachbharatabhiyanlibrary.pojos.VehicleTypePojo;
+import com.appynitty.swachbharatabhiyanlibrary.pojos.EmpWorkHistoryDetailPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.WorkHistoryDetailPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.WorkHistoryPojo;
 
@@ -24,4 +24,16 @@ public interface WorkHistoryWebService {
                                                                 @Header("userId") String userId,
                                                                 @Header("fdate") String fDate,
                                                                 @Header("LanguageId") String languageId);
+
+    @GET("api/Get/QrWorkHistory ")
+    Call<List<WorkHistoryPojo>> pullEmpWorkHistoryList(@Header("appId") String appId,
+                                                    @Header("userId") String userId,
+                                                    @Header("year") String year,
+                                                    @Header("month") String month);
+
+
+    @GET("api/Get/QrWorkHistoryDetails")
+    Call<List<EmpWorkHistoryDetailPojo>> pullEmpWorkHistoryDetailList(@Header("appId") String appId,
+                                                                   @Header("userId") String userId,
+                                                                   @Header("Date") String fDate);
 }

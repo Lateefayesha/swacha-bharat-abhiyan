@@ -2,37 +2,19 @@ package com.appynitty.swachbharatabhiyanlibrary.pojos;
 
 public class LoginDetailsPojo {
 
-    private String message;
-
-    private String status;
-
     private String userId;
-
-    private String userPassword;
-
-    private String userLoginId;
 
     private String type;
 
+    private String typeId;
+
+    private String status;
+
+    private String message;
+
     private String messageMar;
 
-    private boolean gtFeatures;
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
+    private Boolean gtFeatures;
 
     public String getUserId() {
         return userId;
@@ -40,22 +22,6 @@ public class LoginDetailsPojo {
 
     public void setUserId(String userId) {
         this.userId = userId;
-    }
-
-    public String getUserPassword() {
-        return userPassword;
-    }
-
-    public void setUserPassword(String userPassword) {
-        this.userPassword = userPassword;
-    }
-
-    public String getUserLoginId() {
-        return userLoginId;
-    }
-
-    public void setUserLoginId(String userLoginId) {
-        this.userLoginId = userLoginId;
     }
 
     public String getType() {
@@ -66,6 +32,30 @@ public class LoginDetailsPojo {
         this.type = type;
     }
 
+    public String getTypeId() {
+        return typeId;
+    }
+
+    public void setTypeId(String typeId) {
+        this.typeId = typeId;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
     public String getMessageMar() {
         return messageMar;
     }
@@ -74,23 +64,24 @@ public class LoginDetailsPojo {
         this.messageMar = messageMar;
     }
 
-    public boolean getGtFeatures() {
+    public Boolean getGtFeatures() {
         return gtFeatures;
     }
 
-    public void setGtFeatures(boolean gtFeatures) {
+    public void setGtFeatures(Boolean gtFeatures) {
         this.gtFeatures = gtFeatures;
     }
 
     @Override
     public String toString() {
-        return "LoginDetailsPojo{" + "message='" + message + '\''
-                                   + ", status='" + status + '\''
-                                   + ", userId='" + userId + '\''
-                                   + ", userPassword='" + userPassword + '\''
-                                   + ", userLoginId='" + userLoginId + '\''
-                                   + ", type='" + type + '\''
-                                   + ", messageMar='" + messageMar + '\''
-                                   + ", gtFeatures='" + gtFeatures + '\'' + '}';
+        return "LoginDetailsPojo{" +
+                "userId='" + userId + '\'' +
+                "type='" + type + '\'' +
+                ", typeId='" + typeId + '\'' +
+                ", status='" + status + '\'' +
+                ", message='" + message + '\'' +
+                ", messageMar='" + messageMar + '\'' +
+                ", gtFeatures=" + gtFeatures +
+                '}';
     }
 }

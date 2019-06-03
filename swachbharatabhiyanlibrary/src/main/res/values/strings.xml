@@ -130,4 +130,26 @@
     <string name="plz_ent_all_fields">Please enter all the above fields</string>
     <string name="plz_ent_only_number">Please enter only numbers</string>
 
+    <string name="hp_area_validation_emp">Please Enter House Number.</string>
+    <string name="gp_area_validation_emp">Please Enter Garbage Point Id.</string>
+    <string name="dy_area_validation_emp">Please Enter Dump Yard Id.</string>
+
+    <string name="choose_option_txt">Choose Option</string>
+    <string name="add_details_txt">Add Details</string>
+    <string name="skip_txt">Skip</string>
+
+    <string name="name">Name</string>
+    <string name="name_mar">Name Marathi</string>
+    <string name="hint_house_no">House Number</string>
+    <string name="hint_zone">Zone</string>
+    <string name="ward_no">Ward No</string>
+    <string name="hint_area">Area</string>
+    <string name="hint_mobile">Mobile Number</string>
+    <string name="hint_address">Address</string>
+
+    <string name="title_activity_house_registration_form_page">Add House Details</string>
+    <string name="title_activity_point_registration_form_page">Add Garbage Point Details</string>
+    <string name="title_activity_dump_registration_form_page">Add Dump Yard Details</string>
+    <string name="title_activity_emp_add_location_details">Add Details</string>
+
 </resources>

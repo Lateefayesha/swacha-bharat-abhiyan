@@ -48,13 +48,13 @@ import quickutils.core.QuickUtils;
 public class AUtils extends MsUtils {
 
     //    Local URL
-//    public static final String SERVER_URL = "http://192.168.200.4:6077/";
+    public static final String SERVER_URL = "http://192.168.200.4:6077/";
 
     //    Staging URL
 //    public static final String SERVER_URL = "http://115.115.153.117:4044/";
 
     //    Relese URL
-    public static final String SERVER_URL = "https://ghantagadi.in:444/";
+//    public static final String SERVER_URL = "https://ghantagadi.in:444/";
 
     //    Relese Backup URL
 //    public static final String SERVER_URL = "http://202.65.157.253:4044/";
@@ -112,6 +112,7 @@ public class AUtils extends MsUtils {
     public static MyApplication mApplication;
 
     private static final String SERVER_DATE_FORMATE = "MM-dd-yyyy";
+    private static final String EMP_SERVER_DATE_FORMATE = "dd-MM-yyyy";
 
     private static final String TITLE_DATE_FORMATE = "dd MMM yyyy";
 
@@ -139,6 +140,10 @@ public class AUtils extends MsUtils {
     private static Snackbar mSnackbar;
 
     public final static String CONNECTIVITY_ACTION = "android.net.conn.CONNECTIVITY_CHANGE";
+
+    public static final String TAG_HTTP_RESPONSE = "HTTPResponse_Error";
+    public static final String ADD_DETAILS_TYPE_KEY = "ADD_DETAILS_TYPE_KEY";
+    public static final int ADD_DETAILS_REQUEST_KEY = 8986;
 
     public static boolean isIsOnduty() {
         return QuickUtils.prefs.getBoolean(PREFS.IS_ON_DUTY, false);
@@ -242,6 +247,7 @@ public class AUtils extends MsUtils {
         String IS_USER_LOGIN = "UserLoginStatus";
         String USER_ID = "UserId";
         String USER_TYPE = "UserType";
+        String USER_TYPE_ID = "UserTypeId";
         String IS_GT_FEATURE = "isGtFeature";
         String IS_ON_DUTY = "isOnDuty";
 
@@ -253,6 +259,12 @@ public class AUtils extends MsUtils {
         String WORK_HISTORY_POJO_LIST = "WorkHistoryPullList";
         String WORK_HISTORY_DETAIL_POJO_LIST = "WorkHistoryDetailPullList";
         String LANGUAGE_POJO_LIST = "LanguagePullList";
+    }
+
+    public interface NondaniLocation{
+        String OPEN_FORM_TYPE = "OPEN_FORM_TYPE";
+        String SUBMIT_TYPE = "SUBMIT_TYPE";
+        String REFERENCE_ID = "REFERENCE_ID";
     }
 
     public interface DUMPDATA {
@@ -496,6 +508,58 @@ public class AUtils extends MsUtils {
     public static String extractMonth(String date) {
 
         SimpleDateFormat serverFormat = new SimpleDateFormat(SERVER_DATE_FORMATE, Locale.ENGLISH);
+        SimpleDateFormat titleDateFormat = new SimpleDateFormat(SEMI_MONTH_FORMATE, Locale.ENGLISH);
+
+        try {
+            return titleDateFormat.format(serverFormat.parse(date));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
+    public static String getTitleDateFormatEmp(String date) {
+
+        SimpleDateFormat serverFormat = new SimpleDateFormat(EMP_SERVER_DATE_FORMATE, Locale.ENGLISH);
+        SimpleDateFormat titleDateFormat = new SimpleDateFormat(TITLE_DATE_FORMATE, Locale.ENGLISH);
+
+        try {
+            return titleDateFormat.format(serverFormat.parse(date));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
+    public static String getHistoryDetailsDateFormat(String date) {
+
+        SimpleDateFormat serverFormat = new SimpleDateFormat(EMP_SERVER_DATE_FORMATE, Locale.ENGLISH);
+        SimpleDateFormat titleDateFormat = new SimpleDateFormat(SERVER_DATE_FORMATE, Locale.ENGLISH);
+
+        try {
+            return titleDateFormat.format(serverFormat.parse(date));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
+    public static String extractDateEmp(String date) {
+
+        SimpleDateFormat serverFormat = new SimpleDateFormat(EMP_SERVER_DATE_FORMATE, Locale.ENGLISH);
+        SimpleDateFormat titleDateFormat = new SimpleDateFormat(DATE_VALUE_FORMATE, Locale.ENGLISH);
+
+        try {
+            return titleDateFormat.format(serverFormat.parse(date));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
+    public static String extractMonthEmp(String date) {
+
+        SimpleDateFormat serverFormat = new SimpleDateFormat(EMP_SERVER_DATE_FORMATE, Locale.ENGLISH);
         SimpleDateFormat titleDateFormat = new SimpleDateFormat(SEMI_MONTH_FORMATE, Locale.ENGLISH);
 
         try {

@@ -109,4 +109,26 @@
     <string name="plz_ent_all_fields">कृपया वरील सर्व फील्ड प्रविष्ट करा</string>
     <string name="plz_ent_only_number">कृपया फक्त संख्या प्रविष्ट करा</string>
 
+    <string name="hp_area_validation_emp">कृपया घर क्रमांक निवडा.</string>
+    <string name="gp_area_validation_emp">कृपया कचरा पॉइंट निवडा.</string>
+    <string name="dy_area_validation_emp">कृपया डंप यार्ड निवडा.</string>
+
+    <string name="choose_option_txt">पर्याय निवडा</string>
+    <string name="add_details_txt">तपशील सादर करा</string>
+    <string name="skip_txt">स्किप</string>
+
+    <string name="name">नाव</string>
+    <string name="name_mar">नाव मराठी</string>
+    <string name="hint_house_no">घर क्रमांक</string>
+    <string name="hint_zone">झोन</string>
+    <string name="ward_no">वार्ड क्रमांक</string>
+    <string name="hint_area">क्षेत्र</string>
+    <string name="hint_mobile">मोबाइल नंबर</string>
+    <string name="hint_address">पत्ता</string>
+
+    <string name="title_activity_house_registration_form_page">घर तपशील सादर करा</string>
+    <string name="title_activity_point_registration_form_page">कचरा पॉईंट तपशील सादर करा</string>
+    <string name="title_activity_dump_registration_form_page">डंप यार्ड तपशील सादर करा</string>
+    <string name="title_activity_emp_add_location_details">तपशील सादर करा</string>
+
 </resources>

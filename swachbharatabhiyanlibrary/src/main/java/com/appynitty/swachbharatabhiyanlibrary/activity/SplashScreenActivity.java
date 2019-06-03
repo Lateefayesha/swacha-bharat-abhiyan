@@ -42,8 +42,8 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         mAdapter = new VersionDetailsAdapterClass();
 
-//        QuickUtils.prefs.save(AUtils.APP_ID, "1");
-//        QuickUtils.prefs.save(AUtils.VERSION_CODE, 9);
+        QuickUtils.prefs.save(AUtils.APP_ID, "1");
+        QuickUtils.prefs.save(AUtils.VERSION_CODE, 10);
 
         setDefaultLanguage();
 
@@ -109,7 +109,11 @@ public class SplashScreenActivity extends AppCompatActivity {
             @Override
             public void run() {
 
-                startActivity(new Intent(SplashScreenActivity.this, DashboardActivity.class));
+                if(QuickUtils.prefs.getString(AUtils.PREFS.USER_TYPE_ID, "0").equals("1"))
+                    startActivity(new Intent(SplashScreenActivity.this, EmpDashboardActivity.class));
+                else
+                    startActivity(new Intent(SplashScreenActivity.this, DashboardActivity.class));
+
             }
         }, AUtils.SPLASH_SCREEN_TIME);
     }

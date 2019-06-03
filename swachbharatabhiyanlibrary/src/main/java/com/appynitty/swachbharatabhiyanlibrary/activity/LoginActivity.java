@@ -190,14 +190,20 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
 
                 QuickUtils.prefs.save(AUtils.PREFS.USER_ID, mAdapter.getLoginDetailsPojo().getUserId());
                 QuickUtils.prefs.save(AUtils.PREFS.USER_TYPE, mAdapter.getLoginDetailsPojo().getType());
+                QuickUtils.prefs.save(AUtils.PREFS.USER_TYPE_ID, mAdapter.getLoginDetailsPojo().getTypeId());
 
                 QuickUtils.prefs.save(AUtils.PREFS.IS_GT_FEATURE, (boolean)mAdapter.getLoginDetailsPojo().getGtFeatures());
 
                 QuickUtils.prefs.save(AUtils.PREFS.IS_USER_LOGIN, true);
 
                 Toasty.success(mContext, message, Toast.LENGTH_SHORT).show();
+                Intent intent;
 
-                Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
+                if(mAdapter.getLoginDetailsPojo().getTypeId().equals("1"))
+                    intent = new Intent(LoginActivity.this, EmpDashboardActivity.class);
+                else
+                    intent = new Intent(LoginActivity.this, DashboardActivity.class);
+
                 intent.putExtra(AUtils.isFromLogin, true);
                 startActivity(intent);
                 LoginActivity.this.finish();

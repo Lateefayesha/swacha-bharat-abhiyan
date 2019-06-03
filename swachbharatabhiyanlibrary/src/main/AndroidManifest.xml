@@ -79,9 +79,35 @@
             android:theme="@style/SBA.AppTheme.NoActionBar"
             android:windowSoftInputMode="stateVisible" />
 
+        <activity
+            android:name=".activity.EmpDashboardActivity"
+            android:label="@string/title_activity_dashboard"
+            android:theme="@style/SBA.AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".activity.EmpQRcodeScannerActivity"
+            android:label="@string/title_activity_qrcode_scanner"
+            android:theme="@style/SBA.AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".activity.EmpHistoryPageActivity"
+            android:label="@string/title_activity_history_page"
+            android:theme="@style/SBA.AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".activity.EmpHistoryDetailsPageActivity"
+            android:label="@string/title_activity_history_page"
+            android:theme="@style/SBA.AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".activity.EmpAddLocationDetailsActivity"
+            android:label="@string/title_activity_emp_add_location_details"
+            android:theme="@style/SBA.AppTheme.NoActionBar" />
+
         <service
             android:name=".services.ForgroundService"
             android:enabled="true" />
+
         <service
             android:name=".services.NetworkSchedulerService"
             android:exported="true"
