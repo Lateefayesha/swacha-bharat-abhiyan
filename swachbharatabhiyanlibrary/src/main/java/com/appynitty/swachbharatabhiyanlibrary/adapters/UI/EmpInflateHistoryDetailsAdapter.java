@@ -69,7 +69,8 @@ public class EmpInflateHistoryDetailsAdapter extends ArrayAdapter<EmpWorkHistory
                 holder.id.setText(String.format("%s %s", context.getResources().getString(R.string.dump_yard_id_txt), workHistoryDetailPojo.getDumpYardNo()));
             }
 
-            holder.time.setText(workHistoryDetailPojo.getTime());
+//            holder.time.setText(workHistoryDetailPojo.getTime());
+            holder.time.setText(AUtils.getEmpTimeLineFormat(workHistoryDetailPojo.getTime()));
         }
 
         return view;

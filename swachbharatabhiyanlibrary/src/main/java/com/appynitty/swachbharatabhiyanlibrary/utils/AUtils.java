@@ -120,6 +120,7 @@ public class AUtils extends MsUtils {
     private static final String DATE_VALUE_FORMATE = "dd";
 
     private static final String SERVER_TIME_FORMATE = "hh:mm a";
+    private static final String SERVER_TIME_24HR_FORMATE = "HH:mm";
 
     private static final String SERVER_DATE_TIME_FORMATE = "MM-dd-yyyy HH:mm:ss";
 
@@ -512,6 +513,19 @@ public class AUtils extends MsUtils {
 
         try {
             return titleDateFormat.format(serverFormat.parse(date));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
+    public static String getEmpTimeLineFormat(String date) {
+
+        SimpleDateFormat serverFormat = new SimpleDateFormat(SERVER_TIME_24HR_FORMATE, Locale.ENGLISH);
+        SimpleDateFormat timelineFormat = new SimpleDateFormat(SERVER_TIME_FORMATE, Locale.ENGLISH);
+
+        try {
+            return timelineFormat.format(serverFormat.parse(date));
         } catch (ParseException e) {
             e.printStackTrace();
             return "";
