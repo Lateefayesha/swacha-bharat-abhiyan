@@ -33,7 +33,13 @@ public class EmpAttendanceAdapterClass {
             public void doInBackgroundOpration(EmpSyncServer empSyncServer) {
 
                 if(!AUtils.isNull(empInPunchPojo)) {
-                    resultPojo = empSyncServer.saveInPunch(empInPunchPojo);
+                    try {
+                        Thread.currentThread();
+                        Thread.sleep(3000);
+                        resultPojo = empSyncServer.saveInPunch(empInPunchPojo);
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
                 }
             }
 

@@ -265,7 +265,8 @@ public class SyncServer {
 
             UserDetailsWebService service = Connection.createService(UserDetailsWebService.class, AUtils.SERVER_URL);
             userDetailPojo = service.pullUserDetails(QuickUtils.prefs.getString(AUtils.APP_ID, ""),
-                    AUtils.CONTENT_TYPE, QuickUtils.prefs.getString(AUtils.PREFS.USER_ID,null)).execute().body();
+                    AUtils.CONTENT_TYPE, QuickUtils.prefs.getString(AUtils.PREFS.USER_ID,null),
+                    QuickUtils.prefs.getString(AUtils.PREFS.USER_TYPE_ID, "0")).execute().body();
 
             if (!AUtils.isNull(userDetailPojo)) {
 

@@ -14,5 +14,6 @@ public interface UserDetailsWebService {
     @GET("api/Get/User")
     Call<UserDetailPojo> pullUserDetails(@Header("appId") String appId,
                                          @Header("Content-Type") String content_type,
-                                         @Header("userId") String userId);
+                                         @Header("userId") String userId,
+                                         @Header("typeId") String typeId);
 }
