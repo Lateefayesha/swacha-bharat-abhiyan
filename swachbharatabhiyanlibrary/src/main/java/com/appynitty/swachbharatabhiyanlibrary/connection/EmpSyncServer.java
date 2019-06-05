@@ -64,6 +64,13 @@ public class EmpSyncServer {
 
             EmpPunchWebService service = Connection.createService(EmpPunchWebService.class, AUtils.SERVER_URL);
 
+            if (QuickUtils.prefs.getString(AUtils.LAT,"").equals("") &&
+                    QuickUtils.prefs.getString(AUtils.LONG,"").equals(""))
+            {
+                Thread.currentThread();
+                Thread.sleep(3000);
+            }
+
             empInPunchPojo.setQrEmpId(QuickUtils.prefs.getString(AUtils.PREFS.USER_ID,""));
             empInPunchPojo.setStartLat(QuickUtils.prefs.getString(AUtils.LAT,""));
             empInPunchPojo.setStartLong(QuickUtils.prefs.getString(AUtils.LONG,""));

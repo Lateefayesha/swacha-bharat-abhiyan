@@ -34,8 +34,6 @@ public class EmpAttendanceAdapterClass {
 
                 if(!AUtils.isNull(empInPunchPojo)) {
                     try {
-                        Thread.currentThread();
-                        Thread.sleep(3000);
                         resultPojo = empSyncServer.saveInPunch(empInPunchPojo);
                     } catch (Exception ex) {
                         ex.printStackTrace();
