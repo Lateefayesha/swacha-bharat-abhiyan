@@ -43,7 +43,9 @@ import com.mithsoft.lib.components.Toasty;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.lang.reflect.Type;
+import java.text.DecimalFormat;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Objects;
 
 import quickutils.core.QuickUtils;
@@ -69,6 +71,7 @@ public class DumpYardWeightActivity extends AppCompatActivity {
     private String wetImageFilePath = "";
 
     private ImagePojo imagePojo;
+    private Double totalTon;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -95,8 +98,8 @@ public class DumpYardWeightActivity extends AppCompatActivity {
     }
 
     private void initToolbar(){
-        setSupportActionBar(toolbar);
         toolbar.setTitle(R.string.title_activity_dump_yard_weight);
+        setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
     }
 
@@ -118,13 +121,17 @@ public class DumpYardWeightActivity extends AppCompatActivity {
         radioGroupWet = findViewById(R.id.radio_wet_weight);
 
         radioButtonDryKg = findViewById(R.id.radio_dry_kg);
+        radioButtonDryKg.setChecked(true);
         radioButtonDryTon = findViewById(R.id.radio_dry_ton);
         radioButtonWetKg = findViewById(R.id.radio_wet_kg);
+        radioButtonWetKg.setChecked(true);
         radioButtonWetTon = findViewById(R.id.radio_wet_ton);
 
         btnSubmitDumpDetails = findViewById(R.id.btn_submit_dump);
         btnTakeDryPhoto = findViewById(R.id.btn_take_dry_photo);
         btnTakeWetPhoto = findViewById(R.id.btn_take_wet_photo);
+
+        totalTon = 0d;
     }
 
     private void registerEvents(){
@@ -454,9 +461,13 @@ public class DumpYardWeightActivity extends AppCompatActivity {
         double dryInTons = getDryWeightInTons();
         double wetInTons = getWetWeightInTons();
 
-        total = dryInTons + wetInTons;
+        double dryInKgs = getDryWeightInKgs();
+        double wetInKgs = getWetWeightInKgs();
 
-        editTotal.setText(String.valueOf(total));
+        totalTon = dryInTons + wetInTons;
+        total = dryInKgs + wetInKgs;
+
+        editTotal.setText(String.format(Locale.ENGLISH,getString(R.string.restrict_two_decimal), total));
     }
 
     private double getDryWeightInTons(){
@@ -481,6 +492,34 @@ public class DumpYardWeightActivity extends AppCompatActivity {
                 returnValue = Double.parseDouble(wetWt) / 1000;
             }else if(radioButtonWetTon.isChecked()){
                 returnValue = Double.parseDouble(wetWt);
+            }
+        }
+
+        return returnValue;
+    }
+
+    private double getDryWeightInKgs(){
+        double returnValue = 0f;
+        String dryWt = editDryTotal.getText().toString();
+        if(!AUtils.isNull(dryWt)){
+            if(radioButtonDryKg.isChecked()){
+                returnValue = Double.parseDouble(dryWt);
+            }else if(radioButtonDryTon.isChecked()){
+                returnValue = Double.parseDouble(dryWt)*1000;
+            }
+        }
+
+        return returnValue;
+    }
+
+    private double getWetWeightInKgs(){
+        double returnValue = 0f;
+        String wetWt = editWetTotal.getText().toString();
+        if(!AUtils.isNull(wetWt)){
+            if(radioButtonWetKg.isChecked()){
+                returnValue = Double.parseDouble(wetWt);
+            }else if(radioButtonWetTon.isChecked()){
+                returnValue = Double.parseDouble(wetWt)*1000;
             }
         }
 
@@ -517,7 +556,7 @@ public class DumpYardWeightActivity extends AppCompatActivity {
 
     private void submitDumpDetailData(){
 
-        getFormData();
+        boolean isImgPojo = getFormData();
 
         Intent intent = new Intent();
         intent.putExtra(AUtils.DUMPDATA.dumpDataMap, getIntentMap());
@@ -530,7 +569,7 @@ public class DumpYardWeightActivity extends AppCompatActivity {
 
         HashMap<String, String> map = new HashMap<>();
         map.put(AUtils.DUMPDATA.dumpYardId, dumpYardId);
-        map.put(AUtils.DUMPDATA.weightTotal, editTotal.getText().toString());
+        map.put(AUtils.DUMPDATA.weightTotal, String.format(Locale.ENGLISH,getString(R.string.restrict_two_decimal), totalTon));
         map.put(AUtils.DUMPDATA.weightTotalDry, String.valueOf(getDryWeightInTons()));
         map.put(AUtils.DUMPDATA.weightTotalWet, String.valueOf(getWetWeightInTons()));
 

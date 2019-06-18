@@ -142,7 +142,11 @@ public class PopUpDialog extends Dialog {
     private void onSubmitClick()
     {
         mVehicleNo = txtVehicleNo.getText().toString();
-        this.dismiss();
+        if(!mVehicleNo.isEmpty()){
+            this.dismiss();
+        }else {
+            txtVehicleNo.setError(mContext.getString(R.string.noVehicleNo));
+        }
     }
 
     private void popUpDismiss()

@@ -24,11 +24,6 @@
         android:theme="@style/SBA.AppTheme">
 
         <activity
-            android:name=".activity.DumpYardWeightActivity"
-            android:label="@string/title_activity_dump_yard_weight"
-            android:theme="@style/SBA.AppTheme.NoActionBar"/>
-
-        <activity
             android:name=".activity.SplashScreenActivity"
             android:label="@string/app_name"
             android:theme="@style/SBA.AppTheme.NoActionBar" />
@@ -78,6 +73,11 @@
             android:label="@string/title_activity_history_page"
             android:theme="@style/SBA.AppTheme.NoActionBar"
             android:windowSoftInputMode="stateVisible" />
+
+        <activity
+            android:name=".activity.DumpYardWeightActivity"
+            android:label="@string/title_activity_dump_yard_weight"
+            android:theme="@style/SBA.AppTheme.NoActionBar"/>
 
         <activity
             android:name=".activity.EmpDashboardActivity"
