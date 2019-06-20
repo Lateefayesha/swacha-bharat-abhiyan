@@ -1,10 +1,12 @@
 package com.appynitty.swachbharatabhiyanlibrary.webservices;
 
 import com.appynitty.retrofitconnectionlibrary.pojos.ResultPojo;
+import com.appynitty.swachbharatabhiyanlibrary.pojos.EmpRegistrationPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.QrLocationPojo;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
 
@@ -19,4 +21,10 @@ public interface QrLocationWebService {
                                            @Header("gcType") String gcType,
                                            @Header("Content-Type") String contentType,
                                            @Body QrLocationPojo locationPojo);
+
+
+    @GET("api/Get/ScanifyHouse")
+    Call<EmpRegistrationPojo> fetchRegistrationDetails(@Header("appId") String appId,
+                                                       @Header("ReferenceId") String refId,
+                                                       @Header("gcType") String gcType);
 }
