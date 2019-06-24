@@ -583,33 +583,38 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
 
         if (AUtils.isNetWorkAvailable(this)) {
 
-            VehicleTypePojo vehicleTypePojo = (VehicleTypePojo) listItemSelected;
+            if(!AUtils.isNull(vehicleNo) && !vehicleNo.isEmpty()){
+                VehicleTypePojo vehicleTypePojo = (VehicleTypePojo) listItemSelected;
 
-            QuickUtils.prefs.save(AUtils.VEHICLE_ID, vehicleTypePojo.getVtId());
+                QuickUtils.prefs.save(AUtils.VEHICLE_ID, vehicleTypePojo.getVtId());
 
-            QuickUtils.prefs.save(AUtils.VEHICLE_NO, vehicleNo);
+                QuickUtils.prefs.save(AUtils.VEHICLE_NO, vehicleNo);
 
-            if (!AUtils.isNull(inPunchPojo)) {
-                inPunchPojo.setDaDate(AUtils.getSeverDate());
-                inPunchPojo.setStartTime(AUtils.getSeverTime());
+                if (!AUtils.isNull(inPunchPojo)) {
+                    inPunchPojo.setDaDate(AUtils.getSeverDate());
+                    inPunchPojo.setStartTime(AUtils.getSeverTime());
 
-                inPunchPojo.setVehicleNumber(vehicleNo);
-            } else {
-                inPunchPojo = new InPunchPojo();
+                    inPunchPojo.setVehicleNumber(vehicleNo);
+                } else {
+                    inPunchPojo = new InPunchPojo();
 
-                inPunchPojo.setDaDate(AUtils.getSeverDate());
-                inPunchPojo.setStartTime(AUtils.getSeverTime());
+                    inPunchPojo.setDaDate(AUtils.getSeverDate());
+                    inPunchPojo.setStartTime(AUtils.getSeverTime());
 
-                inPunchPojo.setVehicleNumber(vehicleNo);
-            }
+                    inPunchPojo.setVehicleNumber(vehicleNo);
+                }
 
-            try{
-                mAttendanceAdapter.MarkInPunch(inPunchPojo);
-            }catch (Exception e){
-                e.printStackTrace();
+                try{
+                    mAttendanceAdapter.MarkInPunch(inPunchPojo);
+                }catch (Exception e){
+                    e.printStackTrace();
+                    markAttendance.setChecked(false);
+                    Toasty.error(mContext, mContext.getString(R.string.something_error), Toast.LENGTH_SHORT).show();
+                }
+            }else{
                 markAttendance.setChecked(false);
-                Toasty.error(mContext, mContext.getString(R.string.something_error), Toast.LENGTH_SHORT).show();
             }
+
         } else {
             AUtils.showWarning(mContext, mContext.getString(R.string.noInternet));
             markAttendance.setChecked(false);

@@ -1,5 +1,6 @@
 package com.appynitty.swachbharatabhiyanlibrary.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -18,7 +19,9 @@ import android.widget.Toast;
 import com.appynitty.retrofitconnectionlibrary.pojos.ResultPojo;
 import com.appynitty.swachbharatabhiyanlibrary.R;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.EmpQrLocationAdapterClass;
+import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.EmpRegistrationDataAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.EmpWardZoneAreaAdapterClass;
+import com.appynitty.swachbharatabhiyanlibrary.pojos.EmpRegistrationPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.QrLocationPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.ZoneWardAreaMasterPojo;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
@@ -40,12 +43,13 @@ public class EmpAddLocationDetailsActivity extends AppCompatActivity {
     private EditText txtName, txtNameMar, txtAddress, txtHouseNo, txtContactNo;
     private Spinner spinnerZone, spinnerWard, spinnerArea;
     private Button btnSubmit;
-    private String referenceId, submitType;
+    private String referenceId, submitType, zoneId, wardId, areaId;
 
     private HashMap<String, String> zoneMap, zoneWardMap, areaMap;
 
     private EmpWardZoneAreaAdapterClass mAdapterClass;
     private EmpQrLocationAdapterClass empQrLocationAdapterClass;
+    private EmpRegistrationDataAdapterClass empRegistrationDataAdapterClass;
 
     private MyProgressDialog myProgressDialog;
 
@@ -112,6 +116,7 @@ public class EmpAddLocationDetailsActivity extends AppCompatActivity {
 
         mAdapterClass = new EmpWardZoneAreaAdapterClass();
         empQrLocationAdapterClass = new EmpQrLocationAdapterClass();
+        empRegistrationDataAdapterClass = new EmpRegistrationDataAdapterClass();
     }
 
     private void initToolbar(){
@@ -206,9 +211,40 @@ public class EmpAddLocationDetailsActivity extends AppCompatActivity {
                 Toasty.error(mContext,getResources().getString(R.string.serverError), Toast.LENGTH_LONG).show();
             }
         });
+
+        empRegistrationDataAdapterClass.setEmpRegistrationDetailsListner(new EmpRegistrationDataAdapterClass.EmpRegistrationDetailsListner() {
+            @Override
+            public void onSuccessCallback(EmpRegistrationPojo empRegistrationPojo) {
+                myProgressDialog.dismiss();
+                if(!AUtils.isNull(empRegistrationPojo))
+                    initFieldData(empRegistrationPojo);
+                else
+                    Toasty.error(mContext,getResources().getString(R.string.something_error), Toast.LENGTH_LONG).show();
+
+            }
+
+            @Override
+            public void onFailureCallback() {
+                myProgressDialog.dismiss();
+                Toasty.error(mContext,getResources().getString(R.string.something_error), Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onErrorCallback() {
+                myProgressDialog.dismiss();
+                Toasty.error(mContext,getResources().getString(R.string.serverError), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     private void initData(){
+        myProgressDialog.show();
+
+        QrLocationPojo pojo = new QrLocationPojo();
+        pojo.setReferanceId(referenceId);
+        pojo.setGcType(submitType);
+        empRegistrationDataAdapterClass.fetchRegistrationDetails(pojo);
+
         mAdapterClass.fetchZone();
         mAdapterClass.fetchWardZone();
         mAdapterClass.fetchArea();
@@ -221,10 +257,17 @@ public class EmpAddLocationDetailsActivity extends AppCompatActivity {
         for(ZoneWardAreaMasterPojo pojo: list){
             nameList.add(pojo.getName());
             zoneMap.put(pojo.getName(), pojo.getzoneId());
+            zoneMap.put(pojo.getzoneId(), pojo.getName());
         }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, nameList);
         spinnerZone.setAdapter(adapter);
+
+        if(!AUtils.isNull(zoneId) && !zoneId.isEmpty()){
+            if(zoneMap.containsValue(zoneId) && nameList.indexOf(zoneMap.get(zoneId)) > 0){
+                spinnerZone.setSelection(nameList.indexOf(zoneMap.get(zoneId)));
+            }
+        }
     }
 
     private void initWardZone(List<ZoneWardAreaMasterPojo> list){
@@ -235,10 +278,17 @@ public class EmpAddLocationDetailsActivity extends AppCompatActivity {
             String name = pojo.getWardNo()+"("+pojo.getZone()+")";
             nameList.add(name);
             zoneWardMap.put(name, pojo.getWardID());
+            zoneWardMap.put(pojo.getWardID(), name);
         }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, nameList);
         spinnerWard.setAdapter(adapter);
+
+        if(!AUtils.isNull(wardId) && !wardId.isEmpty()){
+            if(zoneWardMap.containsValue(wardId) && nameList.indexOf(zoneWardMap.get(wardId)) > 0){
+                spinnerWard.setSelection(nameList.indexOf(zoneWardMap.get(wardId)));
+            }
+        }
     }
 
     private void initArea(List<ZoneWardAreaMasterPojo> list){
@@ -249,10 +299,32 @@ public class EmpAddLocationDetailsActivity extends AppCompatActivity {
             String name = pojo.getArea()+"("+pojo.getAreaMar()+")";
             nameList.add(name);
             areaMap.put(name, pojo.getId());
+            areaMap.put(pojo.getId(), name);
         }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, nameList);
         spinnerArea.setAdapter(adapter);
+
+        if(!AUtils.isNull(areaId) && !areaId.isEmpty()){
+            if(areaMap.containsValue(areaId) && nameList.indexOf(areaMap.get(areaId)) > 0){
+                spinnerArea.setSelection(nameList.indexOf(areaMap.get(areaId)));
+            }
+        }
+    }
+
+    private void initFieldData(EmpRegistrationPojo pojo){
+        if(pojo.getStatus().toLowerCase().equals(AUtils.STATUS_SUCCESS)){
+            txtName.setText(pojo.getName());
+            txtNameMar.setText(pojo.getNamemar());
+            txtAddress.setText(pojo.getAddress());
+            txtContactNo.setText(pojo.getMobileno());
+            wardId = pojo.getWardId();
+            zoneId = pojo.getZoneId();
+            areaId = pojo.getAreaId();
+        }else{
+            Toast.makeText(mContext, pojo.getMessage(), Toast.LENGTH_LONG).show();
+            ((Activity)mContext).finish();
+        }
     }
 
     private void submitDetails(){

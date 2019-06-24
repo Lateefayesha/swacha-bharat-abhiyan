@@ -65,6 +65,7 @@
     <string name="something_error">Something went wrong!! Please try again later. </string>
     <string name="no_data_error">No history Found</string>
     <string name="no_internet_error">No Internet Connection</string>
+    <string name="noVehicleNo">Please Enter Vehicle Number.</string>
 
     <string name="be_no_duty">Please Mark Your Attendance First!</string>
     <string name="off_duty_warning">Please End your Duty First</string>
@@ -146,6 +147,8 @@
     <string name="hint_area">Area</string>
     <string name="hint_mobile">Mobile Number</string>
     <string name="hint_address">Address</string>
+
+    <string name="restrict_two_decimal" translatable="false">%.2f</string>
 
     <string name="title_activity_house_registration_form_page">Add House Details</string>
     <string name="title_activity_point_registration_form_page">Add Garbage Point Details</string>

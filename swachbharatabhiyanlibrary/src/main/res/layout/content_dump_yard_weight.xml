@@ -114,6 +114,7 @@
                             android:textSize="@dimen/dim_18_sp"/>
 
                         <RadioButton
+                            android:visibility="gone"
                             android:id="@+id/radio_dry_ton"
                             android:layout_width="0dp"
                             android:gravity="center"
@@ -176,6 +177,7 @@
                         android:textSize="@dimen/settings_text_size"/>
 
                     <RadioGroup
+                        android:gravity=""
                         android:id="@+id/radio_wet_weight"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -198,6 +200,7 @@
                             android:textSize="@dimen/dim_18_sp"/>
 
                         <RadioButton
+                            android:visibility="gone"
                             android:id="@+id/radio_wet_ton"
                             android:layout_width="0dp"
                             android:gravity="center"
@@ -244,12 +247,12 @@
                     android:gravity="center"
                     android:textSize="@dimen/button_text_size"
                     android:textColor="@color/black"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/unit_ton"
+                    android:text="@string/unit_kg"
                     android:layout_marginStart="@dimen/dim_10_dp"
                     android:textSize="@dimen/dim_18_sp"/>
 
