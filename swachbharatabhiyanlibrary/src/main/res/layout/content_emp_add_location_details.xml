@@ -35,7 +35,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/dim_20_dp"
             android:layout_marginTop="@dimen/dim_10_dp"
-            android:layout_marginRight="@dimen/dim_20_dp">
+            android:layout_marginRight="@dimen/dim_20_dp"
+            android:visibility="gone">
 
             <EditText
                 android:id="@+id/name_mar"
