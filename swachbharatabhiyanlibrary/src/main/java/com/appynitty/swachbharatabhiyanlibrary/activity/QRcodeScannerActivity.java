@@ -361,8 +361,19 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 if(isAutoCompleteValid(idAutoComplete, idHash))
                     AUtils.hideKeyboard((Activity) mContext);
-                else
-                    Toasty.error(mContext, mContext.getResources().getString(R.string.area_validation)).show();
+                else{
+                    switch (getAreaType()){
+                        case AUtils.HP_AREA_TYPE_ID:
+                            Toasty.error(mContext, mContext.getResources().getString(R.string.hp_validation)).show();
+                            break;
+                        case AUtils.GP_AREA_TYPE_ID:
+                            Toasty.error(mContext, mContext.getResources().getString(R.string.gp_validation)).show();
+                            break;
+                        case AUtils.DY_AREA_TYPE_ID:
+                            Toasty.error(mContext, mContext.getResources().getString(R.string.dy_validation)).show();
+                            break;
+                    }
+                }
             }
         });
 
