@@ -9,14 +9,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.LocationManager;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.BatteryManager;
 import android.os.PowerManager;
 import android.provider.Settings;
-import android.support.annotation.RequiresApi;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AlertDialog;
+import androidx.annotation.RequiresApi;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
@@ -24,8 +20,9 @@ import android.location.Location;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +31,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.appynitty.swachbharatabhiyanlibrary.R;
+import com.google.android.material.snackbar.Snackbar;
 import com.mithsoft.lib.components.Toasty;
 import com.mithsoft.lib.utils.MsUtils;
 
@@ -145,6 +143,10 @@ public class AUtils extends MsUtils {
     public static final String TAG_HTTP_RESPONSE = "HTTPResponse_Error";
     public static final String ADD_DETAILS_TYPE_KEY = "ADD_DETAILS_TYPE_KEY";
     public static final int ADD_DETAILS_REQUEST_KEY = 8986;
+
+    public static final String DATABASE_NAME = "db_sab";
+    public static final String LOCATION_TABLE_NAME = "loc_table";
+    public static final String COLLECTION_TABLE_NAME = "gc_table";
 
     public static boolean isIsOnduty() {
         return QuickUtils.prefs.getBoolean(PREFS.IS_ON_DUTY, false);

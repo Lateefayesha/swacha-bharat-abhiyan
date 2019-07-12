@@ -22,7 +22,7 @@
         android:layout_marginTop="@dimen/dim_40_dp"
         android:layout_centerHorizontal="true"/>
 
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         android:layout_below="@id/img_logo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -47,7 +47,7 @@
                 android:gravity="center_horizontal"
                 android:textColor="@color/colorPrimary" />
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -57,9 +57,9 @@
                     android:hint="@string/user_name_txt"
                     android:inputType="textCapWords" />
 
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp">
@@ -70,7 +70,7 @@
                     android:hint="@string/password_txt"
                     android:inputType="textPassword" />
 
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
                 android:visibility="gone"
@@ -100,7 +100,7 @@
                 android:textColor="@color/colorBlue"/>
 
         </LinearLayout>
-    </android.support.v7.widget.CardView>
+    </androidx.cardview.widget.CardView>
 
     <ImageView
         android:contentDescription="@string/app_name"

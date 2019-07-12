@@ -39,7 +39,7 @@
         android:layout_margin="@dimen/login_margin"
         android:visibility="gone">
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dim_20_dp"
@@ -53,7 +53,7 @@
                 android:maxLength="12"
                 android:digits="@string/vehicle_no_validation"/>
 
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             style="@style/MyButtonStyle"
