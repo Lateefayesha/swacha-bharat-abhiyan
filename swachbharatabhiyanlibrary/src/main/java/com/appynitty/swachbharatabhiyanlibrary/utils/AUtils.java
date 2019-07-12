@@ -46,13 +46,13 @@ import quickutils.core.QuickUtils;
 public class AUtils extends MsUtils {
 
     //    Local URL
-    public static final String SERVER_URL = "http://192.168.200.4:6077/";
+//    public static final String SERVER_URL = "http://192.168.200.4:6077/";
 
     //    Staging URL
 //    public static final String SERVER_URL = "http://115.115.153.117:4044/";
 
     //    Relese URL
-//    public static final String SERVER_URL = "https://ghantagadi.in:444/";
+    public static final String SERVER_URL = "https://ghantagadi.in:444/";
 
     //    Relese Backup URL
 //    public static final String SERVER_URL = "http://202.65.157.253:4044/";
@@ -65,7 +65,7 @@ public class AUtils extends MsUtils {
 
     public static final String LANGUAGE_NAME = "LanguageName";
 
-    public static final String DEFAULT_LANGUAGE_NAME = "mr";
+    public static final String DEFAULT_LANGUAGE_NAME = "en";
 
     public static final String CONTENT_TYPE = "application/json";
 
@@ -75,7 +75,7 @@ public class AUtils extends MsUtils {
     public static final String DIALOG_TYPE_VEHICLE = "DialogTypeVehicle";
     public static final String DIALOG_TYPE_LANGUAGE = "Dialog_Type_Language";
 
-    public static final String DEFAULT_LANGUAGE_ID = "2";
+    public static final String DEFAULT_LANGUAGE_ID = "1";
     public static final String LANGUAGE_ID = "LanguageId";
 
     public static final int SPLASH_SCREEN_TIME = 3000;

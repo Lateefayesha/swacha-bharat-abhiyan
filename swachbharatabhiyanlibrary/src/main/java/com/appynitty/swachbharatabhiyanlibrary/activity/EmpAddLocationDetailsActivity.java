@@ -321,6 +321,11 @@ public class EmpAddLocationDetailsActivity extends AppCompatActivity {
             wardId = pojo.getWardId();
             zoneId = pojo.getZoneId();
             areaId = pojo.getAreaId();
+
+            if(!submitType.equals("1") && !AUtils.isNull(pojo.getHouseId()) && pojo.getHouseId().length() > 0){
+                txtHouseNo.setText(pojo.getHouseId());
+            }
+
         }else{
             Toast.makeText(mContext, pojo.getMessage(), Toast.LENGTH_LONG).show();
             ((Activity)mContext).finish();
