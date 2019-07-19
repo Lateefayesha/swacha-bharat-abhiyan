@@ -5,7 +5,7 @@
         android:width="4dp"
         android:color="@color/colorPinkLight" />
 
-    // the inside color
+     <!--the inside color-->
     <solid
         android:color="@color/colorPinkLight"
         />

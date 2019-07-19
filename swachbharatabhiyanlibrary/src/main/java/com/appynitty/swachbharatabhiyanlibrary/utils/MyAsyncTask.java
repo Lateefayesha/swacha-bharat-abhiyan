@@ -31,7 +31,7 @@ public class MyAsyncTask extends AsyncTask {
     protected void onPreExecute() {
         super.onPreExecute();
         myProgressDialog = new MyProgressDialog(context, R.drawable.progress_bar, false);
-        if (isShowPrgressDialog) {
+        if (!AUtils.isNull(myProgressDialog) && isShowPrgressDialog) {
             myProgressDialog.show();
         }
     }
@@ -54,7 +54,7 @@ public class MyAsyncTask extends AsyncTask {
     @Override
     protected void onPostExecute(Object o) {
         super.onPostExecute(o);
-        if (myProgressDialog.isShowing()) {
+        if (!AUtils.isNull(myProgressDialog) && myProgressDialog.isShowing()) {
             myProgressDialog.dismiss();
         }
         if (isNetworkAvail) {
@@ -62,7 +62,7 @@ public class MyAsyncTask extends AsyncTask {
             asynTaskListener.onFinished();
         } else {
 
-            if (isShowPrgressDialog) {
+            if (!AUtils.isNull(isShowPrgressDialog) && isShowPrgressDialog) {
                 AUtils.showWarning(context, context.getString(R.string.noInternet));
                 asynTaskListener.onInternetLost();
             }
