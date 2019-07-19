@@ -10,12 +10,16 @@ import androidx.room.RoomDatabase;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import com.appynitty.swachbharatabhiyanlibrary.DAO.SyncServerDao;
 import com.appynitty.swachbharatabhiyanlibrary.DAO.UserLocationDao;
+import com.appynitty.swachbharatabhiyanlibrary.connection.SyncServer;
+import com.appynitty.swachbharatabhiyanlibrary.entity.SyncServerEntity;
 import com.appynitty.swachbharatabhiyanlibrary.entity.UserLocationEntity;
 
-@Database(entities = {UserLocationEntity.class}, version = 1)
+@Database(entities = {UserLocationEntity.class, SyncServerEntity.class}, version = 1)
 public abstract class SbaRoomDatabase extends RoomDatabase {
     public abstract UserLocationDao userLocationDao();
+    public abstract SyncServerDao syncServerDao();
 
     private static volatile SbaRoomDatabase INSTANCE;
 
@@ -57,9 +61,11 @@ public abstract class SbaRoomDatabase extends RoomDatabase {
     private static class PopulateDbAsync extends AsyncTask<Void, Void, Void> {
 
         private final UserLocationDao mDao;
+        private final SyncServerDao mSyncDao;
 
         PopulateDbAsync(SbaRoomDatabase db) {
             mDao = db.userLocationDao();
+            mSyncDao = db.syncServerDao();
         }
 
         @Override

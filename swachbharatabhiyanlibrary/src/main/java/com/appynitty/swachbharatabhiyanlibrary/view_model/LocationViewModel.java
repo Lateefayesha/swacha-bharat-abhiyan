@@ -25,4 +25,8 @@ public class LocationViewModel extends AndroidViewModel {
     public LiveData<List<UserLocationEntity>> getUserLocationEntityList() { return mUserLocationEntityList; }
 
     public void insert(UserLocationEntity userLocationEntity) { mRepository.insert(userLocationEntity); }
+
+    public void deleteAllRecord() { mRepository.deleteAllRecord();}
+
+    public void deleteSelectedRecord(int id) { mRepository.deleteSelectedRecord(id);}
 }

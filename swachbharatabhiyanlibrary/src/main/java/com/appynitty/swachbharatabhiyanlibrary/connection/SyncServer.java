@@ -341,24 +341,6 @@ public class SyncServer {
         return false;
     }
 
-    public UserLocationResultPojo saveUserLocation(List<UserLocationPojo> userLocationPojoList) {
-
-        UserLocationResultPojo resultPojo = null;
-        try {
-
-            UserLocationWebService service = Connection.createService(UserLocationWebService.class, AUtils.SERVER_URL);
-
-
-            resultPojo = service.saveUserLocation(QuickUtils.prefs.getString(AUtils.APP_ID, "1"), AUtils.CONTENT_TYPE,
-                    QuickUtils.prefs.getString(AUtils.PREFS.USER_ID, null),AUtils.getBatteryStatus(), userLocationPojoList).execute().body();
-
-        } catch (Exception e) {
-
-            e.printStackTrace();
-        }
-        return resultPojo;
-    }
-
     public Boolean checkVersionUpdate(){
 
         Boolean doUpdate = false;

@@ -73,6 +73,7 @@ public class ForgroundService extends Service {
         //Toast.makeText(this, "MyService Stopped", Toast.LENGTH_LONG).show();
         locationHandler.removeCallbacks(locationThread);
         monitoringService.onStopTracking();
+
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
         {
             stopForeground(STOP_FOREGROUND_REMOVE);

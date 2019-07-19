@@ -9,6 +9,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.BatteryManager;
 import android.os.PowerManager;
 import android.provider.Settings;
@@ -31,6 +33,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.appynitty.swachbharatabhiyanlibrary.R;
+import com.appynitty.swachbharatabhiyanlibrary.pojos.UserLocationPojo;
 import com.google.android.material.snackbar.Snackbar;
 import com.mithsoft.lib.components.Toasty;
 import com.mithsoft.lib.utils.MsUtils;
@@ -39,6 +42,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 import quickutils.core.QuickUtils;
@@ -46,13 +50,13 @@ import quickutils.core.QuickUtils;
 public class AUtils extends MsUtils {
 
     //    Local URL
-//    public static final String SERVER_URL = "http://192.168.200.4:6077/";
+    public static final String SERVER_URL = "http://192.168.200.4:6077/";
 
     //    Staging URL
 //    public static final String SERVER_URL = "http://115.115.153.117:4044/";
 
     //    Relese URL
-    public static final String SERVER_URL = "https://ghantagadi.in:444/";
+//    public static final String SERVER_URL = "https://ghantagadi.in:444/";
 
     //    Relese Backup URL
 //    public static final String SERVER_URL = "http://202.65.157.253:4044/";
@@ -147,6 +151,8 @@ public class AUtils extends MsUtils {
     public static final String DATABASE_NAME = "db_sab";
     public static final String LOCATION_TABLE_NAME = "loc_table";
     public static final String COLLECTION_TABLE_NAME = "gc_table";
+
+    public static List<UserLocationPojo> UserLocationPojoList= new ArrayList<>();
 
     public static boolean isIsOnduty() {
         return QuickUtils.prefs.getBoolean(PREFS.IS_ON_DUTY, false);
@@ -703,6 +709,14 @@ public class AUtils extends MsUtils {
     public static int getBatteryStatus(){
         BatteryManager batteryManager = (BatteryManager) mCurrentContext.getSystemService(Context.BATTERY_SERVICE);
         return batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY);
+    }
+
+    public static boolean isInternetAvailable()
+    {
+        ConnectivityManager cm = (ConnectivityManager)
+                mApplication.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
 }
 

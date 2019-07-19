@@ -2,6 +2,8 @@ package com.appynitty.swachbharatabhiyanlibrary.pojos;
 
 public class UserLocationPojo {
 
+    private String OfflineId;
+
     private String userId;
 
     private String Long;
@@ -42,9 +44,18 @@ public class UserLocationPojo {
         this.lat = lat;
     }
 
+    public String getOfflineId() {
+        return OfflineId;
+    }
+
+    public void setOfflineId(String id) {
+        this.OfflineId = id;
+    }
+
     @Override
     public String toString() {
         return "UserLocationPojo{" +
+                "id='" + OfflineId + '\'' +
                 "userId='" + userId + '\'' +
                 ", Long='" + Long + '\'' +
                 ", datetime='" + datetime + '\'' +

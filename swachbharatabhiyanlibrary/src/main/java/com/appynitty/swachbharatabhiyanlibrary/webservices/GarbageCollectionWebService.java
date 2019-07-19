@@ -1,10 +1,15 @@
 package com.appynitty.swachbharatabhiyanlibrary.webservices;
 
 import com.appynitty.swachbharatabhiyanlibrary.pojos.GcResultPojo;
+import com.appynitty.swachbharatabhiyanlibrary.pojos.OfflineGarbageColectionPojo;
+import com.appynitty.swachbharatabhiyanlibrary.pojos.OfflineGcResultPojo;
+
+import java.util.List;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
@@ -62,4 +67,10 @@ public interface GarbageCollectionWebService {
                                               @Part("totalGcWeight") RequestBody weightTotal,
                                               @Part("totalDryWeight") RequestBody weightDry,
                                               @Part("totalWetWeight") RequestBody weightWet);
+
+    @POST("api/Save/GarbageCollectionOfflineUpload")
+    Call<OfflineGcResultPojo> saveGarbageCollectionOffline(@Header("appId") String appId,
+                                                                        @Header("batteryStatus") int batteryStatus,
+                                                                        @Header("Content-Type") String contentType,
+                                                                        @Body List<OfflineGarbageColectionPojo> userLocationPojoList);
 }

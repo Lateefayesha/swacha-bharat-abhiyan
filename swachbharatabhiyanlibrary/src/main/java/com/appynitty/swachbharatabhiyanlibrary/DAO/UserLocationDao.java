@@ -25,12 +25,12 @@ public interface UserLocationDao {
     @Query("SELECT * FROM "+AUtils.LOCATION_TABLE_NAME)
     LiveData<List<UserLocationEntity>> getAllLocations();
 
-    @Delete
-     void deleteSelectedRecord(UserLocationEntity userLocationEntity);
+    @Query("DELETE FROM "+ AUtils.LOCATION_TABLE_NAME +" WHERE _id =:index_id")
+     void deleteSelectedRecord(int index_id);
 
     @Update
     void updateSelectedRecord(UserLocationEntity userLocationEntity);
 
     @Query("SELECT * FROM "+AUtils.LOCATION_TABLE_NAME +" WHERE _id =:index_id")
-    LiveData<UserLocationEntity> getTask(int index_id);
+    LiveData<UserLocationEntity> getSelectedLocations(int index_id);
 }

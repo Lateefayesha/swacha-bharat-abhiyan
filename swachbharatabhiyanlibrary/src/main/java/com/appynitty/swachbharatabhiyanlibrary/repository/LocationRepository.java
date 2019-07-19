@@ -26,11 +26,11 @@ public class LocationRepository {
         return mUserLocationEntityList;
     }
 
-    public void deleteSelectedRecord (UserLocationEntity word) {
-        new DeleteSelectedRecordAsyncTask(mUserLocationDao).execute(word);
+    public void deleteSelectedRecord (int index_id) {
+        new DeleteSelectedRecordAsyncTask(mUserLocationDao).execute(index_id);
     }
 
-    private class DeleteSelectedRecordAsyncTask extends AsyncTask<UserLocationEntity, Void, Void> {
+    private class DeleteSelectedRecordAsyncTask extends AsyncTask<Integer, Void, Void> {
 
         private UserLocationDao mAsyncTaskDao;
 
@@ -39,7 +39,7 @@ public class LocationRepository {
         }
 
         @Override
-        protected Void doInBackground(final UserLocationEntity... params) {
+        protected Void doInBackground(final Integer... params) {
             mAsyncTaskDao.deleteSelectedRecord(params[0]);
             return null;
         }
@@ -78,8 +78,28 @@ public class LocationRepository {
 
         @Override
         protected Void doInBackground(final UserLocationEntity... params) {
-            mAsyncTaskDao.deleteSelectedRecord(params[0]);
+            mAsyncTaskDao.updateSelectedRecord(params[0]);
             return null;
         }
     }
+
+    public void deleteAllRecord () {
+        new DeleteAllRecordAsyncTask(mUserLocationDao).execute();
+    }
+
+    private class DeleteAllRecordAsyncTask extends AsyncTask<UserLocationEntity, Void, Void> {
+
+        private UserLocationDao mAsyncTaskDao;
+
+        public DeleteAllRecordAsyncTask(UserLocationDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(final UserLocationEntity... params) {
+            mAsyncTaskDao.deleteAll();
+            return null;
+        }
+    }
+
 }

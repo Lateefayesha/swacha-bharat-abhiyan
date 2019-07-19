@@ -1,8 +1,8 @@
 package com.appynitty.swachbharatabhiyanlibrary.pojos;
 
-public class UserLocationResultPojo {
+public class OfflineGcResultPojo {
 
-    private boolean isAttendenceOff;
+    private String ID;
 
     private String message;
 
@@ -10,14 +10,12 @@ public class UserLocationResultPojo {
 
     private String status;
 
-    private String ID;
-
-    public boolean getIsAttendenceOff() {
-        return isAttendenceOff;
+    public String getID() {
+        return ID;
     }
 
-    public void setIsAttendenceOff(boolean isAttendenceOff) {
-        this.isAttendenceOff = isAttendenceOff;
+    public void setID(String ID) {
+        this.ID = ID;
     }
 
     public String getMessage() {
@@ -44,21 +42,12 @@ public class UserLocationResultPojo {
         this.status = status;
     }
 
-    public String getId() {
-        return ID;
-    }
-
-    public void setId(String id) {
-        this.ID = id;
-    }
-
     @Override
     public String toString() {
-        return "UserLocationResultPojo{"
-                + "isAttendenceOff='" + isAttendenceOff + '\''
+        return "OfflineGcResultPojo{"
+                + "ID='" + ID + '\''
                 + ", message='" + message + '\''
                 + ", messageMar='" + messageMar + '\''
-                + ", status='" + status + '\''
-                + ", id='" + ID + '\''+ '}';
+                + ", status='" + status + '\'' + '}';
     }
 }

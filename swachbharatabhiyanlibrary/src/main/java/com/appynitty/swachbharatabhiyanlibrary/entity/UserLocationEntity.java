@@ -62,7 +62,6 @@ public class UserLocationEntity {
                 "index_id='" + index_id + '\'' +
                 ", Long='" + Long + '\'' +
                 ", datetime='" + datetime + '\'' +
-                ", lat='" + lat + '\'' +
-                '}';
+                ", lat='" + lat + '\'' + '}';
     }
 }
