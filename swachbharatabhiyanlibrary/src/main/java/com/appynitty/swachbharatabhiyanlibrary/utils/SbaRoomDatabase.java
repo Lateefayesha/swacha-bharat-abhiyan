@@ -16,7 +16,7 @@ import com.appynitty.swachbharatabhiyanlibrary.connection.SyncServer;
 import com.appynitty.swachbharatabhiyanlibrary.entity.SyncServerEntity;
 import com.appynitty.swachbharatabhiyanlibrary.entity.UserLocationEntity;
 
-@Database(entities = {UserLocationEntity.class, SyncServerEntity.class}, version = 1)
+@Database(entities = {UserLocationEntity.class, SyncServerEntity.class}, version = 1, exportSchema = false)
 public abstract class SbaRoomDatabase extends RoomDatabase {
     public abstract UserLocationDao userLocationDao();
     public abstract SyncServerDao syncServerDao();
