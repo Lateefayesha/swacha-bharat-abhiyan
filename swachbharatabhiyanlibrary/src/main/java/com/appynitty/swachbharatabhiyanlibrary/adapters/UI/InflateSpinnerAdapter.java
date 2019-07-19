@@ -1,21 +1,11 @@
 package com.appynitty.swachbharatabhiyanlibrary.adapters.UI;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import com.appynitty.swachbharatabhiyanlibrary.R;
-import com.appynitty.swachbharatabhiyanlibrary.pojos.MenuListPojo;
-import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Ayan Dey on 25/10/18.

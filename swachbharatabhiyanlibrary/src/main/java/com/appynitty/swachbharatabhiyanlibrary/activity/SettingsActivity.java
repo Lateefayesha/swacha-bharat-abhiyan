@@ -3,11 +3,12 @@ package com.appynitty.swachbharatabhiyanlibrary.activity;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.webkit.WebView;
 import android.widget.CompoundButton;
 import android.widget.Switch;
+
+import androidx.appcompat.widget.Toolbar;
 
 import com.appynitty.swachbharatabhiyanlibrary.R;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;

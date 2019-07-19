@@ -16,7 +16,7 @@ import retrofit2.http.POST;
 public interface UserLocationWebService {
 
     @POST("api/Save/UserLocation")
-    Call<UserLocationResultPojo> saveUserLocation(@Header("appId") String appId,
+    Call<List<UserLocationResultPojo>> saveUserLocation(@Header("appId") String appId,
                                                   @Header("Content-Type") String content_type,
                                                   @Header("userId") String userId,
                                                   @Header("batteryStatus") int batteryStatus,

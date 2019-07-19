@@ -2,39 +2,23 @@ package com.appynitty.swachbharatabhiyanlibrary.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.GridView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.appynitty.swachbharatabhiyanlibrary.R;
-import com.appynitty.swachbharatabhiyanlibrary.adapters.UI.InflateHistoryAdapter;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.UI.InflateHistoryDetailsAdapter;
-import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.HistoryAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.HistoryDetailsAdapterClass;
-import com.appynitty.swachbharatabhiyanlibrary.connection.SyncServer;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.WorkHistoryDetailPojo;
-import com.appynitty.swachbharatabhiyanlibrary.pojos.WorkHistoryPojo;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 import com.appynitty.swachbharatabhiyanlibrary.utils.LocaleHelper;
-import com.appynitty.swachbharatabhiyanlibrary.utils.MyAsyncTask;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Objects;
-
-import quickutils.core.QuickUtils;
-import quickutils.core.categories.view;
 
 public class HistoryDetailsPageActivity extends AppCompatActivity {
 

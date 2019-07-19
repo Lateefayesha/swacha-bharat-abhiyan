@@ -3,38 +3,74 @@ package com.appynitty.swachbharatabhiyanlibrary.services;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.Criteria;
+import android.location.GpsStatus;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+
 import android.util.Log;
 
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.ShareLocationAdapterClass;
+import com.appynitty.swachbharatabhiyanlibrary.entity.UserLocationEntity;
+import com.appynitty.swachbharatabhiyanlibrary.pojos.UserLocationPojo;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
+import com.appynitty.swachbharatabhiyanlibrary.view_model.LocationViewModel;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
+import java.util.List;
+
 import quickutils.core.QuickUtils;
 
-public class LocationMonitoringService implements
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
-        com.google.android.gms.location.LocationListener {
+public class LocationMonitoringService implements LocationListener, GpsStatus.Listener {
 
 
     private static final String TAG = LocationMonitoringService.class.getSimpleName();
-    GoogleApiClient mLocationClient;
-    LocationRequest mLocationRequest = LocationRequest.create();
-    Context mContext;
 
-    ShareLocationAdapterClass mAdapter;
+    private Context mContext;
 
-    long updatedTime = 0;
+    private LocationViewModel mLocationViewModel;
+
+    private ShareLocationAdapterClass mAdapter;
+
+    private long updatedTime = 0;
 
 
     public LocationMonitoringService (final Context context)
     {
         mContext = context;
+
+        mLocationViewModel = ViewModelProviders.of((AppCompatActivity) AUtils.mCurrentContext).get(LocationViewModel.class);
+
+        mLocationViewModel.getUserLocationEntityList().observeForever(new Observer<List<UserLocationEntity>>() {
+            @Override
+            public void onChanged(@Nullable final List<UserLocationEntity> userLocationEntities) {
+                // Update list
+                AUtils.UserLocationPojoList.clear();
+
+                for(UserLocationEntity entity : userLocationEntities) {
+                    UserLocationPojo userLocationPojo = new UserLocationPojo();
+                    userLocationPojo.setOfflineId(String.valueOf(entity.getIndex_id()));
+                    userLocationPojo.setUserId(QuickUtils.prefs.getString(AUtils.PREFS.USER_ID, ""));
+                    userLocationPojo.setLat(entity.getLat());
+                    userLocationPojo.setLong(entity.getLong());
+                    userLocationPojo.setDatetime(entity.getDatetime());
+
+                    AUtils.UserLocationPojoList.add(userLocationPojo);
+                }
+            }
+        });
 
         mAdapter = new ShareLocationAdapterClass();
 
@@ -58,52 +94,46 @@ public class LocationMonitoringService implements
 
     public void onStartTacking(){
 
-        mLocationClient = new GoogleApiClient.Builder(mContext)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
+        LocationManager locationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
 
+        //Exception thrown when GPS or Network provider were not available on the user's device.
+        try {
+            Criteria criteria = new Criteria();
+            criteria.setAccuracy(Criteria.ACCURACY_FINE);
+            criteria.setPowerRequirement(Criteria.NO_REQUIREMENT);
+            criteria.setAltitudeRequired(false);
+            criteria.setSpeedRequired(true);
+            criteria.setCostAllowed(false);
+            criteria.setBearingRequired(false);
 
-        mLocationRequest.setInterval(AUtils.LOCATION_INTERVAL);
-        mLocationRequest.setFastestInterval(AUtils.FASTEST_LOCATION_INTERVAL);
+            //API level 9 and up
+            criteria.setHorizontalAccuracy(Criteria.ACCURACY_HIGH);
+            criteria.setVerticalAccuracy(Criteria.ACCURACY_HIGH);
 
+            int gpsFreqInDistance = 0;
 
-        int priority = LocationRequest.PRIORITY_HIGH_ACCURACY; //by default
-        //PRIORITY_BALANCED_POWER_ACCURACY, PRIORITY_LOW_POWER, PRIORITY_NO_POWER are the other priority modes
+            locationManager.addGpsStatusListener(this);
 
+            locationManager.requestLocationUpdates(AUtils.LOCATION_INTERVAL, gpsFreqInDistance, criteria, this, null);
 
-        mLocationRequest.setPriority(priority);
-        mLocationClient.connect();
+        } catch (IllegalArgumentException e) {
+            Log.e(TAG, e.getLocalizedMessage());
+        } catch (SecurityException e) {
+            Log.e(TAG, e.getLocalizedMessage());
+        } catch (RuntimeException e) {
+            Log.e(TAG, e.getLocalizedMessage());
+        }
     }
 
     public void onStopTracking()
     {
-//        LocationServices.FusedLocationApi.removeLocationUpdates(mLocationClient,this);
-        mLocationClient.disconnect();
+        LocationManager locationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
+        locationManager.removeUpdates(this);
     }
 
     /*
      * LOCATION CALLBACKS
      */
-    @Override
-    public void onConnected(Bundle dataBundle) {
-        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        LocationServices.FusedLocationApi.requestLocationUpdates(mLocationClient, mLocationRequest, this);
-    }
-
-    /*
-     * Called by Location Services if the connection to the
-     * location client drops because of an error.
-     */
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
 
 
     //to get the location change
@@ -123,7 +153,7 @@ public class LocationMonitoringService implements
                     if (updatedTime == 0) {
                         updatedTime = System.currentTimeMillis();
 
-                        mAdapter.shareLocation();
+                        sendLocation();
 
                         Log.d(TAG, "updated Time ==== " + updatedTime);
                     }
@@ -131,7 +161,7 @@ public class LocationMonitoringService implements
                     if ((updatedTime + AUtils.LOCATION_INTERVAL_MINUTES) <= System.currentTimeMillis()) {
                         updatedTime = System.currentTimeMillis();
 
-                        mAdapter.shareLocation();
+                        sendLocation();
 
                         Log.d(TAG, "updated Time ==== " + updatedTime);
                     }
@@ -141,10 +171,50 @@ public class LocationMonitoringService implements
     }
 
     @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
+    public void onStatusChanged(String provider, int status, Bundle extras) {
 
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
 
     }
 
 
+    @Override
+    public void onGpsStatusChanged(int event) {
+
+    }
+
+    private void sendLocation(){
+
+        UserLocationPojo userLocationPojo = new UserLocationPojo();
+
+        userLocationPojo.setUserId(QuickUtils.prefs.getString(AUtils.PREFS.USER_ID, ""));
+        userLocationPojo.setLat(QuickUtils.prefs.getString(AUtils.LAT, ""));
+        userLocationPojo.setLong(QuickUtils.prefs.getString(AUtils.LONG, ""));
+        userLocationPojo.setDatetime(AUtils.getSeverDateTime());
+        userLocationPojo.setOfflineId("");
+
+        if(AUtils.isInternetAvailable()) {
+
+            AUtils.UserLocationPojoList.add(userLocationPojo);
+            mAdapter.shareLocation();
+        }else {
+            UserLocationEntity entity = new UserLocationEntity();
+
+            entity.setLat(userLocationPojo.getLat());
+            entity.setLong(userLocationPojo.getLong());
+            entity.setDatetime(userLocationPojo.getDatetime());
+
+            mLocationViewModel.insert(entity);
+
+            AUtils.UserLocationPojoList.clear();
+        }
+    }
 }

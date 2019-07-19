@@ -6,8 +6,9 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.appynitty.swachbharatabhiyanlibrary.R;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.VersionDetailsAdapterClass;
@@ -42,8 +43,8 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         mAdapter = new VersionDetailsAdapterClass();
 
-//        QuickUtils.prefs.save(AUtils.APP_ID, "1");
-//        QuickUtils.prefs.save(AUtils.VERSION_CODE, 10);
+        QuickUtils.prefs.save(AUtils.APP_ID, "1");
+        QuickUtils.prefs.save(AUtils.VERSION_CODE, 11);
 
         setDefaultLanguage();
 

@@ -341,32 +341,6 @@ public class SyncServer {
         return false;
     }
 
-    public UserLocationResultPojo saveUserLocation() {
-
-        UserLocationResultPojo resultPojo = null;
-        try {
-
-            UserLocationWebService service = Connection.createService(UserLocationWebService.class, AUtils.SERVER_URL);
-
-            UserLocationPojo userLocationPojo = new UserLocationPojo();
-            userLocationPojo.setUserId(QuickUtils.prefs.getString(AUtils.PREFS.USER_ID,""));
-            userLocationPojo.setLat(QuickUtils.prefs.getString(AUtils.LAT,""));
-            userLocationPojo.setLong(QuickUtils.prefs.getString(AUtils.LONG,""));
-            userLocationPojo.setDatetime(AUtils.getSeverDateTime());
-
-            List<UserLocationPojo> userLocationPojoList = new ArrayList<>();
-
-            userLocationPojoList.add(userLocationPojo);
-            resultPojo = service.saveUserLocation(QuickUtils.prefs.getString(AUtils.APP_ID, "1"), AUtils.CONTENT_TYPE,
-                    QuickUtils.prefs.getString(AUtils.PREFS.USER_ID, null),AUtils.getBatteryStatus(), userLocationPojoList).execute().body();
-
-        } catch (Exception e) {
-
-            e.printStackTrace();
-        }
-        return resultPojo;
-    }
-
     public Boolean checkVersionUpdate(){
 
         Boolean doUpdate = false;

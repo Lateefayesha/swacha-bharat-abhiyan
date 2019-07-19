@@ -2,7 +2,6 @@ package com.appynitty.swachbharatabhiyanlibrary.adapters.UI;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,7 @@ import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 
 import java.util.List;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 /**
  * Created by Ayan Dey on 25/10/18.
