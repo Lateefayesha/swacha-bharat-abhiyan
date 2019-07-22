@@ -51,7 +51,7 @@ public class EmpAttendanceAdapterClass {
                         }
 
                         String message = null;
-                        if(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID,AUtils.DEFAULT_LANGUAGE_ID).equals(AUtils.DEFAULT_LANGUAGE_ID))
+                        if(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID,AUtils.DEFAULT_LANGUAGE_ID).equals("2"))
                         {
                             message = resultPojo.getMessageMar();
                         }
@@ -66,7 +66,7 @@ public class EmpAttendanceAdapterClass {
                             mListener.onFailureCallBack(1);
                         }
                         String message = null;
-                        if(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID,AUtils.DEFAULT_LANGUAGE_ID).equals(AUtils.DEFAULT_LANGUAGE_ID))
+                        if(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID,AUtils.DEFAULT_LANGUAGE_ID).equals("2"))
                         {
                             message = resultPojo.getMessageMar();
                         }
@@ -115,7 +115,7 @@ public class EmpAttendanceAdapterClass {
                             mListener.onSuccessCallBack(2);
                         }
                         String message = null;
-                        if(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID,AUtils.DEFAULT_LANGUAGE_ID).equals(AUtils.DEFAULT_LANGUAGE_ID))
+                        if(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID,AUtils.DEFAULT_LANGUAGE_ID).equals("2"))
                         {
                             message = resultPojo.getMessageMar();
                         }
@@ -131,7 +131,7 @@ public class EmpAttendanceAdapterClass {
                             mListener.onFailureCallBack(2);
                         }
                         String message = null;
-                        if(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID,AUtils.DEFAULT_LANGUAGE_ID).equals(AUtils.DEFAULT_LANGUAGE_ID))
+                        if(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID,AUtils.DEFAULT_LANGUAGE_ID).equals("2"))
                         {
                             message = resultPojo.getMessageMar();
                         }

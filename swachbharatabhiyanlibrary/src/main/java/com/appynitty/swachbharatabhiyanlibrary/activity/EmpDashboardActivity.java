@@ -84,6 +84,8 @@ public class EmpDashboardActivity extends AppCompatActivity implements EmpPopUpD
 
     private EmpUserDetailAdapterClass mUserDetailAdapter;
 
+    private boolean isFromAttendanceChecked = false;
+
     @Override
     protected void attachBaseContext(Context newBase) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -109,7 +111,7 @@ public class EmpDashboardActivity extends AppCompatActivity implements EmpPopUpD
     public boolean onOptionsItemSelected(MenuItem item) {
         if (R.id.action_id_card == item.getItemId()) {
             if(!AUtils.isNull(userDetailPojo)) {
-                if (!QuickUtils.prefs.getString(AUtils.LANGUAGE_ID, AUtils.DEFAULT_LANGUAGE_ID).equals(AUtils.DEFAULT_LANGUAGE_ID)) {
+                if (QuickUtils.prefs.getString(AUtils.LANGUAGE_ID, AUtils.DEFAULT_LANGUAGE_ID).equals("2")) {
                     IdCardDialog cardDialog = new IdCardDialog(mContext, userDetailPojo.getNameMar(), userDetailPojo.getUserId(), userDetailPojo.getProfileImage());
                     cardDialog.show();
                 } else {
@@ -194,10 +196,10 @@ public class EmpDashboardActivity extends AppCompatActivity implements EmpPopUpD
             AUtils.showSnackBar(this);
         }
 
-//        if(!AUtils.isNull(mCheckAttendanceAdapter) && !isFromLogin)
-//        {
-//            mCheckAttendanceAdapter.checkAttendance();
-//        }
+        if(!AUtils.isNull(mCheckAttendanceAdapter) && !isFromLogin)
+        {
+            mCheckAttendanceAdapter.checkAttendance();
+        }
         checkDutyStatus();
     }
 
@@ -250,8 +252,9 @@ public class EmpDashboardActivity extends AppCompatActivity implements EmpPopUpD
                 
                 if(isAttendanceOff)
                 {
+                    isFromAttendanceChecked = true;
                     onOutPunchSuccess();
-                    if(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID,AUtils.DEFAULT_LANGUAGE_ID).equals(AUtils.DEFAULT_LANGUAGE_ID)) {
+                    if(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID,AUtils.DEFAULT_LANGUAGE_ID).equals("2")) {
                         Toasty.info(mContext, messageMar,Toast.LENGTH_LONG).show();
                     }
                     else {
@@ -480,19 +483,23 @@ public class EmpDashboardActivity extends AppCompatActivity implements EmpPopUpD
             if (AUtils.isIsOnduty()) {
                 if (AUtils.isNetWorkAvailable(this)) {
                     try{
-                        AUtils.showConfirmationDialog(mContext, AUtils.CONFIRM_OFFDUTY_DIALOG, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                dialogInterface.dismiss();
-                                mAttendanceAdapter.MarkOutPunch();
-                            }
-                        }, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                dialogInterface.dismiss();
-                                markAttendance.setChecked(true);
-                            }
-                        });
+                        if(!isFromAttendanceChecked){
+                            AUtils.showConfirmationDialog(mContext, AUtils.CONFIRM_OFFDUTY_DIALOG, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.dismiss();
+                                    mAttendanceAdapter.MarkOutPunch();
+                                }
+                            }, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.dismiss();
+                                    markAttendance.setChecked(true);
+                                }
+                            });
+                        }else{
+                            isFromAttendanceChecked = false;
+                        }
                     }catch (Exception e){
                         e.printStackTrace();
                         markAttendance.setChecked(true);

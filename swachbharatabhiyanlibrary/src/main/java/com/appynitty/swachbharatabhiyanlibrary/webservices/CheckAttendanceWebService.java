@@ -13,5 +13,6 @@ public interface CheckAttendanceWebService {
 
     @GET("api/Get/IsAttendence")
     Call<CheckAttendancePojo> CheckAttendance(@Header("appId") String appId,
-                                                    @Header("UserId") String userId);
+                                              @Header("UserId") String userId,
+                                              @Header("typeId") String typeId);
 }

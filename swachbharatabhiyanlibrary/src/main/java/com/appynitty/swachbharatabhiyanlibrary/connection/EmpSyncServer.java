@@ -223,7 +223,8 @@ public class EmpSyncServer {
 
         try {
             checkAttendancePojo = checkAttendanceWebService.CheckAttendance(QuickUtils.prefs.getString(AUtils.APP_ID, ""),
-                    QuickUtils.prefs.getString(AUtils.PREFS.USER_ID, "")).execute().body();
+                    QuickUtils.prefs.getString(AUtils.PREFS.USER_ID, ""),
+                    QuickUtils.prefs.getString(AUtils.PREFS.USER_TYPE_ID, "")).execute().body();
 
         } catch (Exception e) {
 

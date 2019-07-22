@@ -127,6 +127,8 @@
     <string name="hint_mobile">मोबाइल नंबर</string>
     <string name="hint_address">पत्ता</string>
 
+    <string name="invalid_qr_error">अवैध स्कॅनिफाय</string>
+
     <string name="title_activity_house_registration_form_page">घर तपशील सादर करा</string>
     <string name="title_activity_point_registration_form_page">कचरा पॉईंट तपशील सादर करा</string>
     <string name="title_activity_dump_registration_form_page">डंप यार्ड तपशील सादर करा</string>
