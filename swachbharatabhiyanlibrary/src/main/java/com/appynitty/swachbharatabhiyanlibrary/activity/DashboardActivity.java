@@ -118,7 +118,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
     public boolean onOptionsItemSelected(MenuItem item) {
         if (R.id.action_id_card == item.getItemId()) {
             if(!AUtils.isNull(userDetailPojo)) {
-                if (!QuickUtils.prefs.getString(AUtils.LANGUAGE_ID, AUtils.DEFAULT_LANGUAGE_ID).equals(AUtils.DEFAULT_LANGUAGE_ID)) {
+                if (QuickUtils.prefs.getString(AUtils.LANGUAGE_ID, AUtils.DEFAULT_LANGUAGE_ID).equals("2")) {
                     IdCardDialog cardDialog = new IdCardDialog(mContext, userDetailPojo.getNameMar(), userDetailPojo.getUserId(), userDetailPojo.getProfileImage());
                     cardDialog.show();
                 } else {
@@ -290,7 +290,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
                 {
                     isFromAttendanceChecked = true;
                     onOutPunchSuccess();
-                    if(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID,AUtils.DEFAULT_LANGUAGE_ID).equals(AUtils.DEFAULT_LANGUAGE_ID)) {
+                    if(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID,AUtils.DEFAULT_LANGUAGE_ID).equals("2")) {
                         Toasty.info(mContext, messageMar,Toast.LENGTH_LONG).show();
                     }
                     else {
@@ -631,7 +631,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         for (int i = 0; i < vehicleTypePojoList.size(); i++) {
             if(QuickUtils.prefs.getString(AUtils.VEHICLE_ID,"0").equals(vehicleTypePojoList.get(i).getVtId()))
             {
-                if(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID,AUtils.DEFAULT_LANGUAGE_ID).equals(AUtils.DEFAULT_LANGUAGE_ID))
+                if(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID,AUtils.DEFAULT_LANGUAGE_ID).equals("2"))
                     vehicleType = vehicleTypePojoList.get(i).getDescriptionMar();
                 else
                     vehicleType = vehicleTypePojoList.get(i).getDescription();
@@ -733,7 +733,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
 
                 if(QuickUtils.prefs.getString(AUtils.VEHICLE_ID,"").equals(vehicleTypePojoList.get(i).getVtId()))
                 {
-                    if(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID,AUtils.DEFAULT_LANGUAGE_ID).equals(AUtils.DEFAULT_LANGUAGE_ID))
+                    if(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID,AUtils.DEFAULT_LANGUAGE_ID).equals("2"))
                         vehicleName = vehicleTypePojoList.get(i).getDescriptionMar();
                     else
                         vehicleName = vehicleTypePojoList.get(i).getDescription();

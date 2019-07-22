@@ -509,8 +509,12 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
     }
 
     private void showActionPopUp(String id){
-        chooseActionPopUp.setData(id);
-        chooseActionPopUp.show();
+        
+        if(validSubmitId(id.toLowerCase())){
+            chooseActionPopUp.setData(id);
+            chooseActionPopUp.show();
+        }else
+            Toasty.error(mContext, getResources().getString(R.string.invalid_qr_error)).show();
     }
 
     private void submitOnSkip(String id){

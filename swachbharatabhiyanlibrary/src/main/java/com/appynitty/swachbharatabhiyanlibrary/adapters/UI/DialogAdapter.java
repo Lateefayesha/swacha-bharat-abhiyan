@@ -70,7 +70,7 @@ public class DialogAdapter extends BaseAdapter {
 
                 VehicleTypePojo vehicleTypePojo = (VehicleTypePojo) mMapList.get(position);
 
-                if(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID, AUtils.DEFAULT_LANGUAGE_ID).equals(AUtils.DEFAULT_LANGUAGE_ID))
+                if(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID, AUtils.DEFAULT_LANGUAGE_ID).equals("2"))
                 {
                     holder.mDataText.setText(vehicleTypePojo.getDescriptionMar());
                     //holder.mDataText.setTag(Integer.parseInt(vehicleTypePojo.getVtId()));

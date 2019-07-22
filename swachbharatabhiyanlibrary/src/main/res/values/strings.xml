@@ -150,6 +150,8 @@
 
     <string name="restrict_two_decimal" translatable="false">%.2f</string>
 
+    <string name="invalid_qr_error">Invalid Scaniffy</string>
+
     <string name="title_activity_house_registration_form_page">Add House Details</string>
     <string name="title_activity_point_registration_form_page">Add Garbage Point Details</string>
     <string name="title_activity_dump_registration_form_page">Add Dump Yard Details</string>
