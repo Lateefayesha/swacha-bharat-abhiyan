@@ -15,20 +15,8 @@ public class SyncServerEntity {
     @ColumnInfo(name = "_id")
     private int index_id;
 
-    @ColumnInfo(name = "image2")
-    private String image2;
-
-    @ColumnInfo(name = "image1")
-    private String image1;
-
-    @ColumnInfo(name = "AfterImage")
-    private String AfterImage;
-
-    @ColumnInfo(name = "beforeImage")
-    private String beforeImage;
-
-    @ColumnInfo(name = "id")
-    private String id;
+    @ColumnInfo(name = "RefId")
+    private String ref_id;
 
     @ColumnInfo(name = "comment")
     private String comment;
@@ -46,7 +34,16 @@ public class SyncServerEntity {
     private double weightTotalWet;
 
     @ColumnInfo(name = "gcType")
-    private double gcType;
+    private int gcType;
+
+    @ColumnInfo(name = "Long")
+    private String Long;
+
+    @ColumnInfo(name = "vhicleNumber")
+    private String vehicleNumber;
+
+    @ColumnInfo(name = "Lat")
+    private String Lat;
 
     public int getIndex_id() {
         return index_id;
@@ -56,44 +53,12 @@ public class SyncServerEntity {
         this.index_id = index_id;
     }
 
-    public String getImage2() {
-        return image2;
+    public String getRef_id() {
+        return ref_id;
     }
 
-    public void setImage2(String image2) {
-        this.image2 = image2;
-    }
-
-    public String getImage1() {
-        return image1;
-    }
-
-    public void setImage1(String image1) {
-        this.image1 = image1;
-    }
-
-    public String getAfterImage() {
-        return AfterImage;
-    }
-
-    public void setAfterImage(String afterImage) {
-        AfterImage = afterImage;
-    }
-
-    public String getBeforeImage() {
-        return beforeImage;
-    }
-
-    public void setBeforeImage(String beforeImage) {
-        this.beforeImage = beforeImage;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
+    public void setRef_id(String ref_id) {
+        this.ref_id = ref_id;
     }
 
     public String getComment() {
@@ -136,28 +101,51 @@ public class SyncServerEntity {
         this.weightTotalWet = weightTotalWet;
     }
 
-    public double getGcType() {
+    public int getGcType() {
         return gcType;
     }
 
-    public void setGcType(double gcType) {
+    public void setGcType(int gcType) {
         this.gcType = gcType;
+    }
+
+    public String getLong() {
+        return Long;
+    }
+
+    public void setLong(String aLong) {
+        Long = aLong;
+    }
+
+    public String getVehicleNumber() {
+        return vehicleNumber;
+    }
+
+    public void setVehicleNumber(String vehicleNumber) {
+        this.vehicleNumber = vehicleNumber;
+    }
+
+    public String getLat() {
+        return Lat;
+    }
+
+    public void setLat(String lat) {
+        Lat = lat;
     }
 
     @Override
     public String toString() {
         return "SyncServerEntity{"
                 + "index_id=" + index_id + '\''
-                + ", image2='" + image2 + '\''
-                + ", image1='" + image1 + '\''
-                + ", AfterImage='" + AfterImage + '\''
-                + ", beforeImage='" + beforeImage + '\''
-                + ", id='" + id + '\''
+                + ", ref_id='" + ref_id + '\''
                 + ", comment='" + comment + '\''
                 + ", garbageType=" + garbageType + '\''
                 + ", weightTotal=" + weightTotal + '\''
                 + ", weightTotalDry=" + weightTotalDry + '\''
                 + ", weightTotalWet=" + weightTotalWet + '\''
-                + ", gcType=" + gcType + '}';
+                + ", gcType=" + gcType + '\''
+                + ", Long='" + Long + '\''
+                + ", vehicleNumber='" + vehicleNumber + '\''
+                + ", Lat='" + Lat + '}';
     }
 }

@@ -31,6 +31,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.appynitty.swachbharatabhiyanlibrary.R;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.UI.AutocompleteContainSearch;
@@ -40,6 +42,7 @@ import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.CollectionAre
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.DumpYardAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.GarbageCollectionAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.dialogs.GarbageTypePopUp;
+import com.appynitty.swachbharatabhiyanlibrary.entity.SyncServerEntity;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.CollectionAreaHousePojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.CollectionAreaPointPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.CollectionAreaPojo;
@@ -47,8 +50,10 @@ import com.appynitty.swachbharatabhiyanlibrary.pojos.CollectionDumpYardPointPojo
 import com.appynitty.swachbharatabhiyanlibrary.pojos.GarbageCollectionPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.GcResultPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.ImagePojo;
+import com.appynitty.swachbharatabhiyanlibrary.pojos.OfflineGarbageColectionPojo;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 import com.appynitty.swachbharatabhiyanlibrary.utils.LocaleHelper;
+import com.appynitty.swachbharatabhiyanlibrary.view_model.SyncServerViewModel;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -86,9 +91,6 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
     private Boolean isScanQr;
     private HashMap<String, String> areaHash;
     private HashMap<String, String> idHash;
-    private List<CollectionAreaPojo> areaPojoList;
-    private List<CollectionAreaHousePojo> hpPojoList;
-    private List<CollectionAreaPointPojo> gpPojoList;
 
     private AreaHouseAdapterClass mHpAdapter;
     private AreaPointAdapterClass mGpAdapter;
@@ -97,6 +99,8 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
     private GarbageCollectionAdapterClass mAdapter;
 
     GarbageCollectionPojo garbageCollectionPojo;
+
+    private SyncServerViewModel syncServerViewModel;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -225,6 +229,35 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+
+        AUtils.mCurrentContext = mContext;
+
+        if(requestCode == DUMP_YARD_DETAILS_REQUEST_CODE && resultCode == RESULT_OK){
+
+            try{
+                HashMap<String, String> map = (HashMap<String, String>) data.getSerializableExtra(AUtils.DUMPDATA.dumpDataMap);
+
+                if(data.hasExtra(AUtils.REQUEST_CODE)){
+                    Type type = new TypeToken<ImagePojo>(){}.getType();
+                    imagePojo = new Gson().fromJson(QuickUtils.prefs.getString(AUtils.PREFS.IMAGE_POJO, null), type);
+
+                    if(!AUtils.isNull(imagePojo)){
+                        isActivityData = true;
+                    }
+                }
+
+                startSubmitQRAsyncTask(map);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
     private void initComponents() {
         generateId();
         registerEvents();
@@ -265,7 +298,6 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
         contentView = findViewById(R.id.scanner_view);
 
         imagePojo = null;
-        areaPojoList = null;
         isActivityData = false;
         isScanQr = true;
 
@@ -276,6 +308,8 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
         contentFrame.addView(scannerView);
 
         initToolbar();
+
+        syncServerViewModel = ViewModelProviders.of((AppCompatActivity) AUtils.mCurrentContext).get(SyncServerViewModel.class);
     }
 
     protected void initToolbar(){
@@ -523,6 +557,32 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
                 Toasty.error(mContext, mContext.getString(R.string.serverError), Toast.LENGTH_SHORT).show();
             }
         });
+
+        syncServerViewModel.getSysncServerEntityList().observeForever(new Observer<List<SyncServerEntity>>() {
+            @Override
+            public void onChanged(@Nullable final List<SyncServerEntity> userLocationEntities) {
+                // Update list
+                AUtils.syncGarbageCollectionPojoList.clear();
+
+                for(SyncServerEntity entity : userLocationEntities) {
+                    OfflineGarbageColectionPojo syncGarbageCollectionPojo = new OfflineGarbageColectionPojo();
+                    syncGarbageCollectionPojo.setOfflineID(String.valueOf(entity.getIndex_id()));
+                    syncGarbageCollectionPojo.setUserId(QuickUtils.prefs.getString(AUtils.PREFS.USER_ID, ""));
+                    syncGarbageCollectionPojo.setLat(entity.getLat());
+                    syncGarbageCollectionPojo.setLong(entity.getLong());
+                    syncGarbageCollectionPojo.setNote(entity.getComment());
+                    syncGarbageCollectionPojo.setTotalGcWeight(String.valueOf(entity.getWeightTotal()));
+                    syncGarbageCollectionPojo.setTotalDryWeight(String.valueOf(entity.getWeightTotalDry()));
+                    syncGarbageCollectionPojo.setTotalWetWeight(String.valueOf(entity.getWeightTotalWet()));
+                    syncGarbageCollectionPojo.setReferenceID(entity.getRef_id());
+                    syncGarbageCollectionPojo.setGcType(String.valueOf(entity.getGcType()));
+                    syncGarbageCollectionPojo.setVehicleNumber(entity.getVehicleNumber());
+                    syncGarbageCollectionPojo.setGarbageType(String.valueOf(entity.getGarbageType()));
+
+                    AUtils.syncGarbageCollectionPojoList.add(syncGarbageCollectionPojo);
+                }
+            }
+        });
     }
 
     protected void initData() {
@@ -733,14 +793,21 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
 
         stopCamera();
         setGarbageCollectionPojo(houseNo,garbageType,comment);
-        mAdapter.submitQR(garbageCollectionPojo);
+        if(AUtils.isInternetAvailable())
+            mAdapter.submitQR(garbageCollectionPojo);
+        else
+            insertToDB(garbageCollectionPojo);
     }
 
     private void startSubmitQRAsyncTask(HashMap<String, String> map){
 
         stopCamera();
         setGarbageCollectionPojo(map);
-        mAdapter.submitQR(garbageCollectionPojo);
+        if(AUtils.isInternetAvailable()) {
+            mAdapter.submitQR(garbageCollectionPojo);
+        } else {
+            insertToDB(garbageCollectionPojo);
+        }
     }
 
     private void getDumpYardDetails(final String houseNo){
@@ -748,35 +815,6 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
         Intent intent = new Intent(mContext, DumpYardWeightActivity.class);
         intent.putExtra(AUtils.dumpYardId, houseNo);
         startActivityForResult(intent, DUMP_YARD_DETAILS_REQUEST_CODE);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-
-        AUtils.mCurrentContext = mContext;
-
-        if(requestCode == DUMP_YARD_DETAILS_REQUEST_CODE && resultCode == RESULT_OK){
-
-            try{
-                HashMap<String, String> map = (HashMap<String, String>) data.getSerializableExtra(AUtils.DUMPDATA.dumpDataMap);
-
-                if(data.hasExtra(AUtils.REQUEST_CODE)){
-                    Type type = new TypeToken<ImagePojo>(){}.getType();
-                    imagePojo = new Gson().fromJson(QuickUtils.prefs.getString(AUtils.PREFS.IMAGE_POJO, null), type);
-
-                    if(!AUtils.isNull(imagePojo)){
-                        isActivityData = true;
-                    }
-                }
-
-                startSubmitQRAsyncTask(map);
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-
-        }
-
-        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void inflateAreaAutoComplete(List<CollectionAreaPojo> pojoList){
@@ -919,5 +957,64 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
 
     private GarbageCollectionPojo getGarbageCollectionPojo() {
         return garbageCollectionPojo;
+    }
+
+    private void insertToDB(GarbageCollectionPojo garbageCollectionPojo) {
+
+        SyncServerEntity entity = new SyncServerEntity();
+
+        entity.setRef_id(garbageCollectionPojo.getId());
+        if(garbageCollectionPojo.getId().substring(0, 2).matches("^[HhPp]+$")){
+            entity.setGcType(1);
+        }else if(garbageCollectionPojo.getId().substring(0, 2).matches("^[GgPp]+$")){
+            entity.setGcType(2);
+        }else if(garbageCollectionPojo.getId().substring(0, 2).matches("^[DdYy]+$")){
+            entity.setGcType(3);
+        }
+        entity.setComment(garbageCollectionPojo.getComment());
+        entity.setGarbageType(garbageCollectionPojo.getGarbageType());
+        entity.setWeightTotal(garbageCollectionPojo.getWeightTotal());
+        entity.setWeightTotalDry(garbageCollectionPojo.getWeightTotalDry());
+        entity.setWeightTotalWet(garbageCollectionPojo.getWeightTotalWet());
+        entity.setVehicleNumber(QuickUtils.prefs.getString(AUtils.VEHICLE_NO,""));
+        entity.setLong(QuickUtils.prefs.getString(AUtils.LONG,""));
+        entity.setLat(QuickUtils.prefs.getString(AUtils.LAT,""));
+
+        syncServerViewModel.insert(entity);
+
+        showOfflinePopup(getGarbageCollectionPojo().getId(), garbageCollectionPojo.getId());
+    }
+
+    private void showOfflinePopup(String id, String pojo){
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setCancelable(false);
+        View view = View.inflate(mContext, R.layout.layout_qr_result, null);
+        builder.setView(view);
+        final AlertDialog dialog = builder.create();
+        if(!dialog.isShowing()){
+            dialog.show();
+        }
+
+        TextView ownerName = view.findViewById(R.id.house_owner_name);
+        Button doneBtn = view.findViewById(R.id.done_btn);
+
+        ownerName.setText(pojo);
+
+        doneBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.cancel();
+            }
+        });
+
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                restartPreview();
+                finish();
+            }
+        });
+
     }
 }

@@ -42,7 +42,11 @@ public class ShareLocationAdapterClass {
 
             UserLocationWebService service = Connection.createService(UserLocationWebService.class, AUtils.SERVER_URL);
 
-            service.saveUserLocation(QuickUtils.prefs.getString(AUtils.APP_ID, "1"), AUtils.CONTENT_TYPE, QuickUtils.prefs.getString(AUtils.PREFS.USER_ID, null), AUtils.getBatteryStatus(), AUtils.UserLocationPojoList).enqueue(new Callback<List<UserLocationResultPojo>>() {
+            service.saveUserLocation(QuickUtils.prefs.getString(AUtils.APP_ID, "1"),
+                    AUtils.CONTENT_TYPE,
+                    QuickUtils.prefs.getString(AUtils.PREFS.USER_ID, null),
+                    AUtils.getBatteryStatus(), AUtils.UserLocationPojoList)
+                    .enqueue(new Callback<List<UserLocationResultPojo>>() {
                 @Override
                 public void onResponse(Call<List<UserLocationResultPojo>> call, Response<List<UserLocationResultPojo>> response) {
 

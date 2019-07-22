@@ -33,6 +33,8 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.appynitty.swachbharatabhiyanlibrary.R;
+import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.SyncServerAdapterClass;
+import com.appynitty.swachbharatabhiyanlibrary.pojos.OfflineGarbageColectionPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.UserLocationPojo;
 import com.google.android.material.snackbar.Snackbar;
 import com.mithsoft.lib.components.Toasty;
@@ -153,6 +155,9 @@ public class AUtils extends MsUtils {
     public static final String COLLECTION_TABLE_NAME = "gc_table";
 
     public static List<UserLocationPojo> UserLocationPojoList= new ArrayList<>();
+    public static List<OfflineGarbageColectionPojo> syncGarbageCollectionPojoList = new ArrayList<>();
+
+    private static SyncServerAdapterClass syncServer;
 
     public static boolean isIsOnduty() {
         return QuickUtils.prefs.getBoolean(PREFS.IS_ON_DUTY, false);
@@ -693,6 +698,9 @@ public class AUtils extends MsUtils {
         if(mSnackbar != null && mSnackbar.isShown())
         {
             mSnackbar.dismiss();
+
+            syncServer = new SyncServerAdapterClass();
+            syncServer.syncServer();
         }
     }
 

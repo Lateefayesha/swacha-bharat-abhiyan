@@ -69,8 +69,8 @@ public interface GarbageCollectionWebService {
                                               @Part("totalWetWeight") RequestBody weightWet);
 
     @POST("api/Save/GarbageCollectionOfflineUpload")
-    Call<OfflineGcResultPojo> saveGarbageCollectionOffline(@Header("appId") String appId,
-                                                                        @Header("batteryStatus") int batteryStatus,
-                                                                        @Header("Content-Type") String contentType,
-                                                                        @Body List<OfflineGarbageColectionPojo> userLocationPojoList);
+    Call<List<OfflineGcResultPojo>> saveGarbageCollectionOffline(@Header("appId") String appId,
+                                                                 @Header("batteryStatus") int batteryStatus,
+                                                                 @Header("Content-Type") String contentType,
+                                                                 @Body List<OfflineGarbageColectionPojo> userLocationPojoList);
 }
