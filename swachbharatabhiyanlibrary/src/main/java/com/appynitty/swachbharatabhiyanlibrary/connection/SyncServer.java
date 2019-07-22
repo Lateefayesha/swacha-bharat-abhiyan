@@ -67,7 +67,8 @@ public class SyncServer {
         try {
 
             LoginWebService service = Connection.createService(LoginWebService.class, AUtils.SERVER_URL);
-            resultPojo = service.saveLoginDetails(QuickUtils.prefs.getString(AUtils.APP_ID, "1"),AUtils.CONTENT_TYPE,
+            resultPojo = service.saveLoginDetails(QuickUtils.prefs.getString(AUtils.APP_ID, "")
+                    ,AUtils.CONTENT_TYPE,
                     loginPojo).execute().body();
 
         } catch (Exception e) {

@@ -45,6 +45,9 @@ public class SyncServerEntity {
     @ColumnInfo(name = "Lat")
     private String Lat;
 
+    @ColumnInfo(name = "gcDate")
+    private String gcDate;
+
     public int getIndex_id() {
         return index_id;
     }
@@ -133,6 +136,14 @@ public class SyncServerEntity {
         Lat = lat;
     }
 
+    public String getGcDate() {
+        return gcDate;
+    }
+
+    public void setGcDate(String gcDate) {
+        this.gcDate = gcDate;
+    }
+
     @Override
     public String toString() {
         return "SyncServerEntity{"
@@ -146,6 +157,7 @@ public class SyncServerEntity {
                 + ", gcType=" + gcType + '\''
                 + ", Long='" + Long + '\''
                 + ", vehicleNumber='" + vehicleNumber + '\''
+                + ", gcDate='" + gcDate + '\''
                 + ", Lat='" + Lat + '}';
     }
 }

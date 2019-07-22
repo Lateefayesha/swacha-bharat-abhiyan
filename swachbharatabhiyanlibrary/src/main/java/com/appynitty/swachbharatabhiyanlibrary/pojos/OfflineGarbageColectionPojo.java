@@ -26,6 +26,8 @@ public class OfflineGarbageColectionPojo {
 
     private String Lat;
 
+    private String gcDate;
+
     public String getNote() {
         return note;
     }
@@ -120,6 +122,14 @@ public class OfflineGarbageColectionPojo {
 
     public void setLat(String lat) {
         Lat = lat;
+    }
+
+    public String getGcDate() {
+        return gcDate;
+    }
+
+    public void setGcDate(String gcDate) {
+        this.gcDate = gcDate;
     }
 
     @Override

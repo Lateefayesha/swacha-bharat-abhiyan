@@ -578,6 +578,7 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
                     syncGarbageCollectionPojo.setGcType(String.valueOf(entity.getGcType()));
                     syncGarbageCollectionPojo.setVehicleNumber(entity.getVehicleNumber());
                     syncGarbageCollectionPojo.setGarbageType(String.valueOf(entity.getGarbageType()));
+                    syncGarbageCollectionPojo.setGcDate(String.valueOf(entity.getGcDate()));
 
                     AUtils.syncGarbageCollectionPojoList.add(syncGarbageCollectionPojo);
                 }
@@ -979,6 +980,7 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
         entity.setVehicleNumber(QuickUtils.prefs.getString(AUtils.VEHICLE_NO,""));
         entity.setLong(QuickUtils.prefs.getString(AUtils.LONG,""));
         entity.setLat(QuickUtils.prefs.getString(AUtils.LAT,""));
+        entity.setGcDate(AUtils.getSeverDateTime());
 
         syncServerViewModel.insert(entity);
 
