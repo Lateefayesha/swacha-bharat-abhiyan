@@ -12,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.appynitty.swachbharatabhiyanlibrary.R;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.VersionDetailsAdapterClass;
-import com.appynitty.swachbharatabhiyanlibrary.connection.SyncServer;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 import com.appynitty.swachbharatabhiyanlibrary.utils.LocaleHelper;
 import com.appynitty.swachbharatabhiyanlibrary.utils.MyAsyncTask;
@@ -85,7 +84,6 @@ public class SplashScreenActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        finish();
     }
 
     @Override
@@ -100,6 +98,8 @@ public class SplashScreenActivity extends AppCompatActivity {
         }
     }
 
+
+
     private void setDefaultLanguage() {
         AUtils.changeLanguage(SplashScreenActivity.this, Integer.parseInt(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID, AUtils.DEFAULT_LANGUAGE_ID)));
     }
@@ -110,10 +110,14 @@ public class SplashScreenActivity extends AppCompatActivity {
             @Override
             public void run() {
 
-                if(QuickUtils.prefs.getString(AUtils.PREFS.USER_TYPE_ID, "0").equals("1"))
+                if(QuickUtils.prefs.getString(AUtils.PREFS.USER_TYPE_ID, "0").equals("1")) {
                     startActivity(new Intent(SplashScreenActivity.this, EmpDashboardActivity.class));
-                else
+                    SplashScreenActivity.this.finish();
+                } else {
                     startActivity(new Intent(SplashScreenActivity.this, DashboardActivity.class));
+                    SplashScreenActivity.this.finish();
+                }
+
 
             }
         }, AUtils.SPLASH_SCREEN_TIME);
@@ -125,7 +129,10 @@ public class SplashScreenActivity extends AppCompatActivity {
             public void run() {
 
                 startActivity(new Intent(SplashScreenActivity.this, LoginActivity.class));
+                SplashScreenActivity.this.finish();
             }
         }, AUtils.SPLASH_SCREEN_TIME);
+
+
     }
 }
