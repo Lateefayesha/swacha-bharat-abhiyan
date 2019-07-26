@@ -53,6 +53,7 @@ public class EmpAddLocationDetailsActivity extends AppCompatActivity {
     private String referenceId, submitType, zoneId, wardId, areaId;
 
     private HashMap<String, String> zoneMap, zoneWardMap, areaMap;
+    ArrayList<String> nameListZone, nameListWardZone, nameListArea;
 
     private EmpWardZoneAreaAdapterClass mAdapterClass;
     private EmpQrLocationAdapterClass empQrLocationAdapterClass;
@@ -95,6 +96,10 @@ public class EmpAddLocationDetailsActivity extends AppCompatActivity {
         zoneMap = new HashMap<>();
         zoneWardMap = new HashMap<>();
         areaMap = new HashMap<>();
+
+        nameListZone = new ArrayList<>();
+        nameListWardZone = new ArrayList<>();
+        nameListArea = new ArrayList<>();
 
         TextInputLayout mobileLayout = findViewById(R.id.contact_hint);
         TextInputLayout houseIdLayout = findViewById(R.id.house_id_hint);
@@ -291,63 +296,60 @@ public class EmpAddLocationDetailsActivity extends AppCompatActivity {
     }
 
     private void initZone(List<ZoneWardAreaMasterPojo> list){
-        ArrayList<String> nameList = new ArrayList<>();
 
-        nameList.add("--Select Zone--");
+        nameListZone.add("--Select Zone--");
         for(ZoneWardAreaMasterPojo pojo: list){
-            nameList.add(pojo.getName());
+            nameListZone.add(pojo.getName());
             zoneMap.put(pojo.getName(), pojo.getzoneId());
             zoneMap.put(pojo.getzoneId(), pojo.getName());
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, nameList);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, nameListZone);
         spinnerZone.setAdapter(adapter);
 
         if(!AUtils.isNull(zoneId) && !zoneId.isEmpty()){
-            if(zoneMap.containsValue(zoneId) && nameList.indexOf(zoneMap.get(zoneId)) > 0){
-                spinnerZone.setSelection(nameList.indexOf(zoneMap.get(zoneId)));
+            if(zoneMap.containsValue(zoneId) && nameListZone.indexOf(zoneMap.get(zoneId)) > 0){
+                spinnerZone.setSelection(nameListZone.indexOf(zoneMap.get(zoneId)));
             }
         }
     }
 
     private void initWardZone(List<ZoneWardAreaMasterPojo> list){
-        ArrayList<String> nameList = new ArrayList<>();
 
-        nameList.add("--Select Ward No.--");
+        nameListWardZone.add("--Select Ward No.--");
         for(ZoneWardAreaMasterPojo pojo: list){
             String name = pojo.getWardNo()+"("+pojo.getZone()+")";
-            nameList.add(name);
+            nameListWardZone.add(name);
             zoneWardMap.put(name, pojo.getWardID());
             zoneWardMap.put(pojo.getWardID(), name);
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, nameList);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, nameListWardZone);
         spinnerWard.setAdapter(adapter);
 
         if(!AUtils.isNull(wardId) && !wardId.isEmpty()){
-            if(zoneWardMap.containsValue(wardId) && nameList.indexOf(zoneWardMap.get(wardId)) > 0){
-                spinnerWard.setSelection(nameList.indexOf(zoneWardMap.get(wardId)));
+            if(zoneWardMap.containsValue(wardId) && nameListWardZone.indexOf(zoneWardMap.get(wardId)) > 0){
+                spinnerWard.setSelection(nameListWardZone.indexOf(zoneWardMap.get(wardId)));
             }
         }
     }
 
     private void initArea(List<ZoneWardAreaMasterPojo> list){
-        ArrayList<String> nameList = new ArrayList<>();
 
-        nameList.add("--Select Area--");
+        nameListArea.add("--Select Area--");
         for(ZoneWardAreaMasterPojo pojo: list){
             String name = pojo.getArea()+"("+pojo.getAreaMar()+")";
-            nameList.add(name);
+            nameListArea.add(name);
             areaMap.put(name, pojo.getId());
             areaMap.put(pojo.getId(), name);
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, nameList);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, nameListArea);
         spinnerArea.setAdapter(adapter);
 
         if(!AUtils.isNull(areaId) && !areaId.isEmpty()){
-            if(areaMap.containsValue(areaId) && nameList.indexOf(areaMap.get(areaId)) > 0){
-                spinnerArea.setSelection(nameList.indexOf(areaMap.get(areaId)));
+            if(areaMap.containsValue(areaId) && nameListArea.indexOf(areaMap.get(areaId)) > 0){
+                spinnerArea.setSelection(nameListArea.indexOf(areaMap.get(areaId)));
             }
         }
     }
@@ -362,8 +364,20 @@ public class EmpAddLocationDetailsActivity extends AppCompatActivity {
             zoneId = pojo.getZoneId();
             areaId = pojo.getAreaId();
 
-            if(!submitType.equals("1") && !AUtils.isNull(pojo.getHouseId()) && pojo.getHouseId().length() > 0){
+            if(submitType.equals("1") && !AUtils.isNull(pojo.getHouseId()) && pojo.getHouseId().length() > 0){
                 txtHouseNo.setText(pojo.getHouseId());
+            }
+
+            if(zoneMap.size() > 0 && zoneMap.containsValue(zoneId) && nameListZone.indexOf(zoneMap.get(zoneId)) > 0){
+                spinnerZone.setSelection(nameListZone.indexOf(zoneMap.get(zoneId)));
+            }
+
+            if(zoneWardMap.size() > 0 && zoneWardMap.containsValue(wardId) && nameListWardZone.indexOf(zoneWardMap.get(wardId)) > 0){
+                spinnerWard.setSelection(nameListWardZone.indexOf(zoneWardMap.get(wardId)));
+            }
+
+            if(areaMap.size() > 0 && areaMap.containsValue(areaId) && nameListArea.indexOf(areaMap.get(areaId)) > 0){
+                spinnerArea.setSelection(nameListArea.indexOf(areaMap.get(areaId)));
             }
 
         }else{
