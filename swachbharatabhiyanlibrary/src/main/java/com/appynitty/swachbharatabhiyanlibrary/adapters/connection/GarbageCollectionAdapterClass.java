@@ -47,7 +47,7 @@ public class GarbageCollectionAdapterClass {
                 if(!AUtils.isNull(getResultPojo())){
                     mListener.onSuccessCallBack();
                 }else{
-                    mListener.onFailureCallBack();
+                    mListener.onFailureCallBack(garbageCollectionPojo);
                 }
             }
 
@@ -60,6 +60,6 @@ public class GarbageCollectionAdapterClass {
 
     public interface GarbageCollectionListener {
         void onSuccessCallBack();
-        void onFailureCallBack();
+        void onFailureCallBack(GarbageCollectionPojo garbageCollectionPojo);
     }
 }

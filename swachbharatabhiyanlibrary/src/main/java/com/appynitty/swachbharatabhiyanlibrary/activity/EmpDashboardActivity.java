@@ -28,6 +28,7 @@ import com.appynitty.swachbharatabhiyanlibrary.R;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.UI.EmpInflateMenuAdapter;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.EmpAttendanceAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.EmpCheckAttendanceAdapterClass;
+import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.EmpSyncServerAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.EmpUserDetailAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.custom_component.GlideCircleTransformation;
 import com.appynitty.swachbharatabhiyanlibrary.dialogs.EmpPopUpDialog;
@@ -200,6 +201,10 @@ public class EmpDashboardActivity extends AppCompatActivity implements EmpPopUpD
         {
             mCheckAttendanceAdapter.checkAttendance();
         }
+
+        EmpSyncServerAdapterClass empSyncServer = new EmpSyncServerAdapterClass();
+        empSyncServer.syncServer();
+
         checkDutyStatus();
     }
 

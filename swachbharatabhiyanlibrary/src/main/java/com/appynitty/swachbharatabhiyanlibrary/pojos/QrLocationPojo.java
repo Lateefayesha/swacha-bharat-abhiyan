@@ -19,6 +19,8 @@ public class QrLocationPojo {
     private String houseNumber;
     private String userId;
     private String mobileno;
+    private String date;
+    private String OfflineID;
 
     public String getAppId() {
         return appId;
@@ -132,6 +134,22 @@ public class QrLocationPojo {
         this.mobileno = mobileno;
     }
 
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getOfflineID() {
+        return OfflineID;
+    }
+
+    public void setOfflineID(String offlineID) {
+        OfflineID = offlineID;
+    }
+
     @Override
     public String toString() {
         return "QrLocationPojo{" +
@@ -149,6 +167,8 @@ public class QrLocationPojo {
                 ", houseNumber='" + houseNumber + '\'' +
                 ", userId='" + userId + '\'' +
                 ", mobileno='" + mobileno + '\'' +
+                ", date='" + date + '\'' +
+                ", OfflineID='" + OfflineID + '\'' +
                 '}';
     }
 }

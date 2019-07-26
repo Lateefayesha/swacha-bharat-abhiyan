@@ -47,8 +47,7 @@ public class LocationMonitoringService implements LocationListener, GpsStatus.Li
     private long updatedTime = 0;
 
 
-    public LocationMonitoringService (final Context context)
-    {
+    public LocationMonitoringService (final Context context) {
         mContext = context;
 
         mLocationViewModel = ViewModelProviders.of((AppCompatActivity) AUtils.mCurrentContext).get(LocationViewModel.class);
@@ -93,7 +92,7 @@ public class LocationMonitoringService implements LocationListener, GpsStatus.Li
         });
     }
 
-    public void onStartTacking(){
+    public void onStartTacking() {
 
         LocationManager locationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
 
@@ -126,8 +125,8 @@ public class LocationMonitoringService implements LocationListener, GpsStatus.Li
         }
     }
 
-    public void onStopTracking()
-    {
+    public void onStopTracking() {
+        mAdapter.shareLocation();
         LocationManager locationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
         locationManager.removeUpdates(this);
     }
@@ -192,7 +191,7 @@ public class LocationMonitoringService implements LocationListener, GpsStatus.Li
 
     }
 
-    private void sendLocation(){
+    private void sendLocation() {
 
         UserLocationPojo userLocationPojo = new UserLocationPojo();
 
@@ -200,7 +199,7 @@ public class LocationMonitoringService implements LocationListener, GpsStatus.Li
         userLocationPojo.setLat(QuickUtils.prefs.getString(AUtils.LAT, ""));
         userLocationPojo.setLong(QuickUtils.prefs.getString(AUtils.LONG, ""));
         userLocationPojo.setDatetime(AUtils.getSeverDateTime());
-        userLocationPojo.setOfflineId("");
+        userLocationPojo.setOfflineId("0");
 
         if(AUtils.isInternetAvailable()) {
 

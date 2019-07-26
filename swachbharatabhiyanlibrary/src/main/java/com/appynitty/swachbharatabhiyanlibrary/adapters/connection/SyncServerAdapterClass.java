@@ -68,23 +68,6 @@ public class SyncServerAdapterClass {
         }
     }
 
-    public List<UserLocationResultPojo> saveUserLocation(List<UserLocationPojo> userLocationPojoList) {
-
-        List<UserLocationResultPojo> resultPojo = null;
-        try {
-
-            UserLocationWebService service = Connection.createService(UserLocationWebService.class, AUtils.SERVER_URL);
-
-
-            resultPojo = service.saveUserLocation(QuickUtils.prefs.getString(AUtils.APP_ID, "1"), AUtils.CONTENT_TYPE, QuickUtils.prefs.getString(AUtils.PREFS.USER_ID, null), AUtils.getBatteryStatus(), userLocationPojoList).execute().body();
-
-        } catch (Exception e) {
-
-            e.printStackTrace();
-        }
-        return resultPojo;
-    }
-
     private void onResponseReceived(List<OfflineGcResultPojo> results) {
 
         if (!AUtils.isNull(results) && results.size() > 0) {
@@ -96,18 +79,14 @@ public class SyncServerAdapterClass {
                     if (Integer.parseInt(result.getID()) != 0) {
                         mSyncServerViewModel.deleteSelectedRecord(Integer.parseInt(result.getID()));
                     }
-                    for (int i = 0; i < AUtils.UserLocationPojoList.size(); i++) {
-                        if (AUtils.UserLocationPojoList.get(i).getOfflineId().equals(result.getID())) {
-                            AUtils.UserLocationPojoList.remove(i);
+                    for (int i = 0; i < AUtils.syncGarbageCollectionPojoList.size(); i++) {
+                        if (AUtils.syncGarbageCollectionPojoList.get(i).getOfflineID().equals(result.getID())) {
+                            AUtils.syncGarbageCollectionPojoList.remove(i);
                             break;
                         }
                     }
-
                 } else {
-                    for (UserLocationPojo pojo : AUtils.UserLocationPojoList) {
-                        mSyncServerViewModel.deleteAllRecord();
-                        break;
-                    }
+                    mSyncServerViewModel.deleteAllRecord();
                 }
             }
         }

@@ -33,8 +33,10 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.appynitty.swachbharatabhiyanlibrary.R;
+import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.EmpSyncServerAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.SyncServerAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.OfflineGarbageColectionPojo;
+import com.appynitty.swachbharatabhiyanlibrary.pojos.QrLocationPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.UserLocationPojo;
 import com.google.android.material.snackbar.Snackbar;
 import com.mithsoft.lib.components.Toasty;
@@ -153,11 +155,15 @@ public class AUtils extends MsUtils {
     public static final String DATABASE_NAME = "db_sab";
     public static final String LOCATION_TABLE_NAME = "loc_table";
     public static final String COLLECTION_TABLE_NAME = "gc_table";
+    public static final String QR_TABLE_NAME = "qr_table";
 
     public static List<UserLocationPojo> UserLocationPojoList= new ArrayList<>();
     public static List<OfflineGarbageColectionPojo> syncGarbageCollectionPojoList = new ArrayList<>();
+    public static List<QrLocationPojo> qrLocationPojoList = new ArrayList<>();
 
     private static SyncServerAdapterClass syncServer;
+
+    private static EmpSyncServerAdapterClass empSyncServer;
 
     public static boolean isIsOnduty() {
         return QuickUtils.prefs.getBoolean(PREFS.IS_ON_DUTY, false);
@@ -699,8 +705,13 @@ public class AUtils extends MsUtils {
         {
             mSnackbar.dismiss();
 
-            syncServer = new SyncServerAdapterClass();
-            syncServer.syncServer();
+            if(!QuickUtils.prefs.getString(PREFS.USER_TYPE_ID,"0").equals("1")) {
+                syncServer = new SyncServerAdapterClass();
+                syncServer.syncServer();
+            } else {
+                empSyncServer = new EmpSyncServerAdapterClass();
+                empSyncServer.syncServer();
+            }
         }
     }
 

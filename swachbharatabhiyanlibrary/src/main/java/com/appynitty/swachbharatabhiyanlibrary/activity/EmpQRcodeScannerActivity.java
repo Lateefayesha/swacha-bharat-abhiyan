@@ -3,7 +3,6 @@ package com.appynitty.swachbharatabhiyanlibrary.activity;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,9 +13,12 @@ import android.os.Bundle;
 import android.provider.Settings;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 import android.view.MenuItem;
 import android.view.View;
@@ -25,23 +27,25 @@ import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.appynitty.retrofitconnectionlibrary.pojos.ResultPojo;
 import com.appynitty.swachbharatabhiyanlibrary.R;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.EmpQrLocationAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.dialogs.ChooseActionPopUp;
-import com.appynitty.swachbharatabhiyanlibrary.pojos.ImagePojo;
+import com.appynitty.swachbharatabhiyanlibrary.entity.EmpSyncServerEntity;
+import com.appynitty.swachbharatabhiyanlibrary.entity.SyncServerEntity;
+import com.appynitty.swachbharatabhiyanlibrary.pojos.OfflineGarbageColectionPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.QrLocationPojo;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 import com.appynitty.swachbharatabhiyanlibrary.utils.LocaleHelper;
+import com.appynitty.swachbharatabhiyanlibrary.view_model.EmpSyncServerViewModel;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.mithsoft.lib.components.MyProgressDialog;
 import com.mithsoft.lib.components.Toasty;
 
-import java.lang.reflect.Type;
+import java.util.List;
 import java.util.Objects;
 
 import io.github.kobakei.materialfabspeeddial.FabSpeedDial;
@@ -63,14 +67,14 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
     private String radioSelection;
     private Button submitBtn, permissionBtn;
     private View contentView;
-    private boolean isActivityData;
-    private ImagePojo imagePojo;
     private Boolean isScanQr;
     private ChooseActionPopUp chooseActionPopUp;
     private EmpQrLocationAdapterClass empQrLocationAdapter;
     private QrLocationPojo qrLocationPojo;
 
     private MyProgressDialog myProgressDialog;
+
+    private EmpSyncServerViewModel syncServerViewModel;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -218,8 +222,6 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
         permissionBtn = findViewById(R.id.grant_permission);
         contentView = findViewById(R.id.scanner_view);
 
-        imagePojo = null;
-        isActivityData = false;
         isScanQr = true;
 
         ViewGroup contentFrame = (ViewGroup) findViewById(R.id.qr_scanner);
@@ -233,6 +235,8 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
         chooseActionPopUp = new ChooseActionPopUp(mContext);
         empQrLocationAdapter = new EmpQrLocationAdapterClass();
         qrLocationPojo = new QrLocationPojo();
+
+        syncServerViewModel = ViewModelProviders.of((AppCompatActivity) AUtils.mCurrentContext).get(EmpSyncServerViewModel.class);
     }
 
     protected void initToolbar(){
@@ -252,9 +256,9 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
                     if(!idAutoComplete.getText().toString().matches("")){
                         submitQRcode(idAutoComplete.getText().toString());
                     }else{
-                        if(getAreaType().equals(AUtils.HP_AREA_TYPE_ID))
+                        if(getGCType().equals(AUtils.HP_AREA_TYPE_ID))
                             Toasty.error(mContext, mContext.getResources().getString(R.string.hp_area_validation_emp)).show();
-                        else if (getAreaType().equals(AUtils.GP_AREA_TYPE_ID))
+                        else if (getGCType().equals(AUtils.GP_AREA_TYPE_ID))
                             Toasty.error(mContext, mContext.getResources().getString(R.string.gp_area_validation_emp)).show();
                         else
                             Toasty.error(mContext, mContext.getResources().getString(R.string.dy_area_validation_emp)).show();
@@ -349,7 +353,11 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
                 String mId = (String) data;
                 switch(actionType){
                     case ChooseActionPopUp.ADD_DETAILS_BUTTON_CLICKED:
-                        submitOnDetails(mId, getAreaType(mId));
+                        if(AUtils.isInternetAvailable()) {
+                            submitOnDetails(mId, getGCType(mId));
+                        } else {
+                            Toasty.info(mContext, getResources().getString(R.string.no_internet_error), Toast.LENGTH_LONG).show();
+                        }
                         break;
                     case ChooseActionPopUp.SKIP_BUTTON_CLICKED:
                         submitOnSkip(mId);
@@ -391,21 +399,40 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
             }
         });
 
+        syncServerViewModel.getEmpSysncServerEntityList().observeForever(new Observer<List<EmpSyncServerEntity>>() {
+            @Override
+            public void onChanged(@Nullable final List<EmpSyncServerEntity> userLocationEntities) {
+                // Update list
+                AUtils.qrLocationPojoList.clear();
+
+                for(EmpSyncServerEntity entity : userLocationEntities) {
+                    QrLocationPojo qrLocationPojo = new QrLocationPojo();
+                    qrLocationPojo.setOfflineID(String.valueOf(entity.getIndex_id()));
+                    qrLocationPojo.setUserId(QuickUtils.prefs.getString(AUtils.PREFS.USER_ID, ""));
+                    qrLocationPojo.setLat(entity.getLat());
+                    qrLocationPojo.setLong(entity.getLong());
+                    qrLocationPojo.setReferanceId(entity.getRef_id());
+                    qrLocationPojo.setGcType(String.valueOf(entity.getGcType()));
+                    qrLocationPojo.setDate(String.valueOf(entity.getDate()));
+                    qrLocationPojo.setAddress(entity.getAddress());
+                    qrLocationPojo.setAreaId(entity.getAreaId());
+                    qrLocationPojo.setHouseNumber(entity.getHouseNumber());
+                    qrLocationPojo.setWardId(entity.getWardId());
+                    qrLocationPojo.setZoneId(entity.getZoneId());
+                    qrLocationPojo.setMobileno(entity.getMobileno());
+                    qrLocationPojo.setName(entity.getName());
+                    qrLocationPojo.setNameMar(entity.getNameMar());
+
+                    AUtils.qrLocationPojoList.add(qrLocationPojo);
+                }
+            }
+        });
+
     }
 
     protected void initData() {
 
         checkCameraPermission();
-
-        Intent intent = getIntent();
-        if(intent.hasExtra(AUtils.REQUEST_CODE)){
-            Type type = new TypeToken<ImagePojo>(){}.getType();
-            imagePojo = new Gson().fromJson(QuickUtils.prefs.getString(AUtils.PREFS.IMAGE_POJO, null), type);
-
-            if(!AUtils.isNull(imagePojo)){
-                isActivityData = true;
-            }
-        }
     }
 
     private void submitQRcode(String houseid) {
@@ -532,7 +559,7 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
             qrLocationPojo.setHouseNumber("");
             qrLocationPojo.setMobileno("");
 
-            qrLocationPojo.setGcType(getAreaType(id));
+            qrLocationPojo.setGcType(getGCType(id));
 
             startSubmitQRAsyncTask(qrLocationPojo);
         }catch (Exception e){
@@ -552,8 +579,12 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
     private void startSubmitQRAsyncTask(QrLocationPojo pojo){
         myProgressDialog.show();
         pojo.setUserId(QuickUtils.prefs.getString(AUtils.PREFS.USER_ID, ""));
-        empQrLocationAdapter.saveQrLocation(pojo);
-        stopCamera();
+        if(AUtils.isInternetAvailable()) {
+            empQrLocationAdapter.saveQrLocation(pojo);
+            stopCamera();
+        } else {
+            insertToDB(pojo);
+        }
     }
 
     @Override
@@ -569,7 +600,7 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
 
     }
 
-    private String getAreaType(){
+    private String getGCType(){
         String areaType = AUtils.GP_AREA_TYPE_ID;
         if(radioSelection.equals(AUtils.RADIO_SELECTED_HP)){
             areaType = AUtils.HP_AREA_TYPE_ID;
@@ -578,7 +609,7 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
         }
         return areaType;
     }
-    private String getAreaType(String refId){
+    private String getGCType(String refId){
         if(refId.substring(0,2).toLowerCase().matches("^[hp]+$"))
             return "1";
         else if(refId.substring(0,2).toLowerCase().matches("^[gp]+$"))
@@ -589,4 +620,27 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
             return "0";
     }
 
+    private void insertToDB(QrLocationPojo pojo) {
+
+        EmpSyncServerEntity entity = new EmpSyncServerEntity();
+
+        entity.setRef_id(pojo.getReferanceId());
+        entity.setGcType(Integer.parseInt(pojo.getGcType()));
+        entity.setLong(QuickUtils.prefs.getString(AUtils.LONG,""));
+        entity.setLat(QuickUtils.prefs.getString(AUtils.LAT,""));
+        entity.setDate(AUtils.getSeverDateTime());
+        entity.setName(pojo.getName());
+        entity.setNameMar(pojo.getNameMar());
+        entity.setAddress(pojo.getAddress());
+        entity.setZoneId(pojo.getZoneId());
+        entity.setWardId(pojo.getWardId());
+        entity.setAreaId(pojo.getAreaId());
+        entity.setHouseNumber(pojo.getHouseNumber());
+        entity.setMobileno(pojo.getMobileno());
+
+        syncServerViewModel.insert(entity);
+
+        Toasty.success(mContext, "Uploaded successfully", Toast.LENGTH_LONG).show();
+        finish();
+    }
 }

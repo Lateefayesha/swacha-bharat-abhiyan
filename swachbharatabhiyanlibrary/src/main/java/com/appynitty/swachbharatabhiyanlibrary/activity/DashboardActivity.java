@@ -28,6 +28,7 @@ import com.appynitty.swachbharatabhiyanlibrary.R;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.UI.InflateMenuAdapter;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.AttendanceAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.CheckAttendanceAdapterClass;
+import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.SyncServerAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.UserDetailAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.VehicleTypeAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.custom_component.GlideCircleTransformation;
@@ -235,6 +236,10 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         {
             mCheckAttendanceAdapter.checkAttendance();
         }
+
+        SyncServerAdapterClass syncServer = new SyncServerAdapterClass();
+        syncServer.syncServer();
+
         checkDutyStatus();
     }
 

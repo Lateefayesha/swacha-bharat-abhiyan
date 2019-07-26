@@ -552,9 +552,10 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
             }
 
             @Override
-            public void onFailureCallBack() {
+            public void onFailureCallBack(GarbageCollectionPojo garbageCollectionPojo) {
                 restartPreview();
                 Toasty.error(mContext, mContext.getString(R.string.serverError), Toast.LENGTH_SHORT).show();
+                insertToDB(garbageCollectionPojo);
             }
         });
 

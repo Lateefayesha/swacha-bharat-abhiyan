@@ -1,6 +1,9 @@
 package com.appynitty.swachbharatabhiyanlibrary.utils;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 
 import androidx.annotation.NonNull;
@@ -10,16 +13,21 @@ import androidx.room.RoomDatabase;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import com.appynitty.swachbharatabhiyanlibrary.DAO.EmpSyncServerDao;
 import com.appynitty.swachbharatabhiyanlibrary.DAO.SyncServerDao;
 import com.appynitty.swachbharatabhiyanlibrary.DAO.UserLocationDao;
 import com.appynitty.swachbharatabhiyanlibrary.connection.SyncServer;
+import com.appynitty.swachbharatabhiyanlibrary.entity.EmpSyncServerEntity;
 import com.appynitty.swachbharatabhiyanlibrary.entity.SyncServerEntity;
 import com.appynitty.swachbharatabhiyanlibrary.entity.UserLocationEntity;
 
-@Database(entities = {UserLocationEntity.class, SyncServerEntity.class}, version = 1, exportSchema = false)
+import quickutils.core.QuickUtils;
+
+@Database(entities = {UserLocationEntity.class, SyncServerEntity.class, EmpSyncServerEntity.class}, version = 2, exportSchema = false)
 public abstract class SbaRoomDatabase extends RoomDatabase {
     public abstract UserLocationDao userLocationDao();
     public abstract SyncServerDao syncServerDao();
+    public abstract EmpSyncServerDao empSyncServerDao();
 
     private static volatile SbaRoomDatabase INSTANCE;
 
@@ -42,8 +50,9 @@ public abstract class SbaRoomDatabase extends RoomDatabase {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
             //Logic of marging Database
-//            database.execSQL("CREATE TABLE `Fruit` (`id` INTEGER, "
-//                    + "`name` TEXT, PRIMARY KEY(`id`))");
+
+//            new PopulateDbAsync(INSTANCE).execute();
+            new PopulateDb2Async(INSTANCE).execute();
         }
     };
 
@@ -62,10 +71,29 @@ public abstract class SbaRoomDatabase extends RoomDatabase {
 
         private final UserLocationDao mDao;
         private final SyncServerDao mSyncDao;
+//        private final EmpSyncServerDao mEmpSyncDao;
 
         PopulateDbAsync(SbaRoomDatabase db) {
             mDao = db.userLocationDao();
             mSyncDao = db.syncServerDao();
+//            mEmpSyncDao = db.empSyncServerDao();
+        }
+
+        @Override
+        protected Void doInBackground(final Void... params) {
+            // Start the app with a clean database every time.
+            // Not needed if you only populate on creation.
+
+            return null;
+        }
+    }
+
+    private static class PopulateDb2Async extends AsyncTask<Void, Void, Void> {
+
+        private final EmpSyncServerDao mEmpSyncDao;
+
+        PopulateDb2Async(SbaRoomDatabase db) {
+            mEmpSyncDao = db.empSyncServerDao();
         }
 
         @Override

@@ -5,8 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -20,11 +25,13 @@ import com.appynitty.swachbharatabhiyanlibrary.R;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.EmpQrLocationAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.EmpRegistrationDataAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.EmpWardZoneAreaAdapterClass;
+import com.appynitty.swachbharatabhiyanlibrary.entity.EmpSyncServerEntity;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.EmpRegistrationPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.QrLocationPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.ZoneWardAreaMasterPojo;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 import com.appynitty.swachbharatabhiyanlibrary.utils.LocaleHelper;
+import com.appynitty.swachbharatabhiyanlibrary.view_model.EmpSyncServerViewModel;
 import com.google.android.material.textfield.TextInputLayout;
 import com.mithsoft.lib.components.MyProgressDialog;
 import com.mithsoft.lib.components.Toasty;
@@ -52,6 +59,8 @@ public class EmpAddLocationDetailsActivity extends AppCompatActivity {
     private EmpRegistrationDataAdapterClass empRegistrationDataAdapterClass;
 
     private MyProgressDialog myProgressDialog;
+
+    private EmpSyncServerViewModel syncServerViewModel;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -117,6 +126,8 @@ public class EmpAddLocationDetailsActivity extends AppCompatActivity {
         mAdapterClass = new EmpWardZoneAreaAdapterClass();
         empQrLocationAdapterClass = new EmpQrLocationAdapterClass();
         empRegistrationDataAdapterClass = new EmpRegistrationDataAdapterClass();
+
+        syncServerViewModel = ViewModelProviders.of((AppCompatActivity) AUtils.mCurrentContext).get(EmpSyncServerViewModel.class);
     }
 
     private void initToolbar(){
@@ -233,6 +244,35 @@ public class EmpAddLocationDetailsActivity extends AppCompatActivity {
             public void onErrorCallback() {
                 myProgressDialog.dismiss();
                 Toasty.error(mContext,getResources().getString(R.string.serverError), Toast.LENGTH_LONG).show();
+            }
+        });
+
+        syncServerViewModel.getEmpSysncServerEntityList().observeForever(new Observer<List<EmpSyncServerEntity>>() {
+            @Override
+            public void onChanged(@Nullable final List<EmpSyncServerEntity> userLocationEntities) {
+                // Update list
+                AUtils.qrLocationPojoList.clear();
+
+                for(EmpSyncServerEntity entity : userLocationEntities) {
+                    QrLocationPojo qrLocationPojo = new QrLocationPojo();
+                    qrLocationPojo.setOfflineID(String.valueOf(entity.getIndex_id()));
+                    qrLocationPojo.setUserId(QuickUtils.prefs.getString(AUtils.PREFS.USER_ID, ""));
+                    qrLocationPojo.setLat(entity.getLat());
+                    qrLocationPojo.setLong(entity.getLong());
+                    qrLocationPojo.setReferanceId(entity.getRef_id());
+                    qrLocationPojo.setGcType(String.valueOf(entity.getGcType()));
+                    qrLocationPojo.setDate(String.valueOf(entity.getDate()));
+                    qrLocationPojo.setAddress(entity.getAddress());
+                    qrLocationPojo.setAreaId(entity.getAreaId());
+                    qrLocationPojo.setHouseNumber(entity.getHouseNumber());
+                    qrLocationPojo.setWardId(entity.getWardId());
+                    qrLocationPojo.setZoneId(entity.getZoneId());
+                    qrLocationPojo.setMobileno(entity.getMobileno());
+                    qrLocationPojo.setName(entity.getName());
+                    qrLocationPojo.setNameMar(entity.getNameMar());
+
+                    AUtils.qrLocationPojoList.add(qrLocationPojo);
+                }
             }
         });
     }
@@ -363,7 +403,11 @@ public class EmpAddLocationDetailsActivity extends AppCompatActivity {
         qrLocationPojo.setMobileno(txtContactNo.getText().toString());
         qrLocationPojo.setUserId(QuickUtils.prefs.getString(AUtils.PREFS.USER_ID, ""));
 
-        empQrLocationAdapterClass.saveQrLocation(qrLocationPojo);
+        if(AUtils.isInternetAvailable()) {
+            empQrLocationAdapterClass.saveQrLocation(qrLocationPojo);
+        } else {
+            insertToDB(qrLocationPojo);
+        }
     }
 
     @Override
@@ -373,5 +417,29 @@ public class EmpAddLocationDetailsActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void insertToDB(QrLocationPojo pojo) {
+
+        EmpSyncServerEntity entity = new EmpSyncServerEntity();
+
+        entity.setRef_id(pojo.getReferanceId());
+        entity.setGcType(Integer.parseInt(pojo.getGcType()));
+        entity.setLong(QuickUtils.prefs.getString(AUtils.LONG,""));
+        entity.setLat(QuickUtils.prefs.getString(AUtils.LAT,""));
+        entity.setDate(AUtils.getSeverDateTime());
+        entity.setName(pojo.getName());
+        entity.setNameMar(pojo.getNameMar());
+        entity.setAddress(pojo.getAddress());
+        entity.setZoneId(pojo.getZoneId());
+        entity.setWardId(pojo.getWardId());
+        entity.setAreaId(pojo.getAreaId());
+        entity.setHouseNumber(pojo.getHouseNumber());
+        entity.setMobileno(pojo.getMobileno());
+
+        syncServerViewModel.insert(entity);
+
+        Toasty.success(mContext, "Uploaded successfully", Toast.LENGTH_LONG).show();
+        finish();
     }
 }

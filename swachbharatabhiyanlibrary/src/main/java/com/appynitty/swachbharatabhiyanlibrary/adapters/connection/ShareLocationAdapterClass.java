@@ -38,42 +38,39 @@ public class ShareLocationAdapterClass {
 
         mLocationViewModel = ViewModelProviders.of((AppCompatActivity) AUtils.mCurrentContext).get(LocationViewModel.class);
 
-        if (!QuickUtils.prefs.getString(AUtils.PREFS.USER_TYPE_ID, "0").equals("1")) {
+        UserLocationWebService service = Connection.createService(UserLocationWebService.class, AUtils.SERVER_URL);
 
-            UserLocationWebService service = Connection.createService(UserLocationWebService.class, AUtils.SERVER_URL);
+        service.saveUserLocation(QuickUtils.prefs.getString(AUtils.APP_ID, "1"),
+                AUtils.CONTENT_TYPE, QuickUtils.prefs.getString(AUtils.PREFS.USER_TYPE_ID, "0"),
+                AUtils.getBatteryStatus(), AUtils.UserLocationPojoList)
+                .enqueue(new Callback<List<UserLocationResultPojo>>() {
+            @Override
+            public void onResponse(Call<List<UserLocationResultPojo>> call, Response<List<UserLocationResultPojo>> response) {
 
-            service.saveUserLocation(QuickUtils.prefs.getString(AUtils.APP_ID, "1"),
-                    AUtils.CONTENT_TYPE,
-                    QuickUtils.prefs.getString(AUtils.PREFS.USER_ID, null),
-                    AUtils.getBatteryStatus(), AUtils.UserLocationPojoList)
-                    .enqueue(new Callback<List<UserLocationResultPojo>>() {
-                @Override
-                public void onResponse(Call<List<UserLocationResultPojo>> call, Response<List<UserLocationResultPojo>> response) {
-
-                    if (response.code() == 200) {
-                        onResponseReceived(response.body());
-                    } else {
-                        mListener.onFailureCallBack();
-                        Log.i(AUtils.TAG_HTTP_RESPONSE, "onFailureCallback: Response Code-" + response.code());
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<List<UserLocationResultPojo>> call, Throwable t) {
-                    for (UserLocationPojo pojo : AUtils.UserLocationPojoList) {
-
-                        UserLocationEntity entity = new UserLocationEntity();
-                        entity.setLat(pojo.getLat());
-                        entity.setLong(pojo.getLong());
-                        entity.setDatetime(pojo.getDatetime());
-
-                        mLocationViewModel.insert(entity);
-                    }
+                if (response.code() == 200) {
+                    onResponseReceived(response.body());
+                } else {
                     mListener.onFailureCallBack();
-                    Log.i(AUtils.TAG_HTTP_RESPONSE, "onFailureCallback: Response Code-" + t.getMessage());
+                    Log.i(AUtils.TAG_HTTP_RESPONSE, "onFailureCallback: Response Code-" + response.code());
                 }
-            });
-        }
+            }
+
+            @Override
+            public void onFailure(Call<List<UserLocationResultPojo>> call, Throwable t) {
+                for (UserLocationPojo pojo : AUtils.UserLocationPojoList) {
+
+                    UserLocationEntity entity = new UserLocationEntity();
+                    entity.setLat(pojo.getLat());
+                    entity.setLong(pojo.getLong());
+                    entity.setDatetime(pojo.getDatetime());
+
+                    mLocationViewModel.insert(entity);
+                }
+                mListener.onFailureCallBack();
+                Log.i(AUtils.TAG_HTTP_RESPONSE, "onFailureCallback: Response Code-" + t.getMessage());
+            }
+        });
+
     }
 
     public List<UserLocationResultPojo> saveUserLocation(List<UserLocationPojo> userLocationPojoList) {
