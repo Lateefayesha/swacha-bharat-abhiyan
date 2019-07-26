@@ -18,7 +18,7 @@ public interface UserLocationWebService {
     @POST("api/Save/UserLocation")
     Call<List<UserLocationResultPojo>> saveUserLocation(@Header("appId") String appId,
                                                   @Header("Content-Type") String content_type,
-                                                  @Header("userId") String userId,
+                                                  @Header("typeId") String typeId,
                                                   @Header("batteryStatus") int batteryStatus,
                                                   @Body List<UserLocationPojo> userLocationPojoList);
 }

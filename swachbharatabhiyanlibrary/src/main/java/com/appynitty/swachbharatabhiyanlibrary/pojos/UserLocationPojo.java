@@ -12,8 +12,6 @@ public class UserLocationPojo {
 
     private String lat;
 
-    private int typeId;
-
     public String getUserId() {
         return userId;
     }
@@ -54,14 +52,6 @@ public class UserLocationPojo {
         this.OfflineId = id;
     }
 
-    public int getTypeId() {
-        return typeId;
-    }
-
-    public void setTypeId(int typeId) {
-        this.typeId = typeId;
-    }
-
     @Override
     public String toString() {
         return "UserLocationPojo{" +
@@ -69,7 +59,6 @@ public class UserLocationPojo {
                 "userId='" + userId + '\'' +
                 ", Long='" + Long + '\'' +
                 ", datetime='" + datetime + '\'' +
-                ", lat='" + lat + '\'' +
-                ", typeId='" + typeId + '\'' +'}';
+                ", lat='" + lat + '\'' +'}';
     }
 }

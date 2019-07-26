@@ -1,5 +1,6 @@
 package com.appynitty.swachbharatabhiyanlibrary.dialogs;
 
+
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -56,7 +57,6 @@ public class ChooseActionPopUp extends Dialog {
     }
 
     private void initData() {
-
     }
 
     private void registerEvents() {

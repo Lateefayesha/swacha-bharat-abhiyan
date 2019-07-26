@@ -41,7 +41,8 @@ public class ShareLocationAdapterClass {
         UserLocationWebService service = Connection.createService(UserLocationWebService.class, AUtils.SERVER_URL);
 
         service.saveUserLocation(QuickUtils.prefs.getString(AUtils.APP_ID, "1"),
-                AUtils.CONTENT_TYPE, QuickUtils.prefs.getString(AUtils.PREFS.USER_TYPE_ID, "0"),
+                AUtils.CONTENT_TYPE,
+                QuickUtils.prefs.getString(AUtils.PREFS.USER_TYPE_ID, "0"),
                 AUtils.getBatteryStatus(), AUtils.UserLocationPojoList)
                 .enqueue(new Callback<List<UserLocationResultPojo>>() {
             @Override
@@ -59,12 +60,14 @@ public class ShareLocationAdapterClass {
             public void onFailure(Call<List<UserLocationResultPojo>> call, Throwable t) {
                 for (UserLocationPojo pojo : AUtils.UserLocationPojoList) {
 
-                    UserLocationEntity entity = new UserLocationEntity();
-                    entity.setLat(pojo.getLat());
-                    entity.setLong(pojo.getLong());
-                    entity.setDatetime(pojo.getDatetime());
+                    if(pojo.getOfflineId().equals("0")) {
+                        UserLocationEntity entity = new UserLocationEntity();
+                        entity.setLat(pojo.getLat());
+                        entity.setLong(pojo.getLong());
+                        entity.setDatetime(pojo.getDatetime());
 
-                    mLocationViewModel.insert(entity);
+                        mLocationViewModel.insert(entity);
+                    }
                 }
                 mListener.onFailureCallBack();
                 Log.i(AUtils.TAG_HTTP_RESPONSE, "onFailureCallback: Response Code-" + t.getMessage());

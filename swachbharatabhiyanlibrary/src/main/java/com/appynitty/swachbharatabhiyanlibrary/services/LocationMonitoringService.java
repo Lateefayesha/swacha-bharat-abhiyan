@@ -62,7 +62,6 @@ public class LocationMonitoringService implements LocationListener, GpsStatus.Li
                     UserLocationPojo userLocationPojo = new UserLocationPojo();
                     userLocationPojo.setOfflineId(String.valueOf(entity.getIndex_id()));
                     userLocationPojo.setUserId(QuickUtils.prefs.getString(AUtils.PREFS.USER_ID, ""));
-                    userLocationPojo.setUserId(QuickUtils.prefs.getString(AUtils.PREFS.USER_TYPE_ID, ""));
                     userLocationPojo.setLat(entity.getLat());
                     userLocationPojo.setLong(entity.getLong());
                     userLocationPojo.setDatetime(entity.getDatetime());
