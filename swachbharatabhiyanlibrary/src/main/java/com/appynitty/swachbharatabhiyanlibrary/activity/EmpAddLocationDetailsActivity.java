@@ -359,13 +359,14 @@ public class EmpAddLocationDetailsActivity extends AppCompatActivity {
             txtName.setText(pojo.getName());
             txtNameMar.setText(pojo.getNamemar());
             txtAddress.setText(pojo.getAddress());
-            txtContactNo.setText(pojo.getMobileno());
+
             wardId = pojo.getWardId();
             zoneId = pojo.getZoneId();
             areaId = pojo.getAreaId();
 
-            if(submitType.equals("1") && !AUtils.isNull(pojo.getHouseId()) && pojo.getHouseId().length() > 0){
-                txtHouseNo.setText(pojo.getHouseId());
+            if(submitType.equals("1") && !AUtils.isNull(pojo.getHouseNumber()) && pojo.getHouseNumber().length() > 0){
+                txtHouseNo.setText(pojo.getHouseNumber());
+                txtContactNo.setText(pojo.getMobileno());
             }
 
             if(zoneMap.size() > 0 && zoneMap.containsValue(zoneId) && nameListZone.indexOf(zoneMap.get(zoneId)) > 0){
