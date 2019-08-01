@@ -11,7 +11,6 @@ import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 public class EmpSyncServerEntity {
 
     @PrimaryKey(autoGenerate = true)
-    @NonNull
     @ColumnInfo(name = "_id")
     private int index_id;
 
@@ -40,13 +39,13 @@ public class EmpSyncServerEntity {
     private String Address;
 
     @ColumnInfo(name = "zoneId")
-    private int zoneId;
+    private String zoneId;
 
     @ColumnInfo(name = "wardId")
-    private int wardId;
+    private String wardId;
 
     @ColumnInfo(name = "areaId")
-    private int areaId;
+    private String areaId;
 
     @ColumnInfo(name = "houseNumber")
     private String houseNumber;
@@ -126,27 +125,27 @@ public class EmpSyncServerEntity {
         Address = address;
     }
 
-    public int getZoneId() {
+    public String getZoneId() {
         return zoneId;
     }
 
-    public void setZoneId(int zoneId) {
+    public void setZoneId(String zoneId) {
         this.zoneId = zoneId;
     }
 
-    public int getWardId() {
+    public String getWardId() {
         return wardId;
     }
 
-    public void setWardId(int wardId) {
+    public void setWardId(String wardId) {
         this.wardId = wardId;
     }
 
-    public int getAreaId() {
+    public String getAreaId() {
         return areaId;
     }
 
-    public void setAreaId(int areaId) {
+    public void setAreaId(String areaId) {
         this.areaId = areaId;
     }
 

@@ -23,7 +23,7 @@ import com.appynitty.swachbharatabhiyanlibrary.entity.UserLocationEntity;
 
 import quickutils.core.QuickUtils;
 
-@Database(entities = {UserLocationEntity.class, SyncServerEntity.class, EmpSyncServerEntity.class}, version = 2, exportSchema = false)
+@Database(entities = {UserLocationEntity.class, SyncServerEntity.class, EmpSyncServerEntity.class}, version = 3, exportSchema = false)
 public abstract class SbaRoomDatabase extends RoomDatabase {
     public abstract UserLocationDao userLocationDao();
     public abstract SyncServerDao syncServerDao();
@@ -38,7 +38,7 @@ public abstract class SbaRoomDatabase extends RoomDatabase {
                     // Create database here
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             SbaRoomDatabase.class, AUtils.DATABASE_NAME)
-                            .addMigrations(MIGRATION_1_2)
+                            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_1_3)
                             .build();
                 }
             }
@@ -51,11 +51,11 @@ public abstract class SbaRoomDatabase extends RoomDatabase {
         public void migrate(SupportSQLiteDatabase database) {
             //Logic of marging Database
 
-//            database.execSQL("ALTER TABLE "+AUtils.LOCATION_TABLE_NAME+" RENAME TO locTemp");
-//            database.execSQL("ALTER TABLE "+AUtils.COLLECTION_TABLE_NAME+" RENAME TO gcTemp");
+            database.execSQL("ALTER TABLE "+AUtils.LOCATION_TABLE_NAME+" RENAME TO locTemp");
+            database.execSQL("ALTER TABLE "+AUtils.COLLECTION_TABLE_NAME+" RENAME TO gcTemp");
 //            new PopulateDbAsync(INSTANCE).execute();
 
-            database.execSQL("CREATE TABLE "+AUtils.QR_TABLE_NAME
+            database.execSQL("CREATE TABLE IF NOT EXISTS "+AUtils.QR_TABLE_NAME
                     +" (`_id` INTEGER, "
                     + "`RefId` TEXT,"
                     + "`gcType` INTEGER,"
@@ -65,9 +65,9 @@ public abstract class SbaRoomDatabase extends RoomDatabase {
                     + "`name` TEXT,"
                     + "`nameMar` TEXT,"
                     + "`address` TEXT,"
-                    + "`zoneId` INTEGER,"
-                    + "`wardId` INTEGER,"
-                    + "`areaId` INTEGER,"
+                    + "`zoneId` TEXT,"
+                    + "`wardId` TEXT,"
+                    + "`areaId` TEXT,"
                     + "`houseNumber` TEXT,"
                     + "`mobileno` TEXT,"
                     + "`areaId` TEXT,"
@@ -75,8 +75,76 @@ public abstract class SbaRoomDatabase extends RoomDatabase {
                     +" PRIMARY KEY(`_id`))");
 //            new PopulateDb2Async(INSTANCE).execute();
 
-//            database.execSQL("ALTER TABLE locTemp RENAME TO "+AUtils.LOCATION_TABLE_NAME);
-//            database.execSQL("ALTER TABLE gcTemp RENAME TO "+AUtils.COLLECTION_TABLE_NAME);
+            database.execSQL("ALTER TABLE locTemp RENAME TO "+AUtils.LOCATION_TABLE_NAME);
+            database.execSQL("ALTER TABLE gcTemp RENAME TO "+AUtils.COLLECTION_TABLE_NAME);
+        }
+    };
+
+    static final Migration MIGRATION_2_3 = new Migration(2, 3) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            //Logic of marging Database
+
+            database.execSQL("ALTER TABLE "+AUtils.LOCATION_TABLE_NAME+" RENAME TO locTemp");
+            database.execSQL("ALTER TABLE "+AUtils.COLLECTION_TABLE_NAME+" RENAME TO gcTemp");
+//            new PopulateDbAsync(INSTANCE).execute();
+
+            database.execSQL("CREATE TABLE IF NOT EXISTS "+AUtils.QR_TABLE_NAME
+                    +" (`_id` INTEGER, "
+                    + "`RefId` TEXT,"
+                    + "`gcType` INTEGER,"
+                    + "`Long` TEXT,"
+                    + "`Lat` TEXT,"
+                    + "`date` TEXT,"
+                    + "`name` TEXT,"
+                    + "`nameMar` TEXT,"
+                    + "`address` TEXT,"
+                    + "`zoneId` TEXT,"
+                    + "`wardId` TEXT,"
+                    + "`areaId` TEXT,"
+                    + "`houseNumber` TEXT,"
+                    + "`mobileno` TEXT,"
+                    + "`areaId` TEXT,"
+                    + "`areaId` TEXT,"
+                    +" PRIMARY KEY(`_id`))");
+//            new PopulateDb2Async(INSTANCE).execute();
+
+            database.execSQL("ALTER TABLE locTemp RENAME TO "+AUtils.LOCATION_TABLE_NAME);
+            database.execSQL("ALTER TABLE gcTemp RENAME TO "+AUtils.COLLECTION_TABLE_NAME);
+        }
+    };
+
+    static final Migration MIGRATION_1_3 = new Migration(1, 3) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            //Logic of marging Database
+
+            database.execSQL("ALTER TABLE "+AUtils.LOCATION_TABLE_NAME+" RENAME TO locTemp");
+            database.execSQL("ALTER TABLE "+AUtils.COLLECTION_TABLE_NAME+" RENAME TO gcTemp");
+//            new PopulateDbAsync(INSTANCE).execute();
+
+            database.execSQL("CREATE TABLE IF NOT EXISTS "+AUtils.QR_TABLE_NAME
+                    +" (`_id` INTEGER, "
+                    + "`RefId` TEXT,"
+                    + "`gcType` INTEGER,"
+                    + "`Long` TEXT,"
+                    + "`Lat` TEXT,"
+                    + "`date` TEXT,"
+                    + "`name` TEXT,"
+                    + "`nameMar` TEXT,"
+                    + "`address` TEXT,"
+                    + "`zoneId` TEXT,"
+                    + "`wardId` TEXT,"
+                    + "`areaId` TEXT,"
+                    + "`houseNumber` TEXT,"
+                    + "`mobileno` TEXT,"
+                    + "`areaId` TEXT,"
+                    + "`areaId` TEXT,"
+                    +" PRIMARY KEY(`_id`))");
+//            new PopulateDb2Async(INSTANCE).execute();
+
+            database.execSQL("ALTER TABLE locTemp RENAME TO "+AUtils.LOCATION_TABLE_NAME);
+            database.execSQL("ALTER TABLE gcTemp RENAME TO "+AUtils.COLLECTION_TABLE_NAME);
         }
     };
 

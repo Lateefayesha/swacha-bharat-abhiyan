@@ -639,9 +639,9 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
         entity.setName(pojo.getName());
         entity.setNameMar(pojo.getNameMar());
         entity.setAddress(pojo.getAddress());
-        entity.setZoneId(Integer.parseInt(pojo.getZoneId()));
-        entity.setWardId(Integer.parseInt(pojo.getWardId()));
-        entity.setAreaId(Integer.parseInt(pojo.getAreaId()));
+        entity.setZoneId(pojo.getZoneId());
+        entity.setWardId(pojo.getWardId());
+        entity.setAreaId(pojo.getAreaId());
         entity.setHouseNumber(pojo.getHouseNumber());
         entity.setMobileno(pojo.getMobileno());
 
