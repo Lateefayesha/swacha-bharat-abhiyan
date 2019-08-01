@@ -133,6 +133,7 @@
     <string name="title_activity_point_registration_form_page">कचरा पॉईंट तपशील सादर करा</string>
     <string name="title_activity_dump_registration_form_page">डंप यार्ड तपशील सादर करा</string>
     <string name="title_activity_emp_add_location_details">तपशील सादर करा</string>
+
     <string name="slow_internet">आपले इंटरनेट हळुवारपणे चालत आहे!</string>
     <string name="feature_unavailable_error">आपले हळुवार इंटरनेटमुळे ही सेवा अनुपलब्ध आहे.</string>
 
