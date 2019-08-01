@@ -40,13 +40,13 @@ public class EmpSyncServerEntity {
     private String Address;
 
     @ColumnInfo(name = "zoneId")
-    private String zoneId;
+    private int zoneId;
 
     @ColumnInfo(name = "wardId")
-    private String wardId;
+    private int wardId;
 
     @ColumnInfo(name = "areaId")
-    private String areaId;
+    private int areaId;
 
     @ColumnInfo(name = "houseNumber")
     private String houseNumber;
@@ -126,27 +126,27 @@ public class EmpSyncServerEntity {
         Address = address;
     }
 
-    public String getZoneId() {
+    public int getZoneId() {
         return zoneId;
     }
 
-    public void setZoneId(String zoneId) {
+    public void setZoneId(int zoneId) {
         this.zoneId = zoneId;
     }
 
-    public String getWardId() {
+    public int getWardId() {
         return wardId;
     }
 
-    public void setWardId(String wardId) {
+    public void setWardId(int wardId) {
         this.wardId = wardId;
     }
 
-    public String getAreaId() {
+    public int getAreaId() {
         return areaId;
     }
 
-    public void setAreaId(String areaId) {
+    public void setAreaId(int areaId) {
         this.areaId = areaId;
     }
 

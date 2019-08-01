@@ -51,8 +51,13 @@ public abstract class SbaRoomDatabase extends RoomDatabase {
         public void migrate(SupportSQLiteDatabase database) {
             //Logic of marging Database
 
+//            database.execSQL("ALTER TABLE "+AUtils.LOCATION_TABLE_NAME+" RENAME TO locTemp");
+//            database.execSQL("ALTER TABLE "+AUtils.COLLECTION_TABLE_NAME+" RENAME TO gcTemp");
 //            new PopulateDbAsync(INSTANCE).execute();
             new PopulateDb2Async(INSTANCE).execute();
+
+//            database.execSQL("ALTER TABLE locTemp RENAME TO "+AUtils.LOCATION_TABLE_NAME);
+//            database.execSQL("ALTER TABLE gcTemp RENAME TO "+AUtils.COLLECTION_TABLE_NAME);
         }
     };
 
