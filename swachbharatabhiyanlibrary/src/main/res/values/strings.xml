@@ -156,6 +156,7 @@
     <string name="title_activity_point_registration_form_page">Add Garbage Point Details</string>
     <string name="title_activity_dump_registration_form_page">Add Dump Yard Details</string>
     <string name="title_activity_emp_add_location_details">Add Details</string>
+
     <string name="slow_internet">Your Internet is slow!</string>
     <string name="feature_unavailable_error">This feature is unavailable due to slow internet.</string>
 
