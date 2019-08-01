@@ -54,7 +54,26 @@ public abstract class SbaRoomDatabase extends RoomDatabase {
 //            database.execSQL("ALTER TABLE "+AUtils.LOCATION_TABLE_NAME+" RENAME TO locTemp");
 //            database.execSQL("ALTER TABLE "+AUtils.COLLECTION_TABLE_NAME+" RENAME TO gcTemp");
 //            new PopulateDbAsync(INSTANCE).execute();
-            new PopulateDb2Async(INSTANCE).execute();
+
+            database.execSQL("CREATE TABLE "+AUtils.QR_TABLE_NAME
+                    +" (`_id` INTEGER, "
+                    + "`RefId` TEXT,"
+                    + "`gcType` INTEGER,"
+                    + "`Long` TEXT,"
+                    + "`Lat` TEXT,"
+                    + "`date` TEXT,"
+                    + "`name` TEXT,"
+                    + "`nameMar` TEXT,"
+                    + "`address` TEXT,"
+                    + "`zoneId` INTEGER,"
+                    + "`wardId` INTEGER,"
+                    + "`areaId` INTEGER,"
+                    + "`houseNumber` TEXT,"
+                    + "`mobileno` TEXT,"
+                    + "`areaId` TEXT,"
+                    + "`areaId` TEXT,"
+                    +" PRIMARY KEY(`_id`))");
+//            new PopulateDb2Async(INSTANCE).execute();
 
 //            database.execSQL("ALTER TABLE locTemp RENAME TO "+AUtils.LOCATION_TABLE_NAME);
 //            database.execSQL("ALTER TABLE gcTemp RENAME TO "+AUtils.COLLECTION_TABLE_NAME);
