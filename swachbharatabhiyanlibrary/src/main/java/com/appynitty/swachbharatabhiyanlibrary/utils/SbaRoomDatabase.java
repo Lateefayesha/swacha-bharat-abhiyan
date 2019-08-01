@@ -51,8 +51,8 @@ public abstract class SbaRoomDatabase extends RoomDatabase {
         public void migrate(SupportSQLiteDatabase database) {
             //Logic of marging Database
 
-            database.execSQL("ALTER TABLE "+AUtils.LOCATION_TABLE_NAME+" RENAME TO locTemp");
-            database.execSQL("ALTER TABLE "+AUtils.COLLECTION_TABLE_NAME+" RENAME TO gcTemp");
+//            database.execSQL("ALTER TABLE "+AUtils.LOCATION_TABLE_NAME+" RENAME TO locTemp");
+//            database.execSQL("ALTER TABLE "+AUtils.COLLECTION_TABLE_NAME+" RENAME TO gcTemp");
 //            new PopulateDbAsync(INSTANCE).execute();
 
             database.execSQL("CREATE TABLE IF NOT EXISTS "+AUtils.QR_TABLE_NAME
@@ -75,8 +75,8 @@ public abstract class SbaRoomDatabase extends RoomDatabase {
                     +" PRIMARY KEY(`_id`))");
 //            new PopulateDb2Async(INSTANCE).execute();
 
-            database.execSQL("ALTER TABLE locTemp RENAME TO "+AUtils.LOCATION_TABLE_NAME);
-            database.execSQL("ALTER TABLE gcTemp RENAME TO "+AUtils.COLLECTION_TABLE_NAME);
+//            database.execSQL("ALTER TABLE locTemp RENAME TO "+AUtils.LOCATION_TABLE_NAME);
+//            database.execSQL("ALTER TABLE gcTemp RENAME TO "+AUtils.COLLECTION_TABLE_NAME);
         }
     };
 
@@ -85,8 +85,8 @@ public abstract class SbaRoomDatabase extends RoomDatabase {
         public void migrate(SupportSQLiteDatabase database) {
             //Logic of marging Database
 
-            database.execSQL("ALTER TABLE "+AUtils.LOCATION_TABLE_NAME+" RENAME TO locTemp");
-            database.execSQL("ALTER TABLE "+AUtils.COLLECTION_TABLE_NAME+" RENAME TO gcTemp");
+//            database.execSQL("ALTER TABLE "+AUtils.LOCATION_TABLE_NAME+" RENAME TO locTemp");
+//            database.execSQL("ALTER TABLE "+AUtils.COLLECTION_TABLE_NAME+" RENAME TO gcTemp");
 //            new PopulateDbAsync(INSTANCE).execute();
 
             database.execSQL("CREATE TABLE IF NOT EXISTS "+AUtils.QR_TABLE_NAME
@@ -109,8 +109,8 @@ public abstract class SbaRoomDatabase extends RoomDatabase {
                     +" PRIMARY KEY(`_id`))");
 //            new PopulateDb2Async(INSTANCE).execute();
 
-            database.execSQL("ALTER TABLE locTemp RENAME TO "+AUtils.LOCATION_TABLE_NAME);
-            database.execSQL("ALTER TABLE gcTemp RENAME TO "+AUtils.COLLECTION_TABLE_NAME);
+//            database.execSQL("ALTER TABLE locTemp RENAME TO "+AUtils.LOCATION_TABLE_NAME);
+//            database.execSQL("ALTER TABLE gcTemp RENAME TO "+AUtils.COLLECTION_TABLE_NAME);
         }
     };
 
@@ -119,8 +119,8 @@ public abstract class SbaRoomDatabase extends RoomDatabase {
         public void migrate(SupportSQLiteDatabase database) {
             //Logic of marging Database
 
-            database.execSQL("ALTER TABLE "+AUtils.LOCATION_TABLE_NAME+" RENAME TO locTemp");
-            database.execSQL("ALTER TABLE "+AUtils.COLLECTION_TABLE_NAME+" RENAME TO gcTemp");
+//            database.execSQL("ALTER TABLE "+AUtils.LOCATION_TABLE_NAME+" RENAME TO locTemp");
+//            database.execSQL("ALTER TABLE "+AUtils.COLLECTION_TABLE_NAME+" RENAME TO gcTemp");
 //            new PopulateDbAsync(INSTANCE).execute();
 
             database.execSQL("CREATE TABLE IF NOT EXISTS "+AUtils.QR_TABLE_NAME
@@ -143,8 +143,8 @@ public abstract class SbaRoomDatabase extends RoomDatabase {
                     +" PRIMARY KEY(`_id`))");
 //            new PopulateDb2Async(INSTANCE).execute();
 
-            database.execSQL("ALTER TABLE locTemp RENAME TO "+AUtils.LOCATION_TABLE_NAME);
-            database.execSQL("ALTER TABLE gcTemp RENAME TO "+AUtils.COLLECTION_TABLE_NAME);
+//            database.execSQL("ALTER TABLE locTemp RENAME TO "+AUtils.LOCATION_TABLE_NAME);
+//            database.execSQL("ALTER TABLE gcTemp RENAME TO "+AUtils.COLLECTION_TABLE_NAME);
         }
     };
 
