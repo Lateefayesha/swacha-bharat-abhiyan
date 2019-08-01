@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">Swach Bharat Abhiyan</string>
-    <string name="title_activity_dashboard">Swach Bharat Swasth Bharat</string>
+    <string name="app_name">Yavatmal Garbage Collection Van</string>
+    <string name="title_activity_dashboard">Yavatmal Garbage Collection Van</string>
     <string name="title_activity_qrcode_scanner">Scaniffy Code</string>
     <string name="title_activity_take_photo">Taking Photo</string>
     <string name="title_activity_profile_page">Profile</string>
@@ -156,5 +156,7 @@
     <string name="title_activity_point_registration_form_page">Add Garbage Point Details</string>
     <string name="title_activity_dump_registration_form_page">Add Dump Yard Details</string>
     <string name="title_activity_emp_add_location_details">Add Details</string>
+    <string name="slow_internet">Your Internet is slow!</string>
+    <string name="feature_unavailable_error">This feature is unavailable due to slow internet.</string>
 
 </resources>

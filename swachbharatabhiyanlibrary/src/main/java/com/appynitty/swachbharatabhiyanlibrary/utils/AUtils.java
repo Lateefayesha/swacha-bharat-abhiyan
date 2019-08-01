@@ -25,6 +25,8 @@ import android.os.Looper;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
+
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,10 +56,10 @@ import quickutils.core.QuickUtils;
 public class AUtils extends MsUtils {
 
     //    Local URL
-    public static final String SERVER_URL = "http://192.168.200.4:6077/";
+//    public static final String SERVER_URL = "http://192.168.200.4:6077/";
 
     //    Staging URL
-//    public static final String SERVER_URL = "http://115.115.153.117:4044/";
+    public static final String SERVER_URL = "http://115.115.153.117:4044/";
 
     //    Relese URL
 //    public static final String SERVER_URL = "https://ghantagadi.in:444/";
@@ -736,6 +738,61 @@ public class AUtils extends MsUtils {
                 mApplication.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+    }
+
+    public static boolean isConnectedFast(Context context){
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo info = cm.getActiveNetworkInfo();
+        return (info != null && info.isConnected() && AUtils.isConnectionFast(info.getType(),info.getSubtype()));
+    }
+
+    public static boolean isConnectionFast(int type, int subType){
+        if(type==ConnectivityManager.TYPE_WIFI){
+            return true;
+        }else if(type==ConnectivityManager.TYPE_MOBILE){
+            switch(subType){
+                case TelephonyManager.NETWORK_TYPE_1xRTT:
+                    return false; // ~ 50-100 kbps
+                case TelephonyManager.NETWORK_TYPE_CDMA:
+                    return false; // ~ 14-64 kbps
+                case TelephonyManager.NETWORK_TYPE_EDGE:
+                    return false; // ~ 50-100 kbps
+                case TelephonyManager.NETWORK_TYPE_EVDO_0:
+                    return true; // ~ 400-1000 kbps
+                case TelephonyManager.NETWORK_TYPE_EVDO_A:
+                    return true; // ~ 600-1400 kbps
+                case TelephonyManager.NETWORK_TYPE_GPRS:
+                    return false; // ~ 100 kbps
+                case TelephonyManager.NETWORK_TYPE_HSDPA:
+                    return true; // ~ 2-14 Mbps
+                case TelephonyManager.NETWORK_TYPE_HSPA:
+                    return true; // ~ 700-1700 kbps
+                case TelephonyManager.NETWORK_TYPE_HSUPA:
+                    return true; // ~ 1-23 Mbps
+                case TelephonyManager.NETWORK_TYPE_UMTS:
+                    return true; // ~ 400-7000 kbps
+                /*
+                 * Above API level 7, make sure to set android:targetSdkVersion
+                 * to appropriate level to use these
+                 */
+                case TelephonyManager.NETWORK_TYPE_EHRPD: // API level 11
+                    return true; // ~ 1-2 Mbps
+                case TelephonyManager.NETWORK_TYPE_EVDO_B: // API level 9
+                    return true; // ~ 5 Mbps
+                case TelephonyManager.NETWORK_TYPE_HSPAP: // API level 13
+                    return true; // ~ 10-20 Mbps
+                case TelephonyManager.NETWORK_TYPE_IDEN: // API level 8
+                    return false; // ~25 kbps
+                case TelephonyManager.NETWORK_TYPE_LTE: // API level 11
+                    return true; // ~ 10+ Mbps
+                // Unknown
+                case TelephonyManager.NETWORK_TYPE_UNKNOWN:
+                default:
+                    return false;
+            }
+        }else{
+            return false;
+        }
     }
 }
 

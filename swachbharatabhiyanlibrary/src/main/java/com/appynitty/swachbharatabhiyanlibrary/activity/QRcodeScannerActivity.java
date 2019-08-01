@@ -355,18 +355,30 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
                 if (radioGroupId == R.id.house_collection_radio) {
                     idIpLayout.setHint(getResources().getString(R.string.house_number_hint));
                     radioSelection = AUtils.RADIO_SELECTED_HP;
+                    if(! AUtils.isConnectedFast(mContext))
+                    {
+                        AUtils.showWarning(mContext, getResources().getString(R.string.slow_internet));
+                    }
                     mAreaAdapter.fetchAreaList(getAreaType(),true);
                 }
 
                 if (radioGroupId == R.id.point_collection_radio){
                     idIpLayout.setHint(getResources().getString(R.string.gp_id_hint));
                     radioSelection = AUtils.RADIO_SELECTED_GP;
+                    if(! AUtils.isConnectedFast(mContext))
+                    {
+                        AUtils.showWarning(mContext, getResources().getString(R.string.slow_internet));
+                    }
                     mAreaAdapter.fetchAreaList(getAreaType(),true);
                 }
 
                 if (radioGroupId == R.id.dump_yard_radio){
                     idIpLayout.setHint(getResources().getString(R.string.dy_id_hint));
                     radioSelection = AUtils.RADIO_SELECTED_DY;
+                    if(! AUtils.isConnectedFast(mContext))
+                    {
+                        AUtils.showWarning(mContext, getResources().getString(R.string.slow_internet));
+                    }
                     mAreaAdapter.fetchAreaList(getAreaType(),true);
                 }
             }
@@ -590,6 +602,12 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
     protected void initData() {
 
         checkCameraPermission();
+
+        if(! AUtils.isConnectedFast(mContext))
+        {
+            AUtils.showWarning(mContext, getResources().getString(R.string.slow_internet));
+        }
+
         mAreaAdapter.fetchAreaList(getAreaType(),false);
 
         Intent intent = getIntent();
@@ -795,17 +813,19 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
 
         stopCamera();
         setGarbageCollectionPojo(houseNo,garbageType,comment);
-        if(AUtils.isInternetAvailable())
+        if(AUtils.isInternetAvailable() && AUtils.isConnectedFast(mContext)) {
             mAdapter.submitQR(garbageCollectionPojo);
-        else
+        }
+        else {
             insertToDB(garbageCollectionPojo);
+        }
     }
 
     private void startSubmitQRAsyncTask(HashMap<String, String> map){
 
         stopCamera();
         setGarbageCollectionPojo(map);
-        if(AUtils.isInternetAvailable()) {
+        if(AUtils.isInternetAvailable() && AUtils.isConnectedFast(mContext)) {
             mAdapter.submitQR(garbageCollectionPojo);
         } else {
             insertToDB(garbageCollectionPojo);
@@ -985,10 +1005,10 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
 
         syncServerViewModel.insert(entity);
 
-        showOfflinePopup(getGarbageCollectionPojo().getId(), garbageCollectionPojo.getId());
+        showOfflinePopup(garbageCollectionPojo.getId());
     }
 
-    private void showOfflinePopup(String id, String pojo){
+    private void showOfflinePopup(String pojo){
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setCancelable(false);

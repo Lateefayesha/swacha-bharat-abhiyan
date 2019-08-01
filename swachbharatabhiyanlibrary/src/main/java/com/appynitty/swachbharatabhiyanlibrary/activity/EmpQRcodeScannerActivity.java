@@ -353,10 +353,17 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
                 String mId = (String) data;
                 switch(actionType){
                     case ChooseActionPopUp.ADD_DETAILS_BUTTON_CLICKED:
-                        if(AUtils.isInternetAvailable()) {
+                        if(AUtils.isInternetAvailable() && AUtils.isConnectedFast(mContext)) {
                             submitOnDetails(mId, getGCType(mId));
                         } else {
-                            Toasty.info(mContext, getResources().getString(R.string.no_internet_error), Toast.LENGTH_LONG).show();
+                            if(!AUtils.isConnectedFast(mContext))
+                            {
+                                AUtils.showWarning(mContext,getResources().getString(R.string.feature_unavailable_error));
+                            } else {
+                                Toasty.info(mContext, getResources().getString(R.string.no_internet_error), Toast.LENGTH_LONG).show();
+                            }
+
+                            restartPreview();
                         }
                         break;
                     case ChooseActionPopUp.SKIP_BUTTON_CLICKED:
@@ -579,7 +586,7 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
     private void startSubmitQRAsyncTask(QrLocationPojo pojo){
         myProgressDialog.show();
         pojo.setUserId(QuickUtils.prefs.getString(AUtils.PREFS.USER_ID, ""));
-        if(AUtils.isInternetAvailable()) {
+        if(AUtils.isInternetAvailable() && AUtils.isConnectedFast(mContext)) {
             empQrLocationAdapter.saveQrLocation(pojo);
             stopCamera();
         } else {

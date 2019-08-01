@@ -210,6 +210,10 @@ public class BroadcastActivity extends AppCompatActivity {
 
     protected void initData() {
 
+        if(! AUtils.isConnectedFast(mContext))
+        {
+            AUtils.showWarning(mContext,getResources().getString(R.string.slow_internet));
+        }
         mAreaAdapter.fetchAreaList(AUtils.HP_AREA_TYPE_ID, true);
     }
 
