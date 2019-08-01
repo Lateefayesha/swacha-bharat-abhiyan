@@ -276,7 +276,6 @@ public class EmpAddLocationDetailsActivity extends AppCompatActivity {
                     qrLocationPojo.setMobileno(entity.getMobileno());
                     qrLocationPojo.setName(entity.getName());
                     qrLocationPojo.setNameMar(entity.getNameMar());
-
                     AUtils.qrLocationPojoList.add(qrLocationPojo);
                 }
             }
