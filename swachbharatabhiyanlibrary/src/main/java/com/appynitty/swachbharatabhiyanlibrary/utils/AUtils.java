@@ -161,10 +161,6 @@ public class AUtils extends MsUtils {
     public static final String COLLECTION_TABLE_NAME = "table_gcollection";
     public static final String QR_TABLE_NAME = "table_qr_emp";
 
-    public static List<UserLocationPojo> UserLocationPojoList= new ArrayList<>();
-    public static List<OfflineGarbageColectionPojo> syncGarbageCollectionPojoList = new ArrayList<>();
-    public static List<QrLocationPojo> qrLocationPojoList = new ArrayList<>();
-
     private static SyncServerAdapterClass syncServer;
 
     private static EmpSyncServerAdapterClass empSyncServer;
