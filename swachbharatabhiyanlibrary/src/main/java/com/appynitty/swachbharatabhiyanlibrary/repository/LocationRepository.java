@@ -25,7 +25,7 @@ public class LocationRepository {
         SQLiteDatabase database = AUtils.sqlDBInstance(mContext);
 
         ContentValues values = new ContentValues();
-        values.put(EmpSyncServerEntity.COLUMN_DATA, pojo);
+        values.put(UserLocationEntity.COLUMN_DATA, pojo);
 
         database.insert(AUtils.LOCATION_TABLE_NAME, null, values);
         database.close();

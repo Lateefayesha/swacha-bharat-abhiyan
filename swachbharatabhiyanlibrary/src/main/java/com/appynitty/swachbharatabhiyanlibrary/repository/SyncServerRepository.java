@@ -26,7 +26,7 @@ public class SyncServerRepository {
         SQLiteDatabase database = AUtils.sqlDBInstance(mContext);
 
         ContentValues values = new ContentValues();
-        values.put(EmpSyncServerEntity.COLUMN_DATA, pojo);
+        values.put(SyncServerEntity.COLUMN_DATA, pojo);
 
         database.insert(AUtils.COLLECTION_TABLE_NAME, null, values);
         database.close();
