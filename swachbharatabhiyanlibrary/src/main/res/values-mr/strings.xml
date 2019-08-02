@@ -136,5 +136,6 @@
 
     <string name="slow_internet">आपले इंटरनेट हळुवारपणे चालत आहे!</string>
     <string name="feature_unavailable_error">आपले हळुवार इंटरनेटमुळे ही सेवा अनुपलब्ध आहे.</string>
+    <string name="success_message">यशस्वीरित्या अपलोड केले</string>
 
 </resources>

@@ -159,5 +159,6 @@
 
     <string name="slow_internet">Your Internet is slow!</string>
     <string name="feature_unavailable_error">This feature is unavailable due to slow internet.</string>
+    <string name="success_message">Uploaded successfully</string>
 
 </resources>
