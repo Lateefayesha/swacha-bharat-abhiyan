@@ -5,9 +5,11 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
 import android.content.ComponentName;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -154,10 +156,10 @@ public class AUtils extends MsUtils {
     public static final String ADD_DETAILS_TYPE_KEY = "ADD_DETAILS_TYPE_KEY";
     public static final int ADD_DETAILS_REQUEST_KEY = 8986;
 
-    public static final String DATABASE_NAME = "db_sab";
-    public static final String LOCATION_TABLE_NAME = "loc_table";
-    public static final String COLLECTION_TABLE_NAME = "gc_table";
-    public static final String QR_TABLE_NAME = "qr_table";
+    public static final String DATABASE_NAME = "db_sba_offline";
+    public static final String LOCATION_TABLE_NAME = "table_location";
+    public static final String COLLECTION_TABLE_NAME = "table_gcollection";
+    public static final String QR_TABLE_NAME = "table_qr_emp";
 
     public static List<UserLocationPojo> UserLocationPojoList= new ArrayList<>();
     public static List<OfflineGarbageColectionPojo> syncGarbageCollectionPojoList = new ArrayList<>();
@@ -793,6 +795,13 @@ public class AUtils extends MsUtils {
         }else{
             return false;
         }
+    }
+
+    public static SQLiteDatabase sqlDBInstance(Context mContext){
+
+        SbaDatabase databaseHelper = new SbaDatabase(mContext);
+
+        return databaseHelper.getWritableDatabase();
     }
 }
 

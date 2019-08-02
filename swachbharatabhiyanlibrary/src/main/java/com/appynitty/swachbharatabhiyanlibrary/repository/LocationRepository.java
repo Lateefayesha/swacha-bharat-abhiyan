@@ -1,105 +1,69 @@
 package com.appynitty.swachbharatabhiyanlibrary.repository;
 
-import android.app.Application;
-import android.os.AsyncTask;
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
-import androidx.lifecycle.LiveData;
-
-import com.appynitty.swachbharatabhiyanlibrary.DAO.UserLocationDao;
+import com.appynitty.swachbharatabhiyanlibrary.entity.EmpSyncServerEntity;
 import com.appynitty.swachbharatabhiyanlibrary.entity.UserLocationEntity;
-import com.appynitty.swachbharatabhiyanlibrary.utils.SbaRoomDatabase;
+import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class LocationRepository {
 
-    private UserLocationDao mUserLocationDao;
-    private LiveData<List<UserLocationEntity>> mUserLocationEntityList;
+    private Context mContext;
+    private SQLiteDatabase database;
 
-    public LocationRepository(Application application) {
-        SbaRoomDatabase db = SbaRoomDatabase.getDatabase(application);
-        mUserLocationDao = db.userLocationDao();
-        mUserLocationEntityList = mUserLocationDao.getAllLocations();
+    public LocationRepository(Context context) {
+        mContext = context;
+        database = AUtils.sqlDBInstance(context);
     }
 
-    public LiveData<List<UserLocationEntity>> getUserLocationEntityList() {
-        return mUserLocationEntityList;
+    public void insertUserLocationEntity(String pojo) {
+
+        ContentValues values = new ContentValues();
+        values.put(EmpSyncServerEntity.COLUMN_DATA, pojo);
+
+        database.insert(AUtils.LOCATION_TABLE_NAME, null, values);
+        database.close();
     }
 
-    public void deleteSelectedRecord (int index_id) {
-        new DeleteSelectedRecordAsyncTask(mUserLocationDao).execute(index_id);
-    }
+    public List<UserLocationEntity> getAllUserLocationEntity() {
+        List<UserLocationEntity> list = new ArrayList<>();
 
-    private class DeleteSelectedRecordAsyncTask extends AsyncTask<Integer, Void, Void> {
+        String sql = "SELECT * FROM " + AUtils.LOCATION_TABLE_NAME + " ORDER BY " + EmpSyncServerEntity.COLUMN_ID + " DESC";
 
-        private UserLocationDao mAsyncTaskDao;
+        Cursor cursor = database.rawQuery(sql, null);
+        if (cursor.moveToFirst()) {
+            do {
+                UserLocationEntity userLocationEntity = new UserLocationEntity();
+                userLocationEntity.setIndex_id(cursor.getInt(cursor.getColumnIndex(UserLocationEntity.COLUMN_ID)));
+                userLocationEntity.setPojo(cursor.getString(cursor.getColumnIndex(UserLocationEntity.COLUMN_DATA)));
 
-        public DeleteSelectedRecordAsyncTask(UserLocationDao dao) {
-            mAsyncTaskDao = dao;
+                list.add(userLocationEntity);
+            } while (cursor.moveToNext());
         }
 
-        @Override
-        protected Void doInBackground(final Integer... params) {
-            mAsyncTaskDao.deleteSelectedRecord(params[0]);
-            return null;
-        }
+        cursor.close();
+        database.close();
+        return list;
     }
 
-    public void insert (UserLocationEntity word) {
-        new InsertAsyncTask(mUserLocationDao).execute(word);
+    public void deleteUserLocationEntity(int id) {
+
+        String whereClause = UserLocationEntity.COLUMN_ID + "= ?";
+        String[] args = new String[]{String.valueOf(id)};
+
+        database.delete(AUtils.LOCATION_TABLE_NAME, whereClause, args);
+        database.close();
     }
 
-    private class InsertAsyncTask extends AsyncTask<UserLocationEntity, Void, Void> {
+    public void deleteAllUserLocationEntity() {
 
-        private UserLocationDao mAsyncTaskDao;
-
-        public InsertAsyncTask(UserLocationDao dao) {
-            mAsyncTaskDao = dao;
-        }
-
-        @Override
-        protected Void doInBackground(final UserLocationEntity... params) {
-            mAsyncTaskDao.insert(params[0]);
-            return null;
-        }
+        database.delete(AUtils.LOCATION_TABLE_NAME, null, null);
+        database.close();
     }
-
-    public void updateSelectedRecord (UserLocationEntity word) {
-        new UpdateSelectedRecordAsyncTask(mUserLocationDao).execute(word);
-    }
-
-    private class UpdateSelectedRecordAsyncTask extends AsyncTask<UserLocationEntity, Void, Void> {
-
-        private UserLocationDao mAsyncTaskDao;
-
-        public UpdateSelectedRecordAsyncTask(UserLocationDao dao) {
-            mAsyncTaskDao = dao;
-        }
-
-        @Override
-        protected Void doInBackground(final UserLocationEntity... params) {
-            mAsyncTaskDao.updateSelectedRecord(params[0]);
-            return null;
-        }
-    }
-
-    public void deleteAllRecord () {
-        new DeleteAllRecordAsyncTask(mUserLocationDao).execute();
-    }
-
-    private class DeleteAllRecordAsyncTask extends AsyncTask<UserLocationEntity, Void, Void> {
-
-        private UserLocationDao mAsyncTaskDao;
-
-        public DeleteAllRecordAsyncTask(UserLocationDao dao) {
-            mAsyncTaskDao = dao;
-        }
-
-        @Override
-        protected Void doInBackground(final UserLocationEntity... params) {
-            mAsyncTaskDao.deleteAll();
-            return null;
-        }
-    }
-
 }
