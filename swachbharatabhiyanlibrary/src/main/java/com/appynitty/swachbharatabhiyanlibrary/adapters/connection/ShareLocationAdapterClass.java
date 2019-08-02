@@ -106,7 +106,8 @@ public class ShareLocationAdapterClass {
 
                 @Override
                 public void onFailure(Call<List<UserLocationResultPojo>> call, Throwable t) {
-                    mListener.onFailureCallBack();
+                    if(!AUtils.isNull(mListener))
+                        mListener.onFailureCallBack();
                     Log.i(AUtils.TAG_HTTP_RESPONSE, "onFailureCallback: Response Code-" + t.getMessage());
                 }
             });

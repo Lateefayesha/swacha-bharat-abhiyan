@@ -730,7 +730,7 @@ public class AUtils extends MsUtils {
     }
 
     public static int getBatteryStatus(){
-        BatteryManager batteryManager = (BatteryManager) mCurrentContext.getSystemService(Context.BATTERY_SERVICE);
+        BatteryManager batteryManager = (BatteryManager) mApplication.getApplicationContext().getSystemService(Context.BATTERY_SERVICE);
         return batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY);
     }
 

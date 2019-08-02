@@ -47,6 +47,7 @@ import com.appynitty.swachbharatabhiyanlibrary.pojos.CollectionDumpYardPointPojo
 import com.appynitty.swachbharatabhiyanlibrary.pojos.GarbageCollectionPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.GcResultPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.ImagePojo;
+import com.appynitty.swachbharatabhiyanlibrary.pojos.OfflineGarbageColectionPojo;
 import com.appynitty.swachbharatabhiyanlibrary.repository.SyncServerRepository;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 import com.appynitty.swachbharatabhiyanlibrary.utils.LocaleHelper;
@@ -96,7 +97,7 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
 
     GarbageCollectionPojo garbageCollectionPojo;
 
-    private SyncServerRepository mSyncServerRepository;
+    private SyncServerRepository syncServerRepository;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -305,7 +306,7 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
 
         initToolbar();
 
-        mSyncServerRepository = new SyncServerRepository(AUtils.mApplication.getApplicationContext());
+        syncServerRepository = new SyncServerRepository(AUtils.mApplication.getApplicationContext());
     }
 
     protected void initToolbar(){
@@ -952,8 +953,29 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
 
     private void insertToDB(GarbageCollectionPojo garbageCollectionPojo) {
 
-        Type type = new TypeToken<GarbageCollectionPojo>() {}.getType();
-        mSyncServerRepository.insertSyncServerEntity(new Gson().toJson(garbageCollectionPojo,type));
+        OfflineGarbageColectionPojo entity = new OfflineGarbageColectionPojo();
+
+        entity.setReferenceID(garbageCollectionPojo.getId());
+        if(garbageCollectionPojo.getId().substring(0, 2).matches("^[HhPp]+$")){
+            entity.setGcType("1");
+        }else if(garbageCollectionPojo.getId().substring(0, 2).matches("^[GgPp]+$")){
+            entity.setGcType("2");
+        }else if(garbageCollectionPojo.getId().substring(0, 2).matches("^[DdYy]+$")){
+            entity.setGcType("3");
+        }
+        entity.setNote(garbageCollectionPojo.getComment());
+        entity.setGarbageType(String.valueOf(garbageCollectionPojo.getGarbageType()));
+        entity.setTotalGcWeight(String.valueOf(garbageCollectionPojo.getWeightTotal()));
+        entity.setTotalDryWeight(String.valueOf(garbageCollectionPojo.getWeightTotalDry()));
+        entity.setTotalWetWeight(String.valueOf(garbageCollectionPojo.getWeightTotalWet()));
+        entity.setVehicleNumber(QuickUtils.prefs.getString(AUtils.VEHICLE_NO,""));
+        entity.setLong(QuickUtils.prefs.getString(AUtils.LONG,""));
+        entity.setLat(QuickUtils.prefs.getString(AUtils.LAT,""));
+        entity.setGcDate(AUtils.getSeverDateTime());
+
+        Type type = new TypeToken<OfflineGarbageColectionPojo>() {}.getType();
+
+        syncServerRepository.insertSyncServerEntity(new Gson().toJson(entity, type));
 
         showOfflinePopup(garbageCollectionPojo.getId());
     }

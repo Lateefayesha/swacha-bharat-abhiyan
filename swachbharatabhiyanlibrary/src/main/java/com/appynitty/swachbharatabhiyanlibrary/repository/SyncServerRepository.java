@@ -60,7 +60,7 @@ public class SyncServerRepository {
 
         SQLiteDatabase database = AUtils.sqlDBInstance(mContext);
 
-        String whereClause = UserLocationEntity.COLUMN_ID + "= ?";
+        String whereClause = SyncServerEntity.COLUMN_ID + "= ?";
         String[] args = new String[]{String.valueOf(id)};
 
         database.delete(AUtils.COLLECTION_TABLE_NAME, whereClause, args);

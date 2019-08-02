@@ -96,7 +96,7 @@ public class SyncServerAdapterClass {
         for (SyncServerEntity entity : entityList) {
             Type type = new TypeToken<OfflineGarbageColectionPojo>() {}.getType();
             OfflineGarbageColectionPojo pojo = new Gson().fromJson(entity.getPojo(), type);
-
+            pojo.setUserId(QuickUtils.prefs.getString(AUtils.PREFS.USER_ID, ""));
             pojo.setOfflineID(String.valueOf(entity.getIndex_id()));
             offlineGarbageColectionPojoList.add(pojo);
         }
