@@ -388,6 +388,7 @@ public class EmpAddLocationDetailsActivity extends AppCompatActivity {
         qrLocationPojo.setHouseNumber(txtHouseNo.getText().toString());
         qrLocationPojo.setMobileno(txtContactNo.getText().toString());
         qrLocationPojo.setUserId(QuickUtils.prefs.getString(AUtils.PREFS.USER_ID, ""));
+        qrLocationPojo.setDate(AUtils.getSeverDateTime());
 
         if(AUtils.isInternetAvailable()) {
             empQrLocationAdapterClass.saveQrLocation(qrLocationPojo);

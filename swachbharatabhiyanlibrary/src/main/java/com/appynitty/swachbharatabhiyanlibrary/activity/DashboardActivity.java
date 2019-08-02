@@ -28,6 +28,7 @@ import com.appynitty.swachbharatabhiyanlibrary.R;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.UI.InflateMenuAdapter;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.AttendanceAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.CheckAttendanceAdapterClass;
+import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.ShareLocationAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.SyncServerAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.UserDetailAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.VehicleTypeAdapterClass;
@@ -239,6 +240,9 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
 
         SyncServerAdapterClass syncServer = new SyncServerAdapterClass();
         syncServer.syncServer();
+
+        ShareLocationAdapterClass shareLocationAdapterClass = new ShareLocationAdapterClass();
+        shareLocationAdapterClass.shareLocation();
 
         checkDutyStatus();
     }

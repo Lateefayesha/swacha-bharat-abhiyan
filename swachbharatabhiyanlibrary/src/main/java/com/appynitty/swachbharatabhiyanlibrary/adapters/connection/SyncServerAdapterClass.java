@@ -3,9 +3,11 @@ package com.appynitty.swachbharatabhiyanlibrary.adapters.connection;
 import android.util.Log;
 
 import com.appynitty.retrofitconnectionlibrary.connection.Connection;
+import com.appynitty.swachbharatabhiyanlibrary.entity.EmpSyncServerEntity;
 import com.appynitty.swachbharatabhiyanlibrary.entity.SyncServerEntity;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.OfflineGarbageColectionPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.OfflineGcResultPojo;
+import com.appynitty.swachbharatabhiyanlibrary.pojos.QrLocationPojo;
 import com.appynitty.swachbharatabhiyanlibrary.repository.SyncServerRepository;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 import com.appynitty.swachbharatabhiyanlibrary.webservices.GarbageCollectionWebService;
@@ -82,39 +84,29 @@ public class SyncServerAdapterClass {
                         }
                     }
                 } else {
-                    mSyncServerRepository.deleteAllSyncServerEntity();
+                    if (Integer.parseInt(result.getID()) != 0) {
+                        mSyncServerRepository.deleteSyncServerEntity(Integer.parseInt(result.getID()));
+                    }
+                    for (int i = 0; i < offlineGarbageColectionPojoList.size(); i++) {
+                        if (offlineGarbageColectionPojoList.get(i).getOfflineID().equals(result.getID())) {
+                            offlineGarbageColectionPojoList.remove(i);
+                            break;
+                        }
+                    }
                 }
             }
         }
     }
 
     private void getDBList(){
-        List<SyncServerEntity> syncServerEntities = mSyncServerRepository.getAllSyncServerEntity();
-        if(syncServerEntities.size() > 0) {
-            offlineGarbageColectionPojoList.clear();
+        List<SyncServerEntity> entityList = mSyncServerRepository.getAllSyncServerEntity();
+        offlineGarbageColectionPojoList.clear();
+        for (SyncServerEntity entity : entityList) {
+            Type type = new TypeToken<OfflineGarbageColectionPojo>() {}.getType();
+            OfflineGarbageColectionPojo pojo = new Gson().fromJson(entity.getPojo(), type);
 
-            for(SyncServerEntity entity : syncServerEntities) {
-                OfflineGarbageColectionPojo syncGarbageCollectionPojo = new OfflineGarbageColectionPojo();
-                syncGarbageCollectionPojo.setOfflineID(String.valueOf(entity.getIndex_id()));
-                syncGarbageCollectionPojo.setUserId(QuickUtils.prefs.getString(AUtils.PREFS.USER_ID, ""));
-
-                Type type = new TypeToken<OfflineGarbageColectionPojo>() {}.getType();
-                OfflineGarbageColectionPojo offlineGarbageColectionPojo = new Gson().fromJson(entity.getPojo(), type);
-
-                syncGarbageCollectionPojo.setLat(offlineGarbageColectionPojo.getLat());
-                syncGarbageCollectionPojo.setLong(offlineGarbageColectionPojo.getLong());
-                syncGarbageCollectionPojo.setNote(offlineGarbageColectionPojo.getNote());
-                syncGarbageCollectionPojo.setTotalGcWeight(String.valueOf(offlineGarbageColectionPojo.getTotalGcWeight()));
-                syncGarbageCollectionPojo.setTotalDryWeight(String.valueOf(offlineGarbageColectionPojo.getTotalDryWeight()));
-                syncGarbageCollectionPojo.setTotalWetWeight(String.valueOf(offlineGarbageColectionPojo.getTotalWetWeight()));
-                syncGarbageCollectionPojo.setReferenceID(offlineGarbageColectionPojo.getReferenceID());
-                syncGarbageCollectionPojo.setGcType(String.valueOf(offlineGarbageColectionPojo.getGcType()));
-                syncGarbageCollectionPojo.setVehicleNumber(offlineGarbageColectionPojo.getVehicleNumber());
-                syncGarbageCollectionPojo.setGarbageType(String.valueOf(offlineGarbageColectionPojo.getGarbageType()));
-                syncGarbageCollectionPojo.setGcDate(String.valueOf(offlineGarbageColectionPojo.getGcDate()));
-
-                offlineGarbageColectionPojoList.add(syncGarbageCollectionPojo);
-            }
+            pojo.setOfflineID(String.valueOf(entity.getIndex_id()));
+            offlineGarbageColectionPojoList.add(pojo);
         }
     }
 }

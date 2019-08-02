@@ -38,6 +38,7 @@ import android.widget.Toast;
 
 import com.appynitty.swachbharatabhiyanlibrary.R;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.EmpSyncServerAdapterClass;
+import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.ShareLocationAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.SyncServerAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.OfflineGarbageColectionPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.QrLocationPojo;
@@ -162,7 +163,7 @@ public class AUtils extends MsUtils {
     public static final String QR_TABLE_NAME = "table_qr_emp";
 
     private static SyncServerAdapterClass syncServer;
-
+    private static ShareLocationAdapterClass shareLocationAdapterClass;
     private static EmpSyncServerAdapterClass empSyncServer;
 
     public static boolean isIsOnduty() {
@@ -712,6 +713,9 @@ public class AUtils extends MsUtils {
                 empSyncServer = new EmpSyncServerAdapterClass();
                 empSyncServer.syncServer();
             }
+
+            shareLocationAdapterClass = new ShareLocationAdapterClass();
+            shareLocationAdapterClass.shareLocation();
         }
     }
 

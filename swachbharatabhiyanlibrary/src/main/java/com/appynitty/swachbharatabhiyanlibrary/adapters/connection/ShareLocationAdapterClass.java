@@ -3,6 +3,7 @@ package com.appynitty.swachbharatabhiyanlibrary.adapters.connection;
 import android.util.Log;
 
 import com.appynitty.retrofitconnectionlibrary.connection.Connection;
+import com.appynitty.swachbharatabhiyanlibrary.entity.UserLocationEntity;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.UserLocationPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.UserLocationResultPojo;
 import com.appynitty.swachbharatabhiyanlibrary.repository.LocationRepository;
@@ -12,6 +13,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 import quickutils.core.QuickUtils;
@@ -25,6 +27,13 @@ public class ShareLocationAdapterClass {
 
     private LocationRepository mLocationRepository;
 
+    private List<UserLocationPojo> userLocationPojoList;
+
+    public ShareLocationAdapterClass(){
+        mLocationRepository = new LocationRepository(AUtils.mApplication.getApplicationContext());
+        userLocationPojoList = new ArrayList<>();
+    }
+
     public ShareLocationListener getShareLocationListener() {
         return mListener;
     }
@@ -35,7 +44,7 @@ public class ShareLocationAdapterClass {
 
     public void shareLocation(final List<UserLocationPojo> userLocationPojos) {
 
-        mLocationRepository = new LocationRepository(AUtils.mApplication.getApplicationContext());
+
 
         UserLocationWebService service = Connection.createService(UserLocationWebService.class, AUtils.SERVER_URL);
 
@@ -68,6 +77,40 @@ public class ShareLocationAdapterClass {
                 Log.i(AUtils.TAG_HTTP_RESPONSE, "onFailureCallback: Response Code-" + t.getMessage());
             }
         });
+
+    }
+
+    public void shareLocation() {
+
+        getDBList();
+
+        if(userLocationPojoList.size() > 0) {
+
+            UserLocationWebService service = Connection.createService(UserLocationWebService.class, AUtils.SERVER_URL);
+
+            service.saveUserLocation(QuickUtils.prefs.getString(AUtils.APP_ID, "1"),
+                    AUtils.CONTENT_TYPE,
+                    QuickUtils.prefs.getString(AUtils.PREFS.USER_TYPE_ID, "0"),
+                    AUtils.getBatteryStatus(),
+                    userLocationPojoList).enqueue(new Callback<List<UserLocationResultPojo>>() {
+                @Override
+                public void onResponse(Call<List<UserLocationResultPojo>> call, Response<List<UserLocationResultPojo>> response) {
+
+                    if (response.code() == 200) {
+                        onResponseReceived(response.body(), userLocationPojoList);
+                    } else {
+                        mListener.onFailureCallBack();
+                        Log.i(AUtils.TAG_HTTP_RESPONSE, "onFailureCallback: Response Code-" + response.code());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<UserLocationResultPojo>> call, Throwable t) {
+                    mListener.onFailureCallBack();
+                    Log.i(AUtils.TAG_HTTP_RESPONSE, "onFailureCallback: Response Code-" + t.getMessage());
+                }
+            });
+        }
 
     }
 
@@ -128,6 +171,24 @@ public class ShareLocationAdapterClass {
                 } else {
                     mListener.onFailureCallBack();
                 }
+            }
+        }
+    }
+
+    private void getDBList() {
+        List<UserLocationEntity> userLocationEntities = mLocationRepository.getAllUserLocationEntity();
+
+        if(userLocationEntities.size() > 0) {
+
+            userLocationPojoList.clear();
+
+            for (UserLocationEntity entity : userLocationEntities) {
+
+                Type type = new TypeToken<UserLocationPojo>() {}.getType();
+                UserLocationPojo pojo = new Gson().fromJson(entity.getPojo(), type);
+                pojo.setOfflineId(String.valueOf(entity.getIndex_id()));
+
+                userLocationPojoList.add(pojo);
             }
         }
     }

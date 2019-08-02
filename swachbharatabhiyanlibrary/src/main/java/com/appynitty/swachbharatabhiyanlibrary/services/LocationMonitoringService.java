@@ -100,27 +100,7 @@ public class LocationMonitoringService implements LocationListener, GpsStatus.Li
     }
 
     public void onStopTracking() {
-        List<UserLocationEntity> userLocationEntities = mLocationRepository.getAllUserLocationEntity();
-
-        if(userLocationEntities.size() > 0) {
-            mUserLocationPojoList.clear();
-
-            for (UserLocationEntity entity : userLocationEntities) {
-                UserLocationPojo userLocationPojo = new UserLocationPojo();
-                userLocationPojo.setOfflineId(String.valueOf(entity.getIndex_id()));
-
-                Type type = new TypeToken<UserLocationPojo>() {}.getType();
-                UserLocationPojo locationPojo = new Gson().fromJson(entity.getPojo(), type);
-
-                userLocationPojo.setUserId(QuickUtils.prefs.getString(AUtils.PREFS.USER_ID, ""));
-                userLocationPojo.setLat(locationPojo.getLat());
-                userLocationPojo.setLong(locationPojo.getLong());
-                userLocationPojo.setDatetime(locationPojo.getDatetime());
-
-                mUserLocationPojoList.add(userLocationPojo);
-            }
-        }
-        mAdapter.shareLocation(mUserLocationPojoList);
+        mAdapter.shareLocation();
         LocationManager locationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
         locationManager.removeUpdates(this);
     }

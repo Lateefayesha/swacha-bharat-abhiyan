@@ -30,6 +30,7 @@ import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.EmpAttendance
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.EmpCheckAttendanceAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.EmpSyncServerAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.EmpUserDetailAdapterClass;
+import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.ShareLocationAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.custom_component.GlideCircleTransformation;
 import com.appynitty.swachbharatabhiyanlibrary.dialogs.EmpPopUpDialog;
 import com.appynitty.swachbharatabhiyanlibrary.dialogs.IdCardDialog;
@@ -204,6 +205,9 @@ public class EmpDashboardActivity extends AppCompatActivity implements EmpPopUpD
 
         EmpSyncServerAdapterClass empSyncServer = new EmpSyncServerAdapterClass();
         empSyncServer.syncServer();
+
+        ShareLocationAdapterClass shareLocationAdapterClass = new ShareLocationAdapterClass();
+        shareLocationAdapterClass.shareLocation();
 
         checkDutyStatus();
     }
