@@ -16,14 +16,14 @@ import java.util.List;
 public class SyncServerRepository {
 
     private Context mContext;
-    private SQLiteDatabase database;
 
     public SyncServerRepository(Context context) {
         mContext = context;
-        database = AUtils.sqlDBInstance(context);
     }
 
     public void insertSyncServerEntity(String pojo) {
+
+        SQLiteDatabase database = AUtils.sqlDBInstance(mContext);
 
         ContentValues values = new ContentValues();
         values.put(EmpSyncServerEntity.COLUMN_DATA, pojo);
@@ -33,6 +33,9 @@ public class SyncServerRepository {
     }
 
     public List<SyncServerEntity> getAllSyncServerEntity() {
+
+        SQLiteDatabase database = AUtils.sqlDBInstance(mContext);
+
         List<SyncServerEntity> list = new ArrayList<>();
 
         String sql = "SELECT * FROM " + AUtils.COLLECTION_TABLE_NAME + " ORDER BY " + SyncServerEntity.COLUMN_ID + " DESC";
@@ -55,6 +58,8 @@ public class SyncServerRepository {
 
     public void deleteSyncServerEntity(int id) {
 
+        SQLiteDatabase database = AUtils.sqlDBInstance(mContext);
+
         String whereClause = UserLocationEntity.COLUMN_ID + "= ?";
         String[] args = new String[]{String.valueOf(id)};
 
@@ -63,6 +68,8 @@ public class SyncServerRepository {
     }
 
     public void deleteAllSyncServerEntity() {
+
+        SQLiteDatabase database = AUtils.sqlDBInstance(mContext);
 
         database.delete(AUtils.COLLECTION_TABLE_NAME, null, null);
         database.close();

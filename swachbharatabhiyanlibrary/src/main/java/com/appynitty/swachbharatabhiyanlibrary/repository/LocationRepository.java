@@ -15,14 +15,14 @@ import java.util.List;
 public class LocationRepository {
 
     private Context mContext;
-    private SQLiteDatabase database;
 
     public LocationRepository(Context context) {
         mContext = context;
-        database = AUtils.sqlDBInstance(context);
     }
 
     public void insertUserLocationEntity(String pojo) {
+
+        SQLiteDatabase database = AUtils.sqlDBInstance(mContext);
 
         ContentValues values = new ContentValues();
         values.put(EmpSyncServerEntity.COLUMN_DATA, pojo);
@@ -32,6 +32,9 @@ public class LocationRepository {
     }
 
     public List<UserLocationEntity> getAllUserLocationEntity() {
+
+        SQLiteDatabase database = AUtils.sqlDBInstance(mContext);
+
         List<UserLocationEntity> list = new ArrayList<>();
 
         String sql = "SELECT * FROM " + AUtils.LOCATION_TABLE_NAME + " ORDER BY " + UserLocationEntity.COLUMN_ID + " DESC";
@@ -54,6 +57,8 @@ public class LocationRepository {
 
     public void deleteUserLocationEntity(int id) {
 
+        SQLiteDatabase database = AUtils.sqlDBInstance(mContext);
+
         String whereClause = UserLocationEntity.COLUMN_ID + "= ?";
         String[] args = new String[]{String.valueOf(id)};
 
@@ -62,6 +67,8 @@ public class LocationRepository {
     }
 
     public void deleteAllUserLocationEntity() {
+
+        SQLiteDatabase database = AUtils.sqlDBInstance(mContext);
 
         database.delete(AUtils.LOCATION_TABLE_NAME, null, null);
         database.close();

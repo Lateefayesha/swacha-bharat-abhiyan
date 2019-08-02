@@ -14,14 +14,14 @@ import java.util.List;
 public class EmpSyncServerRepository {
 
     private Context mContext;
-    private SQLiteDatabase database;
 
     public EmpSyncServerRepository(Context context) {
         mContext = context;
-        database = AUtils.sqlDBInstance(context);
     }
 
     public void insertEmpSyncServerEntity(String pojo) {
+
+        SQLiteDatabase database = AUtils.sqlDBInstance(mContext);
 
         ContentValues values = new ContentValues();
         values.put(EmpSyncServerEntity.COLUMN_DATA, pojo);
@@ -31,6 +31,8 @@ public class EmpSyncServerRepository {
     }
 
     public List<EmpSyncServerEntity> getAllEmpSyncServerEntity() {
+
+        SQLiteDatabase database = AUtils.sqlDBInstance(mContext);
         List<EmpSyncServerEntity> list = new ArrayList<>();
 
         String sql = "SELECT * FROM " + AUtils.QR_TABLE_NAME + " ORDER BY " + EmpSyncServerEntity.COLUMN_ID + " DESC";
@@ -53,6 +55,8 @@ public class EmpSyncServerRepository {
 
     public void deleteEmpSyncServerEntity(int id) {
 
+        SQLiteDatabase database = AUtils.sqlDBInstance(mContext);
+
         String whereClause = EmpSyncServerEntity.COLUMN_ID + "= ?";
         String[] args = new String[]{String.valueOf(id)};
 
@@ -61,6 +65,8 @@ public class EmpSyncServerRepository {
     }
 
     public void deleteAllEmpSyncServerEntity() {
+
+        SQLiteDatabase database = AUtils.sqlDBInstance(mContext);
 
         database.delete(AUtils.QR_TABLE_NAME, null, null);
         database.close();
