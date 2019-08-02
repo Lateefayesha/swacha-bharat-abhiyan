@@ -98,8 +98,6 @@ public class SplashScreenActivity extends AppCompatActivity {
         }
     }
 
-
-
     private void setDefaultLanguage() {
         AUtils.changeLanguage(SplashScreenActivity.this, Integer.parseInt(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID, AUtils.DEFAULT_LANGUAGE_ID)));
     }

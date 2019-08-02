@@ -11,15 +11,6 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
-
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,25 +18,29 @@ import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 
 import com.appynitty.retrofitconnectionlibrary.pojos.ResultPojo;
 import com.appynitty.swachbharatabhiyanlibrary.R;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.EmpQrLocationAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.dialogs.ChooseActionPopUp;
-import com.appynitty.swachbharatabhiyanlibrary.entity.EmpSyncServerEntity;
-import com.appynitty.swachbharatabhiyanlibrary.entity.SyncServerEntity;
-import com.appynitty.swachbharatabhiyanlibrary.pojos.OfflineGarbageColectionPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.QrLocationPojo;
+import com.appynitty.swachbharatabhiyanlibrary.repository.EmpSyncServerRepository;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 import com.appynitty.swachbharatabhiyanlibrary.utils.LocaleHelper;
-import com.appynitty.swachbharatabhiyanlibrary.view_model.EmpSyncServerViewModel;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.mithsoft.lib.components.MyProgressDialog;
 import com.mithsoft.lib.components.Toasty;
 
-import java.util.List;
+import java.lang.reflect.Type;
 import java.util.Objects;
 
 import io.github.kobakei.materialfabspeeddial.FabSpeedDial;
@@ -53,7 +48,7 @@ import me.dm7.barcodescanner.zbar.Result;
 import me.dm7.barcodescanner.zbar.ZBarScannerView;
 import quickutils.core.QuickUtils;
 
-public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarScannerView.ResultHandler{
+public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarScannerView.ResultHandler {
 
     private final static String TAG = "EmpQRcodeScannerActivity";
 
@@ -72,9 +67,10 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
     private EmpQrLocationAdapterClass empQrLocationAdapter;
     private QrLocationPojo qrLocationPojo;
 
-    private MyProgressDialog myProgressDialog;
+    private EmpSyncServerRepository empSyncServerRepository;
+    private Gson gson;
 
-    private EmpSyncServerViewModel syncServerViewModel;
+    private MyProgressDialog myProgressDialog;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -135,7 +131,7 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
 
             if (allgranted) {
                 checkLocationPermission();
-            }else if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) mContext, Manifest.permission.ACCESS_FINE_LOCATION)) {
+            } else if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) mContext, Manifest.permission.ACCESS_FINE_LOCATION)) {
 
                 AUtils.showPermissionDialog(mContext, "Location Service", new DialogInterface.OnClickListener() {
                     @Override
@@ -165,7 +161,7 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
                 break;
@@ -175,9 +171,9 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
 
     @Override
     public void onBackPressed() {
-        if(!isScanQr){
+        if (!isScanQr) {
             scanQR();
-        }else {
+        } else {
             super.onBackPressed();
         }
     }
@@ -185,11 +181,9 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        if(AUtils.isNetWorkAvailable(this))
-        {
+        if (AUtils.isNetWorkAvailable(this)) {
             AUtils.hideSnackBar();
-        }
-        else {
+        } else {
             AUtils.showSnackBar(this);
         }
     }
@@ -207,6 +201,9 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
         mContext = EmpQRcodeScannerActivity.this;
         AUtils.mCurrentContext = mContext;
         myProgressDialog = new MyProgressDialog(mContext, R.drawable.progress_bar, false);
+
+        empSyncServerRepository = new EmpSyncServerRepository(mContext);
+        gson = new Gson();
 
         fabSpeedDial = findViewById(R.id.flash_toggle);
         idAutoComplete = findViewById(R.id.txt_id_auto);
@@ -235,11 +232,9 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
         chooseActionPopUp = new ChooseActionPopUp(mContext);
         empQrLocationAdapter = new EmpQrLocationAdapterClass();
         qrLocationPojo = new QrLocationPojo();
-
-        syncServerViewModel = ViewModelProviders.of((AppCompatActivity) AUtils.mCurrentContext).get(EmpSyncServerViewModel.class);
     }
 
-    protected void initToolbar(){
+    protected void initToolbar() {
         toolbar.setTitle(getResources().getString(R.string.title_activity_qrcode_scanner));
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
@@ -251,19 +246,19 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
             @Override
             public void onClick(View view) {
 
-                try{
+                try {
 
-                    if(!idAutoComplete.getText().toString().matches("")){
+                    if (!idAutoComplete.getText().toString().matches("")) {
                         submitQRcode(idAutoComplete.getText().toString());
-                    }else{
-                        if(getGCType().equals(AUtils.HP_AREA_TYPE_ID))
+                    } else {
+                        if (getGCType().equals(AUtils.HP_AREA_TYPE_ID))
                             Toasty.error(mContext, mContext.getResources().getString(R.string.hp_area_validation_emp)).show();
                         else if (getGCType().equals(AUtils.GP_AREA_TYPE_ID))
                             Toasty.error(mContext, mContext.getResources().getString(R.string.gp_area_validation_emp)).show();
                         else
                             Toasty.error(mContext, mContext.getResources().getString(R.string.dy_area_validation_emp)).show();
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
@@ -287,14 +282,14 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
                     idAutoComplete.setSelection(5);
                 }
 
-                if (radioGroupId == R.id.point_collection_radio){
+                if (radioGroupId == R.id.point_collection_radio) {
                     idIpLayout.setHint(getResources().getString(R.string.gp_id_hint));
                     radioSelection = AUtils.RADIO_SELECTED_GP;
                     idAutoComplete.setText("GPSBA");
                     idAutoComplete.setSelection(5);
                 }
 
-                if (radioGroupId == R.id.dump_yard_radio){
+                if (radioGroupId == R.id.dump_yard_radio) {
                     idIpLayout.setHint(getResources().getString(R.string.dy_id_hint));
                     radioSelection = AUtils.RADIO_SELECTED_DY;
                     idAutoComplete.setText("DYSBA");
@@ -306,7 +301,7 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
         idAutoComplete.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean isFocused) {
-                if(isFocused)
+                if (isFocused)
                     AUtils.showKeyboard((Activity) mContext);
 
                 if (isFocused && isScanQr) {
@@ -314,7 +309,7 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
                     idAutoComplete.setText("HPSBA");
                     idAutoComplete.setSelection(4);
                     AUtils.showKeyboard((Activity) mContext);
-                }else {
+                } else {
                     idAutoComplete.clearListSelection();
                 }
             }
@@ -337,10 +332,10 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
         fabSpeedDial.getMainFab().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(scannerView.getFlash()){
+                if (scannerView.getFlash()) {
                     scannerView.setFlash(false);
                     fabSpeedDial.getMainFab().setImageDrawable(getResources().getDrawable(R.drawable.ic_flash_on_indicator));
-                }else{
+                } else {
                     scannerView.setFlash(true);
                     fabSpeedDial.getMainFab().setImageDrawable(getResources().getDrawable(R.drawable.ic_flash_off));
                 }
@@ -351,14 +346,13 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
             @Override
             public void onChooseActionPopUpDismissed(@Nullable Object data, int actionType) {
                 String mId = (String) data;
-                switch(actionType){
+                switch (actionType) {
                     case ChooseActionPopUp.ADD_DETAILS_BUTTON_CLICKED:
-                        if(AUtils.isInternetAvailable() && AUtils.isConnectedFast(mContext)) {
+                        if (AUtils.isInternetAvailable() && AUtils.isConnectedFast(mContext)) {
                             submitOnDetails(mId, getGCType(mId));
                         } else {
-                            if(!AUtils.isConnectedFast(mContext))
-                            {
-                                AUtils.showWarning(mContext,getResources().getString(R.string.feature_unavailable_error));
+                            if (!AUtils.isConnectedFast(mContext)) {
+                                AUtils.showWarning(mContext, getResources().getString(R.string.feature_unavailable_error));
                             } else {
                                 Toasty.info(mContext, getResources().getString(R.string.no_internet_error), Toast.LENGTH_LONG).show();
                             }
@@ -379,16 +373,16 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
                 myProgressDialog.dismiss();
                 String message = "";
 
-                if(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID, AUtils.DEFAULT_LANGUAGE_ID).equals("2")){
+                if (QuickUtils.prefs.getString(AUtils.LANGUAGE_ID, AUtils.DEFAULT_LANGUAGE_ID).equals("2")) {
                     message = resultPojo.getMessageMar();
-                }else{
+                } else {
                     message = resultPojo.getMessage();
                 }
 
-                if(resultPojo.getStatus().equals(AUtils.STATUS_SUCCESS)){
+                if (resultPojo.getStatus().equals(AUtils.STATUS_SUCCESS)) {
                     Toasty.success(mContext, message, Toast.LENGTH_LONG).show();
                     finish();
-                }else{
+                } else {
                     Toasty.error(mContext, message, Toast.LENGTH_LONG).show();
                 }
             }
@@ -396,42 +390,13 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
             @Override
             public void onFailureCallback() {
                 myProgressDialog.dismiss();
-                Toasty.error(mContext,getResources().getString(R.string.something_error), Toast.LENGTH_LONG).show();
+                Toasty.error(mContext, getResources().getString(R.string.something_error), Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void onErrorCallback() {
                 myProgressDialog.dismiss();
-                Toasty.error(mContext,getResources().getString(R.string.serverError), Toast.LENGTH_LONG).show();
-            }
-        });
-
-        syncServerViewModel.getEmpSysncServerEntityList().observeForever(new Observer<List<EmpSyncServerEntity>>() {
-            @Override
-            public void onChanged(@Nullable final List<EmpSyncServerEntity> userLocationEntities) {
-                // Update list
-                AUtils.qrLocationPojoList.clear();
-
-                for(EmpSyncServerEntity entity : userLocationEntities) {
-                    QrLocationPojo qrLocationPojo = new QrLocationPojo();
-                    qrLocationPojo.setOfflineID(String.valueOf(entity.getIndex_id()));
-                    qrLocationPojo.setUserId(QuickUtils.prefs.getString(AUtils.PREFS.USER_ID, ""));
-                    qrLocationPojo.setLat(entity.getLat());
-                    qrLocationPojo.setLong(entity.getLong());
-                    qrLocationPojo.setReferanceId(entity.getRef_id());
-                    qrLocationPojo.setGcType(String.valueOf(entity.getGcType()));
-                    qrLocationPojo.setDate(String.valueOf(entity.getDate()));
-                    qrLocationPojo.setAddress(entity.getAddress());
-                    qrLocationPojo.setAreaId(String.valueOf(entity.getAreaId()));
-                    qrLocationPojo.setHouseNumber(entity.getHouseNumber());
-                    qrLocationPojo.setWardId(String.valueOf(entity.getWardId()));
-                    qrLocationPojo.setZoneId(String.valueOf(entity.getZoneId()));
-                    qrLocationPojo.setMobileno(entity.getMobileno());
-                    qrLocationPojo.setName(entity.getName());
-                    qrLocationPojo.setNameMar(entity.getNameMar());
-
-                    AUtils.qrLocationPojoList.add(qrLocationPojo);
-                }
+                Toasty.error(mContext, getResources().getString(R.string.serverError), Toast.LENGTH_LONG).show();
             }
         });
 
@@ -440,38 +405,38 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
     protected void initData() {
 
         checkCameraPermission();
+
     }
 
     private void submitQRcode(String houseid) {
 
-        if (validSubmitId(houseid.toLowerCase()))
-        {
+        if (validSubmitId(houseid.toLowerCase())) {
             showActionPopUp(houseid);
 
-        }else {
+        } else {
             AUtils.showWarning(EmpQRcodeScannerActivity.this, mContext.getResources().getString(R.string.qr_error));
             restartPreview();
         }
     }
 
-    private Boolean validSubmitId(String id){
+    private Boolean validSubmitId(String id) {
 
         return id.matches("hpsba[0-9]+$") || id.matches("gpsba[0-9]+$") || id.matches("dysba[0-9]+$");
     }
 
     private void checkCameraPermission() {
-        if(AUtils.isCameraPermissionGiven(mContext)){
+        if (AUtils.isCameraPermissionGiven(mContext)) {
             startPreview();
             contentView.setVisibility(View.VISIBLE);
             permissionBtn.setVisibility(View.GONE);
             checkLocationPermission();
-        }else{
+        } else {
             contentView.setVisibility(View.GONE);
             permissionBtn.setVisibility(View.VISIBLE);
         }
     }
 
-    private void scanQR(){
+    private void scanQR() {
         isScanQr = true;
         startCamera();
         contentView.setVisibility(View.VISIBLE);
@@ -482,17 +447,16 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
         idIpLayout.setHint(getResources().getString(R.string.hp_gp_id_hint));
     }
 
-    private void hideQR(){
-        isScanQr= false;
+    private void hideQR() {
+        isScanQr = false;
         stopCamera();
         contentView.setVisibility(View.GONE);
         submitBtn.setVisibility(View.VISIBLE);
         collectionRadioGroup.setVisibility(View.VISIBLE);
 
-        if(radioSelection.equals(AUtils.RADIO_SELECTED_HP)) {
+        if (radioSelection.equals(AUtils.RADIO_SELECTED_HP)) {
             idIpLayout.setHint(getResources().getString(R.string.house_number_hint));
-        }
-        else{
+        } else {
             idIpLayout.setHint(getResources().getString(R.string.gp_id_hint));
         }
     }
@@ -508,7 +472,7 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
 
             if (!GpsStatus) {
                 startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-            }else{
+            } else {
                 AUtils.saveLocation(locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER));
             }
         }
@@ -519,21 +483,21 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
 //        restartPreview();
     }
 
-    private void startPreview(){
+    private void startPreview() {
         scannerView.startCamera();
         scannerView.resumeCameraPreview(this);
     }
 
-    private void stopPreview(){
+    private void stopPreview() {
         scannerView.stopCameraPreview();
         scannerView.stopCamera();
     }
 
-    private void startCamera(){
+    private void startCamera() {
         scannerView.startCamera();
     }
 
-    private void stopCamera(){
+    private void stopCamera() {
         scannerView.stopCamera();
     }
 
@@ -542,17 +506,17 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
         startPreview();
     }
 
-    private void showActionPopUp(String id){
-        
-        if(validSubmitId(id.toLowerCase())){
+    private void showActionPopUp(String id) {
+
+        if (validSubmitId(id.toLowerCase())) {
             chooseActionPopUp.setData(id);
             chooseActionPopUp.show();
-        }else
+        } else
             Toasty.error(mContext, getResources().getString(R.string.invalid_qr_error)).show();
     }
 
-    private void submitOnSkip(String id){
-        try{
+    private void submitOnSkip(String id) {
+        try {
             qrLocationPojo.setReferanceId(id);
             qrLocationPojo.setLat(QuickUtils.prefs.getString(AUtils.LAT, ""));
             qrLocationPojo.setLong(QuickUtils.prefs.getString(AUtils.LONG, ""));
@@ -569,12 +533,12 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
             qrLocationPojo.setGcType(getGCType(id));
 
             startSubmitQRAsyncTask(qrLocationPojo);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void submitOnDetails(String refId, String gctype){
+    private void submitOnDetails(String refId, String gctype) {
         Intent intent = new Intent(mContext, EmpAddLocationDetailsActivity.class);
         intent.putExtra(AUtils.ADD_DETAILS_TYPE_KEY, AUtils.NondaniLocation.OPEN_FORM_TYPE);
         intent.putExtra(AUtils.NondaniLocation.REFERENCE_ID, refId);
@@ -583,10 +547,10 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
         startActivityForResult(intent, AUtils.ADD_DETAILS_REQUEST_KEY);
     }
 
-    private void startSubmitQRAsyncTask(QrLocationPojo pojo){
+    private void startSubmitQRAsyncTask(QrLocationPojo pojo) {
         myProgressDialog.show();
         pojo.setUserId(QuickUtils.prefs.getString(AUtils.PREFS.USER_ID, ""));
-        if(AUtils.isInternetAvailable() && AUtils.isConnectedFast(mContext)) {
+        if (AUtils.isInternetAvailable() && AUtils.isConnectedFast(mContext)) {
             empQrLocationAdapter.saveQrLocation(pojo);
             stopCamera();
         } else {
@@ -599,7 +563,7 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
 
         AUtils.mCurrentContext = mContext;
 
-        if(requestCode == AUtils.ADD_DETAILS_REQUEST_KEY && resultCode == RESULT_OK){
+        if (requestCode == AUtils.ADD_DETAILS_REQUEST_KEY && resultCode == RESULT_OK) {
             finish();
         }
 
@@ -607,21 +571,22 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
 
     }
 
-    private String getGCType(){
+    private String getGCType() {
         String areaType = AUtils.GP_AREA_TYPE_ID;
-        if(radioSelection.equals(AUtils.RADIO_SELECTED_HP)){
+        if (radioSelection.equals(AUtils.RADIO_SELECTED_HP)) {
             areaType = AUtils.HP_AREA_TYPE_ID;
-        }else if(radioSelection.equals(AUtils.RADIO_SELECTED_DY)){
+        } else if (radioSelection.equals(AUtils.RADIO_SELECTED_DY)) {
             areaType = AUtils.DY_AREA_TYPE_ID;
         }
         return areaType;
     }
-    private String getGCType(String refId){
-        if(refId.substring(0,2).toLowerCase().matches("^[hp]+$"))
+
+    private String getGCType(String refId) {
+        if (refId.substring(0, 2).toLowerCase().matches("^[hp]+$"))
             return "1";
-        else if(refId.substring(0,2).toLowerCase().matches("^[gp]+$"))
+        else if (refId.substring(0, 2).toLowerCase().matches("^[gp]+$"))
             return "2";
-        else if(refId.substring(0,2).toLowerCase().matches("^[dy]+$"))
+        else if (refId.substring(0, 2).toLowerCase().matches("^[dy]+$"))
             return "3";
         else
             return "0";
@@ -629,23 +594,9 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
 
     private void insertToDB(QrLocationPojo pojo) {
 
-        EmpSyncServerEntity entity = new EmpSyncServerEntity();
-
-        entity.setRef_id(pojo.getReferanceId());
-        entity.setGcType(Integer.parseInt(pojo.getGcType()));
-        entity.setLong(QuickUtils.prefs.getString(AUtils.LONG,""));
-        entity.setLat(QuickUtils.prefs.getString(AUtils.LAT,""));
-        entity.setDate(AUtils.getSeverDateTime());
-        entity.setName(pojo.getName());
-        entity.setNameMar(pojo.getNameMar());
-        entity.setAddress(pojo.getAddress());
-        entity.setZoneId(pojo.getZoneId());
-        entity.setWardId(pojo.getWardId());
-        entity.setAreaId(pojo.getAreaId());
-        entity.setHouseNumber(pojo.getHouseNumber());
-        entity.setMobileno(pojo.getMobileno());
-
-        syncServerViewModel.insert(entity);
+        Type type = new TypeToken<QrLocationPojo>() {
+        }.getType();
+        empSyncServerRepository.insertEmpSyncServerEntity(gson.toJson(pojo, type));
 
         Toasty.success(mContext, "Uploaded successfully", Toast.LENGTH_LONG).show();
         finish();

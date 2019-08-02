@@ -5,13 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
-
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -20,22 +13,27 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import com.appynitty.retrofitconnectionlibrary.pojos.ResultPojo;
 import com.appynitty.swachbharatabhiyanlibrary.R;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.EmpQrLocationAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.EmpRegistrationDataAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.EmpWardZoneAreaAdapterClass;
-import com.appynitty.swachbharatabhiyanlibrary.entity.EmpSyncServerEntity;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.EmpRegistrationPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.QrLocationPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.ZoneWardAreaMasterPojo;
+import com.appynitty.swachbharatabhiyanlibrary.repository.EmpSyncServerRepository;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 import com.appynitty.swachbharatabhiyanlibrary.utils.LocaleHelper;
-import com.appynitty.swachbharatabhiyanlibrary.view_model.EmpSyncServerViewModel;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.mithsoft.lib.components.MyProgressDialog;
 import com.mithsoft.lib.components.Toasty;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -61,7 +59,8 @@ public class EmpAddLocationDetailsActivity extends AppCompatActivity {
 
     private MyProgressDialog myProgressDialog;
 
-    private EmpSyncServerViewModel syncServerViewModel;
+    private EmpSyncServerRepository empSyncServerRepository;
+    private Gson gson;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -92,6 +91,9 @@ public class EmpAddLocationDetailsActivity extends AppCompatActivity {
         AUtils.mCurrentContext = mContext;
 
         myProgressDialog = new MyProgressDialog(mContext, R.drawable.progress_bar, false);
+
+        empSyncServerRepository = new EmpSyncServerRepository(mContext);
+        gson = new Gson();
 
         zoneMap = new HashMap<>();
         zoneWardMap = new HashMap<>();
@@ -131,8 +133,6 @@ public class EmpAddLocationDetailsActivity extends AppCompatActivity {
         mAdapterClass = new EmpWardZoneAreaAdapterClass();
         empQrLocationAdapterClass = new EmpQrLocationAdapterClass();
         empRegistrationDataAdapterClass = new EmpRegistrationDataAdapterClass();
-
-        syncServerViewModel = ViewModelProviders.of((AppCompatActivity) AUtils.mCurrentContext).get(EmpSyncServerViewModel.class);
     }
 
     private void initToolbar(){
@@ -249,35 +249,6 @@ public class EmpAddLocationDetailsActivity extends AppCompatActivity {
             public void onErrorCallback() {
                 myProgressDialog.dismiss();
                 Toasty.error(mContext,getResources().getString(R.string.serverError), Toast.LENGTH_LONG).show();
-            }
-        });
-
-        syncServerViewModel.getEmpSysncServerEntityList().observeForever(new Observer<List<EmpSyncServerEntity>>() {
-            @Override
-            public void onChanged(@Nullable final List<EmpSyncServerEntity> userLocationEntities) {
-                // Update list
-                AUtils.qrLocationPojoList.clear();
-
-                for(EmpSyncServerEntity entity : userLocationEntities) {
-                    QrLocationPojo qrLocationPojo = new QrLocationPojo();
-                    qrLocationPojo.setOfflineID(String.valueOf(entity.getIndex_id()));
-                    qrLocationPojo.setUserId(QuickUtils.prefs.getString(AUtils.PREFS.USER_ID, ""));
-                    qrLocationPojo.setLat(entity.getLat());
-                    qrLocationPojo.setLong(entity.getLong());
-                    qrLocationPojo.setReferanceId(entity.getRef_id());
-                    qrLocationPojo.setGcType(String.valueOf(entity.getGcType()));
-                    qrLocationPojo.setDate(String.valueOf(entity.getDate()));
-                    qrLocationPojo.setAddress(entity.getAddress());
-                    qrLocationPojo.setAreaId(String.valueOf(entity.getAreaId()));
-                    qrLocationPojo.setHouseNumber(entity.getHouseNumber());
-                    qrLocationPojo.setWardId(String.valueOf(entity.getWardId()));
-                    qrLocationPojo.setZoneId(String.valueOf(entity.getZoneId()));
-                    qrLocationPojo.setZoneId(String.valueOf(entity.getZoneId()));
-                    qrLocationPojo.setMobileno(entity.getMobileno());
-                    qrLocationPojo.setName(entity.getName());
-                    qrLocationPojo.setNameMar(entity.getNameMar());
-                    AUtils.qrLocationPojoList.add(qrLocationPojo);
-                }
             }
         });
     }
@@ -436,23 +407,8 @@ public class EmpAddLocationDetailsActivity extends AppCompatActivity {
 
     private void insertToDB(QrLocationPojo pojo) {
 
-        EmpSyncServerEntity entity = new EmpSyncServerEntity();
-
-        entity.setRef_id(pojo.getReferanceId());
-        entity.setGcType(Integer.parseInt(pojo.getGcType()));
-        entity.setLong(QuickUtils.prefs.getString(AUtils.LONG,""));
-        entity.setLat(QuickUtils.prefs.getString(AUtils.LAT,""));
-        entity.setDate(AUtils.getSeverDateTime());
-        entity.setName(pojo.getName());
-        entity.setNameMar(pojo.getNameMar());
-        entity.setAddress(pojo.getAddress());
-        entity.setZoneId(pojo.getZoneId());
-        entity.setWardId(pojo.getWardId());
-        entity.setAreaId(pojo.getAreaId());
-        entity.setHouseNumber(pojo.getHouseNumber());
-        entity.setMobileno(pojo.getMobileno());
-
-        syncServerViewModel.insert(entity);
+        Type type = new TypeToken<QrLocationPojo>(){}.getType();
+        empSyncServerRepository.insertEmpSyncServerEntity(gson.toJson(pojo, type));
 
         Toasty.success(mContext, "Uploaded successfully", Toast.LENGTH_LONG).show();
         finish();

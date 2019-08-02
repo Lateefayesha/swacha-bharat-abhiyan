@@ -2,18 +2,18 @@ package com.appynitty.swachbharatabhiyanlibrary.adapters.connection;
 
 import android.util.Log;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProviders;
-
 import com.appynitty.retrofitconnectionlibrary.connection.Connection;
+import com.appynitty.swachbharatabhiyanlibrary.entity.EmpSyncServerEntity;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.OfflineGcResultPojo;
-import com.appynitty.swachbharatabhiyanlibrary.pojos.UserLocationPojo;
-import com.appynitty.swachbharatabhiyanlibrary.pojos.UserLocationResultPojo;
+import com.appynitty.swachbharatabhiyanlibrary.pojos.QrLocationPojo;
+import com.appynitty.swachbharatabhiyanlibrary.repository.EmpSyncServerRepository;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
-import com.appynitty.swachbharatabhiyanlibrary.view_model.EmpSyncServerViewModel;
 import com.appynitty.swachbharatabhiyanlibrary.webservices.QrLocationWebService;
-import com.appynitty.swachbharatabhiyanlibrary.webservices.UserLocationWebService;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 import quickutils.core.QuickUtils;
@@ -26,24 +26,27 @@ import retrofit2.Response;
  */
 public class EmpSyncServerAdapterClass {
 
-    private EmpSyncServerViewModel empSyncServerViewModel;
+    private List<QrLocationPojo> locationPojoList;
+    private Gson gson;
+    private EmpSyncServerRepository empSyncServerRepository;
 
-
-    public EmpSyncServerAdapterClass(){
-        empSyncServerViewModel = ViewModelProviders.of((AppCompatActivity) AUtils.mCurrentContext)
-                .get(EmpSyncServerViewModel.class);
+    public EmpSyncServerAdapterClass() {
+        empSyncServerRepository = new EmpSyncServerRepository(AUtils.mApplication.getApplicationContext());
+        locationPojoList = new ArrayList<>();
+        gson = new Gson();
     }
 
     public void syncServer() {
 
-        if (AUtils.qrLocationPojoList.size() > 0) {
+        getDatabaseList();
+
+        if (locationPojoList.size() > 0) {
 
             QrLocationWebService service = Connection.createService(QrLocationWebService.class,
                     AUtils.SERVER_URL);
 
             service.saveQrLocationDetailsOffline(QuickUtils.prefs.getString(AUtils.APP_ID, ""),
-                    AUtils.CONTENT_TYPE,
-                    AUtils.qrLocationPojoList)
+                    AUtils.CONTENT_TYPE, locationPojoList)
                     .enqueue(new Callback<List<OfflineGcResultPojo>>() {
                         @Override
                         public void onResponse(Call<List<OfflineGcResultPojo>> call, Response<List<OfflineGcResultPojo>> response) {
@@ -63,6 +66,20 @@ public class EmpSyncServerAdapterClass {
         }
     }
 
+    private void getDatabaseList() {
+
+        List<EmpSyncServerEntity> entityList = empSyncServerRepository.getAllEmpSyncServerEntity();
+        locationPojoList.clear();
+        for (EmpSyncServerEntity entity : entityList) {
+            Type type = new TypeToken<QrLocationPojo>() {
+            }.getType();
+            QrLocationPojo pojo = gson.fromJson(entity.getPojo(), type);
+
+            pojo.setOfflineID(String.valueOf(entity.getIndex_id()));
+            locationPojoList.add(pojo);
+        }
+    }
+
     private void onResponseReceived(List<OfflineGcResultPojo> results) {
 
         if (!AUtils.isNull(results) && results.size() > 0) {
@@ -72,16 +89,18 @@ public class EmpSyncServerAdapterClass {
                 if (result.getStatus().equals(AUtils.STATUS_SUCCESS)) {
 
                     if (Integer.parseInt(result.getID()) != 0) {
-                        empSyncServerViewModel.deleteSelectedRecord(Integer.parseInt(result.getID()));
+                        empSyncServerRepository.deleteEmpSyncServerEntity(Integer.parseInt(result.getID()));
                     }
-                    for (int i = 0; i < AUtils.qrLocationPojoList.size(); i++) {
-                        if (AUtils.qrLocationPojoList.get(i).getOfflineID().equals(result.getID())) {
-                            AUtils.qrLocationPojoList.remove(i);
+
+                    for (int i = 0; i < locationPojoList.size(); i++) {
+                        if (locationPojoList.get(i).getOfflineID().equals(result.getID())) {
+                            locationPojoList.remove(i);
                             break;
                         }
                     }
+
                 } else {
-                    empSyncServerViewModel.deleteAllRecord();
+                    empSyncServerRepository.deleteAllEmpSyncServerEntity();
                 }
             }
         }
