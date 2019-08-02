@@ -1,34 +1,23 @@
 package com.appynitty.swachbharatabhiyanlibrary.services;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.GpsStatus;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
-
 import android.util.Log;
 
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.ShareLocationAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.entity.UserLocationEntity;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.UserLocationPojo;
+import com.appynitty.swachbharatabhiyanlibrary.repository.LocationRepository;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
-import com.appynitty.swachbharatabhiyanlibrary.view_model.LocationViewModel;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.List;
 
 import quickutils.core.QuickUtils;
@@ -40,36 +29,19 @@ public class LocationMonitoringService implements LocationListener, GpsStatus.Li
 
     private Context mContext;
 
-    private LocationViewModel mLocationViewModel;
+    private LocationRepository mLocationRepository;
 
     private ShareLocationAdapterClass mAdapter;
 
     private long updatedTime = 0;
 
+    private List<UserLocationPojo> mUserLocationPojoList;
+
 
     public LocationMonitoringService (final Context context) {
         mContext = context;
 
-        mLocationViewModel = ViewModelProviders.of((AppCompatActivity) AUtils.mCurrentContext).get(LocationViewModel.class);
-
-        mLocationViewModel.getUserLocationEntityList().observeForever(new Observer<List<UserLocationEntity>>() {
-            @Override
-            public void onChanged(@Nullable final List<UserLocationEntity> userLocationEntities) {
-                // Update list
-                AUtils.UserLocationPojoList.clear();
-
-                for(UserLocationEntity entity : userLocationEntities) {
-                    UserLocationPojo userLocationPojo = new UserLocationPojo();
-                    userLocationPojo.setOfflineId(String.valueOf(entity.getIndex_id()));
-                    userLocationPojo.setUserId(QuickUtils.prefs.getString(AUtils.PREFS.USER_ID, ""));
-                    userLocationPojo.setLat(entity.getLat());
-                    userLocationPojo.setLong(entity.getLong());
-                    userLocationPojo.setDatetime(entity.getDatetime());
-
-                    AUtils.UserLocationPojoList.add(userLocationPojo);
-                }
-            }
-        });
+        mLocationRepository = new LocationRepository(AUtils.mApplication.getApplicationContext());
 
         mAdapter = new ShareLocationAdapterClass();
 
@@ -125,7 +97,27 @@ public class LocationMonitoringService implements LocationListener, GpsStatus.Li
     }
 
     public void onStopTracking() {
-        mAdapter.shareLocation();
+        List<UserLocationEntity> userLocationEntities = mLocationRepository.getAllUserLocationEntity();
+
+        if(userLocationEntities.size() > 0) {
+            mUserLocationPojoList.clear();
+
+            for (UserLocationEntity entity : userLocationEntities) {
+                UserLocationPojo userLocationPojo = new UserLocationPojo();
+                userLocationPojo.setOfflineId(String.valueOf(entity.getIndex_id()));
+
+                Type type = new TypeToken<UserLocationPojo>() {}.getType();
+                UserLocationPojo locationPojo = new Gson().fromJson(entity.getPojo(), type);
+
+                userLocationPojo.setUserId(QuickUtils.prefs.getString(AUtils.PREFS.USER_ID, ""));
+                userLocationPojo.setLat(locationPojo.getLat());
+                userLocationPojo.setLong(locationPojo.getLong());
+                userLocationPojo.setDatetime(locationPojo.getDatetime());
+
+                mUserLocationPojoList.add(userLocationPojo);
+            }
+        }
+        mAdapter.shareLocation(mUserLocationPojoList);
         LocationManager locationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
         locationManager.removeUpdates(this);
     }
@@ -202,18 +194,13 @@ public class LocationMonitoringService implements LocationListener, GpsStatus.Li
 
         if(AUtils.isInternetAvailable()) {
 
-            AUtils.UserLocationPojoList.add(userLocationPojo);
-            mAdapter.shareLocation();
+            mUserLocationPojoList.add(userLocationPojo);
+            mAdapter.shareLocation(mUserLocationPojoList);
         }else {
-            UserLocationEntity entity = new UserLocationEntity();
+            Type type = new TypeToken<UserLocationPojo>() {}.getType();
+            mLocationRepository.insertUserLocationEntity(new Gson().toJson(userLocationPojo,type));
 
-            entity.setLat(userLocationPojo.getLat());
-            entity.setLong(userLocationPojo.getLong());
-            entity.setDatetime(userLocationPojo.getDatetime());
-
-            mLocationViewModel.insert(entity);
-
-            AUtils.UserLocationPojoList.clear();
+            mUserLocationPojoList.clear();
         }
     }
 }

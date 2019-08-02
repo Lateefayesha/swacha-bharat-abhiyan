@@ -31,8 +31,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.appynitty.swachbharatabhiyanlibrary.R;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.UI.AutocompleteContainSearch;
@@ -42,7 +40,6 @@ import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.CollectionAre
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.DumpYardAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.GarbageCollectionAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.dialogs.GarbageTypePopUp;
-import com.appynitty.swachbharatabhiyanlibrary.entity.SyncServerEntity;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.CollectionAreaHousePojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.CollectionAreaPointPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.CollectionAreaPojo;
@@ -50,10 +47,9 @@ import com.appynitty.swachbharatabhiyanlibrary.pojos.CollectionDumpYardPointPojo
 import com.appynitty.swachbharatabhiyanlibrary.pojos.GarbageCollectionPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.GcResultPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.ImagePojo;
-import com.appynitty.swachbharatabhiyanlibrary.pojos.OfflineGarbageColectionPojo;
+import com.appynitty.swachbharatabhiyanlibrary.repository.SyncServerRepository;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 import com.appynitty.swachbharatabhiyanlibrary.utils.LocaleHelper;
-import com.appynitty.swachbharatabhiyanlibrary.view_model.SyncServerViewModel;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -100,7 +96,7 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
 
     GarbageCollectionPojo garbageCollectionPojo;
 
-    private SyncServerViewModel syncServerViewModel;
+    private SyncServerRepository mSyncServerRepository;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -309,7 +305,7 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
 
         initToolbar();
 
-        syncServerViewModel = ViewModelProviders.of((AppCompatActivity) AUtils.mCurrentContext).get(SyncServerViewModel.class);
+        mSyncServerRepository = new SyncServerRepository(AUtils.mApplication.getApplicationContext());
     }
 
     protected void initToolbar(){
@@ -568,33 +564,6 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
                 restartPreview();
                 Toasty.error(mContext, mContext.getString(R.string.serverError), Toast.LENGTH_SHORT).show();
                 insertToDB(garbageCollectionPojo);
-            }
-        });
-
-        syncServerViewModel.getSysncServerEntityList().observeForever(new Observer<List<SyncServerEntity>>() {
-            @Override
-            public void onChanged(@Nullable final List<SyncServerEntity> userLocationEntities) {
-                // Update list
-                AUtils.syncGarbageCollectionPojoList.clear();
-
-                for(SyncServerEntity entity : userLocationEntities) {
-                    OfflineGarbageColectionPojo syncGarbageCollectionPojo = new OfflineGarbageColectionPojo();
-                    syncGarbageCollectionPojo.setOfflineID(String.valueOf(entity.getIndex_id()));
-                    syncGarbageCollectionPojo.setUserId(QuickUtils.prefs.getString(AUtils.PREFS.USER_ID, ""));
-                    syncGarbageCollectionPojo.setLat(entity.getLat());
-                    syncGarbageCollectionPojo.setLong(entity.getLong());
-                    syncGarbageCollectionPojo.setNote(entity.getComment());
-                    syncGarbageCollectionPojo.setTotalGcWeight(String.valueOf(entity.getWeightTotal()));
-                    syncGarbageCollectionPojo.setTotalDryWeight(String.valueOf(entity.getWeightTotalDry()));
-                    syncGarbageCollectionPojo.setTotalWetWeight(String.valueOf(entity.getWeightTotalWet()));
-                    syncGarbageCollectionPojo.setReferenceID(entity.getRef_id());
-                    syncGarbageCollectionPojo.setGcType(String.valueOf(entity.getGcType()));
-                    syncGarbageCollectionPojo.setVehicleNumber(entity.getVehicleNumber());
-                    syncGarbageCollectionPojo.setGarbageType(String.valueOf(entity.getGarbageType()));
-                    syncGarbageCollectionPojo.setGcDate(String.valueOf(entity.getGcDate()));
-
-                    AUtils.syncGarbageCollectionPojoList.add(syncGarbageCollectionPojo);
-                }
             }
         });
     }
@@ -983,27 +952,8 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
 
     private void insertToDB(GarbageCollectionPojo garbageCollectionPojo) {
 
-        SyncServerEntity entity = new SyncServerEntity();
-
-        entity.setRef_id(garbageCollectionPojo.getId());
-        if(garbageCollectionPojo.getId().substring(0, 2).matches("^[HhPp]+$")){
-            entity.setGcType(1);
-        }else if(garbageCollectionPojo.getId().substring(0, 2).matches("^[GgPp]+$")){
-            entity.setGcType(2);
-        }else if(garbageCollectionPojo.getId().substring(0, 2).matches("^[DdYy]+$")){
-            entity.setGcType(3);
-        }
-        entity.setComment(garbageCollectionPojo.getComment());
-        entity.setGarbageType(garbageCollectionPojo.getGarbageType());
-        entity.setWeightTotal(garbageCollectionPojo.getWeightTotal());
-        entity.setWeightTotalDry(garbageCollectionPojo.getWeightTotalDry());
-        entity.setWeightTotalWet(garbageCollectionPojo.getWeightTotalWet());
-        entity.setVehicleNumber(QuickUtils.prefs.getString(AUtils.VEHICLE_NO,""));
-        entity.setLong(QuickUtils.prefs.getString(AUtils.LONG,""));
-        entity.setLat(QuickUtils.prefs.getString(AUtils.LAT,""));
-        entity.setGcDate(AUtils.getSeverDateTime());
-
-        syncServerViewModel.insert(entity);
+        Type type = new TypeToken<GarbageCollectionPojo>() {}.getType();
+        mSyncServerRepository.insertSyncServerEntity(new Gson().toJson(garbageCollectionPojo,type));
 
         showOfflinePopup(garbageCollectionPojo.getId());
     }

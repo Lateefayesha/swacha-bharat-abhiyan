@@ -2,17 +2,16 @@ package com.appynitty.swachbharatabhiyanlibrary.adapters.connection;
 
 import android.util.Log;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProviders;
-
 import com.appynitty.retrofitconnectionlibrary.connection.Connection;
-import com.appynitty.swachbharatabhiyanlibrary.entity.UserLocationEntity;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.UserLocationPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.UserLocationResultPojo;
+import com.appynitty.swachbharatabhiyanlibrary.repository.LocationRepository;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
-import com.appynitty.swachbharatabhiyanlibrary.view_model.LocationViewModel;
 import com.appynitty.swachbharatabhiyanlibrary.webservices.UserLocationWebService;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.List;
 
 import quickutils.core.QuickUtils;
@@ -24,7 +23,7 @@ public class ShareLocationAdapterClass {
 
     private ShareLocationListener mListener;
 
-    private LocationViewModel mLocationViewModel;
+    private LocationRepository mLocationRepository;
 
     public ShareLocationListener getShareLocationListener() {
         return mListener;
@@ -34,22 +33,22 @@ public class ShareLocationAdapterClass {
         this.mListener = mListener;
     }
 
-    public void shareLocation() {
+    public void shareLocation(final List<UserLocationPojo> userLocationPojos) {
 
-        mLocationViewModel = ViewModelProviders.of((AppCompatActivity) AUtils.mCurrentContext).get(LocationViewModel.class);
+        mLocationRepository = new LocationRepository(AUtils.mApplication.getApplicationContext());
 
         UserLocationWebService service = Connection.createService(UserLocationWebService.class, AUtils.SERVER_URL);
 
         service.saveUserLocation(QuickUtils.prefs.getString(AUtils.APP_ID, "1"),
                 AUtils.CONTENT_TYPE,
                 QuickUtils.prefs.getString(AUtils.PREFS.USER_TYPE_ID, "0"),
-                AUtils.getBatteryStatus(), AUtils.UserLocationPojoList)
+                AUtils.getBatteryStatus(), userLocationPojos)
                 .enqueue(new Callback<List<UserLocationResultPojo>>() {
             @Override
             public void onResponse(Call<List<UserLocationResultPojo>> call, Response<List<UserLocationResultPojo>> response) {
 
                 if (response.code() == 200) {
-                    onResponseReceived(response.body());
+                    onResponseReceived(response.body(), userLocationPojos);
                 } else {
                     mListener.onFailureCallBack();
                     Log.i(AUtils.TAG_HTTP_RESPONSE, "onFailureCallback: Response Code-" + response.code());
@@ -58,15 +57,11 @@ public class ShareLocationAdapterClass {
 
             @Override
             public void onFailure(Call<List<UserLocationResultPojo>> call, Throwable t) {
-                for (UserLocationPojo pojo : AUtils.UserLocationPojoList) {
+                for (UserLocationPojo pojo : userLocationPojos) {
 
                     if(pojo.getOfflineId().equals("0")) {
-                        UserLocationEntity entity = new UserLocationEntity();
-                        entity.setLat(pojo.getLat());
-                        entity.setLong(pojo.getLong());
-                        entity.setDatetime(pojo.getDatetime());
-
-                        mLocationViewModel.insert(entity);
+                        Type type = new TypeToken<UserLocationPojo>() {}.getType();
+                        mLocationRepository.insertUserLocationEntity(new Gson().toJson(pojo,type));
                     }
                 }
                 mListener.onFailureCallBack();
@@ -93,7 +88,7 @@ public class ShareLocationAdapterClass {
         return resultPojo;
     }
 
-    private void onResponseReceived(List<UserLocationResultPojo> results) {
+    private void onResponseReceived(List<UserLocationResultPojo> results, List<UserLocationPojo> userLocationPojos) {
 
         UserLocationResultPojo finalResult = null;
 
@@ -104,21 +99,21 @@ public class ShareLocationAdapterClass {
                 if (result.getStatus().equals(AUtils.STATUS_SUCCESS)) {
 
                     if (Integer.parseInt(result.getId()) != 0) {
-                        mLocationViewModel.deleteSelectedRecord(Integer.parseInt(result.getId()));
+                        mLocationRepository.deleteUserLocationEntity(Integer.parseInt(result.getId()));
                     } else {
                         finalResult = result;
                     }
-                    for (int i = 0; i < AUtils.UserLocationPojoList.size(); i++) {
-                        if (AUtils.UserLocationPojoList.get(i).getOfflineId().equals(result.getId())) {
-                            AUtils.UserLocationPojoList.remove(i);
+                    for (int i = 0; i < userLocationPojos.size(); i++) {
+                        if (userLocationPojos.get(i).getOfflineId().equals(result.getId())) {
+                            userLocationPojos.remove(i);
                             break;
                         }
                     }
 
                 } else {
                     if (!AUtils.isNull(mListener)) {
-                        for (UserLocationPojo pojo : AUtils.UserLocationPojoList) {
-                            mLocationViewModel.deleteAllRecord();
+                        for (UserLocationPojo pojo : userLocationPojos) {
+                            mLocationRepository.deleteAllUserLocationEntity();
                             finalResult = result;
                             break;
                         }
@@ -129,7 +124,7 @@ public class ShareLocationAdapterClass {
             if (!AUtils.isNull(mListener)) {
                 if (finalResult != null && finalResult.getStatus().equals(AUtils.STATUS_SUCCESS)) {
                     mListener.onSuccessCallBack(finalResult.getIsAttendenceOff());
-                    AUtils.UserLocationPojoList.clear();
+                    userLocationPojos.clear();
                 } else {
                     mListener.onFailureCallBack();
                 }

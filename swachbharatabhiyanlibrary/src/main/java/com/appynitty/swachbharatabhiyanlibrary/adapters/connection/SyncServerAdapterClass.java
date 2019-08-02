@@ -2,24 +2,17 @@ package com.appynitty.swachbharatabhiyanlibrary.adapters.connection;
 
 import android.util.Log;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
-
 import com.appynitty.retrofitconnectionlibrary.connection.Connection;
-import com.appynitty.swachbharatabhiyanlibrary.connection.SyncServer;
 import com.appynitty.swachbharatabhiyanlibrary.entity.SyncServerEntity;
-import com.appynitty.swachbharatabhiyanlibrary.entity.UserLocationEntity;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.OfflineGarbageColectionPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.OfflineGcResultPojo;
-import com.appynitty.swachbharatabhiyanlibrary.pojos.UserLocationPojo;
-import com.appynitty.swachbharatabhiyanlibrary.pojos.UserLocationResultPojo;
+import com.appynitty.swachbharatabhiyanlibrary.repository.SyncServerRepository;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
-import com.appynitty.swachbharatabhiyanlibrary.view_model.SyncServerViewModel;
 import com.appynitty.swachbharatabhiyanlibrary.webservices.GarbageCollectionWebService;
-import com.appynitty.swachbharatabhiyanlibrary.webservices.UserLocationWebService;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,17 +23,20 @@ import retrofit2.Response;
 
 public class SyncServerAdapterClass {
 
-    private SyncServerViewModel mSyncServerViewModel;
+    private SyncServerRepository mSyncServerRepository;
+    private List<OfflineGarbageColectionPojo> offlineGarbageColectionPojoList;
 
 
     public SyncServerAdapterClass(){
-        mSyncServerViewModel = ViewModelProviders.of((AppCompatActivity) AUtils.mCurrentContext)
-                .get(SyncServerViewModel.class);
+        mSyncServerRepository = new SyncServerRepository(AUtils.mApplication.getApplicationContext());
+        offlineGarbageColectionPojoList = new ArrayList<>();
     }
 
     public void syncServer() {
 
-        if (AUtils.syncGarbageCollectionPojoList.size() > 0) {
+        getDBList();
+
+        if (offlineGarbageColectionPojoList.size() > 0) {
 
             GarbageCollectionWebService service = Connection.createService(GarbageCollectionWebService.class,
                     AUtils.SERVER_URL);
@@ -48,7 +44,7 @@ public class SyncServerAdapterClass {
             service.saveGarbageCollectionOffline(QuickUtils.prefs.getString(AUtils.APP_ID, ""),
                     AUtils.getBatteryStatus(),
                     AUtils.CONTENT_TYPE,
-                    AUtils.syncGarbageCollectionPojoList)
+                    offlineGarbageColectionPojoList)
                     .enqueue(new Callback<List<OfflineGcResultPojo>>() {
                 @Override
                 public void onResponse(Call<List<OfflineGcResultPojo>> call, Response<List<OfflineGcResultPojo>> response) {
@@ -77,17 +73,47 @@ public class SyncServerAdapterClass {
                 if (result.getStatus().equals(AUtils.STATUS_SUCCESS)) {
 
                     if (Integer.parseInt(result.getID()) != 0) {
-                        mSyncServerViewModel.deleteSelectedRecord(Integer.parseInt(result.getID()));
+                        mSyncServerRepository.deleteSyncServerEntity(Integer.parseInt(result.getID()));
                     }
-                    for (int i = 0; i < AUtils.syncGarbageCollectionPojoList.size(); i++) {
-                        if (AUtils.syncGarbageCollectionPojoList.get(i).getOfflineID().equals(result.getID())) {
-                            AUtils.syncGarbageCollectionPojoList.remove(i);
+                    for (int i = 0; i < offlineGarbageColectionPojoList.size(); i++) {
+                        if (offlineGarbageColectionPojoList.get(i).getOfflineID().equals(result.getID())) {
+                            offlineGarbageColectionPojoList.remove(i);
                             break;
                         }
                     }
                 } else {
-                    mSyncServerViewModel.deleteAllRecord();
+                    mSyncServerRepository.deleteAllSyncServerEntity();
                 }
+            }
+        }
+    }
+
+    private void getDBList(){
+        List<SyncServerEntity> syncServerEntities = mSyncServerRepository.getAllSyncServerEntity();
+        if(syncServerEntities.size() > 0) {
+            offlineGarbageColectionPojoList.clear();
+
+            for(SyncServerEntity entity : syncServerEntities) {
+                OfflineGarbageColectionPojo syncGarbageCollectionPojo = new OfflineGarbageColectionPojo();
+                syncGarbageCollectionPojo.setOfflineID(String.valueOf(entity.getIndex_id()));
+                syncGarbageCollectionPojo.setUserId(QuickUtils.prefs.getString(AUtils.PREFS.USER_ID, ""));
+
+                Type type = new TypeToken<OfflineGarbageColectionPojo>() {}.getType();
+                OfflineGarbageColectionPojo offlineGarbageColectionPojo = new Gson().fromJson(entity.getPojo(), type);
+
+                syncGarbageCollectionPojo.setLat(offlineGarbageColectionPojo.getLat());
+                syncGarbageCollectionPojo.setLong(offlineGarbageColectionPojo.getLong());
+                syncGarbageCollectionPojo.setNote(offlineGarbageColectionPojo.getNote());
+                syncGarbageCollectionPojo.setTotalGcWeight(String.valueOf(offlineGarbageColectionPojo.getTotalGcWeight()));
+                syncGarbageCollectionPojo.setTotalDryWeight(String.valueOf(offlineGarbageColectionPojo.getTotalDryWeight()));
+                syncGarbageCollectionPojo.setTotalWetWeight(String.valueOf(offlineGarbageColectionPojo.getTotalWetWeight()));
+                syncGarbageCollectionPojo.setReferenceID(offlineGarbageColectionPojo.getReferenceID());
+                syncGarbageCollectionPojo.setGcType(String.valueOf(offlineGarbageColectionPojo.getGcType()));
+                syncGarbageCollectionPojo.setVehicleNumber(offlineGarbageColectionPojo.getVehicleNumber());
+                syncGarbageCollectionPojo.setGarbageType(String.valueOf(offlineGarbageColectionPojo.getGarbageType()));
+                syncGarbageCollectionPojo.setGcDate(String.valueOf(offlineGarbageColectionPojo.getGcDate()));
+
+                offlineGarbageColectionPojoList.add(syncGarbageCollectionPojo);
             }
         }
     }
