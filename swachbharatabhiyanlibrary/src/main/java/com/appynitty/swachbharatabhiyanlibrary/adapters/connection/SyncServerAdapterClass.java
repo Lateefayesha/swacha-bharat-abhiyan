@@ -84,15 +84,7 @@ public class SyncServerAdapterClass {
                         }
                     }
                 } else {
-                    if (Integer.parseInt(result.getID()) != 0) {
-                        mSyncServerRepository.deleteSyncServerEntity(Integer.parseInt(result.getID()));
-                    }
-                    for (int i = 0; i < offlineGarbageColectionPojoList.size(); i++) {
-                        if (offlineGarbageColectionPojoList.get(i).getOfflineID().equals(result.getID())) {
-                            offlineGarbageColectionPojoList.remove(i);
-                            break;
-                        }
-                    }
+                    mSyncServerRepository.deleteAllSyncServerEntity();
                 }
             }
         }

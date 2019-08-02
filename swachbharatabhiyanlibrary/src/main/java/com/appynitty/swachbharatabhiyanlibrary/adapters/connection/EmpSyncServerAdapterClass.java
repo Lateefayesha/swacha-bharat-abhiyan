@@ -100,15 +100,7 @@ public class EmpSyncServerAdapterClass {
                     }
 
                 } else {
-                    if (Integer.parseInt(result.getID()) != 0) {
-                        empSyncServerRepository.deleteEmpSyncServerEntity(Integer.parseInt(result.getID()));
-                    }
-                    for (int i = 0; i < locationPojoList.size(); i++) {
-                        if (locationPojoList.get(i).getOfflineID().equals(result.getID())) {
-                            locationPojoList.remove(i);
-                            break;
-                        }
-                    }
+                    empSyncServerRepository.deleteAllEmpSyncServerEntity();
                 }
             }
         }
