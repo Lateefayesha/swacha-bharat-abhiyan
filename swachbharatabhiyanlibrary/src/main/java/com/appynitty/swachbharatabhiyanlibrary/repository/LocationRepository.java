@@ -34,7 +34,7 @@ public class LocationRepository {
     public List<UserLocationEntity> getAllUserLocationEntity() {
         List<UserLocationEntity> list = new ArrayList<>();
 
-        String sql = "SELECT * FROM " + AUtils.LOCATION_TABLE_NAME + " ORDER BY " + EmpSyncServerEntity.COLUMN_ID + " DESC";
+        String sql = "SELECT * FROM " + AUtils.LOCATION_TABLE_NAME + " ORDER BY " + UserLocationEntity.COLUMN_ID + " DESC";
 
         Cursor cursor = database.rawQuery(sql, null);
         if (cursor.moveToFirst()) {

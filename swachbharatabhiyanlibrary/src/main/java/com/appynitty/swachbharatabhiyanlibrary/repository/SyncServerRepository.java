@@ -35,7 +35,7 @@ public class SyncServerRepository {
     public List<SyncServerEntity> getAllSyncServerEntity() {
         List<SyncServerEntity> list = new ArrayList<>();
 
-        String sql = "SELECT * FROM " + AUtils.COLLECTION_TABLE_NAME + " ORDER BY " + EmpSyncServerEntity.COLUMN_ID + " DESC";
+        String sql = "SELECT * FROM " + AUtils.COLLECTION_TABLE_NAME + " ORDER BY " + SyncServerEntity.COLUMN_ID + " DESC";
 
         Cursor cursor = database.rawQuery(sql, null);
         if (cursor.moveToFirst()) {
