@@ -600,7 +600,7 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
         empSyncServerRepository.insertEmpSyncServerEntity(gson.toJson(pojo, type));
 
         myProgressDialog.dismiss();
-        Toasty.success(mContext, "Uploaded successfully", Toast.LENGTH_LONG).show();
+        Toasty.success(mContext, getString(R.string.success_message), Toast.LENGTH_LONG).show();
         finish();
     }
 }
