@@ -1,4 +1,4 @@
-package com.appynitty.swachbharatabhiyanlibrary.utils;
+package com.riaylibrary.utils;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -38,14 +38,14 @@ public class LocaleHelper {
 
     private static String getPersistedData(Context context, String defaultLanguage) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return preferences.getString(AUtils.LANGUAGE_NAME, defaultLanguage);
+        return preferences.getString(CommonUtils.LANGUAGE_NAME, defaultLanguage);
     }
 
     private static void persist(Context context, String language) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = preferences.edit();
 
-        editor.putString(AUtils.LANGUAGE_NAME, language);
+        editor.putString(CommonUtils.LANGUAGE_NAME, language);
         editor.apply();
     }
 

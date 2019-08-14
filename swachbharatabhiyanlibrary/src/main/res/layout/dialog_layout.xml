@@ -10,7 +10,7 @@
         android:id="@+id/lbl_title"
         style="@style/MyTitle"
         android:text="@string/login_title"
-        android:textSize="@dimen/spinner_text_size"
+        android:textSize="@dimen/dim_20_sp"
         android:layout_margin="5dp"
         android:paddingLeft="10dp"
         android:textColor="@color/colorPrimary" />
@@ -43,7 +43,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dim_20_dp"
-            android:layout_marginBottom="@dimen/padding_margin_layout_double">
+            android:layout_marginBottom="@dimen/dim_12_dp">
 
             <EditText
                 android:id="@+id/txt_vehicle_no"

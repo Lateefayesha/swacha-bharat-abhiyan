@@ -1,16 +1,16 @@
 package com.appynitty.swachbharatabhiyanlibrary.adapters.connection;
 
-import androidx.annotation.NonNull;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.appynitty.retrofitconnectionlibrary.connection.Connection;
-import com.appynitty.retrofitconnectionlibrary.pojos.ResultPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.EmpRegistrationPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.QrLocationPojo;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 import com.appynitty.swachbharatabhiyanlibrary.webservices.QrLocationWebService;
+import com.pixplicity.easyprefs.library.Prefs;
 
-import quickutils.core.QuickUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -30,7 +30,7 @@ public class EmpRegistrationDataAdapterClass {
         QrLocationWebService qrLocationWebService = Connection.createService(QrLocationWebService.class,
                 AUtils.SERVER_URL);
         qrLocationWebService.fetchRegistrationDetails(
-                QuickUtils.prefs.getString(AUtils.APP_ID, ""),
+                Prefs.getString(AUtils.APP_ID, ""),
                 submitPojo.getReferanceId(), submitPojo.getGcType())
                 .enqueue(new Callback<EmpRegistrationPojo>() {
                     @Override

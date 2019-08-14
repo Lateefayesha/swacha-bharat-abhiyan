@@ -13,7 +13,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/warning_uni_code"
-        android:textSize="@dimen/dimen_25_sp"
+        android:textSize="@dimen/dim_25_sp"
         android:textColor="@color/yellow"
         android:textStyle="bold"
         android:layout_gravity="center"

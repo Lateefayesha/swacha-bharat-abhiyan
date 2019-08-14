@@ -6,17 +6,16 @@ import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
-import android.widget.FrameLayout;
 
 import com.appynitty.swachbharatabhiyanlibrary.services.ForgroundService;
-import com.appynitty.swachbharatabhiyanlibrary.services.LocationMonitoringService;
 import com.appynitty.swachbharatabhiyanlibrary.services.NetworkSchedulerService;
-
-import quickutils.core.QuickUtils;
+import com.pixplicity.easyprefs.library.Prefs;
+import com.riaylibrary.utils.LocaleHelper;
 
 public class MyApplication extends Application {
 
@@ -26,10 +25,15 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-//        init QuickUtils lib
-        QuickUtils.init(getApplicationContext());
+//        init Easy Prefs lib
+        new Prefs.Builder()
+                .setContext(this)
+                .setMode(ContextWrapper.MODE_PRIVATE)
+                .setPrefsName(getPackageName())
+                .setUseDefaultSharedPreference(true)
+                .build();
 
-        AUtils.mApplication = this;
+        AUtils.mainApplicationConstant = this;
         //FirebaseApp.initializeApp(getApplicationContext());
 
 //        TypefaceUtil.overrideFont(getApplicationContext(), "SERIF", "MYRIADPRO-REGULAR.OTF"); // font from assets: "assets/fonts/Roboto-Regular.ttf
@@ -79,7 +83,7 @@ public class MyApplication extends Application {
     protected void attachBaseContext(Context base) {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            super.attachBaseContext(LocaleHelper.onAttach(base, AUtils.DEFAULT_LANGUAGE_NAME));
+            super.attachBaseContext(LocaleHelper.onAttach(base, AUtils.DEFAULT_LANGUAGE_ID));
         } else {
             super.attachBaseContext(base);
         }

@@ -13,10 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.appynitty.swachbharatabhiyanlibrary.R;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.VersionDetailsAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
-import com.appynitty.swachbharatabhiyanlibrary.utils.LocaleHelper;
-import com.appynitty.swachbharatabhiyanlibrary.utils.MyAsyncTask;
-
-import quickutils.core.QuickUtils;
+import com.pixplicity.easyprefs.library.Prefs;
+import com.riaylibrary.utils.LocaleHelper;
 
 public class SplashScreenActivity extends AppCompatActivity {
 
@@ -38,12 +36,12 @@ public class SplashScreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
-        AUtils.mCurrentContext = this;
+        AUtils.currentContextConstant = this;
 
         mAdapter = new VersionDetailsAdapterClass();
 //
-//        QuickUtils.prefs.save(AUtils.APP_ID, "1");
-//        QuickUtils.prefs.save(AUtils.VERSION_CODE, 18);
+        Prefs.putString(AUtils.APP_ID, "1");
+        Prefs.putInt(AUtils.VERSION_CODE, 20);
 
         setDefaultLanguage();
 
@@ -71,7 +69,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 
             @Override
             public void onFailureCallBack() {
-                if(QuickUtils.prefs.getBoolean(AUtils.PREFS.IS_USER_LOGIN,false))
+                if(Prefs.getBoolean(AUtils.PREFS.IS_USER_LOGIN,false))
                 {
                     loadDashboard();
                 }  else {
@@ -89,17 +87,17 @@ public class SplashScreenActivity extends AppCompatActivity {
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        if(AUtils.isNetWorkAvailable(this))
+        if(AUtils.isInternetAvailable())
         {
             AUtils.hideSnackBar();
         }
         else {
-            AUtils.showSnackBar(this);
+            AUtils.showSnackBar(findViewById(R.id.parent));
         }
     }
 
     private void setDefaultLanguage() {
-        AUtils.changeLanguage(SplashScreenActivity.this, Integer.parseInt(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID, AUtils.DEFAULT_LANGUAGE_ID)));
+        AUtils.changeLanguage(SplashScreenActivity.this, Prefs.getString(AUtils.LANGUAGE_NAME, AUtils.DEFAULT_LANGUAGE_ID));
     }
 
     private void loadDashboard() {
@@ -108,7 +106,7 @@ public class SplashScreenActivity extends AppCompatActivity {
             @Override
             public void run() {
 
-                if(QuickUtils.prefs.getString(AUtils.PREFS.USER_TYPE_ID, "0").equals("1")) {
+                if(Prefs.getString(AUtils.PREFS.USER_TYPE_ID, "0").equals("1")) {
                     startActivity(new Intent(SplashScreenActivity.this, EmpDashboardActivity.class));
                     SplashScreenActivity.this.finish();
                 } else {

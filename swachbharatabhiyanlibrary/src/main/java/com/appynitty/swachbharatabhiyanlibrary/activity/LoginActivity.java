@@ -7,16 +7,16 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-
 import android.telephony.TelephonyManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.appynitty.swachbharatabhiyanlibrary.R;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.LoginAdapterClass;
@@ -24,16 +24,13 @@ import com.appynitty.swachbharatabhiyanlibrary.dialogs.PopUpDialog;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.LanguagePojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.LoginPojo;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
-import com.appynitty.swachbharatabhiyanlibrary.utils.LocaleHelper;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.textfield.TextInputLayout;
-import com.mithsoft.lib.components.Toasty;
+import com.pixplicity.easyprefs.library.Prefs;
+import com.riaylibrary.utils.LocaleHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import quickutils.core.QuickUtils;
 
 /**
  * Created by Richali Pradhan Gupte on 24-10-2018.
@@ -112,12 +109,12 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        if(AUtils.isNetWorkAvailable(this))
+        if(AUtils.isInternetAvailable())
         {
             AUtils.hideSnackBar();
         }
         else {
-            AUtils.showSnackBar(this);
+            AUtils.showSnackBar(findViewById(R.id.parent));
         }
     }
 
@@ -146,7 +143,7 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
         getPermission();
 
         mContext = LoginActivity.this;
-        AUtils.mCurrentContext = mContext;
+        AUtils.currentContextConstant = mContext;
 
         mAdapter = new LoginAdapterClass();
 
@@ -181,21 +178,21 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
             public void onSuccessCallBack() {
                 String message = "";
 
-                if(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID, AUtils.DEFAULT_LANGUAGE_ID).equals("2")){
+                if(Prefs.getString(AUtils.LANGUAGE_NAME, AUtils.DEFAULT_LANGUAGE_ID).equals("2")){
                     message = mAdapter.getLoginDetailsPojo().getMessageMar();
                 }else{
                     message = mAdapter.getLoginDetailsPojo().getMessage();
                 }
 
-                QuickUtils.prefs.save(AUtils.PREFS.USER_ID, mAdapter.getLoginDetailsPojo().getUserId());
-                QuickUtils.prefs.save(AUtils.PREFS.USER_TYPE, mAdapter.getLoginDetailsPojo().getType());
-                QuickUtils.prefs.save(AUtils.PREFS.USER_TYPE_ID, mAdapter.getLoginDetailsPojo().getTypeId());
+                Prefs.putString(AUtils.PREFS.USER_ID, mAdapter.getLoginDetailsPojo().getUserId());
+                Prefs.putString(AUtils.PREFS.USER_TYPE, mAdapter.getLoginDetailsPojo().getType());
+                Prefs.putString(AUtils.PREFS.USER_TYPE_ID, mAdapter.getLoginDetailsPojo().getTypeId());
 
-                QuickUtils.prefs.save(AUtils.PREFS.IS_GT_FEATURE, (boolean)mAdapter.getLoginDetailsPojo().getGtFeatures());
+                Prefs.putBoolean(AUtils.PREFS.IS_GT_FEATURE, (boolean)mAdapter.getLoginDetailsPojo().getGtFeatures());
 
-                QuickUtils.prefs.save(AUtils.PREFS.IS_USER_LOGIN, true);
+                Prefs.putBoolean(AUtils.PREFS.IS_USER_LOGIN, true);
 
-                Toasty.success(mContext, message, Toast.LENGTH_SHORT).show();
+                AUtils.success(mContext, message, Toast.LENGTH_SHORT);
                 Intent intent;
 
                 if(mAdapter.getLoginDetailsPojo().getTypeId().equals("1"))
@@ -212,21 +209,21 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
             public void onSuccessFailureCallBack() {
                 String message = "";
 
-                if(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID, AUtils.DEFAULT_LANGUAGE_ID).equals("2")){
+                if(Prefs.getString(AUtils.LANGUAGE_NAME, AUtils.DEFAULT_LANGUAGE_ID).equals("2")){
                     message = mAdapter.getLoginDetailsPojo().getMessageMar();
                 }else{
                     message = mAdapter.getLoginDetailsPojo().getMessage();
                 }
 
-                QuickUtils.prefs.save(AUtils.PREFS.IS_USER_LOGIN, false);
+                Prefs.putBoolean(AUtils.PREFS.IS_USER_LOGIN, false);
 
-                Toasty.error(mContext, message, Toast.LENGTH_SHORT).show();
+                AUtils.error(mContext, message, Toast.LENGTH_SHORT);
             }
 
             @Override
             public void onFailureCallBack() {
-                QuickUtils.prefs.save(AUtils.PREFS.IS_USER_LOGIN, false);
-                Toasty.error(mContext, "" + mContext.getString(R.string.serverError), Toast.LENGTH_SHORT).show();
+                Prefs.putBoolean(AUtils.PREFS.IS_USER_LOGIN, false);
+                AUtils.error(mContext, "" + mContext.getString(R.string.serverError), Toast.LENGTH_SHORT);
             }
         });
     }
@@ -248,12 +245,12 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
     private boolean validateForm() {
 
         if (AUtils.isNullString(txtUserName.getText().toString())) {
-            AUtils.showWarning(mContext, mContext.getString(R.string.plz_ent_username));
+            AUtils.warning(mContext, mContext.getString(R.string.plz_ent_username));
             return false;
         }
 
         if (AUtils.isNullString(txtUserPwd.getText().toString())) {
-            AUtils.showWarning(mContext, mContext.getString(R.string.plz_ent_pwd));
+            AUtils.warning(mContext, mContext.getString(R.string.plz_ent_pwd));
             return false;
         }
         return true;
@@ -336,9 +333,9 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
         LanguagePojo languagePojo = (LanguagePojo) listItemSelected;
 
         if (languagePojo.getLanguage().equals("English")) {
-            changeLanguage(1);
+            changeLanguage(AUtils.LanguageConstants.ENGLISH);
         } else if (languagePojo.getLanguage().equals("मराठी")) {
-            changeLanguage(2);
+            changeLanguage(AUtils.LanguageConstants.MARATHI);
         }
     }
 
@@ -358,7 +355,7 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
         mLanguagePojoList.add(eng);
         mLanguagePojoList.add(mar);
 
-        AUtils.changeLanguage(this, Integer.parseInt(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID, AUtils.DEFAULT_LANGUAGE_ID)));
+        AUtils.changeLanguage(this, Prefs.getString(AUtils.LANGUAGE_NAME, AUtils.DEFAULT_LANGUAGE_ID));
 
         if(!AUtils.isNull(mLanguagePojoList) && !mLanguagePojoList.isEmpty()) {
             for (int i = 0; i < mLanguagePojoList.size(); i++) {
@@ -370,7 +367,7 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
         }
     }
 
-    public void changeLanguage(int type) {
+    public void changeLanguage(String type) {
 
         AUtils.changeLanguage(this, type);
         recreate();

@@ -3,22 +3,20 @@ package com.appynitty.swachbharatabhiyanlibrary.adapters.connection;
 import android.util.Log;
 
 import com.appynitty.retrofitconnectionlibrary.connection.Connection;
-import com.appynitty.swachbharatabhiyanlibrary.entity.EmpSyncServerEntity;
 import com.appynitty.swachbharatabhiyanlibrary.entity.SyncServerEntity;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.OfflineGarbageColectionPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.OfflineGcResultPojo;
-import com.appynitty.swachbharatabhiyanlibrary.pojos.QrLocationPojo;
 import com.appynitty.swachbharatabhiyanlibrary.repository.SyncServerRepository;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 import com.appynitty.swachbharatabhiyanlibrary.webservices.GarbageCollectionWebService;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.pixplicity.easyprefs.library.Prefs;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import quickutils.core.QuickUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -30,7 +28,7 @@ public class SyncServerAdapterClass {
 
 
     public SyncServerAdapterClass(){
-        mSyncServerRepository = new SyncServerRepository(AUtils.mApplication.getApplicationContext());
+        mSyncServerRepository = new SyncServerRepository(AUtils.mainApplicationConstant.getApplicationContext());
         offlineGarbageColectionPojoList = new ArrayList<>();
     }
 
@@ -43,7 +41,7 @@ public class SyncServerAdapterClass {
             GarbageCollectionWebService service = Connection.createService(GarbageCollectionWebService.class,
                     AUtils.SERVER_URL);
 
-            service.saveGarbageCollectionOffline(QuickUtils.prefs.getString(AUtils.APP_ID, ""),
+            service.saveGarbageCollectionOffline(Prefs.getString(AUtils.APP_ID, ""),
                     AUtils.getBatteryStatus(),
                     AUtils.CONTENT_TYPE,
                     offlineGarbageColectionPojoList)
@@ -96,7 +94,7 @@ public class SyncServerAdapterClass {
         for (SyncServerEntity entity : entityList) {
             Type type = new TypeToken<OfflineGarbageColectionPojo>() {}.getType();
             OfflineGarbageColectionPojo pojo = new Gson().fromJson(entity.getPojo(), type);
-            pojo.setUserId(QuickUtils.prefs.getString(AUtils.PREFS.USER_ID, ""));
+            pojo.setUserId(Prefs.getString(AUtils.PREFS.USER_ID, ""));
             pojo.setOfflineID(String.valueOf(entity.getIndex_id()));
             offlineGarbageColectionPojoList.add(pojo);
         }

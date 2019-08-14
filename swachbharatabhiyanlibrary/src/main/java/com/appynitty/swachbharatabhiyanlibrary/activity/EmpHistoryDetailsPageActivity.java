@@ -16,7 +16,7 @@ import com.appynitty.swachbharatabhiyanlibrary.adapters.UI.EmpInflateHistoryDeta
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.EmpHistoryDetailsAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.EmpWorkHistoryDetailPojo;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
-import com.appynitty.swachbharatabhiyanlibrary.utils.LocaleHelper;
+import com.riaylibrary.utils.LocaleHelper;
 
 import java.util.List;
 import java.util.Objects;
@@ -69,12 +69,12 @@ public class EmpHistoryDetailsPageActivity extends AppCompatActivity {
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        if(AUtils.isNetWorkAvailable(this))
+        if(AUtils.isInternetAvailable())
         {
             AUtils.hideSnackBar();
         }
         else {
-            AUtils.showSnackBar(this);
+            AUtils.showSnackBar(findViewById(R.id.parent));
         }
     }
 
@@ -84,7 +84,7 @@ public class EmpHistoryDetailsPageActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
         
         mContext = EmpHistoryDetailsPageActivity.this;
-        AUtils.mCurrentContext = mContext;
+        AUtils.currentContextConstant = mContext;
 
         mAdapter = new EmpHistoryDetailsAdapterClass();
 

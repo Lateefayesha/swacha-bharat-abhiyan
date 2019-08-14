@@ -2,27 +2,27 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/padding_margin_layout"
+    android:padding="@dimen/dim_6_dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/menu_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/padding_margin_layout"
-        android:layout_marginBottom="@dimen/padding_margin_layout"
+        android:layout_marginTop="@dimen/dim_6_dp"
+        android:layout_marginBottom="@dimen/dim_6_dp"
         android:layout_marginStart="@dimen/dim_2_dp"
         android:layout_marginEnd="@dimen/dim_2_dp"
-        app:cardCornerRadius="@dimen/card_radius"
-        app:cardElevation="@dimen/card_elevation"
+        app:cardCornerRadius="@dimen/dim_5_dp"
+        app:cardElevation="@dimen/dim_3_dp"
         android:layout_gravity="center">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingTop="@dimen/padding_margin_layout_double"
-            android:paddingBottom="@dimen/padding_margin_layout_double">
+            android:paddingTop="@dimen/dim_12_dp"
+            android:paddingBottom="@dimen/dim_12_dp">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -38,7 +38,7 @@
                     android:textColor="@color/colorPrimary"
                     android:text="@string/hyphen"
                     android:textStyle="bold"
-                    android:textSize="@dimen/button_text_size"/>
+                    android:textSize="@dimen/dim_20_sp"/>
 
                 <TextView
                     android:id="@+id/history_month_txt"
@@ -57,7 +57,7 @@
                 android:layout_height="match_parent"
                 android:background="@color/colorAccent"
                 android:layout_marginStart="@dimen/dim_2_dp"
-                android:layout_marginEnd="@dimen/padding_margin_layout_double"/>
+                android:layout_marginEnd="@dimen/dim_12_dp"/>
 
             <RelativeLayout
                 android:layout_width="0dp"
@@ -77,9 +77,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/house_collection_lbl"
-                    android:textSize="@dimen/primery_text_size"
+                    android:textSize="@dimen/dim_17_sp"
                     android:textColor="@color/colorBlue"
-                    android:layout_marginBottom="@dimen/padding_margin_layout"
+                    android:layout_marginBottom="@dimen/dim_6_dp"
                     android:text="@string/hyphen"/>
 
                 <TextView
@@ -89,7 +89,7 @@
                     android:textColor="@color/colorDefault"
                     android:textSize="@dimen/dim_12_sp"
                     android:layout_below="@id/house_collection"
-                    android:layout_marginTop="@dimen/padding_margin_layout"
+                    android:layout_marginTop="@dimen/dim_6_dp"
                     android:text="@string/point_collection_txt"/>
 
                 <TextView
@@ -97,7 +97,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/gp_collection_lbl"
-                    android:textSize="@dimen/primery_text_size"
+                    android:textSize="@dimen/dim_17_sp"
                     android:textColor="@color/colorPinkLight"
                     android:text="@string/hyphen"/>
 
@@ -108,7 +108,7 @@
                     android:textColor="@color/colorDefault"
                     android:textSize="@dimen/dim_12_sp"
                     android:layout_below="@id/gp_collection"
-                    android:layout_marginTop="@dimen/padding_margin_layout"
+                    android:layout_marginTop="@dimen/dim_6_dp"
                     android:text="@string/dump_yard_txt"/>
 
                 <TextView
@@ -116,7 +116,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/dy_collection_lbl"
-                    android:textSize="@dimen/primery_text_size"
+                    android:textSize="@dimen/dim_17_sp"
                     android:textColor="@color/colorOrange"
                     android:text="@string/hyphen"/>
 

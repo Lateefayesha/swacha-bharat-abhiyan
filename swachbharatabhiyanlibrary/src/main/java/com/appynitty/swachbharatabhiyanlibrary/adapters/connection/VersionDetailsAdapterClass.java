@@ -1,13 +1,8 @@
 package com.appynitty.swachbharatabhiyanlibrary.adapters.connection;
 
-import android.content.DialogInterface;
-
-import com.appynitty.swachbharatabhiyanlibrary.activity.SplashScreenActivity;
 import com.appynitty.swachbharatabhiyanlibrary.connection.SyncServer;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 import com.appynitty.swachbharatabhiyanlibrary.utils.MyAsyncTask;
-
-import quickutils.core.QuickUtils;
 
 public class VersionDetailsAdapterClass {
 
@@ -23,7 +18,7 @@ public class VersionDetailsAdapterClass {
 
     public void checkVersionDetails() {
 
-        new MyAsyncTask(AUtils.mCurrentContext, false, new MyAsyncTask.AsynTaskListener() {
+        new MyAsyncTask(AUtils.currentContextConstant, false, new MyAsyncTask.AsynTaskListener() {
             Boolean doUpdate = false;
             @Override
             public void doInBackgroundOpration(SyncServer syncServer) {

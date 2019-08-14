@@ -30,7 +30,7 @@ public class CollectionAreaAdapterClass {
     }
 
     public void fetchAreaList(final String type, boolean isProgress) {
-        new MyAsyncTask(AUtils.mCurrentContext, isProgress, new MyAsyncTask.AsynTaskListener() {
+        new MyAsyncTask(AUtils.currentContextConstant, isProgress, new MyAsyncTask.AsynTaskListener() {
 
             @Override
             public void doInBackgroundOpration(SyncServer syncServer) {

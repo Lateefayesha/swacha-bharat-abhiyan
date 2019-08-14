@@ -8,7 +8,9 @@ import android.content.IntentFilter;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.appynitty.swachbharatabhiyanlibrary.R;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
+import com.appynitty.swachbharatabhiyanlibrary.utils.MyApplication;
 
 public class NetworkSchedulerService extends JobService implements
         ConnectivityReceiver.ConnectivityReceiverListener {
@@ -53,12 +55,12 @@ public class NetworkSchedulerService extends JobService implements
 
     @Override
     public void onNetworkConnectionChanged(boolean isConnected) {
-        boolean isVisible = AUtils.mApplication.isActivityVisible();
+        boolean isVisible = ((MyApplication)AUtils.mainApplicationConstant).isActivityVisible();
         if (isVisible == true) {
             if (isConnected) {
                 AUtils.hideSnackBar();
             } else {
-                AUtils.showSnackBar((Activity)AUtils.mCurrentContext);
+                AUtils.showSnackBar(((Activity)AUtils.currentContextConstant).findViewById(R.id.parent));
             }
         } else {
             AUtils.hideSnackBar();

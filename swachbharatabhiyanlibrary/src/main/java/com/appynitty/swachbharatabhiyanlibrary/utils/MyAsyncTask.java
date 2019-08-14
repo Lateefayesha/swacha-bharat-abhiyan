@@ -2,12 +2,10 @@ package com.appynitty.swachbharatabhiyanlibrary.utils;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.widget.Toast;
 
 import com.appynitty.swachbharatabhiyanlibrary.R;
 import com.appynitty.swachbharatabhiyanlibrary.connection.SyncServer;
-import com.mithsoft.lib.components.MyProgressDialog;
-import com.mithsoft.lib.components.Toasty;
+import com.riaylibrary.custom_component.MyProgressDialog;
 
 public class MyAsyncTask extends AsyncTask {
 
@@ -39,7 +37,7 @@ public class MyAsyncTask extends AsyncTask {
     @Override
     protected Object doInBackground(Object[] objects) {
 
-        if (AUtils.isNetWorkAvailable(context)) {
+        if (AUtils.isInternetAvailable()) {
             try {
 
                 isNetworkAvail = true;
@@ -63,7 +61,7 @@ public class MyAsyncTask extends AsyncTask {
         } else {
 
             if (!AUtils.isNull(isShowPrgressDialog) && isShowPrgressDialog) {
-                AUtils.showWarning(context, context.getString(R.string.noInternet));
+                AUtils.warning(context, context.getString(R.string.no_internet_error));
                 asynTaskListener.onInternetLost();
             }
         }

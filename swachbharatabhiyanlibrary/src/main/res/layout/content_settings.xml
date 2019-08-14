@@ -26,7 +26,7 @@
             android:layout_height="match_parent"
             android:text="@string/show_bifurcation_type"
             android:gravity="center_vertical"
-            android:textSize="@dimen/primery_text_size"/>
+            android:textSize="@dimen/dim_17_sp"/>
 
         <Switch
             android:id="@+id/switch_bifurcation"

@@ -27,7 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="@dimen/login_card_height"
-        app:cardCornerRadius="@dimen/card_radius"
+        app:cardCornerRadius="@dimen/dim_5_dp"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
         android:layout_centerInParent="true"
@@ -105,11 +105,11 @@
     <ImageView
         android:contentDescription="@string/app_name"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/appynitty_img_height"
+        android:layout_height="@dimen/dim_30_dp"
         android:src="@drawable/appynitty_icon"
         android:layout_marginTop="10dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="@dimen/padding_margin_layout"/>
+        android:layout_marginBottom="@dimen/dim_6_dp"/>
 
 </RelativeLayout>

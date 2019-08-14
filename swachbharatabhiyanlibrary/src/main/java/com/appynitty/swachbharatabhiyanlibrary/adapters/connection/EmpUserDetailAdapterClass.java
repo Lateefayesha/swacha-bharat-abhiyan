@@ -6,10 +6,9 @@ import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 import com.appynitty.swachbharatabhiyanlibrary.utils.EmpMyAsyncTask;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.pixplicity.easyprefs.library.Prefs;
 
 import java.lang.reflect.Type;
-
-import quickutils.core.QuickUtils;
 
 public class EmpUserDetailAdapterClass {
 
@@ -32,7 +31,7 @@ public class EmpUserDetailAdapterClass {
         }.getType();
 
         userDetailPojo = new Gson().fromJson(
-                QuickUtils.prefs.getString(AUtils.PREFS.USER_DETAIL_POJO, null), type);
+                Prefs.getString(AUtils.PREFS.USER_DETAIL_POJO, null), type);
 
         return userDetailPojo;
     }
@@ -40,12 +39,12 @@ public class EmpUserDetailAdapterClass {
     public static void setUserDetailPojo(UserDetailPojo userDetailPojo) {
         Type type = new TypeToken<UserDetailPojo>() {
         }.getType();
-        QuickUtils.prefs.save(AUtils.PREFS.USER_DETAIL_POJO, gson.toJson(userDetailPojo, type));
+        Prefs.putString(AUtils.PREFS.USER_DETAIL_POJO, gson.toJson(userDetailPojo, type));
     }
 
     public void getUserDetail() {
 
-        new EmpMyAsyncTask(AUtils.mCurrentContext, false, new EmpMyAsyncTask.AsynTaskListener() {
+        new EmpMyAsyncTask(AUtils.currentContextConstant, false, new EmpMyAsyncTask.AsynTaskListener() {
             public boolean isDataPull = false;
 
             @Override

@@ -14,42 +14,38 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+
 import com.appynitty.swachbharatabhiyanlibrary.R;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.ImagePojo;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
-import com.appynitty.swachbharatabhiyanlibrary.utils.LocaleHelper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.mithsoft.lib.components.Toasty;
+import com.pixplicity.easyprefs.library.Prefs;
+import com.riaylibrary.utils.LocaleHelper;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.lang.reflect.Type;
-import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Objects;
-
-import quickutils.core.QuickUtils;
 
 public class DumpYardWeightActivity extends AppCompatActivity {
 
@@ -107,7 +103,7 @@ public class DumpYardWeightActivity extends AppCompatActivity {
     private void generateId(){
         setContentView(R.layout.activity_dump_yard_weight);
         mContext = DumpYardWeightActivity.this;
-        AUtils.mCurrentContext = mContext;
+        AUtils.currentContextConstant = mContext;
 
         toolbar = findViewById(R.id.toolbar);
 
@@ -414,7 +410,7 @@ public class DumpYardWeightActivity extends AppCompatActivity {
         } catch (Exception e) {
 
             e.printStackTrace();
-            Toasty.error(mContext, "Unable to add image", Toast.LENGTH_SHORT).show();
+            AUtils.error(mContext, "Unable to add image", Toast.LENGTH_SHORT);
         }
 
         switch (imageViewNo) {
@@ -441,7 +437,7 @@ public class DumpYardWeightActivity extends AppCompatActivity {
         }.getType();
 
         imagePojo = new Gson().fromJson(
-                QuickUtils.prefs.getString(AUtils.PREFS.IMAGE_POJO , null), type);
+                Prefs.getString(AUtils.PREFS.IMAGE_POJO , null), type);
 
 
         if (!AUtils.isNull(imagePojo)) {
@@ -541,14 +537,14 @@ public class DumpYardWeightActivity extends AppCompatActivity {
             AUtils.isNullString(editDryTotal.getText().toString()) ||
             AUtils.isNullString(editWetTotal.getText().toString())
         ){
-            Toasty.error(mContext, mContext.getString(R.string.plz_ent_all_fields)).show();
+            AUtils.error(mContext, mContext.getString(R.string.plz_ent_all_fields));
             return false;
         }else if(
             !AUtils.isNumeric(editTotal.getText().toString()) ||
             !AUtils.isNumeric(editDryTotal.getText().toString()) ||
             !AUtils.isNumeric(editWetTotal.getText().toString())
         ){
-            Toasty.error(mContext, mContext.getString(R.string.plz_ent_only_number)).show();
+            AUtils.error(mContext, mContext.getString(R.string.plz_ent_only_number));
             return false;
         }
 
@@ -594,7 +590,7 @@ public class DumpYardWeightActivity extends AppCompatActivity {
 
             Type type = new TypeToken<ImagePojo>() {
             }.getType();
-            QuickUtils.prefs.save(AUtils.PREFS.IMAGE_POJO, new Gson().toJson(imagePojo, type));
+            Prefs.putString(AUtils.PREFS.IMAGE_POJO, new Gson().toJson(imagePojo, type));
 
             return true;
         }

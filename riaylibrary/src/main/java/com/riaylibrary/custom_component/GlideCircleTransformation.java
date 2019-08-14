@@ -1,4 +1,4 @@
-package com.appynitty.swachbharatabhiyanlibrary.custom_component;
+package com.riaylibrary.custom_component;
 
 import android.content.Context;
 import android.graphics.Bitmap;

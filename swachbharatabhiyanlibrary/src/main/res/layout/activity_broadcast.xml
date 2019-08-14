@@ -24,10 +24,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
-            android:paddingTop="@dimen/padding_margin_layout"
+            android:paddingTop="@dimen/dim_6_dp"
             android:paddingBottom="@dimen/dim_20_dp"
-            android:paddingStart="@dimen/padding_margin_layout"
-            android:paddingEnd="@dimen/padding_margin_layout"
+            android:paddingStart="@dimen/dim_6_dp"
+            android:paddingEnd="@dimen/dim_6_dp"
             android:orientation="vertical">
 
             <com.google.android.material.textfield.TextInputLayout
@@ -36,7 +36,7 @@
                 android:id="@+id/txt_area_layout"
                 android:hint="@string/select_area_hint"
                 android:theme="@style/TextLabel2"
-                android:layout_marginBottom="@dimen/padding_margin_layout_double"
+                android:layout_marginBottom="@dimen/dim_12_dp"
                 android:layout_marginTop="0dp">
 
                 <AutoCompleteTextView
@@ -44,8 +44,8 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/txt_area_auto"
                     android:textColor="@color/white"
-                    android:layout_marginStart="@dimen/padding_margin_layout"
-                    android:layout_marginEnd="@dimen/padding_margin_layout"
+                    android:layout_marginStart="@dimen/dim_6_dp"
+                    android:layout_marginEnd="@dimen/dim_6_dp"
                     android:textSize="@dimen/dim_18_sp"
                     android:maxLines="1"
                     android:imeOptions="actionDone"
@@ -70,8 +70,8 @@
         android:layout_gravity="bottom"
         android:text="@string/submit_txt"
         android:textColor="@color/white"
-        android:textSize="@dimen/button_text_size"
-        android:layout_margin="@dimen/padding_margin_layout_double"
+        android:textSize="@dimen/dim_20_sp"
+        android:layout_margin="@dimen/dim_12_dp"
         android:background="@drawable/rounded_primary_button"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -10,9 +10,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.appynitty.swachbharatabhiyanlibrary.R;
-import com.appynitty.swachbharatabhiyanlibrary.custom_component.GlideCircleTransformation;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 import com.bumptech.glide.Glide;
+import com.riaylibrary.custom_component.GlideCircleTransformation;
 
 public class IdCardDialog extends Dialog {
 
@@ -44,7 +44,7 @@ public class IdCardDialog extends Dialog {
         setContentView(R.layout.dialog_id_card);
         this.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         WindowManager.LayoutParams params = this.getWindow().getAttributes();
-        params.height = (int) mContext.getResources().getDimension(R.dimen.dim_540_dp);
+        params.height = (int) mContext.getResources().getDimension(R.dimen.dim_480_dp);
 
         this.getWindow().setAttributes(params);
 

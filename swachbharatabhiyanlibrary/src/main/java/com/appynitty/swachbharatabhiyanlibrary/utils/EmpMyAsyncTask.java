@@ -5,7 +5,7 @@ import android.os.AsyncTask;
 
 import com.appynitty.swachbharatabhiyanlibrary.R;
 import com.appynitty.swachbharatabhiyanlibrary.connection.EmpSyncServer;
-import com.mithsoft.lib.components.MyProgressDialog;
+import com.riaylibrary.custom_component.MyProgressDialog;
 
 public class EmpMyAsyncTask extends AsyncTask {
 
@@ -37,7 +37,7 @@ public class EmpMyAsyncTask extends AsyncTask {
     @Override
     protected Object doInBackground(Object[] objects) {
 
-        if (AUtils.isNetWorkAvailable(context)) {
+        if (AUtils.isInternetAvailable()) {
             try {
 
                 isNetworkAvail = true;
@@ -61,7 +61,7 @@ public class EmpMyAsyncTask extends AsyncTask {
         } else {
 
             if (isShowPrgressDialog) {
-                AUtils.showWarning(context, context.getString(R.string.noInternet));
+                AUtils.warning(context, context.getString(R.string.no_internet_error));
                 asynTaskListener.onInternetLost();
             }
         }

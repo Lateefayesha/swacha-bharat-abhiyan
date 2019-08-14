@@ -1,16 +1,17 @@
 package com.appynitty.swachbharatabhiyanlibrary.adapters.connection;
 
-import androidx.annotation.NonNull;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 import com.appynitty.retrofitconnectionlibrary.connection.Connection;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.ZoneWardAreaMasterPojo;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 import com.appynitty.swachbharatabhiyanlibrary.webservices.ZoneWardAreaWebService;
+import com.pixplicity.easyprefs.library.Prefs;
 
 import java.util.List;
 
-import quickutils.core.QuickUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -34,7 +35,7 @@ public class EmpWardZoneAreaAdapterClass {
         ZoneWardAreaWebService zoneWardAreaWebService = Connection.createService(ZoneWardAreaWebService.class,
                 AUtils.SERVER_URL);
         zoneWardAreaWebService.fetchZone(
-                QuickUtils.prefs.getString(AUtils.APP_ID, ""), "")
+                Prefs.getString(AUtils.APP_ID, ""), "")
                 .enqueue(new Callback<List<ZoneWardAreaMasterPojo>>() {
                     @Override
                     public void onResponse(@NonNull Call<List<ZoneWardAreaMasterPojo>> call, @NonNull Response<List<ZoneWardAreaMasterPojo>> response) {
@@ -57,7 +58,7 @@ public class EmpWardZoneAreaAdapterClass {
         ZoneWardAreaWebService zoneWardAreaWebService = Connection.createService(ZoneWardAreaWebService.class,
                 AUtils.SERVER_URL);
         zoneWardAreaWebService.fetchWardZone(
-                QuickUtils.prefs.getString(AUtils.APP_ID, ""))
+                Prefs.getString(AUtils.APP_ID, ""))
                 .enqueue(new Callback<List<ZoneWardAreaMasterPojo>>() {
                     @Override
                     public void onResponse(@NonNull Call<List<ZoneWardAreaMasterPojo>> call, @NonNull Response<List<ZoneWardAreaMasterPojo>> response) {
@@ -81,7 +82,7 @@ public class EmpWardZoneAreaAdapterClass {
         ZoneWardAreaWebService zoneWardAreaWebService = Connection.createService(ZoneWardAreaWebService.class,
                 AUtils.SERVER_URL);
         zoneWardAreaWebService.fetchArea(
-                QuickUtils.prefs.getString(AUtils.APP_ID, ""), "")
+                Prefs.getString(AUtils.APP_ID, ""), "")
                 .enqueue(new Callback<List<ZoneWardAreaMasterPojo>>() {
                     @Override
                     public void onResponse(@NonNull Call<List<ZoneWardAreaMasterPojo>> call, @NonNull Response<List<ZoneWardAreaMasterPojo>> response) {

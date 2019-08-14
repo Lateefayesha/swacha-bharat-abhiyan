@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -14,13 +12,15 @@ import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import com.appynitty.swachbharatabhiyanlibrary.R;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.UI.InflateHistoryAdapter;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.HistoryAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.WorkHistoryPojo;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
-import com.appynitty.swachbharatabhiyanlibrary.utils.LocaleHelper;
-import com.mithsoft.lib.components.Toasty;
+import com.riaylibrary.utils.LocaleHelper;
 
 import java.util.List;
 import java.util.Objects;
@@ -73,14 +73,14 @@ public class HistoryPageActivity extends AppCompatActivity {
     protected void onPostResume() {
         super.onPostResume();
 
-        AUtils.mCurrentContext = mContext;
+        AUtils.currentContextConstant = mContext;
 
-        if(AUtils.isNetWorkAvailable(this))
+        if(AUtils.isInternetAvailable())
         {
             AUtils.hideSnackBar();
         }
         else {
-            AUtils.showSnackBar(this);
+            AUtils.showSnackBar(findViewById(R.id.parent));
         }
     }
 
@@ -90,7 +90,7 @@ public class HistoryPageActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
 
         mContext = HistoryPageActivity.this;
-        AUtils.mCurrentContext = mContext;
+        AUtils.currentContextConstant = mContext;
 
         mAdapter = new HistoryAdapterClass();
 
@@ -127,7 +127,7 @@ public class HistoryPageActivity extends AppCompatActivity {
                             String.valueOf(position)
                     );
                 }else{
-                    AUtils.showWarning(mContext, getResources().getString(R.string.select_month_year_warn));
+                    AUtils.warning(mContext, getResources().getString(R.string.select_month_year_warn));
                 }
             }
 
@@ -146,7 +146,7 @@ public class HistoryPageActivity extends AppCompatActivity {
                             String.valueOf(monthSpinner.getSelectedItemPosition())
                     );
                 }else{
-                    Toasty.info(mContext, getResources().getString(R.string.select_month_year_warn)).show();
+                    AUtils.info(mContext, getResources().getString(R.string.select_month_year_warn));
                 }
             }
 
@@ -172,7 +172,7 @@ public class HistoryPageActivity extends AppCompatActivity {
     private void initData() {
         initSpinner();
 
-        if(AUtils.isNetWorkAvailable(mContext)){
+        if(AUtils.isInternetAvailable()){
             noInternetErrorLayout.setVisibility(View.GONE);
             mAdapter.fetchHistory(String.valueOf(AUtils.getCurrentYear()),
                     String.valueOf(AUtils.getCurrentMonth()));
@@ -188,14 +188,14 @@ public class HistoryPageActivity extends AppCompatActivity {
 
     public void setMonthSpinner(Spinner monthSpinner) {
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(mContext,
-                R.layout.layout_simple_white_textview, AUtils.getMonthSpinnerList());
+                R.layout.layout_simple_white_textview, AUtils.getMonthList());
         monthSpinner.setAdapter(spinnerAdapter);
         monthSpinner.setSelection((AUtils.getCurrentMonth()+1), true);
     }
 
     public void setYearSpinner(Spinner yearSpinner) {
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(mContext,
-                R.layout.layout_simple_white_textview, AUtils.getYearSpinnerList());
+                R.layout.layout_simple_white_textview, AUtils.getYearList());
         yearSpinner.setAdapter(spinnerAdapter);
         yearSpinner.setSelection(1, true);
     }

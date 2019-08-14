@@ -1,14 +1,9 @@
 package com.appynitty.swachbharatabhiyanlibrary.adapters.connection;
 
-import android.service.autofill.AutofillService;
-
-import com.appynitty.swachbharatabhiyanlibrary.R;
 import com.appynitty.swachbharatabhiyanlibrary.connection.SyncServer;
-import com.appynitty.swachbharatabhiyanlibrary.pojos.CollectionAreaHousePojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.CollectionAreaPointPojo;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 import com.appynitty.swachbharatabhiyanlibrary.utils.MyAsyncTask;
-import com.mithsoft.lib.components.Toasty;
 
 import java.util.List;
 
@@ -35,7 +30,7 @@ public class AreaPointAdapterClass {
     }
 
     public void fetchGpList(final String areaId) {
-        new MyAsyncTask(AUtils.mCurrentContext, true, new MyAsyncTask.AsynTaskListener() {
+        new MyAsyncTask(AUtils.currentContextConstant, true, new MyAsyncTask.AsynTaskListener() {
 
             @Override
             public void doInBackgroundOpration(SyncServer syncServer) {

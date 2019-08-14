@@ -47,14 +47,13 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
     /** Custom Libraries*/
-    implementation files('libs/QuickUtils.jar')
-    implementation(name: 'mithsoftlib-release', ext: 'aar')
+    implementation(name: 'riaylibrary-release', ext: 'aar')
 
     /** QR code scanner */
     implementation('me.dm7.barcodescanner:zbar:1.9.8')
 
     /** Material Fab Button */
-    implementation('com.github.kobakei:MaterialFabSpeedDial:1.2.0')
+    implementation 'com.github.kobakei:MaterialFabSpeedDial:1.2.0'
 
 //    implementation project(':retrofitconnectionlibrary')
     implementation(name: 'retrofitconnectionlibrary-release', ext: 'aar')
@@ -74,4 +73,8 @@ dependencies {
 
     // image loading libs
     implementation 'com.github.bumptech.glide:glide:3.8.0'
+
+    implementation 'com.pixplicity.easyprefs:library:1.9.0'
+
+    implementation 'com.valdesekamdem.library:md-toast:0.9.0'
 }

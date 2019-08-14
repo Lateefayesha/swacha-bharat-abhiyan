@@ -134,7 +134,7 @@ public class GarbageTypePopUp extends Dialog {
             this.dismiss();
             isSubmit = true;
         }else {
-            AUtils.showWarning(mContext,mContext.getResources().getString(R.string.garbage_error));
+            AUtils.warning(mContext,mContext.getResources().getString(R.string.garbage_error));
         }
     }
 

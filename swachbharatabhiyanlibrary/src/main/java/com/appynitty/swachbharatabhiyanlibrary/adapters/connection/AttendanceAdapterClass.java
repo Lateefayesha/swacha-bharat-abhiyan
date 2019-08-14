@@ -10,9 +10,8 @@ import com.appynitty.swachbharatabhiyanlibrary.pojos.InPunchPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.OutPunchPojo;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 import com.appynitty.swachbharatabhiyanlibrary.utils.MyAsyncTask;
-import com.mithsoft.lib.components.Toasty;
-
-import quickutils.core.QuickUtils;
+import com.pixplicity.easyprefs.library.Prefs;
+import com.riaylibrary.utils.CommonUtils;
 
 public class AttendanceAdapterClass {
 
@@ -28,7 +27,7 @@ public class AttendanceAdapterClass {
 
     public void MarkInPunch(final InPunchPojo inPunchPojo) {
 
-        new MyAsyncTask(AUtils.mCurrentContext, true, new MyAsyncTask.AsynTaskListener() {
+        new MyAsyncTask(AUtils.currentContextConstant, true, new MyAsyncTask.AsynTaskListener() {
             ResultPojo resultPojo = null;
             @Override
             public void doInBackgroundOpration(SyncServer syncServer) {
@@ -48,7 +47,7 @@ public class AttendanceAdapterClass {
                         }
 
                         String message = null;
-                        if(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID,AUtils.DEFAULT_LANGUAGE_ID).equals("2"))
+                        if(Prefs.getString(AUtils.LANGUAGE_NAME,AUtils.DEFAULT_LANGUAGE_ID).equals(AUtils.LanguageConstants.MARATHI))
                         {
                             message = resultPojo.getMessageMar();
                         }
@@ -56,14 +55,14 @@ public class AttendanceAdapterClass {
                         {
                             message = resultPojo.getMessage();
                         }
-                        Toasty.success(AUtils.mCurrentContext, "" + message, Toast.LENGTH_SHORT).show();
+                        AUtils.success(AUtils.currentContextConstant, "" + message, Toast.LENGTH_SHORT);
                     } else {
                         if(!AUtils.isNull(mListener))
                         {
                             mListener.onFailureCallBack(1);
                         }
                         String message = null;
-                        if(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID,AUtils.DEFAULT_LANGUAGE_ID).equals("2"))
+                        if(Prefs.getString(AUtils.LANGUAGE_NAME,AUtils.DEFAULT_LANGUAGE_ID).equals("2"))
                         {
                             message = resultPojo.getMessageMar();
                         }
@@ -71,14 +70,14 @@ public class AttendanceAdapterClass {
                         {
                             message = resultPojo.getMessage();
                         }
-                        Toasty.error(AUtils.mCurrentContext, "" + message, Toast.LENGTH_SHORT).show();
+                        AUtils.error(AUtils.currentContextConstant, "" + message, Toast.LENGTH_SHORT);
                     }
                 } else {
                     if(!AUtils.isNull(mListener))
                     {
                         mListener.onFailureCallBack(1);
                     }
-                    Toasty.error(AUtils.mCurrentContext, "" + AUtils.mCurrentContext.getString(R.string.serverError), Toast.LENGTH_SHORT).show();
+                    AUtils.error(AUtils.currentContextConstant, "" + AUtils.currentContextConstant.getString(R.string.serverError), Toast.LENGTH_SHORT);
                 }
             }
 
@@ -91,7 +90,7 @@ public class AttendanceAdapterClass {
 
     public void MarkOutPunch() {
 
-        new MyAsyncTask(AUtils.mCurrentContext, true, new MyAsyncTask.AsynTaskListener() {
+        new MyAsyncTask(AUtils.currentContextConstant, true, new MyAsyncTask.AsynTaskListener() {
             ResultPojo resultPojo = null;
             @Override
             public void doInBackgroundOpration(SyncServer syncServer) {
@@ -112,7 +111,7 @@ public class AttendanceAdapterClass {
                             mListener.onSuccessCallBack(2);
                         }
                         String message = null;
-                        if(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID,AUtils.DEFAULT_LANGUAGE_ID).equals("2"))
+                        if(Prefs.getString(AUtils.LANGUAGE_NAME,AUtils.DEFAULT_LANGUAGE_ID).equals("2"))
                         {
                             message = resultPojo.getMessageMar();
                         }
@@ -121,14 +120,14 @@ public class AttendanceAdapterClass {
                             message = resultPojo.getMessage();
                         }
 
-                        Toasty.success(AUtils.mCurrentContext, "" + message, Toast.LENGTH_SHORT).show();
+                        AUtils.success(AUtils.currentContextConstant, "" + message, Toast.LENGTH_SHORT);
                     } else {
                         if(!AUtils.isNull(mListener))
                         {
                             mListener.onFailureCallBack(2);
                         }
                         String message = null;
-                        if(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID,AUtils.DEFAULT_LANGUAGE_ID).equals("2"))
+                        if(Prefs.getString(AUtils.LANGUAGE_NAME,AUtils.DEFAULT_LANGUAGE_ID).equals(AUtils.LanguageConstants.MARATHI))
                         {
                             message = resultPojo.getMessageMar();
                         }
@@ -136,14 +135,14 @@ public class AttendanceAdapterClass {
                         {
                             message = resultPojo.getMessage();
                         }
-                        Toasty.error(AUtils.mCurrentContext, "" + message, Toast.LENGTH_SHORT).show();
+                        AUtils.error(AUtils.currentContextConstant, "" + message, Toast.LENGTH_SHORT);
                     }
                 } else {
                     if(!AUtils.isNull(mListener))
                     {
                         mListener.onFailureCallBack(2);
                     }
-                    Toasty.error(AUtils.mCurrentContext, "" + AUtils.mCurrentContext.getString(R.string.serverError), Toast.LENGTH_SHORT).show();
+                    AUtils.error(AUtils.currentContextConstant, "" + AUtils.currentContextConstant.getString(R.string.serverError), Toast.LENGTH_SHORT);
                 }
             }
 

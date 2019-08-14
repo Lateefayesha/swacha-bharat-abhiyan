@@ -6,11 +6,10 @@ import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 import com.appynitty.swachbharatabhiyanlibrary.utils.MyAsyncTask;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.pixplicity.easyprefs.library.Prefs;
 
 import java.lang.reflect.Type;
 import java.util.List;
-
-import quickutils.core.QuickUtils;
 
 public class VehicleTypeAdapterClass {
 
@@ -34,19 +33,19 @@ public class VehicleTypeAdapterClass {
         }.getType();
 
         vehicleTypePojoList = gson.fromJson(
-                QuickUtils.prefs.getString(AUtils.PREFS.VEHICLE_TYPE_POJO_LIST, null), type);
+                Prefs.getString(AUtils.PREFS.VEHICLE_TYPE_POJO_LIST, null), type);
         return vehicleTypePojoList;
     }
 
     public static void setVehicleTypePojoList(List<VehicleTypePojo> vehicleTypePojoList) {
         Type type = new TypeToken<List<VehicleTypePojo>>() {
         }.getType();
-        QuickUtils.prefs.save(AUtils.PREFS.VEHICLE_TYPE_POJO_LIST, gson.toJson(vehicleTypePojoList, type));
+        Prefs.putString(AUtils.PREFS.VEHICLE_TYPE_POJO_LIST, gson.toJson(vehicleTypePojoList, type));
     }
 
     public void getVehicleType() {
 
-        new MyAsyncTask(AUtils.mCurrentContext, false, new MyAsyncTask.AsynTaskListener() {
+        new MyAsyncTask(AUtils.currentContextConstant, false, new MyAsyncTask.AsynTaskListener() {
             public boolean isDataPull = false;
 
             @Override

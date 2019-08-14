@@ -2,19 +2,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/padding_margin_layout_double"
+    android:padding="@dimen/dim_12_dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/menu_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/padding_margin_layout"
-        android:layout_marginBottom="@dimen/padding_margin_layout"
+        android:layout_marginTop="@dimen/dim_6_dp"
+        android:layout_marginBottom="@dimen/dim_6_dp"
         android:layout_marginStart="2dp"
         android:layout_marginEnd="2dp"
-        app:cardCornerRadius="@dimen/card_radius"
-        app:cardElevation="@dimen/card_elevation"
+        app:cardCornerRadius="@dimen/dim_5_dp"
+        app:cardElevation="@dimen/dim_3_dp"
         android:layout_gravity="center">
 
         <LinearLayout
@@ -22,8 +22,8 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="center"
-            android:paddingTop="@dimen/padding_margin_layout_double"
-            android:paddingBottom="@dimen/padding_margin_layout_double"
+            android:paddingTop="@dimen/dim_12_dp"
+            android:paddingBottom="@dimen/dim_12_dp"
             android:layout_gravity="center_vertical">
 
             <ImageView
@@ -38,7 +38,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorPrimary"
-                android:layout_marginTop="@dimen/padding_margin_layout_double"
+                android:layout_marginTop="@dimen/dim_12_dp"
                 android:text="@string/app_name"/>
 
         </LinearLayout>

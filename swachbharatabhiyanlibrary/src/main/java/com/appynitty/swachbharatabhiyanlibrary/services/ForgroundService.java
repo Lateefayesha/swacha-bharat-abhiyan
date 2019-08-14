@@ -11,13 +11,13 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 
 import com.appynitty.swachbharatabhiyanlibrary.R;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
-
-import quickutils.core.QuickUtils;
+import com.pixplicity.easyprefs.library.Prefs;
 
 public class ForgroundService extends Service {
 
@@ -79,7 +79,7 @@ public class ForgroundService extends Service {
             stopForeground(STOP_FOREGROUND_REMOVE);
         }
 
-        if(QuickUtils.prefs.getBoolean(AUtils.PREFS.IS_ON_DUTY,false))
+        if(Prefs.getBoolean(AUtils.PREFS.IS_ON_DUTY,false))
         {
             Intent broadcastIntent = new Intent(this, RestarterBroadcastReceiver.class);
 

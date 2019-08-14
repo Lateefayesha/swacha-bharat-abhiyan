@@ -29,7 +29,7 @@ public class EmpCheckAttendanceAdapterClass {
     }
 
     public void checkAttendance() {
-        new EmpMyAsyncTask(AUtils.mCurrentContext, false, new EmpMyAsyncTask.AsynTaskListener() {
+        new EmpMyAsyncTask(AUtils.currentContextConstant, false, new EmpMyAsyncTask.AsynTaskListener() {
 
             @Override
             public void doInBackgroundOpration(EmpSyncServer empSyncServer) {

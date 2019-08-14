@@ -3,23 +3,22 @@ package com.appynitty.swachbharatabhiyanlibrary.services;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.icu.text.RelativeDateTimeFormatter;
 import android.util.Log;
 
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
-
-import quickutils.core.QuickUtils;
+import com.appynitty.swachbharatabhiyanlibrary.utils.MyApplication;
+import com.pixplicity.easyprefs.library.Prefs;
 
 public class RestarterBroadcastReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.i(RestarterBroadcastReceiver.class.getSimpleName(), "Service Stops! Oooooooooooooppppssssss!!!!");
-        if(QuickUtils.prefs.getBoolean(AUtils.PREFS.IS_ON_DUTY,false))
+        if(Prefs.getBoolean(AUtils.PREFS.IS_ON_DUTY,false))
         {
-            if(!AUtils.isMyServiceRunning(ForgroundService.class))
+            if(!AUtils.isMyServiceRunning(AUtils.mainApplicationConstant,ForgroundService.class))
             {
-                AUtils.mApplication.startLocationTracking();
+                ((MyApplication)AUtils.mainApplicationConstant).startLocationTracking();
             }
         }
         //context.startService(new Intent(context, ForgroundService.class));

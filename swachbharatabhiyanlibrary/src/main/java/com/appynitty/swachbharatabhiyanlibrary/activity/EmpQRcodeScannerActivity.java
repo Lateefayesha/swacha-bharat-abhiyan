@@ -33,12 +33,12 @@ import com.appynitty.swachbharatabhiyanlibrary.dialogs.ChooseActionPopUp;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.QrLocationPojo;
 import com.appynitty.swachbharatabhiyanlibrary.repository.EmpSyncServerRepository;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
-import com.appynitty.swachbharatabhiyanlibrary.utils.LocaleHelper;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.mithsoft.lib.components.MyProgressDialog;
-import com.mithsoft.lib.components.Toasty;
+import com.pixplicity.easyprefs.library.Prefs;
+import com.riaylibrary.custom_component.MyProgressDialog;
+import com.riaylibrary.utils.LocaleHelper;
 
 import java.lang.reflect.Type;
 import java.util.Objects;
@@ -46,7 +46,6 @@ import java.util.Objects;
 import io.github.kobakei.materialfabspeeddial.FabSpeedDial;
 import me.dm7.barcodescanner.zbar.Result;
 import me.dm7.barcodescanner.zbar.ZBarScannerView;
-import quickutils.core.QuickUtils;
 
 public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarScannerView.ResultHandler {
 
@@ -181,10 +180,10 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        if (AUtils.isNetWorkAvailable(this)) {
+        if (AUtils.isInternetAvailable()) {
             AUtils.hideSnackBar();
         } else {
-            AUtils.showSnackBar(this);
+            AUtils.showSnackBar(findViewById(R.id.parent));
         }
     }
 
@@ -199,7 +198,7 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
         toolbar = findViewById(R.id.toolbar);
 
         mContext = EmpQRcodeScannerActivity.this;
-        AUtils.mCurrentContext = mContext;
+        AUtils.currentContextConstant = mContext;
         myProgressDialog = new MyProgressDialog(mContext, R.drawable.progress_bar, false);
 
         empSyncServerRepository = new EmpSyncServerRepository(mContext);
@@ -252,11 +251,11 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
                         submitQRcode(idAutoComplete.getText().toString());
                     } else {
                         if (getGCType().equals(AUtils.HP_AREA_TYPE_ID))
-                            Toasty.error(mContext, mContext.getResources().getString(R.string.hp_area_validation_emp)).show();
+                            AUtils.error(mContext, mContext.getResources().getString(R.string.hp_area_validation_emp));
                         else if (getGCType().equals(AUtils.GP_AREA_TYPE_ID))
-                            Toasty.error(mContext, mContext.getResources().getString(R.string.gp_area_validation_emp)).show();
+                            AUtils.error(mContext, mContext.getResources().getString(R.string.gp_area_validation_emp));
                         else
-                            Toasty.error(mContext, mContext.getResources().getString(R.string.dy_area_validation_emp)).show();
+                            AUtils.error(mContext, mContext.getResources().getString(R.string.dy_area_validation_emp));
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -352,9 +351,9 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
                             submitOnDetails(mId, getGCType(mId));
                         } else {
                             if (!AUtils.isConnectedFast(mContext)) {
-                                AUtils.showWarning(mContext, getResources().getString(R.string.feature_unavailable_error));
+                                AUtils.warning(mContext, getResources().getString(R.string.feature_unavailable_error));
                             } else {
-                                Toasty.info(mContext, getResources().getString(R.string.no_internet_error), Toast.LENGTH_LONG).show();
+                                AUtils.info(mContext, getResources().getString(R.string.no_internet_error), Toast.LENGTH_LONG);
                             }
 
                             restartPreview();
@@ -373,30 +372,30 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
                 myProgressDialog.dismiss();
                 String message = "";
 
-                if (QuickUtils.prefs.getString(AUtils.LANGUAGE_ID, AUtils.DEFAULT_LANGUAGE_ID).equals("2")) {
+                if (Prefs.getString(AUtils.LANGUAGE_NAME, AUtils.DEFAULT_LANGUAGE_ID).equals("2")) {
                     message = resultPojo.getMessageMar();
                 } else {
                     message = resultPojo.getMessage();
                 }
 
                 if (resultPojo.getStatus().equals(AUtils.STATUS_SUCCESS)) {
-                    Toasty.success(mContext, message, Toast.LENGTH_LONG).show();
+                    AUtils.success(mContext, message, Toast.LENGTH_LONG);
                     finish();
                 } else {
-                    Toasty.error(mContext, message, Toast.LENGTH_LONG).show();
+                    AUtils.error(mContext, message, Toast.LENGTH_LONG);
                 }
             }
 
             @Override
             public void onFailureCallback() {
                 myProgressDialog.dismiss();
-                Toasty.error(mContext, getResources().getString(R.string.something_error), Toast.LENGTH_LONG).show();
+                AUtils.error(mContext, getResources().getString(R.string.something_error), Toast.LENGTH_LONG);
             }
 
             @Override
             public void onErrorCallback() {
                 myProgressDialog.dismiss();
-                Toasty.error(mContext, getResources().getString(R.string.serverError), Toast.LENGTH_LONG).show();
+                AUtils.error(mContext, getResources().getString(R.string.serverError), Toast.LENGTH_LONG);
             }
         });
 
@@ -414,7 +413,7 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
             showActionPopUp(houseid);
 
         } else {
-            AUtils.showWarning(EmpQRcodeScannerActivity.this, mContext.getResources().getString(R.string.qr_error));
+            AUtils.warning(EmpQRcodeScannerActivity.this, mContext.getResources().getString(R.string.qr_error));
             restartPreview();
         }
     }
@@ -512,14 +511,14 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
             chooseActionPopUp.setData(id);
             chooseActionPopUp.show();
         } else
-            Toasty.error(mContext, getResources().getString(R.string.invalid_qr_error)).show();
+            AUtils.error(mContext, getResources().getString(R.string.invalid_qr_error));
     }
 
     private void submitOnSkip(String id) {
         try {
             qrLocationPojo.setReferanceId(id);
-            qrLocationPojo.setLat(QuickUtils.prefs.getString(AUtils.LAT, ""));
-            qrLocationPojo.setLong(QuickUtils.prefs.getString(AUtils.LONG, ""));
+            qrLocationPojo.setLat(Prefs.getString(AUtils.LAT, ""));
+            qrLocationPojo.setLong(Prefs.getString(AUtils.LONG, ""));
 
             qrLocationPojo.setName("");
             qrLocationPojo.setNameMar("");
@@ -550,7 +549,7 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
 
     private void startSubmitQRAsyncTask(QrLocationPojo pojo) {
         myProgressDialog.show();
-        pojo.setUserId(QuickUtils.prefs.getString(AUtils.PREFS.USER_ID, ""));
+        pojo.setUserId(Prefs.getString(AUtils.PREFS.USER_ID, ""));
         if (AUtils.isInternetAvailable() && AUtils.isConnectedFast(mContext)) {
             empQrLocationAdapter.saveQrLocation(pojo);
             stopCamera();
@@ -562,7 +561,7 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 
-        AUtils.mCurrentContext = mContext;
+        AUtils.currentContextConstant = mContext;
 
         if (requestCode == AUtils.ADD_DETAILS_REQUEST_KEY && resultCode == RESULT_OK) {
             finish();
@@ -600,7 +599,7 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
         empSyncServerRepository.insertEmpSyncServerEntity(gson.toJson(pojo, type));
 
         myProgressDialog.dismiss();
-        Toasty.success(mContext, getString(R.string.success_message), Toast.LENGTH_LONG).show();
+        AUtils.success(mContext, getString(R.string.success_message), Toast.LENGTH_LONG);
         finish();
     }
 }

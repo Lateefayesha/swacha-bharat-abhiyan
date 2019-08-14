@@ -11,12 +11,12 @@ import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 import com.appynitty.swachbharatabhiyanlibrary.webservices.QrLocationWebService;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.pixplicity.easyprefs.library.Prefs;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import quickutils.core.QuickUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -31,7 +31,7 @@ public class EmpSyncServerAdapterClass {
     private EmpSyncServerRepository empSyncServerRepository;
 
     public EmpSyncServerAdapterClass() {
-        empSyncServerRepository = new EmpSyncServerRepository(AUtils.mApplication.getApplicationContext());
+        empSyncServerRepository = new EmpSyncServerRepository(AUtils.mainApplicationConstant.getApplicationContext());
         locationPojoList = new ArrayList<>();
         gson = new Gson();
     }
@@ -45,7 +45,7 @@ public class EmpSyncServerAdapterClass {
             QrLocationWebService service = Connection.createService(QrLocationWebService.class,
                     AUtils.SERVER_URL);
 
-            service.saveQrLocationDetailsOffline(QuickUtils.prefs.getString(AUtils.APP_ID, ""),
+            service.saveQrLocationDetailsOffline(Prefs.getString(AUtils.APP_ID, ""),
                     AUtils.CONTENT_TYPE, locationPojoList)
                     .enqueue(new Callback<List<OfflineGcResultPojo>>() {
                         @Override

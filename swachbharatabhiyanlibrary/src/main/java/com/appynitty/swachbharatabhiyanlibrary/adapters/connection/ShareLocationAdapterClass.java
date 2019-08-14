@@ -11,12 +11,12 @@ import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 import com.appynitty.swachbharatabhiyanlibrary.webservices.UserLocationWebService;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.pixplicity.easyprefs.library.Prefs;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import quickutils.core.QuickUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -30,7 +30,7 @@ public class ShareLocationAdapterClass {
     private List<UserLocationPojo> userLocationPojoList;
 
     public ShareLocationAdapterClass(){
-        mLocationRepository = new LocationRepository(AUtils.mApplication.getApplicationContext());
+        mLocationRepository = new LocationRepository(AUtils.mainApplicationConstant.getApplicationContext());
         userLocationPojoList = new ArrayList<>();
     }
 
@@ -48,9 +48,9 @@ public class ShareLocationAdapterClass {
 
         UserLocationWebService service = Connection.createService(UserLocationWebService.class, AUtils.SERVER_URL);
 
-        service.saveUserLocation(QuickUtils.prefs.getString(AUtils.APP_ID, "1"),
+        service.saveUserLocation(Prefs.getString(AUtils.APP_ID, "1"),
                 AUtils.CONTENT_TYPE,
-                QuickUtils.prefs.getString(AUtils.PREFS.USER_TYPE_ID, "0"),
+                Prefs.getString(AUtils.PREFS.USER_TYPE_ID, "0"),
                 AUtils.getBatteryStatus(), userLocationPojos)
                 .enqueue(new Callback<List<UserLocationResultPojo>>() {
             @Override
@@ -88,9 +88,9 @@ public class ShareLocationAdapterClass {
 
             UserLocationWebService service = Connection.createService(UserLocationWebService.class, AUtils.SERVER_URL);
 
-            service.saveUserLocation(QuickUtils.prefs.getString(AUtils.APP_ID, "1"),
+            service.saveUserLocation(Prefs.getString(AUtils.APP_ID, "1"),
                     AUtils.CONTENT_TYPE,
-                    QuickUtils.prefs.getString(AUtils.PREFS.USER_TYPE_ID, "0"),
+                    Prefs.getString(AUtils.PREFS.USER_TYPE_ID, "0"),
                     AUtils.getBatteryStatus(),
                     userLocationPojoList).enqueue(new Callback<List<UserLocationResultPojo>>() {
                 @Override
@@ -123,7 +123,7 @@ public class ShareLocationAdapterClass {
             UserLocationWebService service = Connection.createService(UserLocationWebService.class, AUtils.SERVER_URL);
 
 
-            resultPojo = service.saveUserLocation(QuickUtils.prefs.getString(AUtils.APP_ID, "1"), AUtils.CONTENT_TYPE, QuickUtils.prefs.getString(AUtils.PREFS.USER_ID, null), AUtils.getBatteryStatus(), userLocationPojoList).execute().body();
+            resultPojo = service.saveUserLocation(Prefs.getString(AUtils.APP_ID, "1"), AUtils.CONTENT_TYPE, Prefs.getString(AUtils.PREFS.USER_ID, null), AUtils.getBatteryStatus(), userLocationPojoList).execute().body();
 
         } catch (Exception e) {
 

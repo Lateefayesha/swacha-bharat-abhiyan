@@ -31,7 +31,7 @@ public class DumpYardAdapterClass {
     }
 
     public void fetchDyList(final String areaId) {
-        new MyAsyncTask(AUtils.mCurrentContext, true, new MyAsyncTask.AsynTaskListener() {
+        new MyAsyncTask(AUtils.currentContextConstant, true, new MyAsyncTask.AsynTaskListener() {
 
             @Override
             public void doInBackgroundOpration(SyncServer syncServer) {

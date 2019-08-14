@@ -10,18 +10,17 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.ShareLocationAdapterClass;
-import com.appynitty.swachbharatabhiyanlibrary.entity.UserLocationEntity;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.UserLocationPojo;
 import com.appynitty.swachbharatabhiyanlibrary.repository.LocationRepository;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
+import com.appynitty.swachbharatabhiyanlibrary.utils.MyApplication;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.pixplicity.easyprefs.library.Prefs;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-
-import quickutils.core.QuickUtils;
 
 public class LocationMonitoringService implements LocationListener, GpsStatus.Listener {
 
@@ -42,7 +41,7 @@ public class LocationMonitoringService implements LocationListener, GpsStatus.Li
     public LocationMonitoringService (final Context context) {
         mContext = context;
 
-        mLocationRepository = new LocationRepository(AUtils.mApplication.getApplicationContext());
+        mLocationRepository = new LocationRepository(AUtils.mainApplicationConstant.getApplicationContext());
 
         mUserLocationPojoList = new ArrayList<>();
 
@@ -55,7 +54,7 @@ public class LocationMonitoringService implements LocationListener, GpsStatus.Li
                 if(isAttendanceOff)
                 {
                     AUtils.setIsOnduty(false);
-                    AUtils.mApplication.stopLocationTracking();
+                    ((MyApplication)AUtils.mainApplicationConstant).stopLocationTracking();
                 }
             }
 
@@ -120,10 +119,10 @@ public class LocationMonitoringService implements LocationListener, GpsStatus.Li
 
             if (!AUtils.isNullString(String.valueOf(location.getLatitude())) && !AUtils.isNullString(String.valueOf(location.getLongitude()))) {
 
-                QuickUtils.prefs.save(AUtils.LAT, String.valueOf(location.getLatitude()));
-                QuickUtils.prefs.save(AUtils.LONG, String.valueOf(location.getLongitude()));
+                Prefs.putString(AUtils.LAT, String.valueOf(location.getLatitude()));
+                Prefs.putString(AUtils.LONG, String.valueOf(location.getLongitude()));
 
-                if(QuickUtils.prefs.getBoolean(AUtils.PREFS.IS_ON_DUTY,false)) {
+                if(Prefs.getBoolean(AUtils.PREFS.IS_ON_DUTY,false)) {
                     if (updatedTime == 0) {
                         updatedTime = System.currentTimeMillis();
 
@@ -169,9 +168,9 @@ public class LocationMonitoringService implements LocationListener, GpsStatus.Li
 
         UserLocationPojo userLocationPojo = new UserLocationPojo();
 
-        userLocationPojo.setUserId(QuickUtils.prefs.getString(AUtils.PREFS.USER_ID, ""));
-        userLocationPojo.setLat(QuickUtils.prefs.getString(AUtils.LAT, ""));
-        userLocationPojo.setLong(QuickUtils.prefs.getString(AUtils.LONG, ""));
+        userLocationPojo.setUserId(Prefs.getString(AUtils.PREFS.USER_ID, ""));
+        userLocationPojo.setLat(Prefs.getString(AUtils.LAT, ""));
+        userLocationPojo.setLong(Prefs.getString(AUtils.LONG, ""));
         userLocationPojo.setDatetime(AUtils.getSeverDateTime());
         userLocationPojo.setOfflineId("0");
 

@@ -29,7 +29,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="@dimen/padding_margin_layout">
+        android:padding="@dimen/dim_6_dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -50,17 +50,17 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:text="@string/take_before_photo"
-                    android:textSize="@dimen/primery_text_size"/>
+                    android:textSize="@dimen/dim_17_sp"/>
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/dimen_200_dp"
+                    android:layout_height="@dimen/dim_200_dp"
                     android:layout_marginTop="@dimen/dim_5_dp"
-                    android:layout_marginBottom="@dimen/padding_margin_layout"
-                    android:layout_marginStart="@dimen/padding_margin_layout"
-                    android:layout_marginEnd="@dimen/padding_margin_layout"
-                    app:cardCornerRadius="@dimen/padding_margin_layout"
-                    app:cardElevation="@dimen/card_elevation">
+                    android:layout_marginBottom="@dimen/dim_6_dp"
+                    android:layout_marginStart="@dimen/dim_6_dp"
+                    android:layout_marginEnd="@dimen/dim_6_dp"
+                    app:cardCornerRadius="@dimen/dim_6_dp"
+                    app:cardElevation="@dimen/dim_3_dp">
 
                     <ImageView
                         android:contentDescription="@string/take_before_photo"
@@ -85,17 +85,17 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:text="@string/take_after_photo"
-                    android:textSize="@dimen/primery_text_size"/>
+                    android:textSize="@dimen/dim_17_sp"/>
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/dimen_200_dp"
+                    android:layout_height="@dimen/dim_200_dp"
                     android:layout_marginTop="@dimen/dim_5_dp"
-                    android:layout_marginBottom="@dimen/padding_margin_layout"
-                    android:layout_marginStart="@dimen/padding_margin_layout"
-                    android:layout_marginEnd="@dimen/padding_margin_layout"
-                    app:cardCornerRadius="@dimen/padding_margin_layout"
-                    app:cardElevation="@dimen/card_elevation">
+                    android:layout_marginBottom="@dimen/dim_6_dp"
+                    android:layout_marginStart="@dimen/dim_6_dp"
+                    android:layout_marginEnd="@dimen/dim_6_dp"
+                    app:cardCornerRadius="@dimen/dim_6_dp"
+                    app:cardElevation="@dimen/dim_3_dp">
 
                     <ImageView
                         android:contentDescription="@string/take_after_photo"
@@ -113,19 +113,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/comments"
-            android:layout_marginStart="@dimen/padding_margin_layout"
-            android:layout_marginEnd="@dimen/padding_margin_layout"
-            android:textSize="@dimen/primery_text_size" />
+            android:layout_marginStart="@dimen/dim_6_dp"
+            android:layout_marginEnd="@dimen/dim_6_dp"
+            android:textSize="@dimen/dim_17_sp" />
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dimen_100_dp"
+            android:layout_height="@dimen/dim_100_dp"
             android:layout_marginTop="@dimen/dim_5_dp"
-            android:layout_marginBottom="@dimen/padding_margin_layout"
-            android:layout_marginStart="@dimen/padding_margin_layout"
-            android:layout_marginEnd="@dimen/padding_margin_layout"
-            app:cardCornerRadius="@dimen/padding_margin_layout"
-            app:cardElevation="@dimen/card_elevation"
+            android:layout_marginBottom="@dimen/dim_6_dp"
+            android:layout_marginStart="@dimen/dim_6_dp"
+            android:layout_marginEnd="@dimen/dim_6_dp"
+            app:cardCornerRadius="@dimen/dim_6_dp"
+            app:cardElevation="@dimen/dim_3_dp"
             android:focusable="true"
             android:focusableInTouchMode="true">
 
@@ -145,11 +145,11 @@
             android:id="@+id/open_qr"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dimen_100_dp"
-            android:layout_marginEnd="@dimen/dimen_100_dp"
-            android:layout_marginTop="@dimen/padding_margin_layout_double"
-            app:cardCornerRadius="@dimen/card_radius"
-            app:cardElevation="@dimen/padding_margin_layout_double"
+            android:layout_marginStart="@dimen/dim_100_dp"
+            android:layout_marginEnd="@dimen/dim_100_dp"
+            android:layout_marginTop="@dimen/dim_12_dp"
+            app:cardCornerRadius="@dimen/dim_5_dp"
+            app:cardElevation="@dimen/dim_12_dp"
             android:layout_gravity="center">
 
             <LinearLayout
@@ -157,10 +157,10 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:gravity="center"
-                android:paddingTop="@dimen/padding_margin_layout_double"
-                android:paddingBottom="@dimen/padding_margin_layout_double"
-                android:paddingStart="@dimen/padding_margin_layout_double"
-                android:paddingEnd="@dimen/padding_margin_layout_double"
+                android:paddingTop="@dimen/dim_12_dp"
+                android:paddingBottom="@dimen/dim_12_dp"
+                android:paddingStart="@dimen/dim_12_dp"
+                android:paddingEnd="@dimen/dim_12_dp"
                 android:layout_gravity="center_vertical"
                 android:background="@drawable/primary_border_background">
 
@@ -176,7 +176,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/colorGrayList"
-                    android:layout_marginTop="@dimen/padding_margin_layout_double"
+                    android:layout_marginTop="@dimen/dim_12_dp"
                     android:text="@string/title_activity_qrcode_scanner"/>
 
             </LinearLayout>

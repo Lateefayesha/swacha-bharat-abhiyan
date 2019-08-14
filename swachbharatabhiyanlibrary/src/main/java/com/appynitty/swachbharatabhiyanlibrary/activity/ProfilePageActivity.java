@@ -11,16 +11,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.appynitty.swachbharatabhiyanlibrary.R;
-import com.appynitty.swachbharatabhiyanlibrary.custom_component.GlideCircleTransformation;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.UserDetailAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.UserDetailPojo;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
-import com.appynitty.swachbharatabhiyanlibrary.utils.LocaleHelper;
 import com.bumptech.glide.Glide;
+import com.pixplicity.easyprefs.library.Prefs;
+import com.riaylibrary.custom_component.GlideCircleTransformation;
+import com.riaylibrary.utils.LocaleHelper;
 
 import java.util.Objects;
-
-import quickutils.core.QuickUtils;
 
 public class ProfilePageActivity extends AppCompatActivity {
 
@@ -69,12 +68,12 @@ public class ProfilePageActivity extends AppCompatActivity {
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        if(AUtils.isNetWorkAvailable(this))
+        if(AUtils.isInternetAvailable())
         {
             AUtils.hideSnackBar();
         }
         else {
-            AUtils.showSnackBar(this);
+            AUtils.showSnackBar(findViewById(R.id.parent));
         }
     }
 
@@ -82,7 +81,7 @@ public class ProfilePageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile_page);
 
         mContext = ProfilePageActivity.this;
-        AUtils.mCurrentContext = mContext;
+        AUtils.currentContextConstant = mContext;
 
         mAdapter = new UserDetailAdapterClass();
 
@@ -153,7 +152,7 @@ public class ProfilePageActivity extends AppCompatActivity {
             }
         }
 
-        if(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID, AUtils.DEFAULT_LANGUAGE_ID).equals("2")){
+        if(Prefs.getString(AUtils.LANGUAGE_NAME, AUtils.DEFAULT_LANGUAGE_ID).equals("2")){
             userName.setText(userDetailPojo.getNameMar());
         }else{
             userName.setText(userDetailPojo.getName());

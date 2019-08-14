@@ -50,11 +50,12 @@ import com.appynitty.swachbharatabhiyanlibrary.pojos.ImagePojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.OfflineGarbageColectionPojo;
 import com.appynitty.swachbharatabhiyanlibrary.repository.SyncServerRepository;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
-import com.appynitty.swachbharatabhiyanlibrary.utils.LocaleHelper;
+import com.appynitty.swachbharatabhiyanlibrary.utils.MyApplication;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.mithsoft.lib.components.Toasty;
+import com.pixplicity.easyprefs.library.Prefs;
+import com.riaylibrary.utils.LocaleHelper;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -65,7 +66,6 @@ import java.util.Objects;
 import io.github.kobakei.materialfabspeeddial.FabSpeedDial;
 import me.dm7.barcodescanner.zbar.Result;
 import me.dm7.barcodescanner.zbar.ZBarScannerView;
-import quickutils.core.QuickUtils;
 
 public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScannerView.ResultHandler, GarbageTypePopUp.GarbagePopUpDialogListener {
 
@@ -217,19 +217,19 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        if(AUtils.isNetWorkAvailable(this))
+        if(AUtils.isInternetAvailable())
         {
             AUtils.hideSnackBar();
         }
         else {
-            AUtils.showSnackBar(this);
+            AUtils.showSnackBar(findViewById(R.id.parent));
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 
-        AUtils.mCurrentContext = mContext;
+        AUtils.currentContextConstant = mContext;
 
         if(requestCode == DUMP_YARD_DETAILS_REQUEST_CODE && resultCode == RESULT_OK){
 
@@ -238,7 +238,7 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
 
                 if(data.hasExtra(AUtils.REQUEST_CODE)){
                     Type type = new TypeToken<ImagePojo>(){}.getType();
-                    imagePojo = new Gson().fromJson(QuickUtils.prefs.getString(AUtils.PREFS.IMAGE_POJO, null), type);
+                    imagePojo = new Gson().fromJson(Prefs.getString(AUtils.PREFS.IMAGE_POJO, null), type);
 
                     if(!AUtils.isNull(imagePojo)){
                         isActivityData = true;
@@ -266,7 +266,7 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
         toolbar = findViewById(R.id.toolbar);
 
         mContext = QRcodeScannerActivity.this;
-        AUtils.mCurrentContext = mContext;
+        AUtils.currentContextConstant = mContext;
 
         mAdapter = new GarbageCollectionAdapterClass();
         mDyAdapter = new DumpYardAdapterClass();
@@ -306,7 +306,7 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
 
         initToolbar();
 
-        syncServerRepository = new SyncServerRepository(AUtils.mApplication.getApplicationContext());
+        syncServerRepository = new SyncServerRepository(AUtils.mainApplicationConstant.getApplicationContext());
     }
 
     protected void initToolbar(){
@@ -329,9 +329,9 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
                         submitQRcode(idHash.get(idAutoComplete.getText().toString().toLowerCase()));
                     }else{
                         if(getAreaType().equals(AUtils.HP_AREA_TYPE_ID))
-                            Toasty.error(mContext, mContext.getResources().getString(R.string.hp_area_validation)).show();
+                            AUtils.error(mContext, mContext.getResources().getString(R.string.hp_area_validation));
                         else
-                            Toasty.error(mContext, mContext.getResources().getString(R.string.gp_area_validation)).show();
+                            AUtils.error(mContext, mContext.getResources().getString(R.string.gp_area_validation));
                     }
                 }catch (Exception e){
                     e.printStackTrace();
@@ -354,7 +354,7 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
                     radioSelection = AUtils.RADIO_SELECTED_HP;
                     if(! AUtils.isConnectedFast(mContext))
                     {
-                        AUtils.showWarning(mContext, getResources().getString(R.string.slow_internet));
+                        AUtils.warning(mContext, getResources().getString(R.string.slow_internet));
                     }
                     mAreaAdapter.fetchAreaList(getAreaType(),true);
                 }
@@ -364,7 +364,7 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
                     radioSelection = AUtils.RADIO_SELECTED_GP;
                     if(! AUtils.isConnectedFast(mContext))
                     {
-                        AUtils.showWarning(mContext, getResources().getString(R.string.slow_internet));
+                        AUtils.warning(mContext, getResources().getString(R.string.slow_internet));
                     }
                     mAreaAdapter.fetchAreaList(getAreaType(),true);
                 }
@@ -374,7 +374,7 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
                     radioSelection = AUtils.RADIO_SELECTED_DY;
                     if(! AUtils.isConnectedFast(mContext))
                     {
-                        AUtils.showWarning(mContext, getResources().getString(R.string.slow_internet));
+                        AUtils.warning(mContext, getResources().getString(R.string.slow_internet));
                     }
                     mAreaAdapter.fetchAreaList(getAreaType(),true);
                 }
@@ -404,13 +404,13 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
                 else{
                     switch (getAreaType()){
                         case AUtils.HP_AREA_TYPE_ID:
-                            Toasty.error(mContext, mContext.getResources().getString(R.string.hp_validation)).show();
+                            AUtils.error(mContext, mContext.getResources().getString(R.string.hp_validation));
                             break;
                         case AUtils.GP_AREA_TYPE_ID:
-                            Toasty.error(mContext, mContext.getResources().getString(R.string.gp_validation)).show();
+                            AUtils.error(mContext, mContext.getResources().getString(R.string.gp_validation));
                             break;
                         case AUtils.DY_AREA_TYPE_ID:
-                            Toasty.error(mContext, mContext.getResources().getString(R.string.dy_validation)).show();
+                            AUtils.error(mContext, mContext.getResources().getString(R.string.dy_validation));
                             break;
                     }
                 }
@@ -429,13 +429,13 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
                         idAutoComplete.requestFocus();
                         switch (getAreaType()) {
                             case AUtils.HP_AREA_TYPE_ID:
-                                Toasty.error(mContext, mContext.getResources().getString(R.string.hp_validation)).show();
+                                AUtils.error(mContext, mContext.getResources().getString(R.string.hp_validation));
                                 break;
                             case AUtils.GP_AREA_TYPE_ID:
-                                Toasty.error(mContext, mContext.getResources().getString(R.string.gp_validation)).show();
+                                AUtils.error(mContext, mContext.getResources().getString(R.string.gp_validation));
                                 break;
                             case AUtils.DY_AREA_TYPE_ID:
-                                Toasty.error(mContext, mContext.getResources().getString(R.string.dy_validation)).show();
+                                AUtils.error(mContext, mContext.getResources().getString(R.string.dy_validation));
                                 break;
                         }
 
@@ -453,7 +453,7 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
                 if(isAutoCompleteValid(areaAutoComplete, areaHash))
                     inflateAutoComplete(areaHash.get(areaAutoComplete.getText().toString().toLowerCase()));
                 else
-                    Toasty.error(mContext, mContext.getResources().getString(R.string.area_validation)).show();
+                    AUtils.error(mContext, mContext.getResources().getString(R.string.area_validation));
             }
         });
 
@@ -466,7 +466,7 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
                         return false;
                     }else {
                         areaAutoComplete.requestFocus();
-                        Toasty.error(mContext, mContext.getResources().getString(R.string.area_validation)).show();
+                        AUtils.error(mContext, mContext.getResources().getString(R.string.area_validation));
                         return true;
                     }
                 }
@@ -506,7 +506,7 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
 
             @Override
             public void onFailureCallBack() {
-                Toasty.error(mContext, getResources().getString(R.string.serverError)).show();
+                AUtils.error(mContext, getResources().getString(R.string.serverError));
             }
         });
 
@@ -518,7 +518,7 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
 
             @Override
             public void onFailureCallBack() {
-                Toasty.error(mContext, getResources().getString(R.string.serverError)).show();
+                AUtils.error(mContext, getResources().getString(R.string.serverError));
             }
         });
 
@@ -530,7 +530,7 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
 
             @Override
             public void onFailureCallBack() {
-                Toasty.error(mContext, getResources().getString(R.string.serverError)).show();
+                AUtils.error(mContext, getResources().getString(R.string.serverError));
             }
         });
 
@@ -542,7 +542,7 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
 
             @Override
             public void onFailureCallBack() {
-                Toasty.error(mContext, getResources().getString(R.string.serverError)).show();
+                AUtils.error(mContext, getResources().getString(R.string.serverError));
             }
         });
 
@@ -552,7 +552,7 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
                 if(mAdapter.getResultPojo().isAttendenceOff())
                 {
                     AUtils.setIsOnduty(false);
-                    AUtils.mApplication.stopLocationTracking();
+                    ((MyApplication)AUtils.mainApplicationConstant).stopLocationTracking();
                     QRcodeScannerActivity.this.finish();
                 }
                 else {
@@ -563,7 +563,7 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
             @Override
             public void onFailureCallBack(GarbageCollectionPojo garbageCollectionPojo) {
                 restartPreview();
-                Toasty.error(mContext, mContext.getString(R.string.serverError), Toast.LENGTH_SHORT).show();
+                AUtils.error(mContext, mContext.getString(R.string.serverError), Toast.LENGTH_SHORT);
                 insertToDB(garbageCollectionPojo);
             }
         });
@@ -575,7 +575,7 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
 
         if(! AUtils.isConnectedFast(mContext))
         {
-            AUtils.showWarning(mContext, getResources().getString(R.string.slow_internet));
+            AUtils.warning(mContext, getResources().getString(R.string.slow_internet));
         }
 
         mAreaAdapter.fetchAreaList(getAreaType(),false);
@@ -583,7 +583,7 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
         Intent intent = getIntent();
         if(intent.hasExtra(AUtils.REQUEST_CODE)){
             Type type = new TypeToken<ImagePojo>(){}.getType();
-            imagePojo = new Gson().fromJson(QuickUtils.prefs.getString(AUtils.PREFS.IMAGE_POJO, null), type);
+            imagePojo = new Gson().fromJson(Prefs.getString(AUtils.PREFS.IMAGE_POJO, null), type);
 
             if(!AUtils.isNull(imagePojo)){
                 isActivityData = true;
@@ -599,7 +599,7 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
         else if(houseid.substring(0, 2).matches("^[DdYy]+$"))
             getDumpYardDetails(houseid);
         else {
-            AUtils.showWarning(QRcodeScannerActivity.this, mContext.getResources().getString(R.string.qr_error));
+            AUtils.warning(QRcodeScannerActivity.this, mContext.getResources().getString(R.string.qr_error));
             restartPreview();
         }
     }
@@ -628,7 +628,7 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
             statusImage.setImageDrawable(getDrawable(R.drawable.ic_cancel_red));
             doneBtn.setText(getString(R.string.retry_txt));
             houseId.setText(null);
-            if(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID, AUtils.DEFAULT_LANGUAGE_ID).equals("2")){
+            if(Prefs.getString(AUtils.LANGUAGE_NAME, AUtils.DEFAULT_LANGUAGE_ID).equals("2")){
                 collectionStatus.setText(pojo.getMessageMar());
             }else{
                 collectionStatus.setText(pojo.getMessage());
@@ -636,7 +636,7 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
             ownerName.setText(id.toUpperCase());
             ownerMobile.setText(null);
         }else if(responseStatus.equals(AUtils.STATUS_SUCCESS)){
-            if(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID, AUtils.DEFAULT_LANGUAGE_ID).equals("2")){
+            if(Prefs.getString(AUtils.LANGUAGE_NAME, AUtils.DEFAULT_LANGUAGE_ID).equals("2")){
                 ownerName.setText(pojo.getNameMar());
             }else{
                 ownerName.setText(pojo.getName());
@@ -658,7 +658,7 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
             }.getType();
 
             imagePojo = new Gson().fromJson(
-                    QuickUtils.prefs.getString(AUtils.PREFS.IMAGE_POJO , null), type);
+                    Prefs.getString(AUtils.PREFS.IMAGE_POJO , null), type);
         }
 
         doneBtn.setOnClickListener(new View.OnClickListener() {
@@ -674,7 +674,7 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
                 restartPreview();
                 if(responseStatus.equals(AUtils.STATUS_SUCCESS)){
                     imagePojo = null;
-                    QuickUtils.prefs.save(AUtils.PREFS.IMAGE_POJO, null);
+                    Prefs.putString(AUtils.PREFS.IMAGE_POJO, null);
                     finish();
                 }
             }
@@ -771,7 +771,7 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
     }
 
     private void validateTypeOfCollection(String houseid) {
-        if(QuickUtils.prefs.getBoolean(AUtils.PREFS.IS_GT_FEATURE,false)) {
+        if(Prefs.getBoolean(AUtils.PREFS.IS_GT_FEATURE,false)) {
             GarbageTypePopUp dialog = new GarbageTypePopUp(QRcodeScannerActivity.this, houseid, this);
             dialog.show();
         } else {
@@ -968,9 +968,9 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
         entity.setTotalGcWeight(String.valueOf(garbageCollectionPojo.getWeightTotal()));
         entity.setTotalDryWeight(String.valueOf(garbageCollectionPojo.getWeightTotalDry()));
         entity.setTotalWetWeight(String.valueOf(garbageCollectionPojo.getWeightTotalWet()));
-        entity.setVehicleNumber(QuickUtils.prefs.getString(AUtils.VEHICLE_NO,""));
-        entity.setLong(QuickUtils.prefs.getString(AUtils.LONG,""));
-        entity.setLat(QuickUtils.prefs.getString(AUtils.LAT,""));
+        entity.setVehicleNumber(Prefs.getString(AUtils.VEHICLE_NO,""));
+        entity.setLong(Prefs.getString(AUtils.LONG,""));
+        entity.setLat(Prefs.getString(AUtils.LAT,""));
         entity.setGcDate(AUtils.getSeverDateTime());
 
         Type type = new TypeToken<OfflineGarbageColectionPojo>() {}.getType();

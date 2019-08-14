@@ -14,7 +14,7 @@
         android:layout_width="@dimen/dim_2_dp"
         android:layout_height="match_parent"
         android:background="@color/black_alpfa_50"
-        android:layout_marginStart="@dimen/timeline_margin_start"
+        android:layout_marginStart="@dimen/dim_40_dp"
         android:visibility="gone"/>
 
     <GridView
@@ -27,15 +27,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/show_error_data"
-        android:layout_marginTop="@dimen/dimen_100_dp"
+        android:layout_marginTop="@dimen/dim_100_dp"
         android:visibility="gone"
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
         <ImageView
             android:contentDescription="@string/no_data_error"
-            android:layout_width="@dimen/dimen_120_dp"
-            android:layout_height="@dimen/dimen_120_dp"
+            android:layout_width="@dimen/dim_120_dp"
+            android:layout_height="@dimen/dim_120_dp"
             android:background="@drawable/icn_no_history"/>
 
         <TextView
@@ -43,9 +43,9 @@
             android:layout_height="match_parent"
             android:text="@string/no_data_error"
             android:textColor="@color/text_color_no_data"
-            android:textSize="@dimen/dimen_25_sp"
+            android:textSize="@dimen/dim_25_sp"
             android:gravity="center"
-            android:layout_marginTop="@dimen/padding_margin_layout_double"
+            android:layout_marginTop="@dimen/dim_12_dp"
             android:layout_gravity="center_vertical"/>
 
     </LinearLayout>

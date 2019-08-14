@@ -26,20 +26,18 @@ import com.appynitty.swachbharatabhiyanlibrary.pojos.QrLocationPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.ZoneWardAreaMasterPojo;
 import com.appynitty.swachbharatabhiyanlibrary.repository.EmpSyncServerRepository;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
-import com.appynitty.swachbharatabhiyanlibrary.utils.LocaleHelper;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.mithsoft.lib.components.MyProgressDialog;
-import com.mithsoft.lib.components.Toasty;
+import com.pixplicity.easyprefs.library.Prefs;
+import com.riaylibrary.custom_component.MyProgressDialog;
+import com.riaylibrary.utils.LocaleHelper;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
-
-import quickutils.core.QuickUtils;
 
 public class EmpAddLocationDetailsActivity extends AppCompatActivity {
 
@@ -88,7 +86,7 @@ public class EmpAddLocationDetailsActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_emp_add_location_details);
         mContext = EmpAddLocationDetailsActivity.this;
-        AUtils.mCurrentContext = mContext;
+        AUtils.currentContextConstant = mContext;
 
         myProgressDialog = new MyProgressDialog(mContext, R.drawable.progress_bar, false);
 
@@ -175,7 +173,7 @@ public class EmpAddLocationDetailsActivity extends AppCompatActivity {
                                 break;
                         }
                     }else{
-                        Toasty.error(mContext, getResources().getString(R.string.something_error), Toast.LENGTH_SHORT).show();
+                        AUtils.error(mContext, getResources().getString(R.string.something_error), Toast.LENGTH_SHORT);
                     }
                 }catch (Exception e){
                     e.printStackTrace();
@@ -184,12 +182,12 @@ public class EmpAddLocationDetailsActivity extends AppCompatActivity {
 
             @Override
             public void onFailureCallback() {
-                Toasty.error(mContext, getResources().getString(R.string.something_error), Toast.LENGTH_LONG).show();
+                AUtils.error(mContext, getResources().getString(R.string.something_error), Toast.LENGTH_LONG);
             }
 
             @Override
             public void onErrorCallback() {
-                Toasty.error(mContext, getResources().getString(R.string.serverError), Toast.LENGTH_LONG).show();
+                AUtils.error(mContext, getResources().getString(R.string.serverError), Toast.LENGTH_LONG);
             }
         });
 
@@ -199,32 +197,32 @@ public class EmpAddLocationDetailsActivity extends AppCompatActivity {
                 myProgressDialog.dismiss();
                 String message = "";
 
-                if(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID, AUtils.DEFAULT_LANGUAGE_ID).equals("2")){
+                if(Prefs.getString(AUtils.LANGUAGE_NAME, AUtils.DEFAULT_LANGUAGE_ID).equals("2")){
                     message = resultPojo.getMessageMar();
                 }else{
                     message = resultPojo.getMessage();
                 }
 
                 if(resultPojo.getStatus().equals(AUtils.STATUS_SUCCESS)){
-                    Toasty.success(mContext, message, Toast.LENGTH_LONG).show();
+                    AUtils.success(mContext, message, Toast.LENGTH_LONG);
                     Intent intent = new Intent();
                     setResult(RESULT_OK, intent);
                     finish();
                 }else{
-                    Toasty.error(mContext, message, Toast.LENGTH_LONG).show();
+                    AUtils.error(mContext, message, Toast.LENGTH_LONG);
                 }
             }
 
             @Override
             public void onFailureCallback() {
                 myProgressDialog.dismiss();
-                Toasty.error(mContext,getResources().getString(R.string.something_error), Toast.LENGTH_LONG).show();
+                AUtils.error(mContext,getResources().getString(R.string.something_error), Toast.LENGTH_LONG);
             }
 
             @Override
             public void onErrorCallback() {
                 myProgressDialog.dismiss();
-                Toasty.error(mContext,getResources().getString(R.string.serverError), Toast.LENGTH_LONG).show();
+                AUtils.error(mContext,getResources().getString(R.string.serverError), Toast.LENGTH_LONG);
             }
         });
 
@@ -235,20 +233,20 @@ public class EmpAddLocationDetailsActivity extends AppCompatActivity {
                 if(!AUtils.isNull(empRegistrationPojo))
                     initFieldData(empRegistrationPojo);
                 else
-                    Toasty.error(mContext,getResources().getString(R.string.something_error), Toast.LENGTH_LONG).show();
+                    AUtils.error(mContext,getResources().getString(R.string.something_error), Toast.LENGTH_LONG);
 
             }
 
             @Override
             public void onFailureCallback() {
                 myProgressDialog.dismiss();
-                Toasty.error(mContext,getResources().getString(R.string.something_error), Toast.LENGTH_LONG).show();
+                AUtils.error(mContext,getResources().getString(R.string.something_error), Toast.LENGTH_LONG);
             }
 
             @Override
             public void onErrorCallback() {
                 myProgressDialog.dismiss();
-                Toasty.error(mContext,getResources().getString(R.string.serverError), Toast.LENGTH_LONG).show();
+                AUtils.error(mContext,getResources().getString(R.string.serverError), Toast.LENGTH_LONG);
             }
         });
     }
@@ -364,8 +362,8 @@ public class EmpAddLocationDetailsActivity extends AppCompatActivity {
         QrLocationPojo qrLocationPojo = new QrLocationPojo();
         qrLocationPojo.setReferanceId(referenceId);
         qrLocationPojo.setGcType(submitType);
-        qrLocationPojo.setLat(QuickUtils.prefs.getString(AUtils.LAT, ""));
-        qrLocationPojo.setLong(QuickUtils.prefs.getString(AUtils.LONG, ""));
+        qrLocationPojo.setLat(Prefs.getString(AUtils.LAT, ""));
+        qrLocationPojo.setLong(Prefs.getString(AUtils.LONG, ""));
 
         qrLocationPojo.setName(txtName.getText().toString());
         qrLocationPojo.setNameMar(txtNameMar.getText().toString());
@@ -387,7 +385,7 @@ public class EmpAddLocationDetailsActivity extends AppCompatActivity {
 
         qrLocationPojo.setHouseNumber(txtHouseNo.getText().toString());
         qrLocationPojo.setMobileno(txtContactNo.getText().toString());
-        qrLocationPojo.setUserId(QuickUtils.prefs.getString(AUtils.PREFS.USER_ID, ""));
+        qrLocationPojo.setUserId(Prefs.getString(AUtils.PREFS.USER_ID, ""));
         qrLocationPojo.setDate(AUtils.getSeverDateTime());
 
         if(AUtils.isInternetAvailable()) {
@@ -411,7 +409,7 @@ public class EmpAddLocationDetailsActivity extends AppCompatActivity {
         Type type = new TypeToken<QrLocationPojo>(){}.getType();
         empSyncServerRepository.insertEmpSyncServerEntity(gson.toJson(pojo, type));
 
-        Toasty.success(mContext, "Uploaded successfully", Toast.LENGTH_LONG).show();
+        AUtils.success(mContext, "Uploaded successfully", Toast.LENGTH_LONG);
         finish();
     }
 }

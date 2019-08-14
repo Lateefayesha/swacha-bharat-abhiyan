@@ -11,10 +11,9 @@ import com.appynitty.swachbharatabhiyanlibrary.R;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.LanguagePojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.VehicleTypePojo;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
+import com.pixplicity.easyprefs.library.Prefs;
 
 import java.util.HashMap;
-
-import quickutils.core.QuickUtils;
 
 public class DialogAdapter extends BaseAdapter {
 
@@ -70,7 +69,7 @@ public class DialogAdapter extends BaseAdapter {
 
                 VehicleTypePojo vehicleTypePojo = (VehicleTypePojo) mMapList.get(position);
 
-                if(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID, AUtils.DEFAULT_LANGUAGE_ID).equals("2"))
+                if(Prefs.getString(AUtils.LANGUAGE_NAME, AUtils.DEFAULT_LANGUAGE_ID).equals("2"))
                 {
                     holder.mDataText.setText(vehicleTypePojo.getDescriptionMar());
                     //holder.mDataText.setTag(Integer.parseInt(vehicleTypePojo.getVtId()));

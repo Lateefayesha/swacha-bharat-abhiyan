@@ -1,18 +1,15 @@
 package com.appynitty.swachbharatabhiyanlibrary.adapters.connection;
 
-import android.view.View;
-
 import com.appynitty.swachbharatabhiyanlibrary.connection.SyncServer;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.WorkHistoryPojo;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 import com.appynitty.swachbharatabhiyanlibrary.utils.MyAsyncTask;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.pixplicity.easyprefs.library.Prefs;
 
 import java.lang.reflect.Type;
 import java.util.List;
-
-import quickutils.core.QuickUtils;
 
 public class HistoryAdapterClass {
 
@@ -35,18 +32,18 @@ public class HistoryAdapterClass {
         Type type = new TypeToken<List<WorkHistoryPojo>>() {
         }.getType();
 
-        workHistoryPojoList = gson.fromJson(QuickUtils.prefs.getString(AUtils.PREFS.WORK_HISTORY_POJO_LIST, null), type);
+        workHistoryPojoList = gson.fromJson(Prefs.getString(AUtils.PREFS.WORK_HISTORY_POJO_LIST, null), type);
         return workHistoryPojoList;
     }
 
     public static void setworkHistoryTypePojoList(List<WorkHistoryPojo> workHistoryDetailPojoList) {
         Type type = new TypeToken<List<WorkHistoryPojo>>() {
         }.getType();
-        QuickUtils.prefs.save(AUtils.PREFS.WORK_HISTORY_POJO_LIST, gson.toJson(workHistoryDetailPojoList, type));
+        Prefs.putString(AUtils.PREFS.WORK_HISTORY_POJO_LIST, gson.toJson(workHistoryDetailPojoList, type));
     }
 
     public void fetchHistory(final String year, final String month) {
-        new MyAsyncTask(AUtils.mCurrentContext, true, new MyAsyncTask.AsynTaskListener() {
+        new MyAsyncTask(AUtils.currentContextConstant, true, new MyAsyncTask.AsynTaskListener() {
             @Override
             public void doInBackgroundOpration(SyncServer syncServer) {
                 Boolean isSuccess = syncServer.pullWorkHistoryListFromServer(year, month);

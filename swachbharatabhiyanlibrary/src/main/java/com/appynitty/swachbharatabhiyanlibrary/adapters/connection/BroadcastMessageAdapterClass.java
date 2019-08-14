@@ -18,7 +18,7 @@ public class BroadcastMessageAdapterClass {
 
     public void sendBroadcastMessage(final String areaID){
 
-        new MyAsyncTask(AUtils.mCurrentContext, false, new MyAsyncTask.AsynTaskListener() {
+        new MyAsyncTask(AUtils.currentContextConstant, false, new MyAsyncTask.AsynTaskListener() {
             @Override
             public void doInBackgroundOpration(SyncServer syncServer) {
                 syncServer.pullAreaBroadcastFromServer(areaID);

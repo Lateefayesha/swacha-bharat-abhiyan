@@ -1,67 +1,31 @@
 package com.appynitty.swachbharatabhiyanlibrary.activity;
 
-import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.LocationManager;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.RadioGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.appynitty.swachbharatabhiyanlibrary.R;
-import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.AreaHouseAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.BroadcastMessageAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.CollectionAreaAdapterClass;
-import com.appynitty.swachbharatabhiyanlibrary.connection.SyncServer;
-import com.appynitty.swachbharatabhiyanlibrary.pojos.CollectionAreaHousePojo;
-import com.appynitty.swachbharatabhiyanlibrary.pojos.CollectionAreaPointPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.CollectionAreaPojo;
-import com.appynitty.swachbharatabhiyanlibrary.pojos.GarbageCollectionPojo;
-import com.appynitty.swachbharatabhiyanlibrary.pojos.GcResultPojo;
-import com.appynitty.swachbharatabhiyanlibrary.pojos.ImagePojo;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
-import com.appynitty.swachbharatabhiyanlibrary.utils.LocaleHelper;
-import com.appynitty.swachbharatabhiyanlibrary.utils.MyAsyncTask;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.mithsoft.lib.components.Toasty;
+import com.riaylibrary.utils.LocaleHelper;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
-
-import io.github.kobakei.materialfabspeeddial.FabSpeedDial;
-import me.dm7.barcodescanner.zbar.Result;
-import me.dm7.barcodescanner.zbar.ZBarScannerView;
-import quickutils.core.QuickUtils;
-import quickutils.core.categories.view;
 
 public class BroadcastActivity extends AppCompatActivity {
 
@@ -113,12 +77,12 @@ public class BroadcastActivity extends AppCompatActivity {
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        if(AUtils.isNetWorkAvailable(this))
+        if(AUtils.isInternetAvailable())
         {
             AUtils.hideSnackBar();
         }
         else {
-            AUtils.showSnackBar(this);
+            AUtils.showSnackBar(findViewById(R.id.parent));
         }
     }
 
@@ -128,7 +92,7 @@ public class BroadcastActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
 
         mContext = BroadcastActivity.this;
-        AUtils.mCurrentContext = mContext;
+        AUtils.currentContextConstant = mContext;
 
         mAreaAdapter = new CollectionAreaAdapterClass();
         mAdapter = new BroadcastMessageAdapterClass();
@@ -159,7 +123,7 @@ public class BroadcastActivity extends AppCompatActivity {
                 if(isAreaValid())
                 {
                     mAdapter.sendBroadcastMessage(areaHash.get(areaAutoComplete.getText().toString().toLowerCase()));
-                    Toasty.success(mContext, mContext.getResources().getString(R.string.sending_msg), Toast.LENGTH_SHORT).show();
+                    AUtils.success(mContext, mContext.getResources().getString(R.string.sending_msg), Toast.LENGTH_SHORT);
                     finish();
                 }
             }
@@ -191,7 +155,7 @@ public class BroadcastActivity extends AppCompatActivity {
 
             @Override
             public void onFailureCallBack() {
-                Toasty.error(mContext, getResources().getString(R.string.serverError)).show();
+                AUtils.error(mContext, getResources().getString(R.string.serverError));
             }
         });
 
@@ -212,7 +176,7 @@ public class BroadcastActivity extends AppCompatActivity {
 
         if(! AUtils.isConnectedFast(mContext))
         {
-            AUtils.showWarning(mContext,getResources().getString(R.string.slow_internet));
+            AUtils.warning(mContext,getResources().getString(R.string.slow_internet));
         }
         mAreaAdapter.fetchAreaList(AUtils.HP_AREA_TYPE_ID, true);
     }
@@ -241,7 +205,7 @@ public class BroadcastActivity extends AppCompatActivity {
             return true;
         }
         else {
-            Toasty.error(mContext, mContext.getResources().getString(R.string.area_validation)).show();
+            AUtils.error(mContext, mContext.getResources().getString(R.string.area_validation));
             return false;
         }
     }

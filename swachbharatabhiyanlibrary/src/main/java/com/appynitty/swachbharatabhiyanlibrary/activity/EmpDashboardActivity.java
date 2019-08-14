@@ -31,7 +31,6 @@ import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.EmpCheckAtten
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.EmpSyncServerAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.EmpUserDetailAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.ShareLocationAdapterClass;
-import com.appynitty.swachbharatabhiyanlibrary.custom_component.GlideCircleTransformation;
 import com.appynitty.swachbharatabhiyanlibrary.dialogs.EmpPopUpDialog;
 import com.appynitty.swachbharatabhiyanlibrary.dialogs.IdCardDialog;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.EmpInPunchPojo;
@@ -40,12 +39,14 @@ import com.appynitty.swachbharatabhiyanlibrary.pojos.MenuListPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.UserDetailPojo;
 import com.appynitty.swachbharatabhiyanlibrary.services.ForgroundService;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
-import com.appynitty.swachbharatabhiyanlibrary.utils.LocaleHelper;
+import com.appynitty.swachbharatabhiyanlibrary.utils.MyApplication;
 import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.mithsoft.lib.components.Toasty;
+import com.pixplicity.easyprefs.library.Prefs;
+import com.riaylibrary.custom_component.GlideCircleTransformation;
+import com.riaylibrary.utils.LocaleHelper;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -53,7 +54,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import io.github.kobakei.materialfabspeeddial.FabSpeedDial;
-import quickutils.core.QuickUtils;
 
 
 public class EmpDashboardActivity extends AppCompatActivity implements EmpPopUpDialog.PopUpDialogListener {
@@ -113,7 +113,7 @@ public class EmpDashboardActivity extends AppCompatActivity implements EmpPopUpD
     public boolean onOptionsItemSelected(MenuItem item) {
         if (R.id.action_id_card == item.getItemId()) {
             if(!AUtils.isNull(userDetailPojo)) {
-                if (QuickUtils.prefs.getString(AUtils.LANGUAGE_ID, AUtils.DEFAULT_LANGUAGE_ID).equals("2")) {
+                if (Prefs.getString(AUtils.LANGUAGE_NAME, AUtils.DEFAULT_LANGUAGE_ID).equals("2")) {
                     IdCardDialog cardDialog = new IdCardDialog(mContext, userDetailPojo.getNameMar(), userDetailPojo.getUserId(), userDetailPojo.getProfileImage());
                     cardDialog.show();
                 } else {
@@ -121,7 +121,7 @@ public class EmpDashboardActivity extends AppCompatActivity implements EmpPopUpD
                     cardDialog.show();
                 }
             }else {
-                AUtils.showWarning(mContext,mContext.getResources().getString(R.string.try_after_sometime));
+                AUtils.warning(mContext,mContext.getResources().getString(R.string.try_after_sometime));
             }
             return true;
         }
@@ -133,7 +133,7 @@ public class EmpDashboardActivity extends AppCompatActivity implements EmpPopUpD
     protected void onResume() {
         super.onResume();
 
-        AUtils.mCurrentContext = mContext;
+        AUtils.currentContextConstant = mContext;
         checkIsFromLogin();
 
         initUserDetails();
@@ -190,12 +190,12 @@ public class EmpDashboardActivity extends AppCompatActivity implements EmpPopUpD
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        if(AUtils.isNetWorkAvailable(this))
+        if(AUtils.isInternetAvailable())
         {
             AUtils.hideSnackBar();
         }
         else {
-            AUtils.showSnackBar(this);
+            AUtils.showSnackBar(findViewById(R.id.parent));
         }
 
         if(!AUtils.isNull(mCheckAttendanceAdapter) && !isFromLogin)
@@ -226,7 +226,7 @@ public class EmpDashboardActivity extends AppCompatActivity implements EmpPopUpD
         setContentView(R.layout.emp_activity_dashboard);
 
         mContext = EmpDashboardActivity.this;
-        AUtils.mCurrentContext = mContext;
+        AUtils.currentContextConstant = mContext;
         checkIsFromLogin();
 
         mCheckAttendanceAdapter = new EmpCheckAttendanceAdapterClass();
@@ -263,18 +263,18 @@ public class EmpDashboardActivity extends AppCompatActivity implements EmpPopUpD
                 {
                     isFromAttendanceChecked = true;
                     onOutPunchSuccess();
-                    if(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID,AUtils.DEFAULT_LANGUAGE_ID).equals("2")) {
-                        Toasty.info(mContext, messageMar,Toast.LENGTH_LONG).show();
+                    if(Prefs.getString(AUtils.LANGUAGE_NAME,AUtils.DEFAULT_LANGUAGE_ID).equals("2")) {
+                        AUtils.info(mContext, messageMar,Toast.LENGTH_LONG);
                     }
                     else {
-                        Toasty.info(mContext, message,Toast.LENGTH_LONG).show();
+                        AUtils.info(mContext, message,Toast.LENGTH_LONG);
                     }
                 }
             }
 
             @Override
             public void onFailureCallBack() {
-                if(!QuickUtils.prefs.getBoolean(AUtils.PREFS.IS_ON_DUTY,false))
+                if(!Prefs.getBoolean(AUtils.PREFS.IS_ON_DUTY,false))
                 {
                     onInPunchSuccess();
                 }
@@ -282,7 +282,7 @@ public class EmpDashboardActivity extends AppCompatActivity implements EmpPopUpD
 
             @Override
             public void onNetworkFailureCallBack() {
-                Toasty.error(mContext,getResources().getString(R.string.serverError), Toast.LENGTH_LONG).show();
+                AUtils.error(mContext,getResources().getString(R.string.serverError), Toast.LENGTH_LONG);
             }
         });
 
@@ -364,7 +364,7 @@ public class EmpDashboardActivity extends AppCompatActivity implements EmpPopUpD
                 if(AUtils.isIsOnduty())
                     startActivity(new Intent(mContext, EmpQRcodeScannerActivity.class));
                 else
-                    AUtils.showWarning(mContext, getResources().getString(R.string.be_no_duty));
+                    AUtils.warning(mContext, getResources().getString(R.string.be_no_duty));
                 break;
             case 1:
                 startActivity(new Intent(mContext, EmpHistoryPageActivity.class));
@@ -390,7 +390,7 @@ public class EmpDashboardActivity extends AppCompatActivity implements EmpPopUpD
 
         Type type = new TypeToken<EmpInPunchPojo>() {
         }.getType();
-        empInPunchPojo = new Gson().fromJson(QuickUtils.prefs.getString(AUtils.PREFS.IN_PUNCH_POJO, null), type);
+        empInPunchPojo = new Gson().fromJson(Prefs.getString(AUtils.PREFS.IN_PUNCH_POJO, null), type);
 
         checkDutyStatus();
     }
@@ -402,25 +402,25 @@ public class EmpDashboardActivity extends AppCompatActivity implements EmpPopUpD
                 dialogInterface.dismiss();
 
                 if(!AUtils.isIsOnduty()){
-                    QuickUtils.prefs.remove(AUtils.PREFS.IS_USER_LOGIN);
-                    QuickUtils.prefs.remove(AUtils.PREFS.USER_ID);
-                    QuickUtils.prefs.remove(AUtils.PREFS.USER_TYPE);
-                    QuickUtils.prefs.remove(AUtils.PREFS.USER_TYPE_ID);
-                    QuickUtils.prefs.remove(AUtils.PREFS.VEHICLE_TYPE_POJO_LIST);
-                    QuickUtils.prefs.remove(AUtils.PREFS.USER_DETAIL_POJO);
-                    //QuickUtils.prefs.remove(AUtils.PREFS.IS_ON_DUTY);
+                    Prefs.remove(AUtils.PREFS.IS_USER_LOGIN);
+                    Prefs.remove(AUtils.PREFS.USER_ID);
+                    Prefs.remove(AUtils.PREFS.USER_TYPE);
+                    Prefs.remove(AUtils.PREFS.USER_TYPE_ID);
+                    Prefs.remove(AUtils.PREFS.VEHICLE_TYPE_POJO_LIST);
+                    Prefs.remove(AUtils.PREFS.USER_DETAIL_POJO);
+                    //Prefs.remove(AUtils.PREFS.IS_ON_DUTY);
                     AUtils.setIsOnduty(false); //= false;
-                    QuickUtils.prefs.remove(AUtils.PREFS.IMAGE_POJO);
-                    QuickUtils.prefs.remove(AUtils.PREFS.WORK_HISTORY_DETAIL_POJO_LIST);
-                    QuickUtils.prefs.remove(AUtils.PREFS.WORK_HISTORY_POJO_LIST);
-                    QuickUtils.prefs.remove(AUtils.LAT);
-                    QuickUtils.prefs.remove(AUtils.LONG);
-                    QuickUtils.prefs.remove(AUtils.VEHICLE_NO);
-                    QuickUtils.prefs.remove(AUtils.VEHICLE_ID);
+                    Prefs.remove(AUtils.PREFS.IMAGE_POJO);
+                    Prefs.remove(AUtils.PREFS.WORK_HISTORY_DETAIL_POJO_LIST);
+                    Prefs.remove(AUtils.PREFS.WORK_HISTORY_POJO_LIST);
+                    Prefs.remove(AUtils.LAT);
+                    Prefs.remove(AUtils.LONG);
+                    Prefs.remove(AUtils.VEHICLE_NO);
+                    Prefs.remove(AUtils.VEHICLE_ID);
 
                     openLogin();
                 }else{
-                    Toasty.info(mContext, getResources().getString(R.string.off_duty_warning)).show();
+                    AUtils.info(mContext, getResources().getString(R.string.off_duty_warning));
                 }
             }
         }, null);
@@ -449,7 +449,7 @@ public class EmpDashboardActivity extends AppCompatActivity implements EmpPopUpD
         mLanguagePojoList.add(eng);
         mLanguagePojoList.add(mar);
 
-        AUtils.changeLanguage(this, Integer.parseInt(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID, AUtils.DEFAULT_LANGUAGE_ID)));
+        AUtils.changeLanguage(this, Prefs.getString(AUtils.LANGUAGE_NAME, AUtils.DEFAULT_LANGUAGE_ID));
 
         if(!AUtils.isNull(mLanguagePojoList) && !mLanguagePojoList.isEmpty()) {
             for (int i = 0; i < mLanguagePojoList.size(); i++) {
@@ -461,7 +461,7 @@ public class EmpDashboardActivity extends AppCompatActivity implements EmpPopUpD
         }
     }
 
-    public void changeLanguage(int type) {
+    public void changeLanguage(String type) {
 
         AUtils.changeLanguage(this, type);
 
@@ -474,10 +474,10 @@ public class EmpDashboardActivity extends AppCompatActivity implements EmpPopUpD
 
         if (isChecked) {
             if (isLocationPermission) {
-                if(AUtils.isGPSEnable()) {
+                if(AUtils.isGPSEnable(AUtils.currentContextConstant)) {
 
                     if (!AUtils.isIsOnduty()) {
-                        AUtils.mApplication.startLocationTracking();
+                        ((MyApplication)AUtils.mainApplicationConstant).startLocationTracking();
                         onChangeDutyStatus();
                     }
                 }
@@ -490,7 +490,7 @@ public class EmpDashboardActivity extends AppCompatActivity implements EmpPopUpD
             }
         } else {
             if (AUtils.isIsOnduty()) {
-                if (AUtils.isNetWorkAvailable(this)) {
+                if (AUtils.isInternetAvailable()) {
                     try{
                         if(!isFromAttendanceChecked){
                             AUtils.showConfirmationDialog(mContext, AUtils.CONFIRM_OFFDUTY_DIALOG, new DialogInterface.OnClickListener() {
@@ -514,7 +514,7 @@ public class EmpDashboardActivity extends AppCompatActivity implements EmpPopUpD
                         markAttendance.setChecked(true);
                     }
                 } else {
-                    AUtils.showWarning(mContext, mContext.getString(R.string.noInternet));
+                    AUtils.warning(mContext, mContext.getString(R.string.no_internet_error));
                     markAttendance.setChecked(true);
                 }
             }
@@ -523,7 +523,7 @@ public class EmpDashboardActivity extends AppCompatActivity implements EmpPopUpD
 
     private void onChangeDutyStatus() {
 
-        if (AUtils.isNetWorkAvailable(this)) {
+        if (AUtils.isInternetAvailable()) {
 
             if (AUtils.isNull(empInPunchPojo)) {
                 empInPunchPojo = new EmpInPunchPojo();
@@ -537,10 +537,10 @@ public class EmpDashboardActivity extends AppCompatActivity implements EmpPopUpD
             }catch (Exception e){
                 e.printStackTrace();
                 markAttendance.setChecked(false);
-                Toasty.error(mContext, mContext.getString(R.string.something_error), Toast.LENGTH_SHORT).show();
+                AUtils.error(mContext, mContext.getString(R.string.something_error), Toast.LENGTH_SHORT);
             }
         } else {
-            AUtils.showWarning(mContext, mContext.getString(R.string.noInternet));
+            AUtils.warning(mContext, mContext.getString(R.string.no_internet_error));
             markAttendance.setChecked(false);
         }
     }
@@ -570,10 +570,10 @@ public class EmpDashboardActivity extends AppCompatActivity implements EmpPopUpD
 
         vehicleStatus.setText("");
 
-        boolean isservicerunning = AUtils.isMyServiceRunning(ForgroundService.class);
+        boolean isservicerunning = AUtils.isMyServiceRunning(AUtils.mainApplicationConstant,ForgroundService.class);
 
         if(isservicerunning)
-            AUtils.mApplication.stopLocationTracking();
+            ((MyApplication)AUtils.mainApplicationConstant).stopLocationTracking();
 
         markAttendance.setChecked(false);
 
@@ -590,7 +590,7 @@ public class EmpDashboardActivity extends AppCompatActivity implements EmpPopUpD
 
         if(!AUtils.isNull(userDetailPojo)){
 
-            if(QuickUtils.prefs.getString(AUtils.LANGUAGE_ID, AUtils.DEFAULT_LANGUAGE_ID).equals("2")){
+            if(Prefs.getString(AUtils.LANGUAGE_NAME, AUtils.DEFAULT_LANGUAGE_ID).equals("2")){
                 userName.setText(userDetailPojo.getNameMar());
             }else{
                 userName.setText(userDetailPojo.getName());
@@ -617,9 +617,9 @@ public class EmpDashboardActivity extends AppCompatActivity implements EmpPopUpD
         LanguagePojo languagePojo = (LanguagePojo) listItemSelected;
 
         if (languagePojo.getLanguage().equals("English")) {
-            changeLanguage(1);
+            changeLanguage(AUtils.LanguageConstants.ENGLISH);
         } else if (languagePojo.getLanguage().equals("मराठी")) {
-            changeLanguage(2);
+            changeLanguage(AUtils.LanguageConstants.MARATHI);
         }
     }
 
@@ -627,9 +627,9 @@ public class EmpDashboardActivity extends AppCompatActivity implements EmpPopUpD
 
         if (AUtils.isIsOnduty()) {
 
-            if(!AUtils.isMyServiceRunning(ForgroundService.class))
+            if(!AUtils.isMyServiceRunning(AUtils.mainApplicationConstant,ForgroundService.class))
             {
-                AUtils.mApplication.startLocationTracking();
+                ((MyApplication)AUtils.mainApplicationConstant).startLocationTracking();
             }
             markAttendance.setChecked(true);
 
@@ -638,7 +638,7 @@ public class EmpDashboardActivity extends AppCompatActivity implements EmpPopUpD
 
 //            String vehicleName = "";
 //
-//            if (!AUtils.isNullString(QuickUtils.prefs.getString(AUtils.VEHICLE_NO,""))) {
+//            if (!AUtils.isNullString(Prefs.getString(AUtils.VEHICLE_NO,""))) {
 //
 //                vehicleStatus.setText(String.format("%s%s %s %s%s", this.getResources().getString(R.string.opening_round_bracket), vehicleName, this.getResources().getString(R.string.hyphen), empInPunchPojo.getVehicleNumber(), this.getResources().getString(R.string.closing_round_bracket)));
 //            } else {

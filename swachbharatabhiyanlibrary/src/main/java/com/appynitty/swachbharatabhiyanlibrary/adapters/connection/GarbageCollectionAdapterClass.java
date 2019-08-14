@@ -8,7 +8,6 @@ import com.appynitty.swachbharatabhiyanlibrary.pojos.GarbageCollectionPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.GcResultPojo;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 import com.appynitty.swachbharatabhiyanlibrary.utils.MyAsyncTask;
-import com.mithsoft.lib.components.Toasty;
 
 public class GarbageCollectionAdapterClass {
 
@@ -34,7 +33,7 @@ public class GarbageCollectionAdapterClass {
 
     public void submitQR(final GarbageCollectionPojo garbageCollectionPojo){
 
-        new MyAsyncTask(AUtils.mCurrentContext, true, new MyAsyncTask.AsynTaskListener() {
+        new MyAsyncTask(AUtils.currentContextConstant, true, new MyAsyncTask.AsynTaskListener() {
             GcResultPojo resultPojo = null;
             @Override
             public void doInBackgroundOpration(SyncServer syncServer) {

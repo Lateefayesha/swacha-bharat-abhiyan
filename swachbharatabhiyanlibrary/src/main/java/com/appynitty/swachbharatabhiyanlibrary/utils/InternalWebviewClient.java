@@ -9,7 +9,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.appynitty.swachbharatabhiyanlibrary.R;
-import com.mithsoft.lib.components.MyProgressDialog;
+import com.riaylibrary.custom_component.MyProgressDialog;
 
 /**
  * Created by Ayan Dey on 19/10/18.

@@ -10,7 +10,7 @@
         android:color="@android:color/white"
         />
 
-    <corners android:radius="@dimen/card_radius" />
+    <corners android:radius="@dimen/dim_5_dp" />
 
     <padding
         android:left="20dp"
