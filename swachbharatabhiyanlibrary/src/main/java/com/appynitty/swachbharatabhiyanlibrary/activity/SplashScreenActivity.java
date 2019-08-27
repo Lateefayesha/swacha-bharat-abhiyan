@@ -39,9 +39,6 @@ public class SplashScreenActivity extends AppCompatActivity {
         AUtils.currentContextConstant = this;
 
         mAdapter = new VersionDetailsAdapterClass();
-//
-        Prefs.putString(AUtils.APP_ID, "1");
-        Prefs.putInt(AUtils.VERSION_CODE, 20);
 
         setDefaultLanguage();
 
