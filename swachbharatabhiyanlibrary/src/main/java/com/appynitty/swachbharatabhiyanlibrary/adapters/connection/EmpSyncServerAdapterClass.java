@@ -37,32 +37,34 @@ public class EmpSyncServerAdapterClass {
     }
 
     public void syncServer() {
+        if(!AUtils.isEmpSyncServerRequestEnable) {
 
-        getDatabaseList();
+            getDatabaseList();
 
-        if (locationPojoList.size() > 0) {
+            if (locationPojoList.size() > 0) {
 
-            QrLocationWebService service = Connection.createService(QrLocationWebService.class,
-                    AUtils.SERVER_URL);
+                AUtils.isEmpSyncServerRequestEnable = true;
 
-            service.saveQrLocationDetailsOffline(Prefs.getString(AUtils.APP_ID, ""),
-                    AUtils.CONTENT_TYPE, locationPojoList)
-                    .enqueue(new Callback<List<OfflineGcResultPojo>>() {
-                        @Override
-                        public void onResponse(Call<List<OfflineGcResultPojo>> call, Response<List<OfflineGcResultPojo>> response) {
+                QrLocationWebService service = Connection.createService(QrLocationWebService.class, AUtils.SERVER_URL);
 
-                            if (response.code() == 200) {
-                                onResponseReceived(response.body());
-                            } else {
-                                Log.i(AUtils.TAG_HTTP_RESPONSE, "onFailureCallback: Response Code-" + response.code());
-                            }
+                service.saveQrLocationDetailsOffline(Prefs.getString(AUtils.APP_ID, ""), AUtils.CONTENT_TYPE, locationPojoList).enqueue(new Callback<List<OfflineGcResultPojo>>() {
+                    @Override
+                    public void onResponse(Call<List<OfflineGcResultPojo>> call, Response<List<OfflineGcResultPojo>> response) {
+                        AUtils.isEmpSyncServerRequestEnable = false;
+                        if (response.code() == 200) {
+                            onResponseReceived(response.body());
+                        } else {
+                            Log.i(AUtils.TAG_HTTP_RESPONSE, "onFailureCallback: Response Code-" + response.code());
                         }
+                    }
 
-                        @Override
-                        public void onFailure(Call<List<OfflineGcResultPojo>> call, Throwable t) {
-                            Log.i(AUtils.TAG_HTTP_RESPONSE, "onFailureCallback: Response Code-" + t.getMessage());
-                        }
-                    });
+                    @Override
+                    public void onFailure(Call<List<OfflineGcResultPojo>> call, Throwable t) {
+                        Log.i(AUtils.TAG_HTTP_RESPONSE, "onFailureCallback: Response Code-" + t.getMessage());
+                        AUtils.isEmpSyncServerRequestEnable = false;
+                    }
+                });
+            }
         }
     }
 
@@ -100,7 +102,16 @@ public class EmpSyncServerAdapterClass {
                     }
 
                 } else {
-                    empSyncServerRepository.deleteAllEmpSyncServerEntity();
+                    if (Integer.parseInt(result.getID()) != 0) {
+                        empSyncServerRepository.deleteEmpSyncServerEntity(Integer.parseInt(result.getID()));
+                    }
+
+                    for (int i = 0; i < locationPojoList.size(); i++) {
+                        if (locationPojoList.get(i).getOfflineID().equals(result.getID())) {
+                            locationPojoList.remove(i);
+                            break;
+                        }
+                    }
                 }
             }
         }

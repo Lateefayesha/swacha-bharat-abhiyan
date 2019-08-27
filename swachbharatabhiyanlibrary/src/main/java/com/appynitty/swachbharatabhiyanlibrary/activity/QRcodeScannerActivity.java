@@ -563,8 +563,9 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
             @Override
             public void onFailureCallBack(GarbageCollectionPojo garbageCollectionPojo) {
                 restartPreview();
-                AUtils.error(mContext, mContext.getString(R.string.serverError), Toast.LENGTH_SHORT);
                 insertToDB(garbageCollectionPojo);
+                AUtils.error(mContext, mContext.getString(R.string.serverError), Toast.LENGTH_SHORT);
+
             }
         });
     }

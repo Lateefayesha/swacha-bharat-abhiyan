@@ -33,34 +33,34 @@ public class SyncServerAdapterClass {
     }
 
     public void syncServer() {
+        if(!AUtils.isSyncServerRequestEnable) {
 
-        getDBList();
+            getDBList();
 
-        if (offlineGarbageColectionPojoList.size() > 0) {
+            if (offlineGarbageColectionPojoList.size() > 0) {
 
-            GarbageCollectionWebService service = Connection.createService(GarbageCollectionWebService.class,
-                    AUtils.SERVER_URL);
+                AUtils.isSyncServerRequestEnable = true;
 
-            service.saveGarbageCollectionOffline(Prefs.getString(AUtils.APP_ID, ""),
-                    AUtils.getBatteryStatus(),
-                    AUtils.CONTENT_TYPE,
-                    offlineGarbageColectionPojoList)
-                    .enqueue(new Callback<List<OfflineGcResultPojo>>() {
-                @Override
-                public void onResponse(Call<List<OfflineGcResultPojo>> call, Response<List<OfflineGcResultPojo>> response) {
+                GarbageCollectionWebService service = Connection.createService(GarbageCollectionWebService.class, AUtils.SERVER_URL);
 
-                    if (response.code() == 200) {
-                        onResponseReceived(response.body());
-                    } else {
-                        Log.i(AUtils.TAG_HTTP_RESPONSE, "onFailureCallback: Response Code-" + response.code());
+                service.saveGarbageCollectionOffline(Prefs.getString(AUtils.APP_ID, ""), AUtils.getBatteryStatus(), AUtils.CONTENT_TYPE, offlineGarbageColectionPojoList).enqueue(new Callback<List<OfflineGcResultPojo>>() {
+                    @Override
+                    public void onResponse(Call<List<OfflineGcResultPojo>> call, Response<List<OfflineGcResultPojo>> response) {
+                        AUtils.isSyncServerRequestEnable =false;
+                        if (response.code() == 200) {
+                            onResponseReceived(response.body());
+                        } else {
+                            Log.i(AUtils.TAG_HTTP_RESPONSE, "onFailureCallback: Response Code-" + response.code());
+                        }
                     }
-                }
 
-                @Override
-                public void onFailure(Call<List<OfflineGcResultPojo>> call, Throwable t) {
-                    Log.i(AUtils.TAG_HTTP_RESPONSE, "onFailureCallback: Response Code-" + t.getMessage());
-                }
-            });
+                    @Override
+                    public void onFailure(Call<List<OfflineGcResultPojo>> call, Throwable t) {
+                        Log.i(AUtils.TAG_HTTP_RESPONSE, "onFailureCallback: Response Code-" + t.getMessage());
+                        AUtils.isSyncServerRequestEnable =false;
+                    }
+                });
+            }
         }
     }
 
@@ -82,7 +82,15 @@ public class SyncServerAdapterClass {
                         }
                     }
                 } else {
-                    mSyncServerRepository.deleteAllSyncServerEntity();
+                    if (Integer.parseInt(result.getID()) != 0) {
+                        mSyncServerRepository.deleteSyncServerEntity(Integer.parseInt(result.getID()));
+                    }
+                    for (int i = 0; i < offlineGarbageColectionPojoList.size(); i++) {
+                        if (offlineGarbageColectionPojoList.get(i).getOfflineID().equals(result.getID())) {
+                            offlineGarbageColectionPojoList.remove(i);
+                            break;
+                        }
+                    }
                 }
             }
         }

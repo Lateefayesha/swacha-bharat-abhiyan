@@ -138,6 +138,10 @@ public class AUtils extends CommonUtils {
     private static ShareLocationAdapterClass shareLocationAdapterClass;
     private static EmpSyncServerAdapterClass empSyncServer;
 
+    public static Boolean isSyncServerRequestEnable = false;
+    public static Boolean isLocationRequestEnable = false;
+    public static Boolean isEmpSyncServerRequestEnable = false;
+
     public static boolean isIsOnduty() {
         return Prefs.getBoolean(PREFS.IS_ON_DUTY, false);
     }
