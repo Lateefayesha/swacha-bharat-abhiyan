@@ -113,13 +113,13 @@ public class EmpDashboardActivity extends AppCompatActivity implements EmpPopUpD
     public boolean onOptionsItemSelected(MenuItem item) {
         if (R.id.action_id_card == item.getItemId()) {
             if(!AUtils.isNull(userDetailPojo)) {
-                if (Prefs.getString(AUtils.LANGUAGE_NAME, AUtils.DEFAULT_LANGUAGE_ID).equals("2")) {
-                    IdCardDialog cardDialog = new IdCardDialog(mContext, userDetailPojo.getNameMar(), userDetailPojo.getUserId(), userDetailPojo.getProfileImage());
-                    cardDialog.show();
-                } else {
+//                if (Prefs.getString(AUtils.LANGUAGE_NAME, AUtils.DEFAULT_LANGUAGE_ID).equals("2")) {
+//                    IdCardDialog cardDialog = new IdCardDialog(mContext, userDetailPojo.getNameMar(), userDetailPojo.getUserId(), userDetailPojo.getProfileImage());
+//                    cardDialog.show();
+//                } else {
                     IdCardDialog cardDialog = new IdCardDialog(mContext, userDetailPojo.getName(), userDetailPojo.getUserId(), userDetailPojo.getProfileImage());
                     cardDialog.show();
-                }
+//                }
             }else {
                 AUtils.warning(mContext,mContext.getResources().getString(R.string.try_after_sometime));
             }
@@ -590,11 +590,10 @@ public class EmpDashboardActivity extends AppCompatActivity implements EmpPopUpD
 
         if(!AUtils.isNull(userDetailPojo)){
 
-            if(Prefs.getString(AUtils.LANGUAGE_NAME, AUtils.DEFAULT_LANGUAGE_ID).equals("2")){
-                userName.setText(userDetailPojo.getNameMar());
-            }else{
+//            if(Prefs.getString(AUtils.LANGUAGE_NAME, AUtils.DEFAULT_LANGUAGE_ID).equals("2"))
+//                userName.setText(userDetailPojo.getNameMar());
+//            else
                 userName.setText(userDetailPojo.getName());
-            }
 
             empId.setText(userDetailPojo.getUserId());
             if (!AUtils.isNullString(userDetailPojo.getProfileImage())) {

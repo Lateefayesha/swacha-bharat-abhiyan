@@ -318,7 +318,7 @@ public class SyncServer {
             WorkHistoryWebService service = Connection.createService(WorkHistoryWebService.class, AUtils.SERVER_URL);
             workHistoryDetailPojoList = service.pullWorkHistoryDetailList(Prefs.getString(AUtils.APP_ID, ""),
                     Prefs.getString(AUtils.PREFS.USER_ID,null), fDate,
-                    AUtils.getLanguageId(Prefs.getString(AUtils.LANGUAGE_NAME, AUtils.DEFAULT_LANGUAGE_ID))).execute().body();
+                    "1").execute().body();
 
             if (!AUtils.isNull(workHistoryDetailPojoList) && !workHistoryDetailPojoList.isEmpty()) {
 
