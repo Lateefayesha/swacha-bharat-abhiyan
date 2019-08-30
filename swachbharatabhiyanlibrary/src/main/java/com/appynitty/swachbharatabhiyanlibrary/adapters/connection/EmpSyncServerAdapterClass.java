@@ -50,11 +50,12 @@ public class EmpSyncServerAdapterClass {
                 service.saveQrLocationDetailsOffline(Prefs.getString(AUtils.APP_ID, ""), AUtils.CONTENT_TYPE, locationPojoList).enqueue(new Callback<List<OfflineGcResultPojo>>() {
                     @Override
                     public void onResponse(Call<List<OfflineGcResultPojo>> call, Response<List<OfflineGcResultPojo>> response) {
-                        AUtils.isEmpSyncServerRequestEnable = false;
+
                         if (response.code() == 200) {
                             onResponseReceived(response.body());
                         } else {
                             Log.i(AUtils.TAG_HTTP_RESPONSE, "onFailureCallback: Response Code-" + response.code());
+                            AUtils.isEmpSyncServerRequestEnable = false;
                         }
                     }
 
@@ -115,5 +116,6 @@ public class EmpSyncServerAdapterClass {
                 }
             }
         }
+        AUtils.isEmpSyncServerRequestEnable = false;
     }
 }

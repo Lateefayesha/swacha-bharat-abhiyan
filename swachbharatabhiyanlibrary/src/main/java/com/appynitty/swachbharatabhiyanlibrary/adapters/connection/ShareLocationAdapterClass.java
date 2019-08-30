@@ -94,12 +94,13 @@ public class ShareLocationAdapterClass {
                 service.saveUserLocation(Prefs.getString(AUtils.APP_ID, "1"), AUtils.CONTENT_TYPE, Prefs.getString(AUtils.PREFS.USER_TYPE_ID, "0"), AUtils.getBatteryStatus(), userLocationPojoList).enqueue(new Callback<List<UserLocationResultPojo>>() {
                     @Override
                     public void onResponse(Call<List<UserLocationResultPojo>> call, Response<List<UserLocationResultPojo>> response) {
-                        AUtils.isLocationRequestEnable = false;
+
                         if (response.code() == 200) {
                             onResponseReceived(response.body(), userLocationPojoList);
                         } else {
                             mListener.onFailureCallBack();
                             Log.i(AUtils.TAG_HTTP_RESPONSE, "onFailureCallback: Response Code-" + response.code());
+                            AUtils.isLocationRequestEnable = false;
                         }
                     }
 
@@ -173,6 +174,7 @@ public class ShareLocationAdapterClass {
                 }
             }
         }
+        AUtils.isLocationRequestEnable = false;
     }
 
     private void getDBList() {

@@ -46,11 +46,12 @@ public class SyncServerAdapterClass {
                 service.saveGarbageCollectionOffline(Prefs.getString(AUtils.APP_ID, ""), AUtils.getBatteryStatus(), AUtils.CONTENT_TYPE, offlineGarbageColectionPojoList).enqueue(new Callback<List<OfflineGcResultPojo>>() {
                     @Override
                     public void onResponse(Call<List<OfflineGcResultPojo>> call, Response<List<OfflineGcResultPojo>> response) {
-                        AUtils.isSyncServerRequestEnable =false;
+
                         if (response.code() == 200) {
                             onResponseReceived(response.body());
                         } else {
                             Log.i(AUtils.TAG_HTTP_RESPONSE, "onFailureCallback: Response Code-" + response.code());
+                            AUtils.isSyncServerRequestEnable =false;
                         }
                     }
 
@@ -94,6 +95,7 @@ public class SyncServerAdapterClass {
                 }
             }
         }
+        AUtils.isSyncServerRequestEnable =false;
     }
 
     private void getDBList(){
