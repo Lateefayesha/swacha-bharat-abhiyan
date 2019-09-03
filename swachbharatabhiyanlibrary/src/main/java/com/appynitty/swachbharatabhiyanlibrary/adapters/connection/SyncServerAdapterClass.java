@@ -15,6 +15,8 @@ import com.pixplicity.easyprefs.library.Prefs;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import retrofit2.Call;
@@ -40,6 +42,8 @@ public class SyncServerAdapterClass {
             if (offlineGarbageColectionPojoList.size() > 0) {
 
                 AUtils.isSyncServerRequestEnable = true;
+
+                Collections.reverse(offlineGarbageColectionPojoList);
 
                 GarbageCollectionWebService service = Connection.createService(GarbageCollectionWebService.class, AUtils.SERVER_URL);
 

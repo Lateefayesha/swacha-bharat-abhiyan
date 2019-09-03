@@ -15,6 +15,7 @@ import com.pixplicity.easyprefs.library.Prefs;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import retrofit2.Call;
@@ -43,8 +44,6 @@ public class ShareLocationAdapterClass {
     }
 
     public void shareLocation(final List<UserLocationPojo> userLocationPojos) {
-
-
 
         UserLocationWebService service = Connection.createService(UserLocationWebService.class, AUtils.SERVER_URL);
 
@@ -88,6 +87,8 @@ public class ShareLocationAdapterClass {
             if (userLocationPojoList.size() > 0) {
 
                 AUtils.isLocationRequestEnable = true;
+
+                Collections.reverse(userLocationPojoList);
 
                 UserLocationWebService service = Connection.createService(UserLocationWebService.class, AUtils.SERVER_URL);
 

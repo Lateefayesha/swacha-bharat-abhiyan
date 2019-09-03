@@ -15,6 +15,7 @@ import com.pixplicity.easyprefs.library.Prefs;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import retrofit2.Call;
@@ -44,6 +45,8 @@ public class EmpSyncServerAdapterClass {
             if (locationPojoList.size() > 0) {
 
                 AUtils.isEmpSyncServerRequestEnable = true;
+
+                Collections.reverse(locationPojoList);
 
                 QrLocationWebService service = Connection.createService(QrLocationWebService.class, AUtils.SERVER_URL);
 
