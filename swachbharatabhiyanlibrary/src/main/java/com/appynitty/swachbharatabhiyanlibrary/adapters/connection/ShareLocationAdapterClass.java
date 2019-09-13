@@ -99,7 +99,7 @@ public class ShareLocationAdapterClass {
                         if (response.code() == 200) {
                             onResponseReceived(response.body(), userLocationPojoList);
                         } else {
-                            mListener.onFailureCallBack();
+//                            mListener.onFailureCallBack();
                             Log.i(AUtils.TAG_HTTP_RESPONSE, "onFailureCallback: Response Code-" + response.code());
                             AUtils.isLocationRequestEnable = false;
                         }
@@ -107,7 +107,7 @@ public class ShareLocationAdapterClass {
 
                     @Override
                     public void onFailure(Call<List<UserLocationResultPojo>> call, Throwable t) {
-                        if (!AUtils.isNull(mListener)) mListener.onFailureCallBack();
+//                        if (!AUtils.isNull(mListener)) mListener.onFailureCallBack();
                         Log.i(AUtils.TAG_HTTP_RESPONSE, "onFailureCallback: Response Code-" + t.getMessage());
                         AUtils.isLocationRequestEnable = false;
                     }
@@ -141,13 +141,14 @@ public class ShareLocationAdapterClass {
 
             for (UserLocationResultPojo result : results) {
 
-                if (result.getStatus().equals(AUtils.STATUS_SUCCESS)) {
+//                if (result.getStatus().equals(AUtils.STATUS_SUCCESS)) {
 
                     if (Integer.parseInt(result.getId()) != 0) {
                         mLocationRepository.deleteUserLocationEntity(Integer.parseInt(result.getId()));
                     } else {
                         finalResult = result;
                     }
+
                     for (int i = 0; i < userLocationPojos.size(); i++) {
                         if (userLocationPojos.get(i).getOfflineId().equals(result.getId())) {
                             userLocationPojos.remove(i);
@@ -155,25 +156,25 @@ public class ShareLocationAdapterClass {
                         }
                     }
 
-                } else {
-                    if (!AUtils.isNull(mListener)) {
-                        for (UserLocationPojo pojo : userLocationPojos) {
-                            mLocationRepository.deleteAllUserLocationEntity();
-                            finalResult = result;
-                            break;
-                        }
-                    }
-                }
+//                } else {
+//                    if (!AUtils.isNull(mListener)) {
+//                        for (UserLocationPojo pojo : userLocationPojos) {
+//                            mLocationRepository.deleteAllUserLocationEntity();
+//                            finalResult = result;
+//                            break;
+//                        }
+//                    }
+//                }
             }
 
-            if (!AUtils.isNull(mListener)) {
-                if (finalResult != null && finalResult.getStatus().equals(AUtils.STATUS_SUCCESS)) {
-                    mListener.onSuccessCallBack(finalResult.getIsAttendenceOff());
-                    userLocationPojos.clear();
-                } else {
-                    mListener.onFailureCallBack();
-                }
-            }
+//            if (!AUtils.isNull(mListener)) {
+//                if (finalResult != null && finalResult.getStatus().equals(AUtils.STATUS_SUCCESS)) {
+//                    mListener.onSuccessCallBack(finalResult.getIsAttendenceOff());
+//                    userLocationPojos.clear();
+//                } else {
+//                    mListener.onFailureCallBack();
+//                }
+//            }
         }
         AUtils.isLocationRequestEnable = false;
     }

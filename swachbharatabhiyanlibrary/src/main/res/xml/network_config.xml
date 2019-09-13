@@ -3,6 +3,7 @@
     <domain-config cleartextTrafficPermitted="true">
         <domain includeSubdomains="true">sbaappynitty.co.in</domain>
         <domain includeSubdomains="true">192.168.200.4</domain>
+        <domain includeSubdomains="true">115.115.153.117</domain>
         <domain includeSubdomains="true">ghantagadi.in</domain>
     </domain-config>
 </network-security-config>

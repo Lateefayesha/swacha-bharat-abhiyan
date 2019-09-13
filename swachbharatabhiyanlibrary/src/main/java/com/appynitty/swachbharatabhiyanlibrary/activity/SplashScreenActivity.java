@@ -42,7 +42,10 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         setDefaultLanguage();
 
-        mAdapter.checkVersionDetails();
+        if(AUtils.isInternetAvailable())
+            mAdapter.checkVersionDetails();
+        else
+            loadnextPage();
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
@@ -66,14 +69,18 @@ public class SplashScreenActivity extends AppCompatActivity {
 
             @Override
             public void onFailureCallBack() {
-                if(Prefs.getBoolean(AUtils.PREFS.IS_USER_LOGIN,false))
-                {
-                    loadDashboard();
-                }  else {
-                    loadLogin();
-                }
+                loadnextPage();
             }
         });
+    }
+
+    private void loadnextPage(){
+        if(Prefs.getBoolean(AUtils.PREFS.IS_USER_LOGIN,false))
+        {
+            loadDashboard();
+        }  else {
+            loadLogin();
+        }
     }
 
     @Override
