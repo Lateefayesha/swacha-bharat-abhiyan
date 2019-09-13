@@ -170,34 +170,40 @@ public class LocationMonitoringService implements LocationListener, GpsStatus.Li
         try {
             Date CurrentTime = AUtils.getCurrentTime();
             Date DutyOffTime = AUtils.getDutyEndTime();
+
             if(CurrentTime.before(DutyOffTime)) {
 
                 Log.i(TAG,"Before");
+
+                UserLocationPojo userLocationPojo = new UserLocationPojo();
+
+                userLocationPojo.setUserId(Prefs.getString(AUtils.PREFS.USER_ID, ""));
+                userLocationPojo.setLat(Prefs.getString(AUtils.LAT, ""));
+                userLocationPojo.setLong(Prefs.getString(AUtils.LONG, ""));
+                userLocationPojo.setDatetime(AUtils.getSeverDateTime());
+                userLocationPojo.setOfflineId("0");
+
+                if(AUtils.isInternetAvailable()) {
+
+                    mUserLocationPojoList.add(userLocationPojo);
+                    mAdapter.shareLocation(mUserLocationPojoList);
+                }else {
+                    Type type = new TypeToken<UserLocationPojo>() {}.getType();
+                    mLocationRepository.insertUserLocationEntity(new Gson().toJson(userLocationPojo,type));
+
+                    mUserLocationPojoList.clear();
+                }
             }
             else {
                 Log.i(TAG,"After");
+
+                AUtils.setIsOnduty(false);
+                ((MyApplication)AUtils.mainApplicationConstant).stopLocationTracking();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        UserLocationPojo userLocationPojo = new UserLocationPojo();
 
-        userLocationPojo.setUserId(Prefs.getString(AUtils.PREFS.USER_ID, ""));
-        userLocationPojo.setLat(Prefs.getString(AUtils.LAT, ""));
-        userLocationPojo.setLong(Prefs.getString(AUtils.LONG, ""));
-        userLocationPojo.setDatetime(AUtils.getSeverDateTime());
-        userLocationPojo.setOfflineId("0");
-
-        if(AUtils.isInternetAvailable()) {
-
-            mUserLocationPojoList.add(userLocationPojo);
-            mAdapter.shareLocation(mUserLocationPojoList);
-        }else {
-            Type type = new TypeToken<UserLocationPojo>() {}.getType();
-            mLocationRepository.insertUserLocationEntity(new Gson().toJson(userLocationPojo,type));
-
-            mUserLocationPojoList.clear();
-        }
     }
 }

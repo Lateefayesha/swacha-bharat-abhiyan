@@ -52,6 +52,7 @@ import com.riaylibrary.utils.LocaleHelper;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -230,6 +231,11 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         }
         else {
             AUtils.showSnackBar(findViewById(R.id.parent));
+        }
+
+        if(!AUtils.getInPunchDate().equals(AUtils.getSeverDate(Calendar.getInstance())))
+        {
+            onOutPunchSuccess();
         }
 
         if(!AUtils.isNull(mCheckAttendanceAdapter) && !isFromLogin)
@@ -656,6 +662,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
                     vehicleType, this.getResources().getString(R.string.closing_round_bracket)));
         }
 
+        AUtils.setInPunchDate(Calendar.getInstance());
         AUtils.setIsOnduty(true);
     }
 
@@ -672,6 +679,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
 
         markAttendance.setChecked(false);
 
+        AUtils.removeInPunchDate();
         AUtils.setIsOnduty(false);
     }
 

@@ -135,6 +135,8 @@ public class AUtils extends CommonUtils {
         String IS_GT_FEATURE = "isGtFeature";
         String IS_ON_DUTY = "isOnDuty";
 
+        String IN_PUNCH_DATE = "IN_PUNCH_DATE";
+
         String IMAGE_POJO = "ImagePojo";
 
         String IN_PUNCH_POJO = "InPunchPull";
@@ -375,6 +377,27 @@ public class AUtils extends CommonUtils {
         int seconds = now.get(Calendar.SECOND);
 
         return new Date(year,month,day,hour,minute,seconds);
+    }
+
+    public static void setInPunchDate(Calendar calendar) {
+
+        Prefs.putString(PREFS.IN_PUNCH_DATE, getSeverDate(calendar));
+    }
+
+    public static String getInPunchDate() {
+
+        return Prefs.getString(PREFS.IN_PUNCH_DATE, getSeverDate(Calendar.getInstance()));
+    }
+
+    public static void removeInPunchDate() {
+
+        Prefs.remove(PREFS.IN_PUNCH_DATE);
+    }
+
+    public static String getSeverDate(Calendar calendar) {
+
+        SimpleDateFormat format = new SimpleDateFormat(AUtils.SERVER_DATE_FORMATE, Locale.ENGLISH);
+        return format.format(calendar.getTime());
     }
 }
 
