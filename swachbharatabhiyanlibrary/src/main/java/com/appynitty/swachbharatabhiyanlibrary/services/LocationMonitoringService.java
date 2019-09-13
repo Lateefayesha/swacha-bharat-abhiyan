@@ -20,6 +20,7 @@ import com.pixplicity.easyprefs.library.Prefs;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class LocationMonitoringService implements LocationListener, GpsStatus.Listener {
@@ -165,6 +166,20 @@ public class LocationMonitoringService implements LocationListener, GpsStatus.Li
     }
 
     private void sendLocation() {
+
+        try {
+            Date CurrentTime = AUtils.getCurrentTime();
+            Date DutyOffTime = AUtils.getDutyEndTime();
+            if(CurrentTime.before(DutyOffTime)) {
+
+                Log.i(TAG,"Before");
+            }
+            else {
+                Log.i(TAG,"After");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         UserLocationPojo userLocationPojo = new UserLocationPojo();
 

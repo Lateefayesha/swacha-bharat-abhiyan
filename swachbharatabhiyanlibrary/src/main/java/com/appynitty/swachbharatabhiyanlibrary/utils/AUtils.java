@@ -18,6 +18,7 @@ import com.riaylibrary.utils.CommonUtils;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 public class AUtils extends CommonUtils {
@@ -351,6 +352,29 @@ public class AUtils extends CommonUtils {
         SbaDatabase databaseHelper = new SbaDatabase(mContext);
 
         return databaseHelper.getWritableDatabase();
+    }
+
+    public static Date getDutyEndTime() {
+        Calendar cl = Calendar.getInstance();
+
+        int year = cl.get(Calendar.YEAR);
+        int month = cl.get(Calendar.MONTH);
+        int day = cl.get(Calendar.DATE);
+
+        return new Date(year,month,day,11,50);
+    }
+
+    public static Date getCurrentTime() {
+        Calendar now = Calendar.getInstance();
+
+        int year = now.get(Calendar.YEAR);
+        int month = now.get(Calendar.MONTH);
+        int day = now.get(Calendar.DATE);
+        int hour = now.get(Calendar.HOUR_OF_DAY);
+        int minute = now.get(Calendar.MINUTE);
+        int seconds = now.get(Calendar.SECOND);
+
+        return new Date(year,month,day,hour,minute,seconds);
     }
 }
 
