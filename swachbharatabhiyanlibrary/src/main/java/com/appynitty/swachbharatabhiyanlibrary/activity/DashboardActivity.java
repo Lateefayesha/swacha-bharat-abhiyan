@@ -235,6 +235,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
 
         if(!AUtils.getInPunchDate().equals(AUtils.getSeverDate(Calendar.getInstance())))
         {
+            isFromAttendanceChecked = true;
             onOutPunchSuccess();
         }
 
