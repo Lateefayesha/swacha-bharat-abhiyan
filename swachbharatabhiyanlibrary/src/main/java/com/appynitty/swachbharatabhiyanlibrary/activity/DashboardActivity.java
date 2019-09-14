@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -225,32 +226,39 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        if(AUtils.isInternetAvailable())
-        {
-            AUtils.hideSnackBar();
+        try {
+            if(AUtils.isInternetAvailable())
+            {
+                AUtils.hideSnackBar();
+            }
+            else {
+                AUtils.showSnackBar(findViewById(R.id.parent));
+            }
+
+            String inDate = AUtils.getInPunchDate();
+            String currentDate = AUtils.getSeverDate();
+            if(!inDate.equals(currentDate))
+            {
+                isFromAttendanceChecked = true;
+                onOutPunchSuccess();
+            }
+
+            if(!AUtils.isNull(mCheckAttendanceAdapter) && !isFromLogin)
+            {
+                mCheckAttendanceAdapter.checkAttendance();
+            }
+
+            SyncServerAdapterClass syncServer = new SyncServerAdapterClass();
+            syncServer.syncServer();
+
+            ShareLocationAdapterClass shareLocationAdapterClass = new ShareLocationAdapterClass();
+            shareLocationAdapterClass.shareLocation();
+
+            checkDutyStatus();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
-        else {
-            AUtils.showSnackBar(findViewById(R.id.parent));
-        }
-
-        if(!AUtils.getInPunchDate().equals(AUtils.getSeverDate(Calendar.getInstance())))
-        {
-            isFromAttendanceChecked = true;
-            onOutPunchSuccess();
-        }
-
-        if(!AUtils.isNull(mCheckAttendanceAdapter) && !isFromLogin)
-        {
-            mCheckAttendanceAdapter.checkAttendance();
-        }
-
-        SyncServerAdapterClass syncServer = new SyncServerAdapterClass();
-        syncServer.syncServer();
-
-        ShareLocationAdapterClass shareLocationAdapterClass = new ShareLocationAdapterClass();
-        shareLocationAdapterClass.shareLocation();
-
-        checkDutyStatus();
     }
 
     private void initComponents() {
@@ -664,6 +672,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         }
 
         AUtils.setInPunchDate(Calendar.getInstance());
+        Log.i(TAG,AUtils.getInPunchDate());
         AUtils.setIsOnduty(true);
     }
 
@@ -762,6 +771,8 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
             } else {
                 vehicleStatus.setText(String.format("%s%s%s", this.getResources().getString(R.string.opening_round_bracket), vehicleName, this.getResources().getString(R.string.closing_round_bracket)));
             }
+        } else {
+            markAttendance.setChecked(false);
         }
     }
 

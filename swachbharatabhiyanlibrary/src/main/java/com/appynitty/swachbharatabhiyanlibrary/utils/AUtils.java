@@ -363,7 +363,7 @@ public class AUtils extends CommonUtils {
         int month = cl.get(Calendar.MONTH);
         int day = cl.get(Calendar.DATE);
 
-        return new Date(year,month,day,11,50);
+        return new Date(year,month,day,18,15);
     }
 
     public static Date getCurrentTime() {

@@ -1,5 +1,6 @@
 package com.appynitty.swachbharatabhiyanlibrary.services;
 
+import android.app.Activity;
 import android.content.Context;
 import android.location.Criteria;
 import android.location.GpsStatus;
@@ -199,6 +200,9 @@ public class LocationMonitoringService implements LocationListener, GpsStatus.Li
 
                 AUtils.setIsOnduty(false);
                 ((MyApplication)AUtils.mainApplicationConstant).stopLocationTracking();
+                if(!AUtils.isNull(AUtils.currentContextConstant)) {
+                    ((Activity)AUtils.currentContextConstant).recreate();
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
