@@ -54,6 +54,7 @@ import com.riaylibrary.utils.LocaleHelper;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -237,7 +238,11 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
 
             String inDate = AUtils.getInPunchDate();
             String currentDate = AUtils.getSeverDate();
-            if(!inDate.equals(currentDate))
+
+            Date CurrentTime = AUtils.getCurrentTime();
+            Date DutyOffTime = AUtils.getDutyEndTime();
+
+            if(!inDate.equals(currentDate) || CurrentTime.after(DutyOffTime))
             {
                 isFromAttendanceChecked = true;
                 onOutPunchSuccess();
@@ -307,7 +312,6 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         mCheckAttendanceAdapter.setCheckAttendanceListener(new CheckAttendanceAdapterClass.CheckAttendanceListener() {
             @Override
             public void onSuccessCallBack(boolean isAttendanceOff, String message, String messageMar) {
-
                 
                 if(isAttendanceOff)
                 {
@@ -543,25 +547,29 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         if (isChecked) {
             if (isLocationPermission) {
                 if(AUtils.isGPSEnable(AUtils.currentContextConstant)) {
-                    HashMap<Integer, Object> mLanguage = new HashMap<>();
+                    if(!AUtils.DutyOffFromService) {
+                        HashMap<Integer, Object> mLanguage = new HashMap<>();
 
-                    vehicleTypePojoList = mVehicleTypeAdapter.getVehicleTypePojoList();
+                        vehicleTypePojoList = mVehicleTypeAdapter.getVehicleTypePojoList();
 
-                    if (!AUtils.isNull(vehicleTypePojoList) && !vehicleTypePojoList.isEmpty()) {
-                        for (int i = 0; i < vehicleTypePojoList.size(); i++) {
-                            mLanguage.put(i, vehicleTypePojoList.get(i));
-                        }
+                        if (!AUtils.isNull(vehicleTypePojoList) && !vehicleTypePojoList.isEmpty()) {
+                            for (int i = 0; i < vehicleTypePojoList.size(); i++) {
+                                mLanguage.put(i, vehicleTypePojoList.get(i));
+                            }
 
-                        if (!AUtils.isIsOnduty()) {
-                            ((MyApplication)AUtils.mainApplicationConstant).startLocationTracking();
+                            if (!AUtils.isIsOnduty()) {
+                                ((MyApplication) AUtils.mainApplicationConstant).startLocationTracking();
 
-                            PopUpDialog dialog = new PopUpDialog(DashboardActivity.this, AUtils.DIALOG_TYPE_VEHICLE, mLanguage, this);
-                            dialog.show();
+                                PopUpDialog dialog = new PopUpDialog(DashboardActivity.this, AUtils.DIALOG_TYPE_VEHICLE, mLanguage, this);
+                                dialog.show();
+                            }
+                        } else {
+                            mVehicleTypeAdapter.getVehicleType();
+                            markAttendance.setChecked(false);
+                            AUtils.error(mContext, mContext.getString(R.string.something_error), Toast.LENGTH_SHORT);
                         }
                     } else {
-                        mVehicleTypeAdapter.getVehicleType();
-                        markAttendance.setChecked(false);
-                        AUtils.error(mContext, mContext.getString(R.string.something_error), Toast.LENGTH_SHORT);
+                        AUtils.DutyOffFromService = false;
                     }
                 }
                 else {

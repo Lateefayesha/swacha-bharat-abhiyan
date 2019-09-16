@@ -10,6 +10,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.appynitty.swachbharatabhiyanlibrary.activity.DashboardActivity;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.ShareLocationAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.UserLocationPojo;
 import com.appynitty.swachbharatabhiyanlibrary.repository.LocationRepository;
@@ -200,6 +201,14 @@ public class LocationMonitoringService implements LocationListener, GpsStatus.Li
 
                 AUtils.setIsOnduty(false);
                 ((MyApplication)AUtils.mainApplicationConstant).stopLocationTracking();
+
+                Activity activity = ((Activity)AUtils.currentContextConstant);
+
+                if(activity instanceof DashboardActivity) {
+                    ((Activity)AUtils.currentContextConstant).recreate();
+                    AUtils.DutyOffFromService = true;
+                }
+
                 if(!AUtils.isNull(AUtils.currentContextConstant)) {
                     ((Activity)AUtils.currentContextConstant).recreate();
                 }

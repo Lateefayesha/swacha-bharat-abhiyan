@@ -113,9 +113,11 @@ public class AUtils extends CommonUtils {
     private static ShareLocationAdapterClass shareLocationAdapterClass;
     private static EmpSyncServerAdapterClass empSyncServer;
 
-    public static Boolean isSyncServerRequestEnable = false;
-    public static Boolean isLocationRequestEnable = false;
-    public static Boolean isEmpSyncServerRequestEnable = false;
+    public static boolean isSyncServerRequestEnable = false;
+    public static boolean isLocationRequestEnable = false;
+    public static boolean isEmpSyncServerRequestEnable = false;
+
+    public static boolean DutyOffFromService = false;
 
     public static boolean isIsOnduty() {
         return Prefs.getBoolean(PREFS.IS_ON_DUTY, false);
@@ -363,7 +365,7 @@ public class AUtils extends CommonUtils {
         int month = cl.get(Calendar.MONTH);
         int day = cl.get(Calendar.DATE);
 
-        return new Date(year,month,day,18,15);
+        return new Date(year,month,day,23,50);
     }
 
     public static Date getCurrentTime() {
