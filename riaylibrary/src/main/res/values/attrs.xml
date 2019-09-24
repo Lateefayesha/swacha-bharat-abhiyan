@@ -23,7 +23,7 @@
     </declare-styleable>
 
     <declare-styleable name="GradientTextView">
-        <attr format="integer" name="gradient_start_color"/>
-        <attr format="integer" name="gradient_end_color"/>
+        <attr format="color" name="start_color"/>
+        <attr format="color" name="end_color"/>
     </declare-styleable>
 </resources>
