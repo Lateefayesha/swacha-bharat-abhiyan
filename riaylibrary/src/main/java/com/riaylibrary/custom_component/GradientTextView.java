@@ -1,6 +1,7 @@
 package com.riaylibrary.custom_component;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.LinearGradient;
 import android.graphics.Shader;
 import android.util.AttributeSet;
@@ -12,6 +13,7 @@ import com.appynitty.riaylibrary.R;
 public class GradientTextView extends AppCompatTextView
 {
     Context mContext;
+    int startColor, endColor;
     public GradientTextView(Context context )
     {
         super( context, null, -1 );
@@ -28,6 +30,10 @@ public class GradientTextView extends AppCompatTextView
     {
         super( context, attrs, defStyle );
         mContext = context;
+
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.GradientTextView, defStyle, 0);
+        this.startColor = a.getInt(R.styleable.GradientTextView_gradient_start_color, mContext.getResources().getColor(R.color.gradient_start_color));
+        this.endColor = a.getInt(R.styleable.GradientTextView_gradient_end_color, mContext.getResources().getColor(R.color.gradient_end_color));
     }
 
     @Override
@@ -39,8 +45,8 @@ public class GradientTextView extends AppCompatTextView
         {
             getPaint().setShader( new LinearGradient(
                     0, 0, 0, getHeight(),
-                    mContext.getResources().getColor(R.color.gradient_start_color),
-                    mContext.getResources().getColor(R.color.gradient_end_color),
+                    startColor,
+                    endColor,
                     Shader.TileMode.CLAMP ) );
         }
     }
