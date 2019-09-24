@@ -30,10 +30,6 @@ public class GradientTextView extends AppCompatTextView
     {
         super( context, attrs, defStyle );
         mContext = context;
-
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.GradientTextView, defStyle, 0);
-        this.startColor = a.getColor(R.styleable.GradientTextView_start_color, mContext.getResources().getColor(R.color.gradient_start_color));
-        this.endColor = a.getColor(R.styleable.GradientTextView_end_color, mContext.getResources().getColor(R.color.gradient_end_color));
     }
 
     @Override
@@ -45,8 +41,8 @@ public class GradientTextView extends AppCompatTextView
         {
             getPaint().setShader( new LinearGradient(
                     0, 0, 0, getHeight(),
-                    startColor,
-                    endColor,
+                    mContext.getResources().getColor(R.color.gradient_start_color),
+                    mContext.getResources().getColor(R.color.gradient_end_color),
                     Shader.TileMode.CLAMP ) );
         }
     }

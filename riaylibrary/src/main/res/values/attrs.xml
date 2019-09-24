@@ -21,9 +21,4 @@
         <attr format="color" name="border_color"/>
         <attr format="boolean" name="border_overlay"/>
     </declare-styleable>
-
-    <declare-styleable name="GradientTextView">
-        <attr format="color" name="start_color"/>
-        <attr format="color" name="end_color"/>
-    </declare-styleable>
 </resources>
