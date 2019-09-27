@@ -1164,6 +1164,29 @@ public class CommonUtils {
         String URDU         = "ur";
     }
 
+    public interface LanguageNameConstants {
+        String ENGLISH      = "ENGLISH";
+        String ASSAMESE     = "ASSAMESE";
+        String BENGALI      = "BENGALI";
+        String BIHARI       = "BIHARI";
+        String BODO         = "BODO";
+        String GUJARATI     = "GUJARATI";
+        String HINDI        = "HINDI";
+        String KANADA       = "KANADA";
+        String KASHMIRI     = "KASHMIRI";
+        String KONKANI      = "KONKANI";
+        String MALAYALAM    = "MALAYALAM";
+        String MARATHI      = "MARATHI";
+        String NEPALI       = "NEPALI";
+        String ORIYA        = "ORIYA";
+        String PUNJABI      = "PUNJABI";
+        String SANSKRIT     = "SANSKRIT";
+        String TAMIL        = "TAMIL";
+        String TELUGU       = "TELUGU";
+        String TIBETAN      = "TIBETAN";
+        String URDU         = "URDU";
+    }
+
     public interface LanguageIDConstants {
         String ENGLISH      = "1";
         String ASSAMESE     = "5";
