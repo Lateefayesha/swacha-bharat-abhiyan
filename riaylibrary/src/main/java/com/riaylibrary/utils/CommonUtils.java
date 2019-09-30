@@ -1091,7 +1091,7 @@ public class CommonUtils {
     }
 
     public static void changeLanguage(Activity context, String languageId) {
-        Prefs.putString("LanguageName", languageId);
+        Prefs.putString(LANGUAGE_NAME, languageId);
         LocaleHelper.setLocale(context, languageId);
     }
 
