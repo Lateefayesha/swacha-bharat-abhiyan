@@ -28,7 +28,7 @@
     <string name="plz_ent_pwd">कृपया पासवर्ड एंटर करा</string>
     <string name="logout_txt">लॉगआउट</string>
     <string name="status_off_duty">ऑफ ड्यूटी</string>
-    <string name="status_on_duty">ऑन ड्यूटी</string>
+    <string name="status_on_duty">"ऑन ड्यूटी "</string>
 
     <string name="select_area_hint">क्षेत्र निवडा</string>
     <string name="hp_gp_id_hint">घर आयडी/कचरा पॉइंट आयडी प्रविष्ट करा</string>
