@@ -49,6 +49,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.pixplicity.easyprefs.library.Prefs;
 import com.riaylibrary.custom_component.GlideCircleTransformation;
+import com.riaylibrary.utils.CommonUtils;
 import com.riaylibrary.utils.LocaleHelper;
 
 import java.lang.reflect.Type;
@@ -518,8 +519,13 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         mar.setLanguageId("2");
         mar.setLanguage("मराठी");
 
+        LanguagePojo hi = new LanguagePojo();
+        hi.setLanguageId(AUtils.LanguageIDConstants.HINDI);
+        hi.setLanguage("हिन्दी");
+
         mLanguagePojoList.add(eng);
         mLanguagePojoList.add(mar);
+        mLanguagePojoList.add(hi);
 
         AUtils.changeLanguage(this, Prefs.getString(AUtils.LANGUAGE_NAME, AUtils.DEFAULT_LANGUAGE_ID));
 
@@ -736,10 +742,16 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
 
         LanguagePojo languagePojo = (LanguagePojo) listItemSelected;
 
-        if (languagePojo.getLanguage().equals("English")) {
-            changeLanguage(AUtils.LanguageConstants.ENGLISH);
-        } else if (languagePojo.getLanguage().equals("मराठी")) {
-            changeLanguage(AUtils.LanguageConstants.MARATHI);
+        switch (languagePojo.getLanguage()) {
+            case "English":
+                changeLanguage(AUtils.LanguageConstants.ENGLISH);
+                break;
+            case "मराठी":
+                changeLanguage(AUtils.LanguageConstants.MARATHI);
+                break;
+            case "हिन्दी":
+                changeLanguage(AUtils.LanguageConstants.MARATHI);
+                break;
         }
     }
 
