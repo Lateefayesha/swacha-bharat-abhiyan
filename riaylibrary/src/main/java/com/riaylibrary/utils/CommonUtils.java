@@ -72,6 +72,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -1166,25 +1167,25 @@ public class CommonUtils {
 
     public interface LanguageNameConstants {
         String ENGLISH      = "ENGLISH";
-        String ASSAMESE     = "ASSAMESE";
-        String BENGALI      = "BENGALI";
-        String BIHARI       = "BIHARI";
-        String BODO         = "BODO";
-        String GUJARATI     = "GUJARATI";
-        String HINDI        = "HINDI";
-        String KANADA       = "KANADA";
-        String KASHMIRI     = "KASHMIRI";
-        String KONKANI      = "KONKANI";
-        String MALAYALAM    = "MALAYALAM";
-        String MARATHI      = "MARATHI";
-        String NEPALI       = "NEPALI";
-        String ORIYA        = "ORIYA";
-        String PUNJABI      = "PUNJABI";
-        String SANSKRIT     = "SANSKRIT";
-        String TAMIL        = "TAMIL";
-        String TELUGU       = "TELUGU";
-        String TIBETAN      = "TIBETAN";
-        String URDU         = "URDU";
+        String ASSAMESE     = "অসমিয়া";
+        String BENGALI      = "বাংলা";
+        String BIHARI       = "बिहारी";
+        String BODO         = "बड़ो";
+        String GUJARATI     = "ગુજરતી";
+        String HINDI        = "हिंदी";
+        String KANADA       = "ಕೆನೆಡಾದ";
+        String KASHMIRI     = "कॉशुर";
+        String KONKANI      = "कोंकणी";
+        String MALAYALAM    = "മലയാളം";
+        String MARATHI      = "मराठी";
+        String NEPALI       = "नेपाली";
+        String ORIYA        = "ଓଡ଼ିଆ";
+        String PUNJABI      = "ਪੰਜਾਬੀ";
+        String SANSKRIT     = "संस्कृत";
+        String TAMIL        = "தமிழ்";
+        String TELUGU       = "తెలుగు";
+        String TIBETAN      = "བོད་ཡིག";
+        String URDU         = "اردو";
     }
 
     public interface LanguageIDConstants {
@@ -1278,6 +1279,74 @@ public class CommonUtils {
             type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
         }
         return type;
+    }
+
+    public static HashMap<String, String> getLanguageHashMapList() {
+
+        HashMap<String, String> languageHashMap = new HashMap<>();
+
+        //English
+        languageHashMap.put(LanguageConstants.ENGLISH,LanguageNameConstants.ENGLISH);
+        languageHashMap.put(LanguageNameConstants.ENGLISH,LanguageConstants.ENGLISH);
+        //ASSAMESE
+        languageHashMap.put(LanguageConstants.ASSAMESE,LanguageNameConstants.ASSAMESE);
+        languageHashMap.put(LanguageNameConstants.ASSAMESE,LanguageConstants.ASSAMESE);
+        //BENGALI
+        languageHashMap.put(LanguageConstants.BENGALI,LanguageNameConstants.BENGALI);
+        languageHashMap.put(LanguageNameConstants.BENGALI,LanguageConstants.BENGALI);
+        //BIHARI
+        languageHashMap.put(LanguageConstants.BIHARI,LanguageNameConstants.BIHARI);
+        languageHashMap.put(LanguageNameConstants.BIHARI,LanguageConstants.BIHARI);
+        //BODO
+        languageHashMap.put(LanguageConstants.BODO,LanguageNameConstants.BODO);
+        languageHashMap.put(LanguageNameConstants.BODO,LanguageConstants.BODO);
+        //GUJARATI
+        languageHashMap.put(LanguageConstants.GUJARATI,LanguageNameConstants.GUJARATI);
+        languageHashMap.put(LanguageNameConstants.GUJARATI,LanguageConstants.GUJARATI);
+        //HINDI
+        languageHashMap.put(LanguageConstants.HINDI,LanguageNameConstants.HINDI);
+        languageHashMap.put(LanguageNameConstants.HINDI,LanguageConstants.HINDI);
+        //KANADA
+        languageHashMap.put(LanguageConstants.KANADA,LanguageNameConstants.KANADA);
+        languageHashMap.put(LanguageNameConstants.KANADA,LanguageConstants.KANADA);
+        //KASHMIRI
+        languageHashMap.put(LanguageConstants.KASHMIRI,LanguageNameConstants.KASHMIRI);
+        languageHashMap.put(LanguageNameConstants.KASHMIRI,LanguageConstants.KASHMIRI);
+        //KONKANI
+        languageHashMap.put(LanguageConstants.KONKANI,LanguageNameConstants.KONKANI);
+        languageHashMap.put(LanguageNameConstants.KONKANI,LanguageConstants.KONKANI);
+        //MALAYALAM
+        languageHashMap.put(LanguageConstants.MALAYALAM,LanguageNameConstants.MALAYALAM);
+        languageHashMap.put(LanguageNameConstants.MALAYALAM,LanguageConstants.MALAYALAM);
+        //MARATHI
+        languageHashMap.put(LanguageConstants.MARATHI,LanguageNameConstants.MARATHI);
+        languageHashMap.put(LanguageNameConstants.MARATHI,LanguageConstants.MARATHI);
+        //NEPALI
+        languageHashMap.put(LanguageConstants.NEPALI,LanguageNameConstants.NEPALI);
+        languageHashMap.put(LanguageNameConstants.NEPALI,LanguageConstants.NEPALI);
+        //ORIYA
+        languageHashMap.put(LanguageConstants.ORIYA,LanguageNameConstants.ORIYA);
+        languageHashMap.put(LanguageNameConstants.ORIYA,LanguageConstants.ORIYA);
+        //PUNJABI
+        languageHashMap.put(LanguageConstants.PUNJABI,LanguageNameConstants.PUNJABI);
+        languageHashMap.put(LanguageNameConstants.PUNJABI,LanguageConstants.PUNJABI);
+        //SANSKRIT
+        languageHashMap.put(LanguageConstants.SANSKRIT,LanguageNameConstants.SANSKRIT);
+        languageHashMap.put(LanguageNameConstants.SANSKRIT,LanguageConstants.SANSKRIT);
+        //TAMIL
+        languageHashMap.put(LanguageConstants.TAMIL,LanguageNameConstants.TAMIL);
+        languageHashMap.put(LanguageNameConstants.TAMIL,LanguageConstants.TAMIL);
+        //TELUGU
+        languageHashMap.put(LanguageConstants.TELUGU,LanguageNameConstants.TELUGU);
+        languageHashMap.put(LanguageNameConstants.TELUGU,LanguageConstants.TELUGU);
+        //TIBETAN
+        languageHashMap.put(LanguageConstants.TIBETAN,LanguageNameConstants.TIBETAN);
+        languageHashMap.put(LanguageNameConstants.TIBETAN,LanguageConstants.TIBETAN);
+        //URDU
+        languageHashMap.put(LanguageConstants.URDU,LanguageNameConstants.URDU);
+        languageHashMap.put(LanguageNameConstants.URDU,LanguageConstants.URDU);
+
+        return languageHashMap;
     }
 }
 
