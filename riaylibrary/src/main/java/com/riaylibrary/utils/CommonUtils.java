@@ -1348,5 +1348,10 @@ public class CommonUtils {
 
         return languageHashMap;
     }
+
+    public static String getAndroidId() {
+        return Settings.Secure.getString(currentContextConstant.getContentResolver(),
+                Settings.Secure.ANDROID_ID);
+    }
 }
 
