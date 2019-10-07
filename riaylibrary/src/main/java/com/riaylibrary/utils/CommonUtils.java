@@ -1353,5 +1353,30 @@ public class CommonUtils {
         return Settings.Secure.getString(currentContextConstant.getContentResolver(),
                 Settings.Secure.ANDROID_ID);
     }
+
+    public static double calculateLatLngDistance(double startLat, double startLng, double endLat, double endLng, String unit) {
+        if (startLat == endLat && startLng == endLng) {
+            return 0.0D;
+        } else {
+            double theta = startLng - endLng;
+            double dist = Math.sin(Math.toRadians(startLat)) * Math.sin(Math.toRadians(endLat)) + Math.cos(Math.toRadians(startLat)) * Math.cos(Math.toRadians(endLat)) * Math.cos(Math.toRadians(theta));
+            dist = Math.acos(dist);
+            dist = Math.toDegrees(dist);
+            dist = dist * 60.0D * 1.1515D;
+            if (unit.equals("K")) {
+                dist *= 1.609344D;
+            } else if (unit.equals("N")) {
+                dist *= 0.8684D;
+            }
+
+            return dist;
+        }
+    }
+
+    public interface DistanceUnit {
+        String KiloMeter = "K";
+        String NauticalMiles = "N";
+        String Meter = "M";
+    }
 }
 
