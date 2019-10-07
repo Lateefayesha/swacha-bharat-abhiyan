@@ -1363,9 +1363,9 @@ public class CommonUtils {
             dist = Math.acos(dist);
             dist = Math.toDegrees(dist);
             dist = dist * 60.0D * 1.1515D;
-            if (unit.equals("K")) {
+            if (unit.equals(UNITS.KiloMeter)) {
                 dist *= 1.609344D;
-            } else if (unit.equals("N")) {
+            } else if (unit.equals(UNITS.NauticalMiles)) {
                 dist *= 0.8684D;
             }
 
@@ -1373,10 +1373,41 @@ public class CommonUtils {
         }
     }
 
-    public interface DistanceUnit {
+    public static long getDifferenceBetweenTime(Date first, Date second, @Nullable String returnUnit) {
+        long difference = 0;
+
+        try {
+
+            if(returnUnit == null)
+                returnUnit = UNITS.unit_min;
+
+            difference = second.getTime() - first.getTime();
+
+            switch (returnUnit) {
+                case UNITS.unit_sec:
+                    difference = difference / 1000;
+                    break;
+                case UNITS.unit_min:
+                    difference = difference / 60000;
+                    break;
+                case UNITS.unit_hour:
+                    difference = difference / 3600000;
+                    break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return difference;
+    }
+
+    public interface UNITS {
         String KiloMeter = "K";
         String NauticalMiles = "N";
         String Meter = "M";
+        String unit_sec = "sec";
+        String unit_min = "min";
+        String unit_hour = "hr";
     }
 }
 
