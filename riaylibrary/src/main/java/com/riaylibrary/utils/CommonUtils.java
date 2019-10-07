@@ -81,32 +81,27 @@ import java.util.regex.Pattern;
 
 public class CommonUtils {
 
-    private static final String TAG = "CommonUtils";
-
-    public static Application mainApplicationConstant;
-    public static Context currentContextConstant;
-
     public static final int MY_PERMISSIONS_REQUEST_CAMERA = 444;
     public static final int MY_PERMISSIONS_REQUEST_STORAGE = 555;
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 666;
-
-    private static final Pattern numberPattern = Pattern.compile("-?\\d+");
-
     public static final String LANGUAGE_NAME = "LanguageName";
-
-    public static Snackbar mSnackbar;
-
     public static final String CONFIRM_LOGOUT_DIALOG = "confirmLogout";
     public static final String CONFIRM_OFFDUTY_DIALOG = "confirmOffDuty";
-
     public static final String VERSION_CODE = "AppVersion";
-
+    public static final int unit_sec = 1;
+    public static final int unit_min = 2;
+    public static final int unit_hour = 3;
+    private static final String TAG = "CommonUtils";
+    private static final Pattern numberPattern = Pattern.compile("-?\\d+");
     private static final String[] tensNames = {"", " ten", " twenty", " thirty", " forty", " fifty",
             " sixty", " seventy", " eighty", " ninety"};
 
     private static final String[] numNames = {"", " one", " two", " three", " four", " five", " six",
             " seven", " eight", " nine", " ten", " eleven", " twelve", " thirteen", " fourteen", " fifteen",
             " sixteen", " seventeen", " eighteen", " nineteen"};
+    public static Application mainApplicationConstant;
+    public static Context currentContextConstant;
+    public static Snackbar mSnackbar;
 
     //app setting for permissions dialog
     public static void showPermissionDialog(Context context, String message,
@@ -133,13 +128,13 @@ public class CommonUtils {
         String positiveText = context.getResources().getString(R.string.yes_txt);
         String negativeText = context.getResources().getString(R.string.no_txt);
 
-        if(type.equals(CONFIRM_LOGOUT_DIALOG)){
+        if (type.equals(CONFIRM_LOGOUT_DIALOG)) {
             title = context.getResources().getString(R.string.logout_confirmation_title);
             message = context.getResources().getString(R.string.logout_confirmation_msg);
-        }else if(type.equals(CONFIRM_OFFDUTY_DIALOG)){
+        } else if (type.equals(CONFIRM_OFFDUTY_DIALOG)) {
             title = context.getResources().getString(R.string.offduty_confirmation_title);
             message = context.getResources().getString(R.string.offduty_confirmation_msg);
-        }else if(type.equals(VERSION_CODE)){
+        } else if (type.equals(VERSION_CODE)) {
             title = context.getResources().getString(R.string.update_title);
             message = context.getResources().getString(R.string.update_message);
             positiveText = context.getResources().getString(R.string.update_txt);
@@ -152,9 +147,9 @@ public class CommonUtils {
                 .setCancelable(false)
                 .setPositiveButton(positiveText, positiveListener);
 
-        if(negativeLisner != null){
+        if (negativeLisner != null) {
             builder.setNegativeButton(negativeText, negativeLisner);
-        }else{
+        } else {
             builder.setNegativeButton(negativeText, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
@@ -170,7 +165,7 @@ public class CommonUtils {
     public static boolean isCameraPermissionGiven(final Context context) {
 
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale((Activity)context, Manifest.permission.CAMERA)) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) context, Manifest.permission.CAMERA)) {
                 //Show Information about why you need the permission
 
                 showPermissionDialog(context, "CAMERA", new DialogInterface.OnClickListener() {
@@ -348,7 +343,7 @@ public class CommonUtils {
     }
 
     public static void warning(Context context, String message, int duration) {
-            MDToast.makeText(context, message, duration, MDToast.TYPE_WARNING).show();
+        MDToast.makeText(context, message, duration, MDToast.TYPE_WARNING).show();
     }
 
     public static void info(Context context, String message) {
@@ -358,11 +353,12 @@ public class CommonUtils {
     public static void info(Context context, String message, int duration) {
         MDToast.makeText(context, message, duration, MDToast.TYPE_INFO).show();
     }
+
     public static void error(Context context, String message) {
         MDToast.makeText(context, message, MDToast.LENGTH_SHORT, MDToast.TYPE_ERROR).show();
     }
 
-    public static void error(Context context, String message, int duration ) {
+    public static void error(Context context, String message, int duration) {
         MDToast.makeText(context, message, duration, MDToast.TYPE_ERROR).show();
     }
 
@@ -413,43 +409,41 @@ public class CommonUtils {
         }
     }
 
-    public static int getBatteryStatus(Application application){
+    public static int getBatteryStatus(Application application) {
         BatteryManager batteryManager = (BatteryManager) application.getApplicationContext().getSystemService(Context.BATTERY_SERVICE);
         return batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY);
     }
 
-    public static int getBatteryStatus(){
+    public static int getBatteryStatus() {
         BatteryManager batteryManager = (BatteryManager) mainApplicationConstant.getApplicationContext().getSystemService(Context.BATTERY_SERVICE);
         return batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY);
     }
 
-    public static boolean isInternetAvailable(Application application)
-    {
+    public static boolean isInternetAvailable(Application application) {
         ConnectivityManager cm = (ConnectivityManager)
                 application.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
 
-    public static boolean isInternetAvailable()
-    {
+    public static boolean isInternetAvailable() {
         ConnectivityManager cm = (ConnectivityManager)
                 mainApplicationConstant.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
 
-    public static boolean isConnectedFast(Context context){
+    public static boolean isConnectedFast(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo info = cm.getActiveNetworkInfo();
-        return (info != null && info.isConnected() && isConnectionFast(info.getType(),info.getSubtype()));
+        return (info != null && info.isConnected() && isConnectionFast(info.getType(), info.getSubtype()));
     }
 
-    public static boolean isConnectionFast(int type, int subType){
-        if(type==ConnectivityManager.TYPE_WIFI){
+    public static boolean isConnectionFast(int type, int subType) {
+        if (type == ConnectivityManager.TYPE_WIFI) {
             return true;
-        }else if(type==ConnectivityManager.TYPE_MOBILE){
-            switch(subType){
+        } else if (type == ConnectivityManager.TYPE_MOBILE) {
+            switch (subType) {
                 case TelephonyManager.NETWORK_TYPE_1xRTT:
                     return false; // ~ 50-100 kbps
                 case TelephonyManager.NETWORK_TYPE_CDMA:
@@ -489,7 +483,7 @@ public class CommonUtils {
                 default:
                     return false;
             }
-        }else{
+        } else {
             return false;
         }
     }
@@ -523,8 +517,8 @@ public class CommonUtils {
         List<ResolveInfo> otherApps = context.getPackageManager().queryIntentActivities(rateIntent, 0);
         Iterator var4 = otherApps.iterator();
 
-        while(var4.hasNext()) {
-            ResolveInfo otherApp = (ResolveInfo)var4.next();
+        while (var4.hasNext()) {
+            ResolveInfo otherApp = (ResolveInfo) var4.next();
             if (otherApp.activityInfo.applicationInfo.packageName.equals("com.android.vending")) {
                 ActivityInfo otherAppActivity = otherApp.activityInfo;
                 ComponentName componentName = new ComponentName(otherAppActivity.applicationInfo.packageName, otherAppActivity.name);
@@ -604,7 +598,7 @@ public class CommonUtils {
 
         try {
             String expression = "^[-+]?[0-9]*\\.?[0-9]+$";
-            CharSequence inputStr = (CharSequence)object;
+            CharSequence inputStr = (CharSequence) object;
             Pattern pattern = Pattern.compile(expression);
             Matcher matcher = pattern.matcher(inputStr);
             if (matcher.matches()) {
@@ -618,11 +612,11 @@ public class CommonUtils {
     }
 
     public static Number randomNumber() {
-        return (int)(Math.random() * 32767.0D);
+        return (int) (Math.random() * 32767.0D);
     }
 
     public static String randomString() {
-        return Integer.toString((int)(Math.random() * 2.147483647E9D), 36);
+        return Integer.toString((int) (Math.random() * 2.147483647E9D), 36);
     }
 
     public static boolean isNumber(String string) {
@@ -695,7 +689,7 @@ public class CommonUtils {
         boolean isValid = false;
 
         try {
-            CharSequence inputStr = (CharSequence)object;
+            CharSequence inputStr = (CharSequence) object;
             Pattern pattern = Pattern.compile(regularExpression, Pattern.CASE_INSENSITIVE);
             Matcher matcher = pattern.matcher(inputStr);
             if (matcher.matches()) {
@@ -756,7 +750,7 @@ public class CommonUtils {
     public static void smsDialog(Context context, String phNo) {
         try {
             context.startActivity(new Intent("android.intent.action.VIEW",
-                    Uri.fromParts("sms", phNo, (String)null)));
+                    Uri.fromParts("sms", phNo, (String) null)));
         } catch (ActivityNotFoundException var3) {
             Toast.makeText(context, "There are no SMS clients installed.", Toast.LENGTH_SHORT).show();
         }
@@ -777,7 +771,7 @@ public class CommonUtils {
         byte[] var3 = hash;
         int var4 = hash.length;
 
-        for(int var5 = 0; var5 < var4; ++var5) {
+        for (int var5 = 0; var5 < var4; ++var5) {
             byte b = var3[var5];
             if ((b & 255) < 16) {
                 hex.append("0");
@@ -790,24 +784,24 @@ public class CommonUtils {
     }
 
     public static long roundOff(double originalValue) {
-        long tempValue = (long)originalValue;
-        double decimalVal = originalValue - (double)tempValue;
+        long tempValue = (long) originalValue;
+        double decimalVal = originalValue - (double) tempValue;
         if (decimalVal > 0.0D) {
             ++tempValue;
         } else {
-            tempValue = (long)originalValue;
+            tempValue = (long) originalValue;
         }
 
         return tempValue;
     }
 
-    public static String getIMEINo (Context ctx) {
-        TelephonyManager telephonyManager = (TelephonyManager)ctx.getSystemService(Context.TELEPHONY_SERVICE);
+    public static String getIMEINo(Context ctx) {
+        TelephonyManager telephonyManager = (TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE);
         @SuppressLint("MissingPermission") String deviceId = telephonyManager.getDeviceId();
         return deviceId;
     }
 
-    public static String getAndroidId (Context context) {
+    public static String getAndroidId(Context context) {
         return Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
     }
 
@@ -841,7 +835,7 @@ public class CommonUtils {
             prop.load(new FileInputStream(propertiesPath));
             FileOutputStream fos = new FileOutputStream(propertiesPath);
             prop.setProperty(key, value);
-            prop.store(fos, (String)null);
+            prop.store(fos, (String) null);
             fos.close();
         } catch (Exception var6) {
             var6.printStackTrace();
@@ -924,7 +918,7 @@ public class CommonUtils {
                 file.delete();
             }
 
-            DownloadManager mgr = (DownloadManager)context.getSystemService(Context.DOWNLOAD_SERVICE);
+            DownloadManager mgr = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
             Uri downloadUri = Uri.parse(imageUrl);
             DownloadManager.Request request = new DownloadManager.Request(downloadUri);
             request.setAllowedNetworkTypes(3).setAllowedOverRoaming(true).setTitle("Downloading app data").setDestinationInExternalPublicDir(folderName, fileName);
@@ -938,7 +932,7 @@ public class CommonUtils {
     }
 
     public static void notifyMediaScannerService(Context context, String path) {
-        MediaScannerConnection.scanFile(context, new String[]{path}, (String[])null, new MediaScannerConnection.OnScanCompletedListener() {
+        MediaScannerConnection.scanFile(context, new String[]{path}, (String[]) null, new MediaScannerConnection.OnScanCompletedListener() {
             public void onScanCompleted(String path, Uri uri) {
                 Log.i("ExternalStorage", "Scanned " + path + ":");
                 Log.i("ExternalStorage", "-> uri=" + uri);
@@ -947,14 +941,14 @@ public class CommonUtils {
     }
 
     public static void clearSharedPref(Context context) {
-        SharedPreferences preferences = context.getSharedPreferences((String)null, 0);
+        SharedPreferences preferences = context.getSharedPreferences((String) null, 0);
         SharedPreferences.Editor editor = preferences.edit();
         editor.clear();
         editor.commit();
     }
 
     public static int hexToRgb(String hex) {
-        int color = (int)Long.parseLong(hex.replace("#", ""), 16);
+        int color = (int) Long.parseLong(hex.replace("#", ""), 16);
         int r = color >> 16 & 255;
         int g = color >> 8 & 255;
         int b = color >> 0 & 255;
@@ -1033,11 +1027,10 @@ public class CommonUtils {
     public static String convertLessThanOneThousand(int number) {
         String soFar;
 
-        if (number % 100 < 20){
+        if (number % 100 < 20) {
             soFar = numNames[number % 100];
             number /= 100;
-        }
-        else {
+        } else {
             soFar = numNames[number % 10];
             number /= 10;
 
@@ -1096,8 +1089,7 @@ public class CommonUtils {
     }
 
     public static String getLanguageId(String languageName) {
-        switch (languageName)
-        {
+        switch (languageName) {
             case LanguageConstants.ASSAMESE:
                 return LanguageIDConstants.ASSAMESE;
             case LanguageConstants.BENGALI:
@@ -1141,50 +1133,132 @@ public class CommonUtils {
         }
     }
 
+    public static void hideSnackBar() {
+        if (mSnackbar != null && mSnackbar.isShown()) {
+            mSnackbar.dismiss();
+        }
+    }
+
+    public static void showSnackBar(View parent) {
+        mSnackbar = Snackbar.make(parent, "", Snackbar.LENGTH_INDEFINITE);
+        Snackbar.SnackbarLayout v = (Snackbar.SnackbarLayout) mSnackbar.getView();
+        View layout = LayoutInflater.from(currentContextConstant).inflate(R.layout.snackbar_custom_layout, null);
+        v.addView(layout, 0);
+        mSnackbar.show();
+    }
+
+    public static GenericRequestBuilder<Uri, InputStream, SVG, PictureDrawable> getGenericRequestBuilder
+            (Context context, int placeholderImage, int errorImage) {
+        return Glide.with(context)
+                .using(Glide.buildStreamModelLoader(Uri.class, context), InputStream.class)
+                .from(Uri.class)
+                .as(SVG.class)
+                .transcode(new SvgDrawableTranscoder(), PictureDrawable.class)
+                .sourceEncoder(new StreamEncoder())
+                .cacheDecoder(new FileToStreamDecoder<SVG>(new SvgDecoder()))
+                .decoder(new SvgDecoder())
+                .placeholder(placeholderImage)
+                .error(errorImage)
+                .animate(android.R.anim.fade_in)
+                .listener(new SvgSoftwareLayerSetter<Uri>());
+    }
+
+    public static String getMimeType(String url) {
+        String type = null;
+        String extension = MimeTypeMap.getFileExtensionFromUrl(url);
+        if (extension != null) {
+            type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+        }
+        return type;
+    }
+
+    public static long getDifferenceBetweenTime(Date first, Date second, @Nullable int returnUnit) {
+        long difference = 0;
+
+        try {
+
+            difference = second.getTime() - first.getTime();
+
+            switch (returnUnit) {
+                case unit_sec:
+                    difference = difference / 1000;
+                    break;
+                case unit_min:
+                    difference = difference / 60000;
+                    break;
+                case unit_hour:
+                    difference = difference / 3600000;
+                    break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return difference;
+    }
+
+    public static double calculateLatLngDistance(double startLat, double startLng, double endLat, double endLng, String unit) {
+        if ((startLat == endLat) && (startLng == endLng)) {
+            return 0;
+        } else {
+            double theta = startLng - endLng;
+            double dist = Math.sin(Math.toRadians(startLat)) * Math.sin(Math.toRadians(endLat)) + Math.cos(Math.toRadians(startLat)) * Math.cos(Math.toRadians(endLat)) * Math.cos(Math.toRadians(theta));
+            dist = Math.acos(dist);
+            dist = Math.toDegrees(dist);
+            dist = dist * 60 * 1.1515;
+            if (unit.equals(DistanceUnit.KiloMeter)) {
+                dist = dist * 1.609344;
+            } else if (unit.equals(DistanceUnit.NauticalMiles)) {
+                dist = dist * 0.8684;
+            }
+            return (dist);
+        }
+    }
+
     public interface LanguageConstants {
-        String ENGLISH      = "en";
-        String ASSAMESE     = "as";
-        String BENGALI      = "bn";
-        String BIHARI       = "bh";
-        String BODO         = "brx";
-        String GUJARATI     = "gu";
-        String HINDI        = "hi";
-        String KANADA       = "kn";
-        String KASHMIRI     = "ks";
-        String KONKANI      = "kok";
-        String MALAYALAM    = "ml";
-        String MARATHI      = "mr";
-        String NEPALI       = "ne";
-        String ORIYA        = "or";
-        String PUNJABI      = "pa";
-        String SANSKRIT     = "sa";
-        String TAMIL        = "ta";
-        String TELUGU       = "te";
-        String TIBETAN      = "bo";
-        String URDU         = "ur";
+        String ENGLISH = "en";
+        String ASSAMESE = "as";
+        String BENGALI = "bn";
+        String BIHARI = "bh";
+        String BODO = "brx";
+        String GUJARATI = "gu";
+        String HINDI = "hi";
+        String KANADA = "kn";
+        String KASHMIRI = "ks";
+        String KONKANI = "kok";
+        String MALAYALAM = "ml";
+        String MARATHI = "mr";
+        String NEPALI = "ne";
+        String ORIYA = "or";
+        String PUNJABI = "pa";
+        String SANSKRIT = "sa";
+        String TAMIL = "ta";
+        String TELUGU = "te";
+        String TIBETAN = "bo";
+        String URDU = "ur";
     }
 
     public interface LanguageIDConstants {
-        String ENGLISH      = "1";
-        String ASSAMESE     = "5";
-        String BENGALI      = "6";
-        String BIHARI       = "7";
-        String BODO         = "8";
-        String GUJARATI     = "9";
-        String HINDI        = "3";
-        String KANADA       = "10";
-        String KASHMIRI     = "11";
-        String KONKANI      = "12";
-        String MALAYALAM    = "13";
-        String MARATHI      = "2";
-        String NEPALI       = "14";
-        String ORIYA        = "15";
-        String PUNJABI      = "4";
-        String SANSKRIT     = "16";
-        String TAMIL        = "17";
-        String TELUGU       = "18";
-        String TIBETAN      = "19";
-        String URDU         = "20";
+        String ENGLISH = "1";
+        String ASSAMESE = "5";
+        String BENGALI = "6";
+        String BIHARI = "7";
+        String BODO = "8";
+        String GUJARATI = "9";
+        String HINDI = "3";
+        String KANADA = "10";
+        String KASHMIRI = "11";
+        String KONKANI = "12";
+        String MALAYALAM = "13";
+        String MARATHI = "2";
+        String NEPALI = "14";
+        String ORIYA = "15";
+        String PUNJABI = "4";
+        String SANSKRIT = "16";
+        String TAMIL = "17";
+        String TELUGU = "18";
+        String TIBETAN = "19";
+        String URDU = "20";
     }
 
     public interface FileExtentions {
@@ -1214,47 +1288,10 @@ public class CommonUtils {
         String PARENT_FOLDER = "ParentDirectory";
     }
 
-    public static void hideSnackBar()
-    {
-        if(mSnackbar != null && mSnackbar.isShown())
-        {
-            mSnackbar.dismiss();
-        }
-    }
-
-    public static void showSnackBar(View parent)
-    {
-        mSnackbar = Snackbar.make(parent, "", Snackbar.LENGTH_INDEFINITE);
-        Snackbar.SnackbarLayout v = (Snackbar.SnackbarLayout) mSnackbar.getView();
-        View layout = LayoutInflater.from(currentContextConstant).inflate(R.layout.snackbar_custom_layout, null);
-        v.addView(layout, 0);
-        mSnackbar.show();
-    }
-
-    public static GenericRequestBuilder<Uri, InputStream, SVG, PictureDrawable> getGenericRequestBuilder
-            (Context context,int placeholderImage, int errorImage)
-    {
-        return Glide.with(context)
-                .using(Glide.buildStreamModelLoader(Uri.class, context), InputStream.class)
-                .from(Uri.class)
-                .as(SVG.class)
-                .transcode(new SvgDrawableTranscoder(), PictureDrawable.class)
-                .sourceEncoder(new StreamEncoder())
-                .cacheDecoder(new FileToStreamDecoder<SVG>(new SvgDecoder()))
-                .decoder(new SvgDecoder())
-                .placeholder(placeholderImage)
-                .error(errorImage)
-                .animate(android.R.anim.fade_in)
-                .listener(new SvgSoftwareLayerSetter<Uri>());
-    }
-
-    public static String getMimeType(String url) {
-        String type = null;
-        String extension = MimeTypeMap.getFileExtensionFromUrl(url);
-        if (extension != null) {
-            type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
-        }
-        return type;
+    public interface DistanceUnit {
+        String KiloMeter = "K";
+        String NauticalMiles = "N";
+        String Meter = "M";
     }
 }
 
