@@ -331,12 +331,16 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
 
         LanguagePojo languagePojo = (LanguagePojo) listItemSelected;
 
-        if (languagePojo.getLanguage().equals("English")) {
-            changeLanguage(AUtils.LanguageConstants.ENGLISH);
-        } else if (languagePojo.getLanguage().equals("मराठी")) {
-            changeLanguage(AUtils.LanguageConstants.MARATHI);
-        } else if (languagePojo.getLanguage().equals("हिन्दी")) {
-            changeLanguage(AUtils.LanguageConstants.HINDI);
+        switch (languagePojo.getLanguage()) {
+            case AUtils.LanguageNameConstants.ENGLISH:
+                changeLanguage(AUtils.LanguageConstants.ENGLISH);
+                break;
+            case AUtils.LanguageNameConstants.MARATHI:
+                changeLanguage(AUtils.LanguageConstants.MARATHI);
+                break;
+            case AUtils.LanguageNameConstants.HINDI:
+                changeLanguage(AUtils.LanguageConstants.HINDI);
+                break;
         }
     }
 
@@ -346,19 +350,19 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
         List<LanguagePojo> mLanguagePojoList = new ArrayList<>();
 
         LanguagePojo eng = new LanguagePojo();
-        eng.setLanguage("English");
-        eng.setLanguageId("1");
+        eng.setLanguage(AUtils.LanguageNameConstants.ENGLISH);
+        eng.setLanguageId(AUtils.LanguageIDConstants.ENGLISH);
 
         LanguagePojo mar = new LanguagePojo();
-        mar.setLanguageId("2");
-        mar.setLanguage("मराठी");
+        mar.setLanguageId(AUtils.LanguageIDConstants.MARATHI);
+        mar.setLanguage(AUtils.LanguageNameConstants.MARATHI);
 
         LanguagePojo hi = new LanguagePojo();
         hi.setLanguageId(AUtils.LanguageIDConstants.HINDI);
-        hi.setLanguage("हिन्दी");
+        hi.setLanguage(AUtils.LanguageNameConstants.HINDI);
 
         mLanguagePojoList.add(eng);
-        mLanguagePojoList.add(mar);
+//        mLanguagePojoList.add(mar);
         mLanguagePojoList.add(hi);
 
         AUtils.changeLanguage(this, Prefs.getString(AUtils.LANGUAGE_NAME, AUtils.DEFAULT_LANGUAGE_ID));

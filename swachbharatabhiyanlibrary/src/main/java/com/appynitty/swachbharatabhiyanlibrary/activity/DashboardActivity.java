@@ -512,19 +512,19 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         List<LanguagePojo> mLanguagePojoList = new ArrayList<>();
 
         LanguagePojo eng = new LanguagePojo();
-        eng.setLanguage("English");
-        eng.setLanguageId("1");
+        eng.setLanguage(AUtils.LanguageNameConstants.ENGLISH);
+        eng.setLanguageId(AUtils.LanguageIDConstants.ENGLISH);
 
         LanguagePojo mar = new LanguagePojo();
-        mar.setLanguageId("2");
-        mar.setLanguage("मराठी");
+        mar.setLanguageId(AUtils.LanguageIDConstants.MARATHI);
+        mar.setLanguage(AUtils.LanguageNameConstants.MARATHI);
 
         LanguagePojo hi = new LanguagePojo();
         hi.setLanguageId(AUtils.LanguageIDConstants.HINDI);
-        hi.setLanguage("हिन्दी");
+        hi.setLanguage(AUtils.LanguageNameConstants.HINDI);
 
         mLanguagePojoList.add(eng);
-        mLanguagePojoList.add(mar);
+//        mLanguagePojoList.add(mar);
         mLanguagePojoList.add(hi);
 
         AUtils.changeLanguage(this, Prefs.getString(AUtils.LANGUAGE_NAME, AUtils.DEFAULT_LANGUAGE_ID));
@@ -743,14 +743,14 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         LanguagePojo languagePojo = (LanguagePojo) listItemSelected;
 
         switch (languagePojo.getLanguage()) {
-            case "English":
+            case AUtils.LanguageNameConstants.ENGLISH:
                 changeLanguage(AUtils.LanguageConstants.ENGLISH);
                 break;
-            case "मराठी":
+            case AUtils.LanguageNameConstants.MARATHI:
                 changeLanguage(AUtils.LanguageConstants.MARATHI);
                 break;
-            case "हिन्दी":
-                changeLanguage(AUtils.LanguageConstants.MARATHI);
+            case AUtils.LanguageNameConstants.HINDI:
+                changeLanguage(AUtils.LanguageConstants.HINDI);
                 break;
         }
     }

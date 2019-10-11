@@ -46,6 +46,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.pixplicity.easyprefs.library.Prefs;
 import com.riaylibrary.custom_component.GlideCircleTransformation;
+import com.riaylibrary.utils.CommonUtils;
 import com.riaylibrary.utils.LocaleHelper;
 
 import java.lang.reflect.Type;
@@ -439,15 +440,20 @@ public class EmpDashboardActivity extends AppCompatActivity implements EmpPopUpD
         List<LanguagePojo> mLanguagePojoList = new ArrayList<>();
 
         LanguagePojo eng = new LanguagePojo();
-        eng.setLanguage("English");
-        eng.setLanguageId("1");
+        eng.setLanguage(AUtils.LanguageNameConstants.ENGLISH);
+        eng.setLanguageId(AUtils.LanguageIDConstants.ENGLISH);
 
         LanguagePojo mar = new LanguagePojo();
-        mar.setLanguageId("2");
-        mar.setLanguage("मराठी");
+        mar.setLanguageId(AUtils.LanguageIDConstants.MARATHI);
+        mar.setLanguage(AUtils.LanguageNameConstants.MARATHI);
+
+        LanguagePojo hi = new LanguagePojo();
+        hi.setLanguageId(AUtils.LanguageIDConstants.HINDI);
+        hi.setLanguage(AUtils.LanguageNameConstants.HINDI);
 
         mLanguagePojoList.add(eng);
-        mLanguagePojoList.add(mar);
+//        mLanguagePojoList.add(mar);
+        mLanguagePojoList.add(hi);
 
         AUtils.changeLanguage(this, Prefs.getString(AUtils.LANGUAGE_NAME, AUtils.DEFAULT_LANGUAGE_ID));
 
@@ -615,10 +621,16 @@ public class EmpDashboardActivity extends AppCompatActivity implements EmpPopUpD
 
         LanguagePojo languagePojo = (LanguagePojo) listItemSelected;
 
-        if (languagePojo.getLanguage().equals("English")) {
-            changeLanguage(AUtils.LanguageConstants.ENGLISH);
-        } else if (languagePojo.getLanguage().equals("मराठी")) {
-            changeLanguage(AUtils.LanguageConstants.MARATHI);
+        switch (languagePojo.getLanguage()) {
+            case AUtils.LanguageNameConstants.ENGLISH:
+                changeLanguage(AUtils.LanguageConstants.ENGLISH);
+                break;
+            case AUtils.LanguageNameConstants.MARATHI:
+                changeLanguage(AUtils.LanguageConstants.MARATHI);
+                break;
+            case AUtils.LanguageNameConstants.HINDI:
+                changeLanguage(AUtils.LanguageConstants.HINDI);
+                break;
         }
     }
 

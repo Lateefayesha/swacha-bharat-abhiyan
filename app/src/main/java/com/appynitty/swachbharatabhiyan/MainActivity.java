@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        Prefs.putString(AUtils.APP_ID, "1003");
+        Prefs.putString(AUtils.APP_ID, "1");
 //        Prefs.putInt(AUtils.VERSION_CODE, BuildConfig.VERSION_CODE);
         Prefs.putInt(AUtils.VERSION_CODE, 20);
 
