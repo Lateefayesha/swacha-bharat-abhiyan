@@ -362,8 +362,8 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
         hi.setLanguage(AUtils.LanguageNameConstants.HINDI);
 
         mLanguagePojoList.add(eng);
-//        mLanguagePojoList.add(mar);
-        mLanguagePojoList.add(hi);
+        mLanguagePojoList.add(mar);
+//        mLanguagePojoList.add(hi);
 
         AUtils.changeLanguage(this, Prefs.getString(AUtils.LANGUAGE_NAME, AUtils.DEFAULT_LANGUAGE_ID));
 

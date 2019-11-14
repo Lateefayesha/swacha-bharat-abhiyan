@@ -35,7 +35,7 @@ public class InternalWebviewClient extends WebViewClient {
     public void onPageCommitVisible(WebView view, String url) {
         super.onPageCommitVisible(view, url);
         if(progressDialog != null && progressDialog.isShowing()){
-            progressDialog.hide();
+            progressDialog.dismiss();
             progressDialog = null;
         }
     }
@@ -44,7 +44,7 @@ public class InternalWebviewClient extends WebViewClient {
     public void onPageFinished(WebView view, String url) {
         super.onPageFinished(view, url);
         if(progressDialog != null && progressDialog.isShowing()){
-            progressDialog.hide();
+            progressDialog.dismiss();
             progressDialog = null;
         }
     }
