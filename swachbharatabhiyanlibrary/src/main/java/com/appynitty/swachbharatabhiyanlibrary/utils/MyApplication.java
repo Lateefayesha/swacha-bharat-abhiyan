@@ -79,16 +79,6 @@ public class MyApplication extends Application {
         scheduleJob();
     }
 
-    @Override
-    protected void attachBaseContext(Context base) {
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            super.attachBaseContext(LocaleHelper.onAttach(base, AUtils.DEFAULT_LANGUAGE_ID));
-        } else {
-            super.attachBaseContext(base);
-        }
-    }
-
     public void startLocationTracking()
     {
         Intent intent = new Intent(this, ForgroundService.class);
