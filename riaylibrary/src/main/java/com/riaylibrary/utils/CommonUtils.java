@@ -20,6 +20,7 @@ import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.PictureDrawable;
 import android.location.LocationManager;
 import android.media.MediaScannerConnection;
@@ -1399,6 +1400,17 @@ public class CommonUtils {
         }
 
         return difference;
+    }
+
+    public static AlertDialog getAlertDialog(Context context, int layoutId){
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        View view = LayoutInflater.from(context).inflate(layoutId, null);
+        AlertDialog alertDialog = builder.setCancelable(true)
+                .setView(view)
+                .create();
+        alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        return alertDialog;
     }
 
     public interface UNITS {
