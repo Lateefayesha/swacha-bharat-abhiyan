@@ -335,7 +335,6 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
 
     private void changeLanguage() {
         HashMap<Integer, Object> mLanguage = new HashMap<>();
-
         List<LanguagePojo> mLanguagePojoList = AUtils.getLanguagePojoList();
 
         AUtils.changeLanguage(this, Prefs.getString(AUtils.LANGUAGE_NAME, AUtils.DEFAULT_LANGUAGE_ID));

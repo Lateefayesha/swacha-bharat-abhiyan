@@ -88,10 +88,8 @@ public class InternalWebviewClient extends WebViewClient {
             return true;
 
         }else if(stringUrl.contains("market:") || stringUrl.contains("//play.google.com")){
-
             mContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(stringUrl)));
             return true;
-
         }else{
             return false;
         }
