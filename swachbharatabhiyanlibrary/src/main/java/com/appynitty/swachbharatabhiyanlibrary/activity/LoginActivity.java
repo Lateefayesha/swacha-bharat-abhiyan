@@ -26,6 +26,7 @@ import com.appynitty.swachbharatabhiyanlibrary.pojos.LoginPojo;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 import com.google.android.material.snackbar.Snackbar;
 import com.pixplicity.easyprefs.library.Prefs;
+import com.riaylibrary.utils.CommonUtils;
 import com.riaylibrary.utils.LocaleHelper;
 
 import java.util.ArrayList;
@@ -109,11 +110,9 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        if(AUtils.isInternetAvailable())
-        {
+        if (AUtils.isInternetAvailable()) {
             AUtils.hideSnackBar();
-        }
-        else {
+        } else {
             AUtils.showSnackBar(findViewById(R.id.parent));
         }
     }
@@ -132,7 +131,7 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
         }
     }
 
-    private void initComponents(){
+    private void initComponents() {
         generateId();
         registerEvents();
         initData();
@@ -178,9 +177,9 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
             public void onSuccessCallBack() {
                 String message = "";
 
-                if(Prefs.getString(AUtils.LANGUAGE_NAME, AUtils.DEFAULT_LANGUAGE_ID).equals("2")){
+                if (Prefs.getString(AUtils.LANGUAGE_NAME, AUtils.DEFAULT_LANGUAGE_ID).equals("2")) {
                     message = mAdapter.getLoginDetailsPojo().getMessageMar();
-                }else{
+                } else {
                     message = mAdapter.getLoginDetailsPojo().getMessage();
                 }
 
@@ -188,14 +187,14 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
                 Prefs.putString(AUtils.PREFS.USER_TYPE, mAdapter.getLoginDetailsPojo().getType());
                 Prefs.putString(AUtils.PREFS.USER_TYPE_ID, mAdapter.getLoginDetailsPojo().getTypeId());
 
-                Prefs.putBoolean(AUtils.PREFS.IS_GT_FEATURE, (boolean)mAdapter.getLoginDetailsPojo().getGtFeatures());
+                Prefs.putBoolean(AUtils.PREFS.IS_GT_FEATURE, (boolean) mAdapter.getLoginDetailsPojo().getGtFeatures());
 
                 Prefs.putBoolean(AUtils.PREFS.IS_USER_LOGIN, true);
 
                 AUtils.success(mContext, message, Toast.LENGTH_SHORT);
                 Intent intent;
 
-                if(mAdapter.getLoginDetailsPojo().getTypeId().equals("1"))
+                if (mAdapter.getLoginDetailsPojo().getTypeId().equals("1"))
                     intent = new Intent(LoginActivity.this, EmpDashboardActivity.class);
                 else
                     intent = new Intent(LoginActivity.this, DashboardActivity.class);
@@ -209,9 +208,9 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
             public void onSuccessFailureCallBack() {
                 String message = "";
 
-                if(Prefs.getString(AUtils.LANGUAGE_NAME, AUtils.DEFAULT_LANGUAGE_ID).equals("2")){
+                if (Prefs.getString(AUtils.LANGUAGE_NAME, AUtils.DEFAULT_LANGUAGE_ID).equals("2")) {
                     message = mAdapter.getLoginDetailsPojo().getMessageMar();
-                }else{
+                } else {
                     message = mAdapter.getLoginDetailsPojo().getMessage();
                 }
 
@@ -265,7 +264,7 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
         loginPojo.setUserId("");*/
         loginPojo.setUserLoginId(txtUserName.getText().toString());
         loginPojo.setUserPassword(txtUserPwd.getText().toString());
-        TelephonyManager telephonyManager = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
+        TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 
         @SuppressLint("MissingPermission") String deviceid = telephonyManager.getDeviceId();
 
@@ -331,33 +330,17 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
     private void onLanguageTypeDialogClose(Object listItemSelected) {
 
         LanguagePojo languagePojo = (LanguagePojo) listItemSelected;
-
-        if (languagePojo.getLanguage().equals("English")) {
-            changeLanguage(AUtils.LanguageConstants.ENGLISH);
-        } else if (languagePojo.getLanguage().equals("मराठी")) {
-            changeLanguage(AUtils.LanguageConstants.MARATHI);
-        }
+        changeLanguage(AUtils.setLanguage(languagePojo.getLanguage()));
     }
 
-    private void changeLanguage(){
-        HashMap<Integer,Object> mLanguage = new HashMap<>();
+    private void changeLanguage() {
+        HashMap<Integer, Object> mLanguage = new HashMap<>();
 
-        List<LanguagePojo> mLanguagePojoList = new ArrayList<>();
-
-        LanguagePojo eng = new LanguagePojo();
-        eng.setLanguage("English");
-        eng.setLanguageId("1");
-
-        LanguagePojo mar = new LanguagePojo();
-        mar.setLanguageId("2");
-        mar.setLanguage("मराठी");
-
-        mLanguagePojoList.add(eng);
-        mLanguagePojoList.add(mar);
+        List<LanguagePojo> mLanguagePojoList = AUtils.getLanguagePojoList();
 
         AUtils.changeLanguage(this, Prefs.getString(AUtils.LANGUAGE_NAME, AUtils.DEFAULT_LANGUAGE_ID));
 
-        if(!AUtils.isNull(mLanguagePojoList) && !mLanguagePojoList.isEmpty()) {
+        if (!AUtils.isNull(mLanguagePojoList) && !mLanguagePojoList.isEmpty()) {
             for (int i = 0; i < mLanguagePojoList.size(); i++) {
                 mLanguage.put(i, mLanguagePojoList.get(i));
             }

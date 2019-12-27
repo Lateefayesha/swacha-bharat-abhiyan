@@ -12,7 +12,7 @@ import com.appynitty.swachbharatabhiyanlibrary.pojos.EmpLoginPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.EmpOutPunchPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.EmpWorkHistoryDetailPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.UserDetailPojo;
-import com.appynitty.swachbharatabhiyanlibrary.pojos.WorkHistoryPojo;
+import com.appynitty.swachbharatabhiyanlibrary.pojos.TableDataCountPojo;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 import com.appynitty.swachbharatabhiyanlibrary.webservices.CheckAttendanceWebService;
 import com.appynitty.swachbharatabhiyanlibrary.webservices.EmpLoginWebService;
@@ -138,7 +138,7 @@ public class EmpSyncServer {
 
     public boolean pullWorkHistoryListFromServer(String year, String month) {
 
-        List<WorkHistoryPojo> workHistoryPojoList = null;
+        List<TableDataCountPojo.WorkHistory> workHistoryPojoList = null;
 
         try {
 
@@ -148,7 +148,7 @@ public class EmpSyncServer {
 
             if (!AUtils.isNull(workHistoryPojoList)) {
 
-                Type type = new TypeToken<List<WorkHistoryPojo>>() {
+                Type type = new TypeToken<List<TableDataCountPojo>>() {
                 }.getType();
                 Prefs.putString(AUtils.PREFS.WORK_HISTORY_POJO_LIST, gson.toJson(workHistoryPojoList, type));
 

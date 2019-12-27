@@ -48,7 +48,8 @@ import com.appynitty.swachbharatabhiyanlibrary.pojos.GarbageCollectionPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.GcResultPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.ImagePojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.OfflineGarbageColectionPojo;
-import com.appynitty.swachbharatabhiyanlibrary.repository.SyncServerRepository;
+import com.appynitty.swachbharatabhiyanlibrary.repository.SyncOfflineAttendanceRepository;
+import com.appynitty.swachbharatabhiyanlibrary.repository.SyncOfflineRepository;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 import com.appynitty.swachbharatabhiyanlibrary.utils.MyApplication;
 import com.google.android.material.textfield.TextInputLayout;
@@ -97,7 +98,9 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
 
     GarbageCollectionPojo garbageCollectionPojo;
 
-    private SyncServerRepository syncServerRepository;
+//    private SyncServerRepository syncServerRepository; //TODO
+    private SyncOfflineRepository syncOfflineRepository;
+    private SyncOfflineAttendanceRepository syncOfflineAttendanceRepository;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -306,7 +309,9 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
 
         initToolbar();
 
-        syncServerRepository = new SyncServerRepository(AUtils.mainApplicationConstant.getApplicationContext());
+//        syncServerRepository = new SyncServerRepository(AUtils.mainApplicationConstant.getApplicationContext()); //TODO
+        syncOfflineRepository = new SyncOfflineRepository(AUtils.mainApplicationConstant.getApplicationContext());
+        syncOfflineAttendanceRepository = new SyncOfflineAttendanceRepository(AUtils.mainApplicationConstant.getApplicationContext());
     }
 
     protected void initToolbar(){
@@ -549,7 +554,7 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
         mAdapter.setGarbageCollectionListener(new GarbageCollectionAdapterClass.GarbageCollectionListener() {
             @Override
             public void onSuccessCallBack() {
-                if(mAdapter.getResultPojo().isAttendenceOff())
+                if(mAdapter.getResultPojo().isAttendenceOff() && !syncOfflineAttendanceRepository.checkIsAttendanceIn())
                 {
                     AUtils.setIsOnduty(false);
                     ((MyApplication)AUtils.mainApplicationConstant).stopLocationTracking();
@@ -737,9 +742,9 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
 
             if (!GpsStatus) {
                 startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-            }else{
-                AUtils.saveLocation(locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER));
-            }
+            }//else{
+               // AUtils.saveLocation(locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER));
+           // }
         }
     }
 
@@ -784,23 +789,23 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
 
         stopCamera();
         setGarbageCollectionPojo(houseNo,garbageType,comment);
-        if(AUtils.isInternetAvailable() && AUtils.isConnectedFast(mContext)) {
-            mAdapter.submitQR(garbageCollectionPojo);
-        }
-        else {
+//        if(AUtils.isInternetAvailable() && AUtils.isConnectedFast(mContext)) {
+//            mAdapter.submitQR(garbageCollectionPojo);
+//        }
+//        else {
             insertToDB(garbageCollectionPojo);
-        }
+//        }
     }
 
     private void startSubmitQRAsyncTask(HashMap<String, String> map){
 
         stopCamera();
         setGarbageCollectionPojo(map);
-        if(AUtils.isInternetAvailable() && AUtils.isConnectedFast(mContext)) {
-            mAdapter.submitQR(garbageCollectionPojo);
-        } else {
+//        if(AUtils.isInternetAvailable() && AUtils.isConnectedFast(mContext)) {
+//            mAdapter.submitQR(garbageCollectionPojo);
+//        } else {
             insertToDB(garbageCollectionPojo);
-        }
+//        }
     }
 
     private void getDumpYardDetails(final String houseNo){
@@ -918,6 +923,9 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
         garbageCollectionPojo.setId(houseNo);
         garbageCollectionPojo.setGarbageType(garbageType);
         garbageCollectionPojo.setComment(comment);
+        double newlat = Double.parseDouble(Prefs.getString(AUtils.LAT, "0"));
+        double newlng = Double.parseDouble(Prefs.getString(AUtils.LONG, "0"));
+        garbageCollectionPojo.setDistance(AUtils.calculateDistance(mContext, newlat, newlng));
         if(isActivityData){
             garbageCollectionPojo.setAfterImage(imagePojo.getAfterImage());
             garbageCollectionPojo.setBeforeImage(imagePojo.getBeforeImage());
@@ -936,6 +944,9 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
             garbageCollectionPojo.setWeightTotalWet(Double.parseDouble(Objects.requireNonNull(map.get(AUtils.DUMPDATA.weightTotalWet))));
             garbageCollectionPojo.setGarbageType(-1);
             garbageCollectionPojo.setComment(null);
+            double newlat = Double.parseDouble(Prefs.getString(AUtils.LAT, "0"));
+            double newlng = Double.parseDouble(Prefs.getString(AUtils.LONG, "0"));
+            garbageCollectionPojo.setDistance(AUtils.calculateDistance(mContext, newlat, newlng));
             if(isActivityData){
                 garbageCollectionPojo.setAfterImage(imagePojo.getAfterImage());
                 garbageCollectionPojo.setBeforeImage(imagePojo.getBeforeImage());
@@ -972,11 +983,18 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
         entity.setVehicleNumber(Prefs.getString(AUtils.VEHICLE_NO,""));
         entity.setLong(Prefs.getString(AUtils.LONG,""));
         entity.setLat(Prefs.getString(AUtils.LAT,""));
-        entity.setGcDate(AUtils.getSeverDateTime());
+//        entity.setGcDate(AUtils.getServerDateTime());
+        entity.setGcDate(AUtils.getServerDateTimeLocal());
+        entity.setDistance(String.valueOf(garbageCollectionPojo.getDistance()));
 
-        Type type = new TypeToken<OfflineGarbageColectionPojo>() {}.getType();
+        if(AUtils.isInternetAvailable() && AUtils.isConnectedFast(mContext))
+            entity.setIsOffline(true);
+        else
+            entity.setIsOffline(false);
 
-        syncServerRepository.insertSyncServerEntity(new Gson().toJson(entity, type));
+//        Type type = new TypeToken<OfflineGarbageColectionPojo>() {}.getType(); //TODO
+//        syncServerRepository.insertSyncServerEntity(new Gson().toJson(entity, type)); //TODO
+        syncOfflineRepository.insertCollection(entity);
 
         showOfflinePopup(garbageCollectionPojo.getId());
     }

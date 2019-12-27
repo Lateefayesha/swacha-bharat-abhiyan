@@ -3,6 +3,7 @@ package com.appynitty.swachbharatabhiyanlibrary.webservices;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.GcResultPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.OfflineGarbageColectionPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.OfflineGcResultPojo;
+import com.appynitty.swachbharatabhiyanlibrary.pojos.SyncOfflinePojo;
 
 import java.util.List;
 
@@ -73,4 +74,10 @@ public interface GarbageCollectionWebService {
                                                                  @Header("batteryStatus") int batteryStatus,
                                                                  @Header("Content-Type") String contentType,
                                                                  @Body List<OfflineGarbageColectionPojo> userLocationPojoList);
+
+    @POST("api/Save/GarbageCollectionOfflineUpload")
+    Call<List<OfflineGcResultPojo>> syncOfflineData(@Header("appId") String appId,
+                                                    @Header("batteryStatus") int batteryStatus,
+                                                    @Header("Content-Type") String contentType,
+                                                    @Body List<SyncOfflinePojo> offlineDataList);
 }

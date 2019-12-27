@@ -96,8 +96,8 @@ public class AttendanceAdapterClass {
             public void doInBackgroundOpration(SyncServer syncServer) {
 
                 OutPunchPojo outPunchPojo = new OutPunchPojo();
-                outPunchPojo.setDaDate(AUtils.getSeverDate());
-                outPunchPojo.setEndTime(AUtils.getSeverTime());
+                outPunchPojo.setDaDate(AUtils.getServerDate());
+                outPunchPojo.setEndTime(AUtils.getServerTime());
                 resultPojo = syncServer.saveOutPunch(outPunchPojo);
 
             }
@@ -151,6 +151,8 @@ public class AttendanceAdapterClass {
 
             }
         }).execute();
+
+
     }
 
     public interface AttendanceListener {

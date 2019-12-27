@@ -13,8 +13,7 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="MyProgressDialog" parent="Theme.AppCompat.Dialog">
-    </style>
+    <style name="MyProgressDialog" parent="Theme.AppCompat.Dialog"></style>
 
     <style name="MyEditTextStyleLight" parent="Base.V7.Widget.AppCompat.EditText">
         <item name="android:layout_width">match_parent</item>

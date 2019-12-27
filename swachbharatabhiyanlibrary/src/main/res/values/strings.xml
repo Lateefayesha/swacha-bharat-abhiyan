@@ -62,8 +62,11 @@
 
     <string name="select_month_year_warn">Please Select Proper Month / Year</string>
 
+    <string name="vehicle_not_found_error">Vehicle List Not Found</string>
+
     <string name="something_error">Something went wrong!! Please try again later. </string>
     <string name="no_data_error">No history Found</string>
+    <string name="no_offline_data_error">No Offline Data Found</string>
     <string name="no_internet_error">No Internet Connection</string>
     <string name="noVehicleNo">Please Enter Vehicle Number.</string>
 
@@ -160,5 +163,8 @@
     <string name="slow_internet">Your Internet is slow!</string>
     <string name="feature_unavailable_error">This feature is unavailable due to slow internet.</string>
     <string name="success_message">Uploaded successfully</string>
+    <string name="title_activity_sync_offline">Sync Offline</string>
+    <string name="success_offline_sync">Data Sync is Done Successful</string>
+    <string name="hint_first_sync">Firstly, Please Sync Offline Data</string>
 
 </resources>

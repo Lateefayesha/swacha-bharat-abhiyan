@@ -18,7 +18,7 @@ import androidx.appcompat.widget.Toolbar;
 import com.appynitty.swachbharatabhiyanlibrary.R;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.UI.InflateHistoryAdapter;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.HistoryAdapterClass;
-import com.appynitty.swachbharatabhiyanlibrary.pojos.WorkHistoryPojo;
+import com.appynitty.swachbharatabhiyanlibrary.pojos.TableDataCountPojo;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 import com.riaylibrary.utils.LocaleHelper;
 
@@ -32,7 +32,7 @@ public class HistoryPageActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private Spinner yearSpinner, monthSpinner;
     private GridView historyGrid;
-    private List<WorkHistoryPojo> historyPojoList;
+    private List<TableDataCountPojo.WorkHistory> historyPojoList;
     private LinearLayout noDataErrorLayout, noInternetErrorLayout;
 
     private HistoryAdapterClass mAdapter;

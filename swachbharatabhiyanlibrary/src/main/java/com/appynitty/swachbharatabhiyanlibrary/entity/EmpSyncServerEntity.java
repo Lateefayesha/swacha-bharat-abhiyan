@@ -21,6 +21,15 @@ public class EmpSyncServerEntity {
                     COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                     COLUMN_DATA + " TEXT DEFAULT NULL)";
 
+    public static final String RESTORE_TABLE =
+            "INSERT INTO " + AUtils.QR_TABLE_NAME + " SELECT * FROM TEMP_" + AUtils.QR_TABLE_NAME;
+
+    public static final String DROP_TEMP_TABLE =
+            "DROP TABLE IF EXISTS TEMP_" + AUtils.QR_TABLE_NAME;
+
+    public static final String CREATE_TEMP_TABLE =
+            "ALTER TABLE " + AUtils.QR_TABLE_NAME + " RENAME TO TEMP_" + AUtils.QR_TABLE_NAME;
+
     private int index_id;
 
     private String pojo;

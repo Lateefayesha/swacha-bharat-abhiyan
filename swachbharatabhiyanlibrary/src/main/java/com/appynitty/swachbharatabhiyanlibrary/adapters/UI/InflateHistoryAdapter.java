@@ -6,12 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.appynitty.swachbharatabhiyanlibrary.R;
-import com.appynitty.swachbharatabhiyanlibrary.pojos.MenuListPojo;
-import com.appynitty.swachbharatabhiyanlibrary.pojos.WorkHistoryPojo;
+import com.appynitty.swachbharatabhiyanlibrary.pojos.TableDataCountPojo;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 
 import java.util.List;
@@ -20,14 +18,14 @@ import java.util.List;
  * Created by Ayan Dey on 25/10/18.
  */
 
-public class InflateHistoryAdapter extends ArrayAdapter<WorkHistoryPojo> {
+public class InflateHistoryAdapter extends ArrayAdapter<TableDataCountPojo.WorkHistory> {
 
-    private List<WorkHistoryPojo> historyPojoList;
+    private List<TableDataCountPojo.WorkHistory> historyPojoList;
     private Context context;
     private View view;
     private ViewHolder holder;
 
-    public InflateHistoryAdapter(@NonNull Context context, @NonNull List<WorkHistoryPojo> objects) {
+    public InflateHistoryAdapter(@NonNull Context context, @NonNull List<TableDataCountPojo.WorkHistory> objects) {
         super(context, android.R.layout.simple_list_item_1, objects);
         this.context = context;
         this.historyPojoList = objects;
@@ -56,7 +54,7 @@ public class InflateHistoryAdapter extends ArrayAdapter<WorkHistoryPojo> {
         holder = (ViewHolder) view.getTag();
 
         if (!AUtils.isNull(historyPojoList) && !historyPojoList.isEmpty()) {
-            WorkHistoryPojo workHistoryPojo = historyPojoList.get(position);
+            TableDataCountPojo.WorkHistory workHistoryPojo = historyPojoList.get(position);
             holder.date.setText(String.valueOf(AUtils.extractDate(workHistoryPojo.getDate())));
             holder.month.setText(String.valueOf(AUtils.extractMonth(workHistoryPojo.getDate())));
             holder.houseCollection.setText(workHistoryPojo.getHouseCollection());

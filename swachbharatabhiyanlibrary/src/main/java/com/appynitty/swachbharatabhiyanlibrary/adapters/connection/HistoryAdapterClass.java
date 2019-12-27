@@ -1,7 +1,7 @@
 package com.appynitty.swachbharatabhiyanlibrary.adapters.connection;
 
 import com.appynitty.swachbharatabhiyanlibrary.connection.SyncServer;
-import com.appynitty.swachbharatabhiyanlibrary.pojos.WorkHistoryPojo;
+import com.appynitty.swachbharatabhiyanlibrary.pojos.TableDataCountPojo;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 import com.appynitty.swachbharatabhiyanlibrary.utils.MyAsyncTask;
 import com.google.gson.Gson;
@@ -13,7 +13,7 @@ import java.util.List;
 
 public class HistoryAdapterClass {
 
-    private List<WorkHistoryPojo> workHistoryPojoList;
+    private List<TableDataCountPojo.WorkHistory> workHistoryPojoList;
 
     private static Gson gson = new Gson();
 
@@ -27,17 +27,17 @@ public class HistoryAdapterClass {
         this.mListener = mListener;
     }
 
-    public List<WorkHistoryPojo> getworkHistoryTypePojoList() {
+    public List<TableDataCountPojo.WorkHistory> getworkHistoryTypePojoList() {
 
-        Type type = new TypeToken<List<WorkHistoryPojo>>() {
+        Type type = new TypeToken<List<TableDataCountPojo.WorkHistory>>() {
         }.getType();
 
         workHistoryPojoList = gson.fromJson(Prefs.getString(AUtils.PREFS.WORK_HISTORY_POJO_LIST, null), type);
         return workHistoryPojoList;
     }
 
-    public static void setworkHistoryTypePojoList(List<WorkHistoryPojo> workHistoryDetailPojoList) {
-        Type type = new TypeToken<List<WorkHistoryPojo>>() {
+    public static void setworkHistoryTypePojoList(List<TableDataCountPojo> workHistoryDetailPojoList) {
+        Type type = new TypeToken<List<TableDataCountPojo>>() {
         }.getType();
         Prefs.putString(AUtils.PREFS.WORK_HISTORY_POJO_LIST, gson.toJson(workHistoryDetailPojoList, type));
     }

@@ -293,6 +293,7 @@ public class EmpDashboardActivity extends AppCompatActivity implements EmpPopUpD
                 if (type == 1) {
                     onInPunchSuccess();
                 } else if (type == 2) {
+
                     onOutPunchSuccess();
                 }
             }
@@ -436,18 +437,7 @@ public class EmpDashboardActivity extends AppCompatActivity implements EmpPopUpD
 
         HashMap<Integer,Object> mLanguage = new HashMap<>();
 
-        List<LanguagePojo> mLanguagePojoList = new ArrayList<>();
-
-        LanguagePojo eng = new LanguagePojo();
-        eng.setLanguage("English");
-        eng.setLanguageId("1");
-
-        LanguagePojo mar = new LanguagePojo();
-        mar.setLanguageId("2");
-        mar.setLanguage("मराठी");
-
-        mLanguagePojoList.add(eng);
-        mLanguagePojoList.add(mar);
+        List<LanguagePojo> mLanguagePojoList = AUtils.getLanguagePojoList();
 
         AUtils.changeLanguage(this, Prefs.getString(AUtils.LANGUAGE_NAME, AUtils.DEFAULT_LANGUAGE_ID));
 
@@ -529,8 +519,8 @@ public class EmpDashboardActivity extends AppCompatActivity implements EmpPopUpD
                 empInPunchPojo = new EmpInPunchPojo();
             }
 
-            empInPunchPojo.setStartDate(AUtils.getSeverDate());
-            empInPunchPojo.setStartTime(AUtils.getSeverTime());
+            empInPunchPojo.setStartDate(AUtils.getServerDate());
+            empInPunchPojo.setStartTime(AUtils.getServerTime());
 
             try{
                 mAttendanceAdapter.MarkInPunch(empInPunchPojo);
@@ -614,12 +604,7 @@ public class EmpDashboardActivity extends AppCompatActivity implements EmpPopUpD
     private void onLanguageTypeDialogClose(Object listItemSelected) {
 
         LanguagePojo languagePojo = (LanguagePojo) listItemSelected;
-
-        if (languagePojo.getLanguage().equals("English")) {
-            changeLanguage(AUtils.LanguageConstants.ENGLISH);
-        } else if (languagePojo.getLanguage().equals("मराठी")) {
-            changeLanguage(AUtils.LanguageConstants.MARATHI);
-        }
+        changeLanguage(AUtils.setLanguage(languagePojo.getLanguage()));
     }
 
     private void checkDutyStatus() {
