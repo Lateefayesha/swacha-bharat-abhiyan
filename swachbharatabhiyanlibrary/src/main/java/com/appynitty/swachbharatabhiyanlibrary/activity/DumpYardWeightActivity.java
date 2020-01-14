@@ -68,7 +68,7 @@ public class DumpYardWeightActivity extends AppCompatActivity {
     private String wetImageFilePath = "";
 
     private ImagePojo imagePojo;
-    private Double totalTon;
+    private Double totalTon, dryTon, wetTon;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -129,6 +129,8 @@ public class DumpYardWeightActivity extends AppCompatActivity {
         btnTakeWetPhoto = findViewById(R.id.btn_take_wet_photo);
 
         totalTon = 0d;
+        dryTon = 0d;
+        wetTon = 0d;
     }
 
     private void registerEvents(){
@@ -455,41 +457,23 @@ public class DumpYardWeightActivity extends AppCompatActivity {
     private void calculateTotalWeight(){
         double total = 0;
 
-        double dryInTons = getDryWeightInTons();
-        double wetInTons = getWetWeightInTons();
-
         double dryInKgs = getDryWeightInKgs();
         double wetInKgs = getWetWeightInKgs();
 
-        totalTon = dryInTons + wetInTons;
         total = dryInKgs + wetInKgs;
 
         editTotal.setText(String.format(Locale.ENGLISH,getString(R.string.restrict_two_decimal), total));
+
+        dryTon = getWeightInTons(dryInKgs);
+        wetTon = getWeightInTons(wetInKgs);
+
+        totalTon = getWeightInTons(total);
     }
 
-    private double getDryWeightInTons(){
+    private double getWeightInTons(double weightInKg) {
         double returnValue = 0f;
-        String dryWt = editDryTotal.getText().toString();
-        if(!AUtils.isNull(dryWt)){
-            if(radioButtonDryKg.isChecked()){
-                returnValue = Double.parseDouble(dryWt) / 1000;
-            }else if(radioButtonDryTon.isChecked()){
-                returnValue = Double.parseDouble(dryWt);
-            }
-        }
-
-        return returnValue;
-    }
-
-    private double getWetWeightInTons(){
-        double returnValue = 0f;
-        String wetWt = editWetTotal.getText().toString();
-        if(!AUtils.isNull(wetWt)){
-            if(radioButtonWetKg.isChecked()){
-                returnValue = Double.parseDouble(wetWt) / 1000;
-            }else if(radioButtonWetTon.isChecked()){
-                returnValue = Double.parseDouble(wetWt);
-            }
+        if(weightInKg != 0){
+            returnValue = weightInKg / 1000;
         }
 
         return returnValue;
@@ -566,9 +550,9 @@ public class DumpYardWeightActivity extends AppCompatActivity {
 
         HashMap<String, String> map = new HashMap<>();
         map.put(AUtils.DUMPDATA.dumpYardId, dumpYardId);
-        map.put(AUtils.DUMPDATA.weightTotal, String.format(Locale.ENGLISH,getString(R.string.restrict_two_decimal), totalTon));
-        map.put(AUtils.DUMPDATA.weightTotalDry, String.valueOf(getDryWeightInTons()));
-        map.put(AUtils.DUMPDATA.weightTotalWet, String.valueOf(getWetWeightInTons()));
+        map.put(AUtils.DUMPDATA.weightTotal, String.valueOf(totalTon));
+        map.put(AUtils.DUMPDATA.weightTotalDry, String.valueOf(dryTon));
+        map.put(AUtils.DUMPDATA.weightTotalWet, String.valueOf(wetTon));
 
         return map;
     }

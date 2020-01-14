@@ -18,10 +18,10 @@ import com.appynitty.swachbharatabhiyanlibrary.pojos.InPunchPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.LoginDetailsPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.LoginPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.OutPunchPojo;
+import com.appynitty.swachbharatabhiyanlibrary.pojos.TableDataCountPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.UserDetailPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.VehicleTypePojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.WorkHistoryDetailPojo;
-import com.appynitty.swachbharatabhiyanlibrary.pojos.WorkHistoryPojo;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 import com.appynitty.swachbharatabhiyanlibrary.webservices.AreaBroadcastWebService;
 import com.appynitty.swachbharatabhiyanlibrary.webservices.AreaHousePointService;
@@ -102,8 +102,7 @@ public class SyncServer {
             RequestBody id = RequestBody.create(okhttp3.MultipartBody.FORM, pointId);
 
             RequestBody userId = RequestBody.create(okhttp3.MultipartBody.FORM, Prefs.getString(AUtils.PREFS.USER_ID,""));
-            String lat = Prefs.getString(AUtils.LAT, "");
-            String LongStr = Prefs.getString(AUtils.LONG, "");
+
             RequestBody Lat = RequestBody.create(okhttp3.MultipartBody.FORM, Prefs.getString(AUtils.LAT, ""));
             RequestBody Long = RequestBody.create(okhttp3.MultipartBody.FORM, Prefs.getString(AUtils.LONG, ""));
 
@@ -283,7 +282,7 @@ public class SyncServer {
 
     public boolean pullWorkHistoryListFromServer(String year, String month) {
 
-        List<WorkHistoryPojo> workHistoryPojoList = null;
+        List<TableDataCountPojo.WorkHistory> workHistoryPojoList = null;
 
         try {
 
@@ -293,7 +292,7 @@ public class SyncServer {
 
             if (!AUtils.isNull(workHistoryPojoList)) {
 
-                Type type = new TypeToken<List<WorkHistoryPojo>>() {
+                Type type = new TypeToken<List<TableDataCountPojo>>() {
                 }.getType();
                 Prefs.putString(AUtils.PREFS.WORK_HISTORY_POJO_LIST, gson.toJson(workHistoryPojoList, type));
 

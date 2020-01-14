@@ -1064,7 +1064,7 @@ public class CommonUtils {
         return bm;
     }
 
-    public static String getYoutubeVedioId(String youtubeVideoUrl) {
+    public static String getYoutubeVideoId(String youtubeVideoUrl) {
         String videoId = "";
         if (youtubeVideoUrl != null && youtubeVideoUrl.trim().length() > 0 && youtubeVideoUrl.startsWith("http")) {
             String expression = "^.*((youtu.be\\/)|(v\\/)|(\\/u\\/w\\/)|(embed\\/)|(watch\\?))\\??v?=?([^#\\&\\?]*).*";
@@ -1170,6 +1170,34 @@ public class CommonUtils {
         return type;
     }
 
+    public static long getDifferenceBetweenTime(Date first, Date second, @Nullable String returnUnit) {
+        long difference = 0;
+
+        try {
+
+            if (returnUnit == null)
+                returnUnit = UNITS.unit_min;
+
+            difference = second.getTime() - first.getTime();
+
+            switch (returnUnit) {
+                case UNITS.unit_sec:
+                    difference = difference / 1000;
+                    break;
+                case UNITS.unit_min:
+                    difference = difference / 60000;
+                    break;
+                case UNITS.unit_hour:
+                    difference = difference / 3600000;
+                    break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return difference;
+    }
+
     public static HashMap<String, String> getLanguageHashMapList() {
 
         HashMap<String, String> languageHashMap = new HashMap<>();
@@ -1260,34 +1288,6 @@ public class CommonUtils {
 
             return dist;
         }
-    }
-
-    public static long getDifferenceBetweenTime(Date first, Date second, @Nullable String returnUnit) {
-        long difference = 0;
-
-        try {
-
-            if (returnUnit == null)
-                returnUnit = UNITS.unit_min;
-
-            difference = second.getTime() - first.getTime();
-
-            switch (returnUnit) {
-                case UNITS.unit_sec:
-                    difference = difference / 1000;
-                    break;
-                case UNITS.unit_min:
-                    difference = difference / 60000;
-                    break;
-                case UNITS.unit_hour:
-                    difference = difference / 3600000;
-                    break;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return difference;
     }
 
     public static AlertDialog getAlertDialog(Context context, int layoutId) {

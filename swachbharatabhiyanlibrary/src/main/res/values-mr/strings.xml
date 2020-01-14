@@ -58,8 +58,12 @@
 
     <string name="vehicle_number_txt">वाहन नंबर :</string>
     <string name="select_month_year_warn">कृपया योग्य महिना / वर्ष निवडा</string>
+
+    <string name="vehicle_not_found_error">वाहनांची यादी आढळली नाही</string>
+
     <string name="something_error">काहीतरी चूक झाली!! कृपया पुन्हा प्रयत्न करा.</string>
     <string name="no_data_error">कोणताही इतिहास आढळला नाही</string>
+    <string name="no_offline_data_error">कोणताही ऑफलाइन डेटा आढळला नाही</string>
     <string name="no_internet_error">इंटरनेट कनेक्शन नाही</string>
     <string name="noVehicleNo">कृपया वाहन नंबर प्रविष्ट करा.</string>
 
@@ -137,5 +141,9 @@
     <string name="slow_internet">आपले इंटरनेट हळुवारपणे चालत आहे!</string>
     <string name="feature_unavailable_error">आपले हळुवार इंटरनेटमुळे ही सेवा अनुपलब्ध आहे.</string>
     <string name="success_message">यशस्वीरित्या अपलोड केले</string>
+
+    <string name="title_activity_sync_offline">ऑफलाइन समक्रमित करा</string>
+    <string name="success_offline_sync">डेटा समक्रमण यशस्वी झाले</string>
+    <string name="hint_first_sync">प्रथम, कृपया ऑफलाइन डेटा संकालित करा</string>
 
 </resources>

@@ -330,40 +330,12 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
     private void onLanguageTypeDialogClose(Object listItemSelected) {
 
         LanguagePojo languagePojo = (LanguagePojo) listItemSelected;
-
-        switch (languagePojo.getLanguage()) {
-            case AUtils.LanguageNameConstants.ENGLISH:
-                changeLanguage(AUtils.LanguageConstants.ENGLISH);
-                break;
-            case AUtils.LanguageNameConstants.MARATHI:
-                changeLanguage(AUtils.LanguageConstants.MARATHI);
-                break;
-            case AUtils.LanguageNameConstants.HINDI:
-                changeLanguage(AUtils.LanguageConstants.HINDI);
-                break;
-        }
+        changeLanguage(AUtils.setLanguage(languagePojo.getLanguage()));
     }
 
     private void changeLanguage() {
         HashMap<Integer, Object> mLanguage = new HashMap<>();
-
-        List<LanguagePojo> mLanguagePojoList = new ArrayList<>();
-
-        LanguagePojo eng = new LanguagePojo();
-        eng.setLanguage(AUtils.LanguageNameConstants.ENGLISH);
-        eng.setLanguageId(AUtils.LanguageIDConstants.ENGLISH);
-
-        LanguagePojo mar = new LanguagePojo();
-        mar.setLanguageId(AUtils.LanguageIDConstants.MARATHI);
-        mar.setLanguage(AUtils.LanguageNameConstants.MARATHI);
-
-        LanguagePojo hi = new LanguagePojo();
-        hi.setLanguageId(AUtils.LanguageIDConstants.HINDI);
-        hi.setLanguage(AUtils.LanguageNameConstants.HINDI);
-
-        mLanguagePojoList.add(eng);
-        mLanguagePojoList.add(mar);
-//        mLanguagePojoList.add(hi);
+        List<LanguagePojo> mLanguagePojoList = AUtils.getLanguagePojoList();
 
         AUtils.changeLanguage(this, Prefs.getString(AUtils.LANGUAGE_NAME, AUtils.DEFAULT_LANGUAGE_ID));
 

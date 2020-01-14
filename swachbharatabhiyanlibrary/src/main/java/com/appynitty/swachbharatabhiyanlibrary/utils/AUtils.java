@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -12,13 +13,20 @@ import com.appynitty.swachbharatabhiyanlibrary.R;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.EmpSyncServerAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.ShareLocationAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.SyncServerAdapterClass;
+import com.appynitty.swachbharatabhiyanlibrary.entity.LastLocationEntity;
+import com.appynitty.swachbharatabhiyanlibrary.pojos.LanguagePojo;
+import com.appynitty.swachbharatabhiyanlibrary.repository.LastLocationRepository;
+import com.appynitty.swachbharatabhiyanlibrary.repository.SyncOfflineRepository;
 import com.pixplicity.easyprefs.library.Prefs;
 import com.riaylibrary.utils.CommonUtils;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 
 public class AUtils extends CommonUtils {
@@ -73,7 +81,8 @@ public class AUtils extends CommonUtils {
     public static final String isFromLogin = "isFromLogin";
     public static final String dumpYardId = "dumpYardId";
 
-    private static final String SERVER_DATE_FORMATE = "MM-dd-yyyy";
+    public static final String SERVER_DATE_FORMATE = "MM-dd-yyyy";
+    public static final String SERVER_DATE_FORMATE_LOCAL = "yyyy-MM-dd";
     private static final String EMP_SERVER_DATE_FORMATE = "dd-MM-yyyy";
 
     private static final String TITLE_DATE_FORMATE = "dd MMM yyyy";
@@ -84,7 +93,8 @@ public class AUtils extends CommonUtils {
     private static final String SERVER_TIME_FORMATE = "hh:mm a";
     private static final String SERVER_TIME_24HR_FORMATE = "HH:mm";
 
-    private static final String SERVER_DATE_TIME_FORMATE = "MM-dd-yyyy HH:mm:ss";
+    public static final String SERVER_DATE_TIME_FORMATE = "MM-dd-yyyy HH:mm:ss";
+    public static final String SERVER_DATE_TIME_FORMATE_LOCAL = "yyyy-MM-dd HH:mm:ss.SSS";
 
     public static final long LOCATION_INTERVAL_MINUTES = 10 * 60 * 1000;
 
@@ -116,6 +126,9 @@ public class AUtils extends CommonUtils {
     public static boolean isSyncServerRequestEnable = false;
     public static boolean isLocationRequestEnable = false;
     public static boolean isEmpSyncServerRequestEnable = false;
+    public static boolean isSyncOfflineDataRequestEnable = false;
+
+    private static ArrayList<LanguagePojo> languagePojoList;
 
     public static boolean DutyOffFromService = false;
 
@@ -163,32 +176,80 @@ public class AUtils extends CommonUtils {
         String weightTotalWet = "total_weight_wet";
     }
 
-    public static void saveLocation(Location location) {
-        if (!AUtils.isNull(location)) {
-            Double latti = location.getLatitude();
-            Double longi = location.getLongitude();
+//    public static void saveLocation(Location location) {
+//        if (!AUtils.isNull(location)) {
+//            double latti = location.getLatitude();
+//            double longi = location.getLongitude();
+//
+//            Prefs.putString(AUtils.LONG, Double.toString(longi));
+//            Prefs.putString(AUtils.LAT, Double.toString(latti));
+//        }
+//    }
 
-            Prefs.putString(AUtils.LONG, longi.toString());
-            Prefs.putString(AUtils.LAT, latti.toString());
-        }
-    }
-
-    public static String getSeverDate() {
+    public static String getServerDate() {
 
         SimpleDateFormat format = new SimpleDateFormat(AUtils.SERVER_DATE_FORMATE, Locale.ENGLISH);
         return format.format(Calendar.getInstance().getTime());
     }
 
-    public static String getSeverTime() {
+    public static String getLocalDate() {
+
+        SimpleDateFormat format = new SimpleDateFormat(AUtils.SERVER_DATE_FORMATE_LOCAL, Locale.ENGLISH);
+        return format.format(Calendar.getInstance().getTime());
+    }
+
+    public static String getServerDateLocal(String date) {
+
+        SimpleDateFormat format = new SimpleDateFormat(AUtils.SERVER_DATE_FORMATE_LOCAL, Locale.ENGLISH);
+        try {
+            return format.format(format.parse(date));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return format.format(new Date());
+    }
+
+    public static String serverDateFromLocal(String date) {
+
+        SimpleDateFormat local = new SimpleDateFormat(AUtils.SERVER_DATE_FORMATE_LOCAL, Locale.ENGLISH);
+        SimpleDateFormat server = new SimpleDateFormat(AUtils.SERVER_DATE_FORMATE, Locale.ENGLISH);
+        try{
+            return server.format(local.parse(date));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return server.format(new Date());
+    }
+
+    public static String getServerTime() {
 
         SimpleDateFormat format = new SimpleDateFormat(AUtils.SERVER_TIME_FORMATE, Locale.ENGLISH);
         return format.format(Calendar.getInstance().getTime());
     }
 
-    public static String getSeverDateTime() {
+    public static String getServerDateTime() {
 
         SimpleDateFormat format = new SimpleDateFormat(AUtils.SERVER_DATE_TIME_FORMATE, Locale.ENGLISH);
         return format.format(Calendar.getInstance().getTime());
+    }
+
+    public static String getServerDateTimeLocal() {
+
+        SimpleDateFormat format = new SimpleDateFormat(AUtils.SERVER_DATE_TIME_FORMATE_LOCAL, Locale.ENGLISH);
+        return format.format(Calendar.getInstance().getTime());
+    }
+
+    public static Date parse(String date, String format){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format, Locale.ENGLISH);
+        try{
+            return simpleDateFormat.parse(date);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return new Date();
     }
 
     public static String getTitleDateFormat(String date) {
@@ -224,6 +285,19 @@ public class AUtils extends CommonUtils {
 
         try {
             return titleDateFormat.format(serverFormat.parse(date));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
+    public static String formatDate(String date, String fromFormat, String toFormat) {
+
+        SimpleDateFormat providedFormat = new SimpleDateFormat(fromFormat, Locale.ENGLISH);
+        SimpleDateFormat requiredFormat = new SimpleDateFormat(toFormat, Locale.ENGLISH);
+
+        try {
+            return requiredFormat.format(providedFormat.parse(date));
         } catch (ParseException e) {
             e.printStackTrace();
             return "";
@@ -332,22 +406,10 @@ public class AUtils extends CommonUtils {
         builder.setCancelable(false).setPositiveButton(positiveText, positiveListener).create().show();
     }
 
-    public static void hideSnackBar()
-    {
+    public static void hideSnackBar() {
         if(mSnackbar != null && mSnackbar.isShown())
         {
             mSnackbar.dismiss();
-
-            if(!Prefs.getString(PREFS.USER_TYPE_ID,"0").equals("1")) {
-                syncServer = new SyncServerAdapterClass();
-                syncServer.syncServer();
-            } else {
-                empSyncServer = new EmpSyncServerAdapterClass();
-                empSyncServer.syncServer();
-            }
-
-            shareLocationAdapterClass = new ShareLocationAdapterClass();
-            shareLocationAdapterClass.shareLocation();
         }
     }
 
@@ -358,37 +420,30 @@ public class AUtils extends CommonUtils {
         return databaseHelper.getWritableDatabase();
     }
 
-    public static Date getDutyEndTime() {
+    public static Calendar getDutyEndTime() {
         Calendar cl = Calendar.getInstance();
 
-        int year = cl.get(Calendar.YEAR);
-        int month = cl.get(Calendar.MONTH);
-        int day = cl.get(Calendar.DATE);
+        cl.set(Calendar.HOUR_OF_DAY, 23);
+        cl.set(Calendar.MINUTE, 50);
+        cl.set(Calendar.SECOND, 0);
 
-        return new Date(year,month,day,23,50);
+        return cl;
     }
 
-    public static Date getCurrentTime() {
+    public static Calendar getCurrentTime() {
         Calendar now = Calendar.getInstance();
 
-        int year = now.get(Calendar.YEAR);
-        int month = now.get(Calendar.MONTH);
-        int day = now.get(Calendar.DATE);
-        int hour = now.get(Calendar.HOUR_OF_DAY);
-        int minute = now.get(Calendar.MINUTE);
-        int seconds = now.get(Calendar.SECOND);
-
-        return new Date(year,month,day,hour,minute,seconds);
+        return now;
     }
 
     public static void setInPunchDate(Calendar calendar) {
 
-        Prefs.putString(PREFS.IN_PUNCH_DATE, getSeverDate(calendar));
+        Prefs.putString(PREFS.IN_PUNCH_DATE, getServerDate(calendar));
     }
 
     public static String getInPunchDate() {
 
-        return Prefs.getString(PREFS.IN_PUNCH_DATE, getSeverDate(Calendar.getInstance()));
+        return Prefs.getString(PREFS.IN_PUNCH_DATE, getServerDate(Calendar.getInstance()));
     }
 
     public static void removeInPunchDate() {
@@ -396,10 +451,119 @@ public class AUtils extends CommonUtils {
         Prefs.remove(PREFS.IN_PUNCH_DATE);
     }
 
-    public static String getSeverDate(Calendar calendar) {
+    public static String getServerDate(Calendar calendar) {
 
         SimpleDateFormat format = new SimpleDateFormat(AUtils.SERVER_DATE_FORMATE, Locale.ENGLISH);
         return format.format(calendar.getTime());
+    }
+
+    public static AlertDialog getUploadingAlertDialog(Context context){
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        return builder.setView(R.layout.layout_progress_bar).setCancelable(false).create();
+    }
+
+    public static double calculateDistance(Context context, double newlat, double newLng){
+        LastLocationRepository lastLocationRepository = new LastLocationRepository(context);
+        double startlat = 0d;
+        double startLng = 0d;
+        HashMap<String, Double> map = lastLocationRepository.getLastLocationCoordinates(AUtils.getLocalDate());
+        if(!AUtils.isNull(map) && map.containsKey(LastLocationRepository.LatitudeKey) && map.containsKey(LastLocationRepository.LongitudeKey)) {
+            startlat = map.get(LastLocationRepository.LatitudeKey);
+            startLng = map.get(LastLocationRepository.LongitudeKey);
+        }
+
+        LastLocationEntity entity = new LastLocationEntity();
+        entity.setColumnDate(AUtils.getServerDateTimeLocal());
+        entity.setColumnLattitude(String.valueOf(newlat));
+        entity.setColumnLongitude(String.valueOf(newLng));
+        lastLocationRepository.insertUpdateLastLocation(entity);
+        if(startlat != 0d && startLng != 0d)
+            return calculateLatLngDistance(startlat, startLng, newlat, newLng, UNITS.KiloMeter);
+
+        return 0d;
+    }
+
+    public static String setLanguage(String language){
+        switch (language) {
+            case AUtils.LanguageNameConstants.ENGLISH:
+                return AUtils.LanguageConstants.ENGLISH;
+            case AUtils.LanguageNameConstants.MARATHI:
+                return AUtils.LanguageConstants.MARATHI;
+            case AUtils.LanguageNameConstants.HINDI:
+                return AUtils.LanguageConstants.HINDI;
+        }
+
+        return Prefs.getString(AUtils.LANGUAGE_NAME, AUtils.DEFAULT_LANGUAGE_ID);
+    }
+
+    public static ArrayList<LanguagePojo> getLanguagePojoList() {
+
+        if(AUtils.isNull(languagePojoList)){
+
+            languagePojoList = new ArrayList<>();
+
+            LanguagePojo eng = new LanguagePojo();
+            eng.setLanguage(AUtils.LanguageNameConstants.ENGLISH);
+            eng.setLanguageId(AUtils.LanguageIDConstants.ENGLISH);
+            languagePojoList.add(eng);
+
+            LanguagePojo mar = new LanguagePojo();
+            mar.setLanguageId(AUtils.LanguageIDConstants.MARATHI);
+            mar.setLanguage(AUtils.LanguageNameConstants.MARATHI);
+            languagePojoList.add(mar);
+
+            LanguagePojo hi = new LanguagePojo();
+            hi.setLanguageId(AUtils.LanguageIDConstants.HINDI);
+            hi.setLanguage(AUtils.LanguageNameConstants.HINDI);
+            languagePojoList.add(hi);
+
+        }
+
+        return languagePojoList;
+    }
+
+    public static void setLanguagePojoList(ArrayList<LanguagePojo> languagePojoList) {
+        AUtils.languagePojoList = languagePojoList;
+    }
+
+    public static String getPreviousDateDutyOffTime() {
+
+        DateFormat dateFormat = new SimpleDateFormat(AUtils.SERVER_DATE_TIME_FORMATE_LOCAL, Locale.ENGLISH);
+
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, -1);
+
+        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.MINUTE, 50);
+        cal.set(Calendar.SECOND, 0);
+
+        return dateFormat.format(cal.getTime());
+    }
+
+    public static String getCurrentDateDutyOffTime() {
+
+        DateFormat dateFormat = new SimpleDateFormat(AUtils.SERVER_DATE_TIME_FORMATE_LOCAL, Locale.ENGLISH);
+
+        Calendar cal = Calendar.getInstance();
+
+        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.MINUTE, 50);
+        cal.set(Calendar.SECOND, 0);
+
+        return dateFormat.format(cal.getTime());
+    }
+
+    public static String serverTimeFromLocal(String date) {
+
+        SimpleDateFormat local = new SimpleDateFormat(AUtils.SERVER_DATE_TIME_FORMATE_LOCAL, Locale.ENGLISH);
+        SimpleDateFormat server = new SimpleDateFormat(AUtils.SERVER_TIME_FORMATE, Locale.ENGLISH);
+        try{
+            return server.format(local.parse(date));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return server.format(new Date());
     }
 }
 

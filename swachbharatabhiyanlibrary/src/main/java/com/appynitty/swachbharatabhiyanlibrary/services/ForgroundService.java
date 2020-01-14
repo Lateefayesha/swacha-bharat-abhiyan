@@ -97,10 +97,11 @@ public class ForgroundService extends Service {
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder((Context)this,
                 channelId);
 
+
         Notification notification = notificationBuilder
                 .setOngoing(true)
                 .setContentText("Please don't kill the app from background. Thank you!!")
-                .setSmallIcon(R.drawable.ic_noti_icon)
+                .setSmallIcon(getNotificationIcon(notificationBuilder))
                 .setPriority(-2)
                 .setCategory("service")
                 .build();
@@ -121,5 +122,16 @@ public class ForgroundService extends Service {
 
         service.createNotificationChannel(chan);
         return channelId;
+    }
+
+    private int getNotificationIcon(NotificationCompat.Builder notificationBuilder) {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            int color = 0x008000;
+            notificationBuilder.setColor(color);
+            return R.drawable.ic_noti_icon;
+
+        }
+        return R.drawable.ic_noti_icon;
     }
 }

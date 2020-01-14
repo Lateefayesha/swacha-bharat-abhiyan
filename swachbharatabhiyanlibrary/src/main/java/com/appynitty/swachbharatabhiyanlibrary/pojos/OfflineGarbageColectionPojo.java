@@ -28,6 +28,10 @@ public class OfflineGarbageColectionPojo {
 
     private String gcDate;
 
+    private String distance;
+
+    private Boolean isOffline;
+
     public String getNote() {
         return note;
     }
@@ -132,20 +136,40 @@ public class OfflineGarbageColectionPojo {
         this.gcDate = gcDate;
     }
 
+    public String getDistance() {
+        return distance;
+    }
+
+    public void setDistance(String distance) {
+        this.distance = distance;
+    }
+
+    public Boolean getIsOffline() {
+        return this.isOffline;
+    }
+
+    public void setIsOffline(Boolean isOffline) {
+        this.isOffline = isOffline;
+    }
+
     @Override
     public String toString() {
-        return "OfflineGarbageColectionPojo{"
-                + "note='" + note + '\''
-                + ", totalDryWeight='" + totalDryWeight + '\''
-                + ", totalGcWeight='" + totalGcWeight + '\''
-                + ", ReferenceID='" + ReferenceID + '\''
-                + ", garbageType='" + garbageType + '\''
-                + ", OfflineID='" + OfflineID + '\''
-                + ", Long='" + Long + '\''
-                + ", gcType='" + gcType + '\''
-                + ", vehicleNumber='" + vehicleNumber + '\''
-                + ", totalWetWeight='" + totalWetWeight + '\''
-                + ", userId='" + userId + '\''
-                + ", Lat='" + Lat + '\'' + '}';
+        return "OfflineGarbageColectionPojo{" +
+                "note='" + note + '\'' +
+                ", totalDryWeight='" + totalDryWeight + '\'' +
+                ", totalGcWeight='" + totalGcWeight + '\'' +
+                ", ReferenceID='" + ReferenceID + '\'' +
+                ", garbageType='" + garbageType + '\'' +
+                ", OfflineID='" + OfflineID + '\'' +
+                ", Long='" + Long + '\'' +
+                ", gcType='" + gcType + '\'' +
+                ", vehicleNumber='" + vehicleNumber + '\'' +
+                ", totalWetWeight='" + totalWetWeight + '\'' +
+                ", userId='" + userId + '\'' +
+                ", Lat='" + Lat + '\'' +
+                ", gcDate='" + gcDate + '\'' +
+                ", distance='" + distance + '\'' +
+                ", isOffline='" + isOffline + '\'' +
+                '}';
     }
 }

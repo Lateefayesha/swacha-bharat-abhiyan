@@ -28,5 +28,5 @@ public class CommonResultPojo {
     @Override
     public String toString() {
         return "CommonResultPojo{" + "code='" + code + '\'' + ", message='" + message + '\'' + '}';
-    }
+    }   
 }

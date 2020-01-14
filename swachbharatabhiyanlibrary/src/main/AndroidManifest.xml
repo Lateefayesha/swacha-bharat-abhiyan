@@ -3,6 +3,7 @@
     package="com.appynitty.swachbharatabhiyanlibrary">
 
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
@@ -22,83 +23,71 @@
         android:networkSecurityConfig="@xml/network_config"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
+        <activity
+            android:name=".activity.SyncOfflineActivity"
+            android:label="@string/title_activity_sync_offline"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".activity.SplashScreenActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".activity.LoginActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".activity.DashboardActivity"
             android:label="@string/title_activity_dashboard"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".activity.SettingsActivity"
             android:label="@string/about_appynitty"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".activity.QRcodeScannerActivity"
             android:label="@string/title_activity_qrcode_scanner"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".activity.TakePhotoActivity"
             android:label="@string/title_activity_take_photo"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".activity.ProfilePageActivity"
             android:label="@string/title_activity_profile_page"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".activity.HistoryPageActivity"
             android:label="@string/title_activity_history_page"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".activity.HistoryDetailsPageActivity"
             android:label="@string/title_activity_history_page"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".activity.BroadcastActivity"
             android:label="@string/title_activity_history_page"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateVisible" />
-
         <activity
             android:name=".activity.DumpYardWeightActivity"
             android:label="@string/title_activity_dump_yard_weight"
-            android:theme="@style/AppTheme.NoActionBar"/>
-
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.EmpDashboardActivity"
             android:label="@string/title_activity_dashboard"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".activity.EmpQRcodeScannerActivity"
             android:label="@string/title_activity_qrcode_scanner"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".activity.EmpHistoryPageActivity"
             android:label="@string/title_activity_history_page"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".activity.EmpHistoryDetailsPageActivity"
             android:label="@string/title_activity_history_page"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".activity.EmpAddLocationDetailsActivity"
             android:label="@string/title_activity_emp_add_location_details"
@@ -107,7 +96,6 @@
         <service
             android:name=".services.ForgroundService"
             android:enabled="true" />
-
         <service
             android:name=".services.NetworkSchedulerService"
             android:exported="true"
@@ -117,8 +105,7 @@
             android:name=".services.RestarterBroadcastReceiver"
             android:enabled="true"
             android:exported="true"
-            android:label="RestartServiceWhenStopped"/>
-
+            android:label="RestartServiceWhenStopped" />
     </application>
 
 </manifest>

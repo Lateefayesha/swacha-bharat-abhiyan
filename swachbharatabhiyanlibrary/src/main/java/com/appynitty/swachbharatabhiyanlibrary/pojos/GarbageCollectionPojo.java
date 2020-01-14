@@ -22,6 +22,8 @@ public class GarbageCollectionPojo {
 
     private double weightTotalWet;
 
+    private double distance;
+
     public String getImage2() {
         return image2;
     }
@@ -102,6 +104,14 @@ public class GarbageCollectionPojo {
         this.weightTotalWet = weightTotalWet;
     }
 
+    public double getDistance() {
+        return distance;
+    }
+
+    public void setDistance(double distance) {
+        this.distance = distance;
+    }
+
     @Override
     public String toString() {
         return "GarbageCollectionPojo{"
@@ -114,6 +124,7 @@ public class GarbageCollectionPojo {
                 + ", weightTotal='" + weightTotal + '\''
                 + ", weightTotalDry='" + weightTotalDry + '\''
                 + ", weightTotalWet='" + weightTotalWet + '\''
+                + ", distance='" + distance + '\''
                 + ", garbageType=" + garbageType + '}';
     }
 }

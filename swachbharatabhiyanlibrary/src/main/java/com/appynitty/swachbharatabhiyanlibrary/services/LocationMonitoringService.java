@@ -12,8 +12,11 @@ import android.util.Log;
 
 import com.appynitty.swachbharatabhiyanlibrary.activity.DashboardActivity;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.ShareLocationAdapterClass;
+import com.appynitty.swachbharatabhiyanlibrary.pojos.TableDataCountPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.UserLocationPojo;
 import com.appynitty.swachbharatabhiyanlibrary.repository.LocationRepository;
+import com.appynitty.swachbharatabhiyanlibrary.repository.SyncOfflineAttendanceRepository;
+import com.appynitty.swachbharatabhiyanlibrary.repository.SyncOfflineRepository;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 import com.appynitty.swachbharatabhiyanlibrary.utils.MyApplication;
 import com.google.gson.Gson;
@@ -22,7 +25,7 @@ import com.pixplicity.easyprefs.library.Prefs;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
 
 public class LocationMonitoringService implements LocationListener, GpsStatus.Listener {
@@ -36,15 +39,23 @@ public class LocationMonitoringService implements LocationListener, GpsStatus.Li
 
     private ShareLocationAdapterClass mAdapter;
 
+    private SyncOfflineRepository syncOfflineRepository;
+
     private long updatedTime = 0;
 
     private List<UserLocationPojo> mUserLocationPojoList;
+
+    private SyncOfflineAttendanceRepository syncOfflineAttendanceRepository;
 
 
     public LocationMonitoringService (final Context context) {
         mContext = context;
 
         mLocationRepository = new LocationRepository(AUtils.mainApplicationConstant.getApplicationContext());
+
+        syncOfflineRepository = new SyncOfflineRepository(AUtils.mainApplicationConstant.getApplicationContext());
+
+        syncOfflineAttendanceRepository = new SyncOfflineAttendanceRepository(AUtils.mainApplicationConstant.getApplicationContext());
 
         mUserLocationPojoList = new ArrayList<>();
 
@@ -54,7 +65,7 @@ public class LocationMonitoringService implements LocationListener, GpsStatus.Li
 
             @Override
             public void onSuccessCallBack(boolean isAttendanceOff) {
-                if(isAttendanceOff)
+                if(isAttendanceOff && !syncOfflineAttendanceRepository.checkIsAttendanceIn())
                 {
                     AUtils.setIsOnduty(false);
                     ((MyApplication)AUtils.mainApplicationConstant).stopLocationTracking();
@@ -173,8 +184,8 @@ public class LocationMonitoringService implements LocationListener, GpsStatus.Li
     private void sendLocation() {
 
         try {
-            Date CurrentTime = AUtils.getCurrentTime();
-            Date DutyOffTime = AUtils.getDutyEndTime();
+            Calendar CurrentTime = AUtils.getCurrentTime();
+            Calendar DutyOffTime = AUtils.getDutyEndTime();
 
             if(CurrentTime.before(DutyOffTime)) {
 
@@ -185,22 +196,44 @@ public class LocationMonitoringService implements LocationListener, GpsStatus.Li
                 userLocationPojo.setUserId(Prefs.getString(AUtils.PREFS.USER_ID, ""));
                 userLocationPojo.setLat(Prefs.getString(AUtils.LAT, ""));
                 userLocationPojo.setLong(Prefs.getString(AUtils.LONG, ""));
-                userLocationPojo.setDatetime(AUtils.getSeverDateTime());
+                double startLat = Double.parseDouble(Prefs.getString(AUtils.LAT, "0"));
+                double startLng = Double.parseDouble(Prefs.getString(AUtils.LONG, "0"));
+                userLocationPojo.setDistance(String.valueOf(AUtils.calculateDistance(
+                        AUtils.mainApplicationConstant.getApplicationContext(), startLat, startLng)));
+//                userLocationPojo.setDatetime(AUtils.getServerDateTime()); //TODO
+                userLocationPojo.setDatetime(AUtils.getServerDateTimeLocal());
                 userLocationPojo.setOfflineId("0");
 
+                if(AUtils.isInternetAvailable() && AUtils.isConnectedFast(mContext))
+                    userLocationPojo.setIsOffline(true);
+                else
+                    userLocationPojo.setIsOffline(false);
+
+                String UserTypeId = Prefs.getString(AUtils.PREFS.USER_TYPE_ID, "0");
                 if(AUtils.isInternetAvailable()) {
-
-                    mUserLocationPojoList.add(userLocationPojo);
-                    mAdapter.shareLocation(mUserLocationPojoList);
+                    TableDataCountPojo.LocationCollectionCount count = syncOfflineRepository.getLocationCollectionCount(AUtils.getLocalDate());
+                    if(UserTypeId.equals("0") && (count.getLocationCount() > 0 || count.getCollectionCount() > 0)){
+                        syncOfflineRepository.insetUserLocation(userLocationPojo);
+                    }else{
+                        mUserLocationPojoList.add(userLocationPojo);
+                        mAdapter.shareLocation(mUserLocationPojoList);
+                        mUserLocationPojoList.clear();
+                    }
                 }else {
-                    Type type = new TypeToken<UserLocationPojo>() {}.getType();
-                    mLocationRepository.insertUserLocationEntity(new Gson().toJson(userLocationPojo,type));
-
+                    if(Prefs.getString(AUtils.PREFS.USER_TYPE_ID, "0").equals("0")){
+                        syncOfflineRepository.insetUserLocation(userLocationPojo);
+                    }else {
+                        Type type = new TypeToken<UserLocationPojo>() {}.getType();
+                        mLocationRepository.insertUserLocationEntity(new Gson().toJson(userLocationPojo,type));
+                    }
                     mUserLocationPojoList.clear();
                 }
             }
             else {
                 Log.i(TAG,"After");
+
+                syncOfflineAttendanceRepository.performCollectionInsert(mContext,
+                        syncOfflineAttendanceRepository.checkAttendance(), AUtils.getCurrentDateDutyOffTime());
 
                 AUtils.setIsOnduty(false);
                 ((MyApplication)AUtils.mainApplicationConstant).stopLocationTracking();

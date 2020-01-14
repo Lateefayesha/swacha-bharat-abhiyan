@@ -351,7 +351,7 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
                             submitOnDetails(mId, getGCType(mId));
                         } else {
                             if (!AUtils.isConnectedFast(mContext)) {
-                                AUtils.warning(mContext, getResources().getString(R.string.feature_unavailable_error));
+                                AUtils.warning(mContext, getResources().getString(R.string.feature_unavailable_error), Toast.LENGTH_LONG);
                             } else {
                                 AUtils.info(mContext, getResources().getString(R.string.no_internet_error), Toast.LENGTH_LONG);
                             }
@@ -471,9 +471,9 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
 
             if (!GpsStatus) {
                 startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-            } else {
-                AUtils.saveLocation(locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER));
-            }
+            } //else {
+                //AUtils.saveLocation(locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER));
+            //}
         }
     }
 
@@ -530,7 +530,7 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
             qrLocationPojo.setMobileno("");
 
             qrLocationPojo.setGcType(getGCType(id));
-            qrLocationPojo.setDate(AUtils.getSeverDateTime());
+            qrLocationPojo.setDate(AUtils.getServerDateTime());
 
             startSubmitQRAsyncTask(qrLocationPojo);
         } catch (Exception e) {

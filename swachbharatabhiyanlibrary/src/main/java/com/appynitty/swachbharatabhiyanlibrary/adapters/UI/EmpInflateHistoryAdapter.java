@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 
 import com.appynitty.swachbharatabhiyanlibrary.R;
-import com.appynitty.swachbharatabhiyanlibrary.pojos.WorkHistoryPojo;
+import com.appynitty.swachbharatabhiyanlibrary.pojos.TableDataCountPojo;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 
 import java.util.List;
@@ -19,14 +19,14 @@ import java.util.List;
  * Created by Ayan Dey on 25/10/18.
  */
 
-public class EmpInflateHistoryAdapter extends ArrayAdapter<WorkHistoryPojo> {
+public class EmpInflateHistoryAdapter extends ArrayAdapter<TableDataCountPojo.WorkHistory> {
 
-    private List<WorkHistoryPojo> historyPojoList;
+    private List<TableDataCountPojo.WorkHistory> historyPojoList;
     private Context context;
     private View view;
     private ViewHolder holder;
 
-    public EmpInflateHistoryAdapter(@NonNull Context context, @NonNull List<WorkHistoryPojo> objects) {
+    public EmpInflateHistoryAdapter(@NonNull Context context, @NonNull List<TableDataCountPojo.WorkHistory> objects) {
         super(context, android.R.layout.simple_list_item_1, objects);
         this.context = context;
         this.historyPojoList = objects;
@@ -55,7 +55,7 @@ public class EmpInflateHistoryAdapter extends ArrayAdapter<WorkHistoryPojo> {
         holder = (ViewHolder) view.getTag();
 
         if (!AUtils.isNull(historyPojoList) && !historyPojoList.isEmpty()) {
-            WorkHistoryPojo workHistoryPojo = historyPojoList.get(position);
+            TableDataCountPojo.WorkHistory workHistoryPojo = historyPojoList.get(position);
             holder.date.setText(String.valueOf(AUtils.extractDateEmp(workHistoryPojo.getDate())));
             holder.month.setText(String.valueOf(AUtils.extractMonthEmp(workHistoryPojo.getDate())));
             holder.houseCollection.setText(workHistoryPojo.getHouseCollection());
