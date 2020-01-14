@@ -90,7 +90,10 @@ public class LocationMonitoringService implements LocationListener, GpsStatus.Li
 
             locationManager.addGpsStatusListener(this);
 
-            locationManager.requestLocationUpdates(AUtils.LOCATION_INTERVAL, gpsFreqInDistance, criteria, this, null);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,AUtils.LOCATION_INTERVAL,
+                    gpsFreqInDistance, this, null);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,AUtils.LOCATION_INTERVAL,
+                    gpsFreqInDistance, this, null);
 
         } catch (IllegalArgumentException e) {
             Log.e(TAG, e.getLocalizedMessage());
