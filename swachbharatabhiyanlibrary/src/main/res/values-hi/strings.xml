@@ -119,4 +119,5 @@
     <string name="title_activity_sync_offline">ऑफ़लाइन समन्वयित करें</string>
     <string name="success_offline_sync">डेटा सिंक सफल हो गया है</string>
     <string name="hint_first_sync">सबसे पहले, कृपया ऑफ़लाइन डेटा सिंक करें</string>
+    <string name="image_add_error">छवि जोड़ने में असमर्थ</string>
 </resources>

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Yavatmal Garbage Collection Van</string>
+    <string name="app_name">Yavatmal Garbage Collection  </string>
     <string name="title_activity_dashboard">Yavatmal Garbage Collection Van</string>
     <string name="title_activity_qrcode_scanner">Scaniffy Code</string>
     <string name="title_activity_take_photo">Taking Photo</string>
@@ -166,5 +166,7 @@
     <string name="title_activity_sync_offline">Sync Offline</string>
     <string name="success_offline_sync">Data Sync is Done Successful</string>
     <string name="hint_first_sync">Firstly, Please Sync Offline Data</string>
+
+    <string name="image_add_error">Unable to add image</string>
 
 </resources>

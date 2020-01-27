@@ -6,8 +6,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.hardware.camera2.CameraCharacteristics;
+import android.hardware.camera2.CameraManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,6 +30,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.appynitty.swachbharatabhiyanlibrary.R;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.UI.InflateMenuAdapter;
@@ -58,6 +65,8 @@ import com.pixplicity.easyprefs.library.Prefs;
 import com.riaylibrary.custom_component.GlideCircleTransformation;
 import com.riaylibrary.utils.LocaleHelper;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -72,6 +81,9 @@ import static com.appynitty.swachbharatabhiyanlibrary.R.color.colorONDutyGreen;
 public class DashboardActivity extends AppCompatActivity implements PopUpDialog.PopUpDialogListener {
 
     private final static String TAG = "DashboardActivity";
+
+    private static final int REQUEST_CAMERA = 22;
+    private static final int SELECT_FILE = 33;
 
     private Context mContext;
     private FabSpeedDial fab;
@@ -299,6 +311,22 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == SELECT_FILE) {
+
+//                onSelectFromGalleryResult(data);
+
+            } else if (requestCode == REQUEST_CAMERA) {
+
+                onCaptureImageResult(data);
+            }
+        }
+    }
+
     private void initComponents() {
 
         getPermission();
@@ -328,6 +356,9 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         syncOfflineAttendanceRepository = new SyncOfflineAttendanceRepository(mContext);
 
 
+        if (AUtils.isNull(attendancePojo)) {
+            attendancePojo = new AttendancePojo();
+        }
 
         fab = findViewById(R.id.fab_setting);
         menuGridView = findViewById(R.id.menu_grid);
@@ -605,74 +636,10 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         isSwitchOn = isChecked;
 
         if (isChecked) {
-            if (isLocationPermission) {
-                if(AUtils.isGPSEnable(AUtils.currentContextConstant)) {
-                    if(!AUtils.DutyOffFromService) {
-                        HashMap<Integer, Object> mLanguage = new HashMap<>();
-
-                        vehicleTypePojoList = mVehicleTypeAdapter.getVehicleTypePojoList();
-
-                        if (!AUtils.isNull(vehicleTypePojoList) && !vehicleTypePojoList.isEmpty()) {
-                            for (int i = 0; i < vehicleTypePojoList.size(); i++) {
-                                mLanguage.put(i, vehicleTypePojoList.get(i));
-                            }
-
-                            if (!AUtils.isIsOnduty()) {
-                                ((MyApplication) AUtils.mainApplicationConstant).startLocationTracking();
-
-                                PopUpDialog dialog = new PopUpDialog(DashboardActivity.this, AUtils.DIALOG_TYPE_VEHICLE, mLanguage, this);
-                                dialog.show();
-                            }
-                        } else {
-                            mVehicleTypeAdapter.getVehicleType();
-                            markAttendance.setChecked(false);
-                            AUtils.error(mContext, mContext.getString(R.string.vehicle_not_found_error), Toast.LENGTH_SHORT);
-                        }
-                    } else {
-                        AUtils.DutyOffFromService = false;
-                    }
-                }
-                else {
-                    markAttendance.setChecked(false);
-                    AUtils.showGPSSettingsAlert(mContext);
-                }
-            } else {
-                isLocationPermission = AUtils.isLocationPermissionGiven(DashboardActivity.this);
-            }
+//            onSwitchOn();
+            takePhoto();
         } else {
-            if (AUtils.isIsOnduty()) {
-                try{
-                    if(!isFromAttendanceChecked) {
-                    AUtils.showConfirmationDialog(mContext, AUtils.CONFIRM_OFFDUTY_DIALOG, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            dialogInterface.dismiss();
-                            if(AUtils.isNull(attendancePojo))
-                              attendancePojo = new AttendancePojo();
-
-                            syncOfflineAttendanceRepository.insertCollection(attendancePojo, SyncOfflineAttendanceRepository.OutAttendanceId);
-                            onOutPunchSuccess();
-
-                            if (AUtils.isInternetAvailable()) {
-                                mOfflineAttendanceAdapter.SyncOfflineData();
-                            }
-                        }
-                    }, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            dialogInterface.dismiss();
-                            markAttendance.setChecked(true);
-                        }
-                    });
-
-                    } else {
-                        isFromAttendanceChecked = false;
-                    }
-                }catch (Exception e){
-                    e.printStackTrace();
-                    markAttendance.setChecked(true);
-                }
-            }
+            onSwitchOff();
         }
     }
 
@@ -684,10 +651,6 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
             Prefs.putString(AUtils.VEHICLE_ID, vehicleTypePojo.getVtId());
 
             Prefs.putString(AUtils.VEHICLE_NO, vehicleNo);
-
-            if (AUtils.isNull(attendancePojo)) {
-                attendancePojo = new AttendancePojo();
-            }
 
             try{
                 syncOfflineAttendanceRepository.insertCollection(attendancePojo, SyncOfflineAttendanceRepository.InAttendanceId);
@@ -851,5 +814,116 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
     private void verifyOfflineData(Class<?> nextClass, boolean killPreviousActivity) {
         verifyDataAdapterClass.setRequiredParameters(nextClass, killPreviousActivity);
         verifyDataAdapterClass.verifyData();
+    }
+
+    private void takePhoto() {
+
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        intent.putExtra("android.intent.extras.CAMERA_FACING", CameraCharacteristics.LENS_FACING_BACK);
+        intent.putExtra("android.intent.extra.USE_FRONT_CAMERA", true);
+
+        startActivityForResult(intent, REQUEST_CAMERA);
+    }
+
+    private void onSwitchOn(){
+        if (isLocationPermission) {
+            if(AUtils.isGPSEnable(AUtils.currentContextConstant)) {
+                if(!AUtils.DutyOffFromService) {
+                    HashMap<Integer, Object> mLanguage = new HashMap<>();
+
+                    vehicleTypePojoList = mVehicleTypeAdapter.getVehicleTypePojoList();
+
+                    if (!AUtils.isNull(vehicleTypePojoList) && !vehicleTypePojoList.isEmpty()) {
+                        for (int i = 0; i < vehicleTypePojoList.size(); i++) {
+                            mLanguage.put(i, vehicleTypePojoList.get(i));
+                        }
+
+                        if (!AUtils.isIsOnduty()) {
+                            ((MyApplication) AUtils.mainApplicationConstant).startLocationTracking();
+
+                            PopUpDialog dialog = new PopUpDialog(DashboardActivity.this, AUtils.DIALOG_TYPE_VEHICLE, mLanguage, this);
+                            dialog.show();
+                        }
+                    } else {
+                        mVehicleTypeAdapter.getVehicleType();
+                        markAttendance.setChecked(false);
+                        AUtils.error(mContext, mContext.getString(R.string.vehicle_not_found_error), Toast.LENGTH_SHORT);
+                    }
+                } else {
+                    AUtils.DutyOffFromService = false;
+                }
+            }
+            else {
+                markAttendance.setChecked(false);
+                AUtils.showGPSSettingsAlert(mContext);
+            }
+        } else {
+            isLocationPermission = AUtils.isLocationPermissionGiven(DashboardActivity.this);
+        }
+    }
+
+    private void onSwitchOff(){
+        if (AUtils.isIsOnduty()) {
+            try{
+                if(!isFromAttendanceChecked) {
+                    AUtils.showConfirmationDialog(mContext, AUtils.CONFIRM_OFFDUTY_DIALOG, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                            if(AUtils.isNull(attendancePojo))
+                                attendancePojo = new AttendancePojo();
+
+                            syncOfflineAttendanceRepository.insertCollection(attendancePojo, SyncOfflineAttendanceRepository.OutAttendanceId);
+                            onOutPunchSuccess();
+
+                            if (AUtils.isInternetAvailable()) {
+                                mOfflineAttendanceAdapter.SyncOfflineData();
+                            }
+                        }
+                    }, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                            markAttendance.setChecked(true);
+                        }
+                    });
+
+                } else {
+                    isFromAttendanceChecked = false;
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+                markAttendance.setChecked(true);
+            }
+        }
+    }
+
+    private void onCaptureImageResult(Intent data) {
+
+        Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
+        File destination = null;
+        try {
+            File dir = mContext.getExternalFilesDir(null);
+
+            if (!dir.exists()) {
+                boolean b = dir.mkdir();
+                Log.i(TAG,String.valueOf(b));
+            }
+
+            destination = new File(dir, System.currentTimeMillis() + ".jpg");
+
+            FileOutputStream fOut = new FileOutputStream(destination);
+            thumbnail.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
+
+            attendancePojo.setImagePath(destination.getAbsolutePath());
+
+            onSwitchOn();
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+            AUtils.error(mContext, mContext.getResources().getString(R.string.image_add_error), Toast.LENGTH_SHORT);
+        }
     }
 }
