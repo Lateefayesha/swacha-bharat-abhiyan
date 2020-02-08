@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Yavatmal Garbage Collection Van</string>
+    <string name="app_name">Yavatmal Garbage Collection  </string>
     <string name="title_activity_dashboard">Yavatmal Garbage Collection Van</string>
     <string name="title_activity_qrcode_scanner">Scaniffy Code</string>
     <string name="title_activity_take_photo">Taking Photo</string>
@@ -190,5 +190,7 @@
     <string name="waste_management_added_txt">Waste Details</string>
     <string name="title_activity_waste_history_details">Waste History Details</string>
     <string name="waste_details_success">Details Saved Successfully</string>
+
+    <string name="image_add_error">Unable to add image</string>
 
 </resources>

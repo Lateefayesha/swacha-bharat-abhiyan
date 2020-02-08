@@ -31,6 +31,8 @@ public class AttendancePojo {
 
     private String daEndDate;
 
+    private String imagePath;
+
     public String getStartLat() {
         return startLat;
     }
@@ -135,22 +137,30 @@ public class AttendancePojo {
         this.daEndDate = daEndDate;
     }
 
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+
     @Override
     public String toString() {
-        return "AttendancePojo{" +
-                "startLat='" + startLat + '\'' +
-                ", OfflineID='" + OfflineID + '\'' +
-                ", userId='" + userId + '\'' +
-                ", vtId='" + vtId + '\'' +
-                ", startLong='" + startLong + '\'' +
-                ", daDate='" + daDate + '\'' +
-                ", endLat='" + endLat + '\'' +
-                ", batteryStatus='" + batteryStatus + '\'' +
-                ", endLong='" + endLong + '\'' +
-                ", vehicleNumber='" + vehicleNumber + '\'' +
-                ", startTime='" + startTime + '\'' +
-                ", endTime='" + endTime + '\'' +
-                ", daEndDate='" + daEndDate + '\'' +
-                '}';
+        return "AttendancePojo{"
+                + "startLat='" + startLat + '\''
+                + ", OfflineID='" + OfflineID + '\''
+                + ", userId='" + userId + '\''
+                + ", vtId='" + vtId + '\''
+                + ", startLong='" + startLong + '\''
+                + ", daDate='" + daDate + '\''
+                + ", endLat='" + endLat + '\''
+                + ", batteryStatus='" + batteryStatus + '\''
+                + ", endLong='" + endLong + '\''
+                + ", vehicleNumber='" + vehicleNumber + '\''
+                + ", startTime='" + startTime + '\''
+                + ", endTime='" + endTime + '\''
+                + ", daEndDate='" + daEndDate + '\''
+                + ", imagePath='" + imagePath + '\'' + '}';
     }
 }
