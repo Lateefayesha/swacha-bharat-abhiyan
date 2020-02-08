@@ -7,10 +7,19 @@ public class MenuListPojo {
 
     private String menuName;
     private Integer image;
+    private Class<?> nextIntent;
+    private Boolean checkAttendance;
 
     public MenuListPojo(String menuName, Integer image) {
         this.menuName = menuName;
         this.image = image;
+    }
+
+    public MenuListPojo(String menuName, Integer image, Class<?> nextIntent, Boolean checkAttendance) {
+        this.menuName = menuName;
+        this.image = image;
+        this.nextIntent = nextIntent;
+        this.checkAttendance = checkAttendance;
     }
 
     public String getMenuName() {
@@ -27,5 +36,21 @@ public class MenuListPojo {
 
     public void setImage(Integer image) {
         this.image = image;
+    }
+
+    public Class<?> getNextIntent() {
+        return nextIntent;
+    }
+
+    public void setNextIntent(Class<?> nextIntent) {
+        this.nextIntent = nextIntent;
+    }
+
+    public Boolean getCheckAttendance() {
+        return checkAttendance;
+    }
+
+    public void setCheckAttendance(Boolean checkAttendance) {
+        this.checkAttendance = checkAttendance;
     }
 }

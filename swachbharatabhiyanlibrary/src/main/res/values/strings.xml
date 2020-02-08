@@ -166,5 +166,6 @@
     <string name="title_activity_sync_offline">Sync Offline</string>
     <string name="success_offline_sync">Data Sync is Done Successful</string>
     <string name="hint_first_sync">Firstly, Please Sync Offline Data</string>
+    <string name="title_activity_waste_add_details">Add Waste Details</string>
 
 </resources>

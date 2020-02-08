@@ -264,7 +264,7 @@ public class EmpDashboardActivity extends AppCompatActivity implements EmpPopUpD
                 {
                     isFromAttendanceChecked = true;
                     onOutPunchSuccess();
-                    if(Prefs.getString(AUtils.LANGUAGE_NAME,AUtils.DEFAULT_LANGUAGE_ID).equals("2")) {
+                    if(Prefs.getString(AUtils.LANGUAGE_NAME,AUtils.DEFAULT_LANGUAGE_ID).equals(AUtils.LanguageIDConstants.MARATHI)) {
                         AUtils.info(mContext, messageMar,Toast.LENGTH_LONG);
                     }
                     else {
@@ -581,7 +581,7 @@ public class EmpDashboardActivity extends AppCompatActivity implements EmpPopUpD
 
         if(!AUtils.isNull(userDetailPojo)){
 
-//            if(Prefs.getString(AUtils.LANGUAGE_NAME, AUtils.DEFAULT_LANGUAGE_ID).equals("2"))
+//            if(Prefs.getString(AUtils.LANGUAGE_NAME, AUtils.DEFAULT_LANGUAGE_ID).equals(AUtils.LanguageIDConstants.MARATHI))
 //                userName.setText(userDetailPojo.getNameMar());
 //            else
                 userName.setText(userDetailPojo.getName());
