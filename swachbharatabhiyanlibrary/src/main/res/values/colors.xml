@@ -14,8 +14,11 @@
     <color name="colorONDutyGreen">#3d8e40</color>
 
     <color name="colorItemSelected">#c8e6c9</color>
-    <color name="black_alpfa_170">#86000000</color>
-    <color name="black_alpfa_50">#32000000</color>
+    <color name="black_alpha_170">#86000000</color>
+    <color name="black_alpha_20">#32000000</color>
+    <color name="black_alpha_5">#0D000000</color>
+    <color name="black_alpha_45">#72000000</color>
+    <color name="white_alpha_50">#80FFFFFF</color>
 
     <color name="colorBlue">#658bf3</color>
     <color name="colorGreenLight">#54e69d</color>

@@ -12,20 +12,19 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.CompoundButton;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.appynitty.swachbharatabhiyanlibrary.R;
-import com.appynitty.swachbharatabhiyanlibrary.adapters.UI.EmpInflateMenuAdapter;
+import com.appynitty.swachbharatabhiyanlibrary.adapters.UI.DashboardMenuAdapter;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.EmpAttendanceAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.EmpCheckAttendanceAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.EmpSyncServerAdapterClass;
@@ -46,7 +45,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.pixplicity.easyprefs.library.Prefs;
 import com.riaylibrary.custom_component.GlideCircleTransformation;
-import com.riaylibrary.utils.CommonUtils;
 import com.riaylibrary.utils.LocaleHelper;
 
 import java.lang.reflect.Type;
@@ -63,7 +61,7 @@ public class EmpDashboardActivity extends AppCompatActivity implements EmpPopUpD
 
     private Context mContext;
     private FabSpeedDial fab;
-    private GridView menuGridView;
+    private RecyclerView menuGridView;
     private Toolbar toolbar;
     private TextView attendanceStatus;
     private TextView vehicleStatus;
@@ -236,6 +234,8 @@ public class EmpDashboardActivity extends AppCompatActivity implements EmpPopUpD
 
         fab = findViewById(R.id.fab_setting);
         menuGridView = findViewById(R.id.menu_grid);
+        menuGridView.setLayoutManager(new GridLayoutManager(mContext, 2));
+
         toolbar = findViewById(R.id.toolbar);
         attendanceStatus = findViewById(R.id.user_attendance_status);
         vehicleStatus = findViewById(R.id.user_vehicle_type);
@@ -338,13 +338,6 @@ public class EmpDashboardActivity extends AppCompatActivity implements EmpPopUpD
             }
         });
 
-        menuGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                setMenuClick(position);
-            }
-        });
-
         mUserDetailAdapter.setUserDetailListener(new EmpUserDetailAdapterClass.UserDetailListener() {
             @Override
             public void onSuccessCallBack() {
@@ -359,21 +352,6 @@ public class EmpDashboardActivity extends AppCompatActivity implements EmpPopUpD
 
     }
 
-    private void setMenuClick(int position) {
-
-        switch (position) {
-            case 0:
-                if(AUtils.isIsOnduty())
-                    startActivity(new Intent(mContext, EmpQRcodeScannerActivity.class));
-                else
-                    AUtils.warning(mContext, getResources().getString(R.string.be_no_duty));
-                break;
-            case 1:
-                startActivity(new Intent(mContext, EmpHistoryPageActivity.class));
-                break;
-        }
-    }
-
     private void initData() {
 
         initUserDetails();
@@ -382,12 +360,13 @@ public class EmpDashboardActivity extends AppCompatActivity implements EmpPopUpD
 
         List<MenuListPojo> menuPojoList = new ArrayList<MenuListPojo>();
 
-        menuPojoList.add(new MenuListPojo(getResources().getString(R.string.title_activity_qrcode_scanner), R.drawable.ic_qr_code));
-        menuPojoList.add(new MenuListPojo(getResources().getString(R.string.title_activity_history_page), R.drawable.ic_history));
+        menuPojoList.add(new MenuListPojo(getResources().getString(R.string.title_activity_qrcode_scanner), R.drawable.ic_qr_code, EmpQRcodeScannerActivity.class, true));
+        menuPojoList.add(new MenuListPojo(getResources().getString(R.string.title_activity_history_page), R.drawable.ic_history, EmpHistoryPageActivity.class, false));
 
 //        menuPojoList.add(new MenuListPojo(getResources().getString(R.string.title_activity_profile_page), R.drawable.ic_id_card));
 
-        EmpInflateMenuAdapter mainMenuAdaptor = new EmpInflateMenuAdapter(EmpDashboardActivity.this, menuPojoList);
+        DashboardMenuAdapter mainMenuAdaptor = new DashboardMenuAdapter(EmpDashboardActivity.this);
+        mainMenuAdaptor.setMenuList(menuPojoList);
         menuGridView.setAdapter(mainMenuAdaptor);
 
         Type type = new TypeToken<EmpInPunchPojo>() {

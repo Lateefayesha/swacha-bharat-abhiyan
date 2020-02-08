@@ -56,6 +56,7 @@ public class SyncOfflineAdapterClass {
                 GarbageCollectionWebService service = Connection.createService(GarbageCollectionWebService.class, AUtils.SERVER_URL);
 
                 service.syncOfflineData(Prefs.getString(AUtils.APP_ID, ""),
+                        Prefs.getString(AUtils.PREFS.USER_TYPE_ID, ""),
                         AUtils.getBatteryStatus(), AUtils.CONTENT_TYPE, syncOfflineList)
                         .enqueue(new Callback<List<OfflineGcResultPojo>>() {
                     @Override

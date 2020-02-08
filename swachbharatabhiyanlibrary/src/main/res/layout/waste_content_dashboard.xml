@@ -33,7 +33,7 @@
             android:paddingStart="@dimen/dim_12_dp"
             android:paddingEnd="@dimen/dim_12_dp"
             android:paddingTop="@dimen/dim_5_dp"
-            android:paddingBottom="@dimen/dim_10_dp">
+            android:paddingBottom="@dimen/dim_5_dp">
 
             <ImageView
                 android:id="@+id/user_profile_pic"
@@ -84,7 +84,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:paddingStart="@dimen/dim_0_dp"
                     android:paddingEnd="@dimen/dim_5_dp"
                     android:layout_marginTop="@dimen/dim_10_dp"
                     android:layout_below="@id/user_emp_id_lbl">
@@ -106,7 +105,9 @@
                         android:layout_height="match_parent"/>
 
                 </LinearLayout>
+
             </RelativeLayout>
+
 
         </LinearLayout>
 

@@ -30,6 +30,15 @@ public class LastLocationRepository {
             COLUMN_LNG + " TEXT DEFAULT NULL, " +
             COLUMN_DATE + " DATETIME DEFAULT (strftime('%Y-%m-%d %H:%M:%S','now', 'localtime')))";
 
+    public static final String RESTORE_TABLE =
+            "INSERT INTO " + LAST_LOCATION_TABLE + " SELECT * FROM TEMP_" + LAST_LOCATION_TABLE;
+
+    public static final String DROP_TEMP_TABLE =
+            "DROP TABLE IF EXISTS TEMP_" + LAST_LOCATION_TABLE;
+
+    public static final String CREATE_TEMP_TABLE =
+            "ALTER TABLE " + LAST_LOCATION_TABLE + " RENAME TO TEMP_" + LAST_LOCATION_TABLE;
+
     private Context mContext;
 
     public LastLocationRepository(Context context) {

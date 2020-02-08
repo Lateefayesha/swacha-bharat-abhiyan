@@ -82,4 +82,8 @@ public class TableDataCountPojo {
             LocationCount = locationCount;
         }
     }
+
+    public class WasteAddHistory {
+
+    }
 }

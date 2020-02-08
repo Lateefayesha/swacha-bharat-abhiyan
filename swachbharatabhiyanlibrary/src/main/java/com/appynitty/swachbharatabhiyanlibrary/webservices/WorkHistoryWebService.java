@@ -2,6 +2,7 @@ package com.appynitty.swachbharatabhiyanlibrary.webservices;
 
 import com.appynitty.swachbharatabhiyanlibrary.pojos.EmpWorkHistoryDetailPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.TableDataCountPojo;
+import com.appynitty.swachbharatabhiyanlibrary.pojos.WasteManagementHistoryPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.WorkHistoryDetailPojo;
 
 import java.util.List;
@@ -14,9 +15,9 @@ public interface WorkHistoryWebService {
 
     @GET("api/Get/WorkHistory")
     Call<List<TableDataCountPojo.WorkHistory>> pullWorkHistoryList(@Header("appId") String appId,
-                                                       @Header("userId") String userId,
-                                                       @Header("year") String year,
-                                                       @Header("month") String month);
+                                                                   @Header("userId") String userId,
+                                                                   @Header("year") String year,
+                                                                   @Header("month") String month);
 
 
     @GET("api//Get/WorkHistory/Details")
@@ -27,13 +28,26 @@ public interface WorkHistoryWebService {
 
     @GET("api/Get/QrWorkHistory ")
     Call<List<TableDataCountPojo.WorkHistory>> pullEmpWorkHistoryList(@Header("appId") String appId,
-                                                          @Header("userId") String userId,
-                                                          @Header("year") String year,
-                                                          @Header("month") String month);
+                                                                      @Header("userId") String userId,
+                                                                      @Header("year") String year,
+                                                                      @Header("month") String month);
 
 
     @GET("api/Get/QrWorkHistoryDetails")
     Call<List<EmpWorkHistoryDetailPojo>> pullEmpWorkHistoryDetailList(@Header("appId") String appId,
-                                                                   @Header("userId") String userId,
-                                                                   @Header("Date") String fDate);
+                                                                      @Header("userId") String userId,
+                                                                      @Header("Date") String fDate);
+
+
+    @GET("api/Get/GarbageHistory")
+    Call<List<WasteManagementHistoryPojo>> pullWasteManagementHistory(@Header("appId") String appId,
+                                                                      @Header("userId") String userId,
+                                                                      @Header("year") String year,
+                                                                      @Header("month") String month);
+
+
+    @GET("api/Get/GarbageHistory/Details")
+    Call<List<WasteManagementHistoryPojo>> pullWasteManagementHistoryDetails(@Header("appId") String appId,
+                                                                           @Header("userId") String userId,
+                                                                           @Header("fdate") String fDate);
 }

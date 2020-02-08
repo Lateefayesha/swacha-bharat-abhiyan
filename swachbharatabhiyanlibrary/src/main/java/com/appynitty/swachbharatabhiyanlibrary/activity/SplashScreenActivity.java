@@ -45,7 +45,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         if(AUtils.isInternetAvailable())
             mAdapter.checkVersionDetails();
         else
-            loadnextPage();
+            loadNextPage();
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
@@ -69,12 +69,12 @@ public class SplashScreenActivity extends AppCompatActivity {
 
             @Override
             public void onFailureCallBack() {
-                loadnextPage();
+                loadNextPage();
             }
         });
     }
 
-    private void loadnextPage(){
+    private void loadNextPage(){
         if(Prefs.getBoolean(AUtils.PREFS.IS_USER_LOGIN,false))
         {
             loadDashboard();
@@ -109,16 +109,9 @@ public class SplashScreenActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-
-                if(Prefs.getString(AUtils.PREFS.USER_TYPE_ID, "0").equals("1")) {
-                    startActivity(new Intent(SplashScreenActivity.this, EmpDashboardActivity.class));
-                    SplashScreenActivity.this.finish();
-                } else {
-                    startActivity(new Intent(SplashScreenActivity.this, DashboardActivity.class));
-                    SplashScreenActivity.this.finish();
-                }
-
-
+                String userType = Prefs.getString(AUtils.PREFS.USER_TYPE_ID, AUtils.USER_TYPE.USER_TYPE_GHANTA_GADI);
+                startActivity(new Intent(SplashScreenActivity.this, AUtils.getDashboardClass(userType)));
+                SplashScreenActivity.this.finish();
             }
         }, AUtils.SPLASH_SCREEN_TIME);
     }

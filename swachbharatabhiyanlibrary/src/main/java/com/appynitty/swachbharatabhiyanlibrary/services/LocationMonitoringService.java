@@ -27,6 +27,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Objects;
 
 public class LocationMonitoringService implements LocationListener, GpsStatus.Listener {
 
@@ -107,11 +108,11 @@ public class LocationMonitoringService implements LocationListener, GpsStatus.Li
                     gpsFreqInDistance, this, null);
 
         } catch (IllegalArgumentException e) {
-            Log.e(TAG, e.getLocalizedMessage());
+            Log.e(TAG, Objects.requireNonNull(e.getLocalizedMessage()));
         } catch (SecurityException e) {
-            Log.e(TAG, e.getLocalizedMessage());
+            Log.e(TAG, Objects.requireNonNull(e.getLocalizedMessage()));
         } catch (RuntimeException e) {
-            Log.e(TAG, e.getLocalizedMessage());
+            Log.e(TAG, Objects.requireNonNull(e.getLocalizedMessage()));
         }
     }
 
@@ -142,19 +143,15 @@ public class LocationMonitoringService implements LocationListener, GpsStatus.Li
                 if(Prefs.getBoolean(AUtils.PREFS.IS_ON_DUTY,false)) {
                     if (updatedTime == 0) {
                         updatedTime = System.currentTimeMillis();
-
-                        sendLocation();
-
                         Log.d(TAG, "updated Time ==== " + updatedTime);
                     }
 
                     if ((updatedTime + AUtils.LOCATION_INTERVAL_MINUTES) <= System.currentTimeMillis()) {
                         updatedTime = System.currentTimeMillis();
-
-                        sendLocation();
-
                         Log.d(TAG, "updated Time ==== " + updatedTime);
                     }
+
+                    sendLocation();
                 }
             }
         }
@@ -209,22 +206,22 @@ public class LocationMonitoringService implements LocationListener, GpsStatus.Li
                 else
                     userLocationPojo.setIsOffline(false);
 
-                String UserTypeId = Prefs.getString(AUtils.PREFS.USER_TYPE_ID, "0");
+                String UserTypeId = Prefs.getString(AUtils.PREFS.USER_TYPE_ID, AUtils.USER_TYPE.USER_TYPE_GHANTA_GADI);
                 if(AUtils.isInternetAvailable()) {
                     TableDataCountPojo.LocationCollectionCount count = syncOfflineRepository.getLocationCollectionCount(AUtils.getLocalDate());
-                    if(UserTypeId.equals("0") && (count.getLocationCount() > 0 || count.getCollectionCount() > 0)){
+                    if((UserTypeId.equals(AUtils.USER_TYPE.USER_TYPE_GHANTA_GADI) || UserTypeId.equals(AUtils.USER_TYPE.USER_TYPE_WASTE_MANAGER)) && (count.getLocationCount() > 0 || count.getCollectionCount() > 0)){
                         syncOfflineRepository.insetUserLocation(userLocationPojo);
-                    }else{
+                    } else {
                         mUserLocationPojoList.add(userLocationPojo);
                         mAdapter.shareLocation(mUserLocationPojoList);
                         mUserLocationPojoList.clear();
                     }
-                }else {
-                    if(Prefs.getString(AUtils.PREFS.USER_TYPE_ID, "0").equals("0")){
-                        syncOfflineRepository.insetUserLocation(userLocationPojo);
-                    }else {
+                } else {
+                    if(UserTypeId.equals(AUtils.USER_TYPE.USER_TYPE_EMP_SCANNIFY)){
                         Type type = new TypeToken<UserLocationPojo>() {}.getType();
                         mLocationRepository.insertUserLocationEntity(new Gson().toJson(userLocationPojo,type));
+                    }else {
+                        syncOfflineRepository.insetUserLocation(userLocationPojo);
                     }
                     mUserLocationPojoList.clear();
                 }

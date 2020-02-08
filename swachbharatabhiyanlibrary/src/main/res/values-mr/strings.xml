@@ -42,6 +42,9 @@
     <string name="plz_capture_img">कृपया कोणताही एक फोटो कॅप्चर करा</string>
     <string name="garbage_collection_completed">कचरा संकलन पूर्ण झाले</string>
     <string name="garbage_deposit_completed">कचरा जमा प्रक्रिया पूर्ण झाले</string>
+    <string name="edit_details_txt">तपशील संपादित करा</string>
+    <string name="save_txt">सेव करा</string>
+    <string name="cancel_txt">रद्द करा</string>
     <string name="done_txt">पूर्ण झाले</string>
     <string name="retry_txt">पुन्हा प्रयत्न करा</string>
     <string name="grant_permission_txt">परवानगी देया</string>
@@ -145,5 +148,26 @@
     <string name="title_activity_sync_offline">ऑफलाइन समक्रमित करा</string>
     <string name="success_offline_sync">डेटा समक्रमण यशस्वी झाले</string>
     <string name="hint_first_sync">प्रथम, कृपया ऑफलाइन डेटा संकालित करा</string>
+    <string name="image_add_error">प्रतिमा जोडण्यात अक्षम</string>
+
+    <string name="title_activity_waste_add_details">कचर्‍याचा तपशील जोडा</string>
+    <string name="title_activity_waste_history">कचरा तपशील इतिहास</string>
+    <string name="title_activity_waste_sync_offline">ऑफलाइन कचरा समक्रमित करा</string>
+
+    <string name="waste_type_txt">कचरेचा प्रकार</string>
+    <string name="waste_category_txt">कचरेची श्रेणी</string>
+    <string name="quantity_txt">कचरेचा प्रमाण</string>
+
+    <string name="select_waste_type">--कचरेचा प्रकार निवडा--</string>
+    <string name="select_waste_category">--कचरेची श्रेणी निवडा--</string>
+
+    <string name="plz_select_waste_type">कृपया कचरेचा प्रकार निवडा</string>
+    <string name="plz_select_waste_category">कृपया कचरेची श्रेणी निवडा</string>
+    <string name="plz_enter_waste_quantity">कृपया कचरेचा प्रमाण प्रविष्ट करा</string>
+    <string name="add_more_txt">अधिक जोडा</string>
+    <string name="delete_txt">हटवा</string>
+    <string name="click_here_to_add_item">आयटम जोडण्यासाठी येथे क्लिक करा</string>
+
+    <string name="waste_management_added_txt">कचरा तपशील</string>
 
 </resources>

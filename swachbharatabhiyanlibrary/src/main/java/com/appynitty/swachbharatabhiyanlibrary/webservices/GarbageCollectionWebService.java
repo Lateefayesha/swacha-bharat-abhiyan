@@ -71,12 +71,14 @@ public interface GarbageCollectionWebService {
 
     @POST("api/Save/GarbageCollectionOfflineUpload")
     Call<List<OfflineGcResultPojo>> saveGarbageCollectionOffline(@Header("appId") String appId,
+                                                                 @Header("typeId") String typeId,
                                                                  @Header("batteryStatus") int batteryStatus,
                                                                  @Header("Content-Type") String contentType,
                                                                  @Body List<OfflineGarbageColectionPojo> userLocationPojoList);
 
     @POST("api/Save/GarbageCollectionOfflineUpload")
     Call<List<OfflineGcResultPojo>> syncOfflineData(@Header("appId") String appId,
+                                                    @Header("typeId") String typeId,
                                                     @Header("batteryStatus") int batteryStatus,
                                                     @Header("Content-Type") String contentType,
                                                     @Body List<SyncOfflinePojo> offlineDataList);

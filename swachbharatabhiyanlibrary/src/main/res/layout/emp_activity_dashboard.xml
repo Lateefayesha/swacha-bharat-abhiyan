@@ -30,7 +30,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:fab_extraMargin="-15dp"
-        app:fab_menu="@menu/menu"
+        app:fab_menu="@menu/emp_menu"
         app:fab_miniFabTextColor="@color/colorAccent"
         app:fab_miniFabTextBackground="@drawable/rounded_white_button"
         app:fab_fabDrawable="@drawable/ic_repairing_service"/>

@@ -8,13 +8,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.CompoundButton;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -25,24 +21,23 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.appynitty.swachbharatabhiyanlibrary.R;
-import com.appynitty.swachbharatabhiyanlibrary.adapters.UI.InflateMenuAdapter;
+import com.appynitty.swachbharatabhiyanlibrary.adapters.UI.DashboardMenuAdapter;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.AttendanceAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.CheckAttendanceAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.OfflineAttendanceAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.UserDetailAdapterClass;
-import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.VehicleTypeAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.VerifyDataAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.dialogs.EmpPopUpDialog;
 import com.appynitty.swachbharatabhiyanlibrary.dialogs.IdCardDialog;
-import com.appynitty.swachbharatabhiyanlibrary.dialogs.PopUpDialog;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.AttendancePojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.LanguagePojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.MenuListPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.UserDetailPojo;
-import com.appynitty.swachbharatabhiyanlibrary.pojos.VehicleTypePojo;
 import com.appynitty.swachbharatabhiyanlibrary.repository.LastLocationRepository;
 import com.appynitty.swachbharatabhiyanlibrary.repository.SyncOfflineAttendanceRepository;
 import com.appynitty.swachbharatabhiyanlibrary.repository.SyncOfflineRepository;
@@ -75,16 +70,12 @@ public class WasteDashboardActivity extends AppCompatActivity implements EmpPopU
     private RecyclerView menuGridView;
     private Toolbar toolbar;
     private TextView attendanceStatus;
-    private TextView vehicleStatus;
     private Switch markAttendance;
     private TextView userName;
     private TextView empId;
     private ImageView profilePic;
 
     private AttendancePojo attendancePojo = null;
-
-    private List<VehicleTypePojo> vehicleTypePojoList;
-
     private UserDetailPojo userDetailPojo;
 
     private boolean isLocationPermission = false;
@@ -94,7 +85,6 @@ public class WasteDashboardActivity extends AppCompatActivity implements EmpPopU
 
     private CheckAttendanceAdapterClass mCheckAttendanceAdapter;
     private AttendanceAdapterClass mAttendanceAdapter;
-    private VehicleTypeAdapterClass mVehicleTypeAdapter;
     private UserDetailAdapterClass mUserDetailAdapter;
     private OfflineAttendanceAdapterClass mOfflineAttendanceAdapter;
 
@@ -130,16 +120,16 @@ public class WasteDashboardActivity extends AppCompatActivity implements EmpPopU
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (R.id.action_id_card == item.getItemId()) {
-            if(!AUtils.isNull(userDetailPojo)) {
-//                if (Prefs.getString(AUtils.LANGUAGE_NAME, AUtils.DEFAULT_LANGUAGE_ID).equals(AUtils.LanguageConstants.MARATHI)) {
+            if (!AUtils.isNull(userDetailPojo)) {
+//                if (Prefs.getString(AUtils.LANGUAGE_NAME, AUtils.DEFAULT_LANGUAGE_ID).equals("2")) {
 //                    IdCardDialog cardDialog = new IdCardDialog(mContext, userDetailPojo.getNameMar(), userDetailPojo.getUserId(), userDetailPojo.getProfileImage());
 //                    cardDialog.show();
 //                } else {
-                    IdCardDialog cardDialog = new IdCardDialog(mContext, userDetailPojo.getName(), userDetailPojo.getUserId(), userDetailPojo.getProfileImage());
-                    cardDialog.show();
+                IdCardDialog cardDialog = new IdCardDialog(mContext, userDetailPojo.getName(), userDetailPojo.getUserId(), userDetailPojo.getProfileImage());
+                cardDialog.show();
 //                }
-            }else {
-                AUtils.warning(mContext,mContext.getResources().getString(R.string.try_after_sometime));
+            } else {
+                AUtils.warning(mContext, mContext.getResources().getString(R.string.try_after_sometime));
             }
             return true;
         }
@@ -199,36 +189,8 @@ public class WasteDashboardActivity extends AppCompatActivity implements EmpPopU
     public void onPopUpDismissed(String type, Object listItemSelected, @Nullable String vehicleNo) {
 
         if (!AUtils.isNull(listItemSelected)) {
-            switch (type) {
-                case AUtils.DIALOG_TYPE_VEHICLE: {
-                    onVehicleTypeDialogClose(listItemSelected, vehicleNo);
-                }
-                break;
-                case AUtils.DIALOG_TYPE_LANGUAGE: {
-
-                    onLanguageTypeDialogClose(listItemSelected);
-                }
-                break;
-            }
-        }
-        else
-        {
-            switch (type) {
-                case AUtils.DIALOG_TYPE_VEHICLE: {
-                    if(AUtils.isIsOnduty())
-                    {
-
-                    }
-                    else {
-                        markAttendance.setChecked(false);
-                        ((MyApplication)AUtils.mainApplicationConstant).stopLocationTracking();
-                    }
-                }
-                break;
-                case AUtils.DIALOG_TYPE_LANGUAGE: {
-
-                }
-                break;
+            if (AUtils.DIALOG_TYPE_LANGUAGE.equals(type)) {
+                onLanguageTypeDialogClose(listItemSelected);
             }
         }
     }
@@ -236,64 +198,55 @@ public class WasteDashboardActivity extends AppCompatActivity implements EmpPopU
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        try {
-            if(AUtils.isInternetAvailable())
-            {
-                AUtils.hideSnackBar();
-            }
-            else {
-                AUtils.showSnackBar(findViewById(R.id.parent));
-            }
-
-            String inDate = AUtils.getInPunchDate();
-            String currentDate = AUtils.getServerDate();
-
-            Calendar CurrentTime = AUtils.getCurrentTime();
-            Calendar DutyOffTime = AUtils.getDutyEndTime();
-
-            if(inDate.equals(currentDate) && CurrentTime.after(DutyOffTime)) {
-
-                isFromAttendanceChecked = true;
-
-                String dutyEndTime = AUtils.getCurrentDateDutyOffTime();
-
-                syncOfflineAttendanceRepository.performCollectionInsert(mContext,
-                        syncOfflineAttendanceRepository.checkAttendance(), dutyEndTime);
-
-                onOutPunchSuccess();
-            }
-
-            if(!inDate.equals(currentDate))
-            {
-                isFromAttendanceChecked = true;
-
-                String dutyEndTime = AUtils.getPreviousDateDutyOffTime();
-
-                syncOfflineAttendanceRepository.performCollectionInsert(mContext,
-                        syncOfflineAttendanceRepository.checkAttendance(), dutyEndTime);
-
-                onOutPunchSuccess();
-            }
-
-            if(!AUtils.isNull(syncOfflineAttendanceRepository) && !isFromLogin)
-            {
-                attendancePojo = syncOfflineAttendanceRepository.checkAttendance();
-
-                if(!AUtils.isNull(attendancePojo)) {
-                    markAttendance.setChecked(true);
-                    onInPunchSuccess();
-                }
-            }
-
-            if(!AUtils.isSyncOfflineDataRequestEnable){
-                verifyDataAdapterClass.verifyOfflineSync();
-            }
-
-            checkDutyStatus();
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        if (AUtils.isInternetAvailable()) {
+            AUtils.hideSnackBar();
+        } else {
+            AUtils.showSnackBar(findViewById(R.id.parent));
         }
+
+        String inDate = AUtils.getInPunchDate();
+        String currentDate = AUtils.getServerDate();
+
+        Calendar CurrentTime = AUtils.getCurrentTime();
+        Calendar DutyOffTime = AUtils.getDutyEndTime();
+
+        if (inDate.equals(currentDate) && CurrentTime.after(DutyOffTime)) {
+
+            isFromAttendanceChecked = true;
+
+            String dutyEndTime = AUtils.getCurrentDateDutyOffTime();
+
+            syncOfflineAttendanceRepository.performCollectionInsert(mContext,
+                    syncOfflineAttendanceRepository.checkAttendance(), dutyEndTime);
+
+            onOutPunchSuccess();
+        }
+
+        if (!inDate.equals(currentDate)) {
+            isFromAttendanceChecked = true;
+
+            String dutyEndTime = AUtils.getPreviousDateDutyOffTime();
+
+            syncOfflineAttendanceRepository.performCollectionInsert(mContext,
+                    syncOfflineAttendanceRepository.checkAttendance(), dutyEndTime);
+
+            onOutPunchSuccess();
+        }
+
+        if (!AUtils.isNull(syncOfflineAttendanceRepository) && !isFromLogin) {
+            attendancePojo = syncOfflineAttendanceRepository.checkAttendance();
+
+            if (!AUtils.isNull(attendancePojo)) {
+                markAttendance.setChecked(true);
+                onInPunchSuccess();
+            }
+        }
+
+        if (!AUtils.isSyncOfflineDataRequestEnable) {
+            verifyDataAdapterClass.verifyOfflineSync();
+        }
+
+        checkDutyStatus();
     }
 
     private void initComponents() {
@@ -315,7 +268,6 @@ public class WasteDashboardActivity extends AppCompatActivity implements EmpPopU
 
         mCheckAttendanceAdapter = new CheckAttendanceAdapterClass();
         mAttendanceAdapter = new AttendanceAdapterClass();
-        mVehicleTypeAdapter = new VehicleTypeAdapterClass();
         mUserDetailAdapter = new UserDetailAdapterClass();
         verifyDataAdapterClass = new VerifyDataAdapterClass(mContext);
         mOfflineAttendanceAdapter = new OfflineAttendanceAdapterClass(mContext);
@@ -324,13 +276,12 @@ public class WasteDashboardActivity extends AppCompatActivity implements EmpPopU
         syncOfflineRepository = new SyncOfflineRepository(mContext);
         syncOfflineAttendanceRepository = new SyncOfflineAttendanceRepository(mContext);
 
-
-
         fab = findViewById(R.id.fab_setting);
         menuGridView = findViewById(R.id.menu_grid);
+        menuGridView.setLayoutManager(new GridLayoutManager(mContext, 2));
+
         toolbar = findViewById(R.id.toolbar);
         attendanceStatus = findViewById(R.id.user_attendance_status);
-        vehicleStatus = findViewById(R.id.user_vehicle_type);
         markAttendance = findViewById(R.id.user_attendance_toggle);
         userName = findViewById(R.id.user_full_name);
         empId = findViewById(R.id.user_emp_id);
@@ -350,31 +301,27 @@ public class WasteDashboardActivity extends AppCompatActivity implements EmpPopU
         mCheckAttendanceAdapter.setCheckAttendanceListener(new CheckAttendanceAdapterClass.CheckAttendanceListener() {
             @Override
             public void onSuccessCallBack(boolean isAttendanceOff, String message, String messageMar) {
-                
-                if(isAttendanceOff)
-                {
+                if (isAttendanceOff) {
                     isFromAttendanceChecked = true;
                     onOutPunchSuccess();
-                    if(Prefs.getString(AUtils.LANGUAGE_NAME,AUtils.DEFAULT_LANGUAGE_ID).equals(AUtils.LanguageConstants.MARATHI)) {
-                        AUtils.info(mContext, messageMar,Toast.LENGTH_LONG);
-                    }
-                    else {
-                        AUtils.info(mContext, message,Toast.LENGTH_LONG);
+                    if (Prefs.getString(AUtils.LANGUAGE_NAME, AUtils.DEFAULT_LANGUAGE_ID).equals(AUtils.LanguageIDConstants.MARATHI)) {
+                        AUtils.info(mContext, messageMar, Toast.LENGTH_LONG);
+                    } else {
+                        AUtils.info(mContext, message, Toast.LENGTH_LONG);
                     }
                 }
             }
 
             @Override
             public void onFailureCallBack() {
-                if(!Prefs.getBoolean(AUtils.PREFS.IS_ON_DUTY,false))
-                {
+                if (!Prefs.getBoolean(AUtils.PREFS.IS_ON_DUTY, false)) {
                     onInPunchSuccess();
                 }
             }
 
             @Override
             public void onNetworkFailureCallBack() {
-                AUtils.error(mContext,getResources().getString(R.string.serverError), Toast.LENGTH_LONG);
+                AUtils.error(mContext, getResources().getString(R.string.serverError), Toast.LENGTH_LONG);
             }
         });
 
@@ -385,6 +332,7 @@ public class WasteDashboardActivity extends AppCompatActivity implements EmpPopU
                 if (type == 1) {
                     onInPunchSuccess();
                 } else if (type == 2) {
+
                     onOutPunchSuccess();
                 }
             }
@@ -407,8 +355,6 @@ public class WasteDashboardActivity extends AppCompatActivity implements EmpPopU
             public void onMenuItemClick(FloatingActionButton miniFab, @Nullable TextView label, int itemId) {
                 if (itemId == R.id.action_change_language) {
                     changeLanguage();
-                } else if (itemId == R.id.action_setting) {
-                    startActivity(new Intent(mContext, SettingsActivity.class));
                 } else if (itemId == R.id.action_rate_app) {
                     AUtils.rateApp(mContext);
                 } else if (itemId == R.id.action_share_app) {
@@ -441,60 +387,16 @@ public class WasteDashboardActivity extends AppCompatActivity implements EmpPopU
         verifyDataAdapterClass.setVerifyAdapterListener(new VerifyDataAdapterClass.VerifyAdapterListener() {
             @Override
             public void onDataVerification(Context context, Class<?> providedClass, boolean killActivity) {
-                if ("LoginActivity".equals(providedClass.getSimpleName())) {
+                if (providedClass.getSimpleName().equals("LoginActivity")) {
                     openLogin(context, providedClass);
-                }else {
+                } else {
                     context.startActivity(new Intent(context, providedClass));
                 }
 
-                if(killActivity)
+                if (killActivity)
                     ((Activity) context).finish();
             }
         });
-
-    }
-
-    private void setMenuClick(int position) {
-
-        if(!AUtils.isSyncOfflineDataRequestEnable){
-            verifyDataAdapterClass.verifyOfflineSync();
-        }
-
-        switch (position) {
-            case 0:
-                if(AUtils.isIsOnduty())
-                    if(!AUtils.isInternetAvailable()) startActivity(new Intent(mContext, QRcodeScannerActivity.class));
-                    else
-                        //verifyOfflineData(mContext, QRcodeScannerActivity.class, false);
-                        startActivity(new Intent(mContext, QRcodeScannerActivity.class));
-                else
-                    AUtils.warning(mContext, getResources().getString(R.string.be_no_duty));
-                break;
-            case 1:
-                if(AUtils.isIsOnduty())
-                    if(!AUtils.isInternetAvailable()) startActivity(new Intent(mContext, TakePhotoActivity.class));
-                    else
-//                        verifyOfflineData(mContext, TakePhotoActivity.class, false);
-                        startActivity(new Intent(mContext, TakePhotoActivity.class));
-                else
-                    AUtils.warning(mContext, getResources().getString(R.string.be_no_duty));
-                break;
-            case 2:
-                if(AUtils.isIsOnduty())
-                    startActivity(new Intent(mContext, BroadcastActivity.class));
-                else
-                    AUtils.warning(mContext, getResources().getString(R.string.be_no_duty));
-                break;
-            case 3:
-                startActivity(new Intent(mContext, HistoryPageActivity.class));
-                break;
-            case 4:
-                startActivity(new Intent(mContext, ProfilePageActivity.class));
-                break;
-            case 5:
-                startActivity(new Intent(mContext, SyncOfflineActivity.class));
-                break;
-        }
     }
 
     private void initData() {
@@ -502,16 +404,17 @@ public class WasteDashboardActivity extends AppCompatActivity implements EmpPopU
         lastLocationRepository.clearUnwantedRows();
         initUserDetails();
 
-        mVehicleTypeAdapter.getVehicleType();
         mUserDetailAdapter.getUserDetail();
 
-        List<MenuListPojo> menuPojoList = new ArrayList<MenuListPojo>();
+        List<MenuListPojo> menuPojoList = new ArrayList<>();
 
-        menuPojoList.add(new MenuListPojo(getResources().getString(R.string.title_activity_qrcode_scanner), R.drawable.ic_qr_code));
-        menuPojoList.add(new MenuListPojo(getResources().getString(R.string.title_activity_take_photo), R.drawable.ic_photograph));
+        menuPojoList.add(new MenuListPojo(getResources().getString(R.string.title_activity_waste_add_details), R.drawable.ic_qr_code, WasteAddDetailsActivity.class, true));
+        menuPojoList.add(new MenuListPojo(getResources().getString(R.string.title_activity_waste_history), R.drawable.ic_history, WasteHistoryActivity.class, false));
+        menuPojoList.add(new MenuListPojo(getResources().getString(R.string.title_activity_waste_sync_offline), R.drawable.ic_sync, WasteSyncOfflineActivity.class, false));
 
-        InflateMenuAdapter mainMenuAdaptor = new InflateMenuAdapter(WasteDashboardActivity.this, menuPojoList);
-        menuGridView.setAdapter(mainMenuAdaptor);
+        DashboardMenuAdapter dashboardMenuAdapter = new DashboardMenuAdapter(mContext);
+        dashboardMenuAdapter.setMenuList(menuPojoList);
+        menuGridView.setAdapter(dashboardMenuAdapter);
 
         Type type = new TypeToken<AttendancePojo>() {
         }.getType();
@@ -525,11 +428,12 @@ public class WasteDashboardActivity extends AppCompatActivity implements EmpPopU
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
-                if(!AUtils.isIsOnduty()){
-                    if(AUtils.isInternetAvailable())
+                if (!AUtils.isIsOnduty()) {
+                    if (AUtils.isInternetAvailable())
                         verifyOfflineData(LoginActivity.class, true);
-                    else AUtils.warning(mContext, getResources().getString(R.string.no_internet_error));
-                }else{
+                    else
+                        AUtils.warning(mContext, getResources().getString(R.string.no_internet_error));
+                } else {
                     AUtils.info(mContext, getResources().getString(R.string.off_duty_warning));
                 }
             }
@@ -561,18 +465,18 @@ public class WasteDashboardActivity extends AppCompatActivity implements EmpPopU
 
     private void changeLanguage() {
 
-        HashMap<Integer,Object> mLanguage = new HashMap<>();
+        HashMap<Integer, Object> mLanguage = new HashMap<>();
 
         List<LanguagePojo> mLanguagePojoList = AUtils.getLanguagePojoList();
 
         AUtils.changeLanguage(this, Prefs.getString(AUtils.LANGUAGE_NAME, AUtils.DEFAULT_LANGUAGE_ID));
 
-        if(!AUtils.isNull(mLanguagePojoList) && !mLanguagePojoList.isEmpty()) {
+        if (!AUtils.isNull(mLanguagePojoList) && !mLanguagePojoList.isEmpty()) {
             for (int i = 0; i < mLanguagePojoList.size(); i++) {
                 mLanguage.put(i, mLanguagePojoList.get(i));
             }
 
-            PopUpDialog dialog = new PopUpDialog(WasteDashboardActivity.this, AUtils.DIALOG_TYPE_LANGUAGE, mLanguage, this);
+            EmpPopUpDialog dialog = new EmpPopUpDialog(WasteDashboardActivity.this, AUtils.DIALOG_TYPE_LANGUAGE, mLanguage, this);
             dialog.show();
         }
     }
@@ -590,33 +494,13 @@ public class WasteDashboardActivity extends AppCompatActivity implements EmpPopU
 
         if (isChecked) {
             if (isLocationPermission) {
-                if(AUtils.isGPSEnable(AUtils.currentContextConstant)) {
-                    if(!AUtils.DutyOffFromService) {
-                        HashMap<Integer, Object> mLanguage = new HashMap<>();
+                if (AUtils.isGPSEnable(AUtils.currentContextConstant)) {
 
-                        vehicleTypePojoList = mVehicleTypeAdapter.getVehicleTypePojoList();
-
-                        if (!AUtils.isNull(vehicleTypePojoList) && !vehicleTypePojoList.isEmpty()) {
-                            for (int i = 0; i < vehicleTypePojoList.size(); i++) {
-                                mLanguage.put(i, vehicleTypePojoList.get(i));
-                            }
-
-                            if (!AUtils.isIsOnduty()) {
-                                ((MyApplication) AUtils.mainApplicationConstant).startLocationTracking();
-
-                                PopUpDialog dialog = new PopUpDialog(WasteDashboardActivity.this, AUtils.DIALOG_TYPE_VEHICLE, mLanguage, this);
-                                dialog.show();
-                            }
-                        } else {
-                            mVehicleTypeAdapter.getVehicleType();
-                            markAttendance.setChecked(false);
-                            AUtils.error(mContext, mContext.getString(R.string.vehicle_not_found_error), Toast.LENGTH_SHORT);
-                        }
-                    } else {
-                        AUtils.DutyOffFromService = false;
+                    if (!AUtils.isIsOnduty()) {
+                        ((MyApplication) AUtils.mainApplicationConstant).startLocationTracking();
+                        onChangeDutyStatus();
                     }
-                }
-                else {
+                } else {
                     markAttendance.setChecked(false);
                     AUtils.showGPSSettingsAlert(mContext);
                 }
@@ -625,34 +509,35 @@ public class WasteDashboardActivity extends AppCompatActivity implements EmpPopU
             }
         } else {
             if (AUtils.isIsOnduty()) {
-                try{
-                    if(!isFromAttendanceChecked) {
-                    AUtils.showConfirmationDialog(mContext, AUtils.CONFIRM_OFFDUTY_DIALOG, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            dialogInterface.dismiss();
-                            if(AUtils.isNull(attendancePojo))
-                              attendancePojo = new AttendancePojo();
+                try {
+                    if (!isFromAttendanceChecked) {
+                        AUtils.showConfirmationDialog(mContext, AUtils.CONFIRM_OFFDUTY_DIALOG, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                                if (AUtils.isNull(attendancePojo))
+                                    attendancePojo = new AttendancePojo();
 
-                            syncOfflineAttendanceRepository.insertCollection(attendancePojo, SyncOfflineAttendanceRepository.OutAttendanceId);
-                            onOutPunchSuccess();
+                                syncOfflineAttendanceRepository.insertCollection(attendancePojo, SyncOfflineAttendanceRepository.OutAttendanceId);
+                                onOutPunchSuccess();
 
-                            if (AUtils.isInternetAvailable()) {
-                                mOfflineAttendanceAdapter.SyncOfflineData();
+                                if (AUtils.isInternetAvailable()) {
+                                    mOfflineAttendanceAdapter.SyncOfflineData();
+                                }
+
+//                                mAttendanceAdapter.MarkOutPunch();
                             }
-                        }
-                    }, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            dialogInterface.dismiss();
-                            markAttendance.setChecked(true);
-                        }
-                    });
-
+                        }, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                                markAttendance.setChecked(true);
+                            }
+                        });
                     } else {
                         isFromAttendanceChecked = false;
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                     markAttendance.setChecked(true);
                 }
@@ -660,77 +545,44 @@ public class WasteDashboardActivity extends AppCompatActivity implements EmpPopU
         }
     }
 
-    private void onVehicleTypeDialogClose(Object listItemSelected, String vehicleNo) {
+    private void onChangeDutyStatus() {
 
-        if(!AUtils.isNull(vehicleNo) && !vehicleNo.isEmpty()){
-            VehicleTypePojo vehicleTypePojo = (VehicleTypePojo) listItemSelected;
-
-            Prefs.putString(AUtils.VEHICLE_ID, vehicleTypePojo.getVtId());
-
-            Prefs.putString(AUtils.VEHICLE_NO, vehicleNo);
-
-            if (AUtils.isNull(attendancePojo)) {
-                attendancePojo = new AttendancePojo();
-            }
-
-            try{
-                syncOfflineAttendanceRepository.insertCollection(attendancePojo, SyncOfflineAttendanceRepository.InAttendanceId);
-                onInPunchSuccess();
-                if (AUtils.isInternetAvailable()) {
-                    if(!syncOfflineAttendanceRepository.checkIsInAttendanceSync())
-                        mOfflineAttendanceAdapter.SyncOfflineData();
-                }
-            }catch (Exception e){
-                e.printStackTrace();
-                markAttendance.setChecked(false);
-                AUtils.error(mContext, mContext.getString(R.string.something_error), Toast.LENGTH_SHORT);
-            }
-        }else{
-            markAttendance.setChecked(false);
+        if (AUtils.isNull(attendancePojo)) {
+            attendancePojo = new AttendancePojo();
         }
+
+        attendancePojo.setDaDate(AUtils.getServerDate());
+        attendancePojo.setStartTime(AUtils.getServerTime());
+
+        try {
+            syncOfflineAttendanceRepository.insertCollection(attendancePojo, SyncOfflineAttendanceRepository.InAttendanceId);
+            onInPunchSuccess();
+            if (AUtils.isInternetAvailable()) {
+                if (!syncOfflineAttendanceRepository.checkIsInAttendanceSync())
+                    mOfflineAttendanceAdapter.SyncOfflineData();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            markAttendance.setChecked(false);
+            AUtils.error(mContext, mContext.getString(R.string.something_error), Toast.LENGTH_SHORT);
+        }
+
     }
 
     private void onInPunchSuccess() {
         attendanceStatus.setText(this.getResources().getString(R.string.status_on_duty));
-        attendanceStatus.setTextColor(this.getResources().getColor(R.color.colorONDutyGreen));
-
-        String vehicleType = null;
-
-        for (int i = 0; i < vehicleTypePojoList.size(); i++) {
-            if(Prefs.getString(AUtils.VEHICLE_ID,"0").equals(vehicleTypePojoList.get(i).getVtId()))
-            {
-//                if(Prefs.getString(AUtils.LANGUAGE_NAME,AUtils.DEFAULT_LANGUAGE_ID).equals(AUtils.LanguageConstants.MARATHI))
-//                    vehicleType = vehicleTypePojoList.get(i).getDescriptionMar();
-//                else
-                    vehicleType = vehicleTypePojoList.get(i).getDescription();
-            }
-        }
-
-        if (!AUtils.isNullString(attendancePojo.getVehicleNumber())) {
-
-            vehicleStatus.setText(String.format("%s%s %s %s%s", this.getResources().getString(R.string.opening_round_bracket), vehicleType,
-                    this.getResources().getString(R.string.hyphen), attendancePojo.getVehicleNumber(),
-                    this.getResources().getString(R.string.closing_round_bracket)));
-        } else {
-            vehicleStatus.setText(String.format("%s%s%s", this.getResources().getString(R.string.opening_round_bracket),
-                    vehicleType, this.getResources().getString(R.string.closing_round_bracket)));
-        }
-
-        AUtils.setInPunchDate(Calendar.getInstance());
-        Log.i(TAG,AUtils.getInPunchDate());
+        attendanceStatus.setTextColor(ContextCompat.getColor(mContext, R.color.colorONDutyGreen));
         AUtils.setIsOnduty(true);
     }
 
-    private void onOutPunchSuccess(){
+    private void onOutPunchSuccess() {
         attendanceStatus.setText(this.getResources().getString(R.string.status_off_duty));
-        attendanceStatus.setTextColor(this.getResources().getColor(R.color.colorOFFDutyRed));
+        attendanceStatus.setTextColor(ContextCompat.getColor(mContext, R.color.colorOFFDutyRed));
 
-        vehicleStatus.setText("");
+        boolean isServiceRunning = AUtils.isMyServiceRunning(AUtils.mainApplicationConstant, ForgroundService.class);
 
-        boolean isservicerunning = AUtils.isMyServiceRunning(AUtils.mainApplicationConstant,ForgroundService.class);
-
-        if(isservicerunning)
-            ((MyApplication)AUtils.mainApplicationConstant).stopLocationTracking();
+        if (isServiceRunning)
+            ((MyApplication) AUtils.mainApplicationConstant).stopLocationTracking();
 
         markAttendance.setChecked(false);
 
@@ -744,15 +596,15 @@ public class WasteDashboardActivity extends AppCompatActivity implements EmpPopU
         isLocationPermission = AUtils.isLocationPermissionGiven(WasteDashboardActivity.this);
     }
 
-    private void initUserDetails(){
+    private void initUserDetails() {
         userDetailPojo = mUserDetailAdapter.getUserDetailPojo();
 
-        if(!AUtils.isNull(userDetailPojo)){
+        if (!AUtils.isNull(userDetailPojo)) {
 
-//            if(Prefs.getString(AUtils.LANGUAGE_NAME, AUtils.DEFAULT_LANGUAGE_ID).equals(AUtils.LanguageConstants.MARATHI))
+//            if(Prefs.getString(AUtils.LANGUAGE_NAME, AUtils.DEFAULT_LANGUAGE_ID).equals(AUtils.LanguageIDConstants.MARATHI))
 //                userName.setText(userDetailPojo.getNameMar());
 //            else
-                userName.setText(userDetailPojo.getName());
+            userName.setText(userDetailPojo.getName());
 
             empId.setText(userDetailPojo.getUserId());
             if (!AUtils.isNullString(userDetailPojo.getProfileImage())) {
@@ -763,7 +615,7 @@ public class WasteDashboardActivity extends AppCompatActivity implements EmpPopU
                             .centerCrop()
                             .bitmapTransform(new GlideCircleTransformation(getApplicationContext()))
                             .into(profilePic);
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -780,48 +632,23 @@ public class WasteDashboardActivity extends AppCompatActivity implements EmpPopU
 
         if (AUtils.isIsOnduty()) {
 
-            if(!AUtils.isMyServiceRunning(AUtils.mainApplicationConstant,ForgroundService.class))
-            {
-                ((MyApplication)AUtils.mainApplicationConstant).startLocationTracking();
+            if (!AUtils.isMyServiceRunning(AUtils.mainApplicationConstant, ForgroundService.class)) {
+                ((MyApplication) AUtils.mainApplicationConstant).startLocationTracking();
             }
             markAttendance.setChecked(true);
 
             attendanceStatus.setText(this.getResources().getString(R.string.status_on_duty));
-            attendanceStatus.setTextColor(this.getResources().getColor(R.color.colorONDutyGreen));
-
-            String vehicleName = "";
-
-            if(AUtils.isNull(vehicleTypePojoList))
-            {
-                vehicleTypePojoList = mVehicleTypeAdapter.getVehicleTypePojoList();
-            }
-            for (int i = 0; i < vehicleTypePojoList.size(); i++) {
-
-                if(Prefs.getString(AUtils.VEHICLE_ID,"").equals(vehicleTypePojoList.get(i).getVtId()))
-                {
-                    if(Prefs.getString(AUtils.LANGUAGE_NAME,AUtils.DEFAULT_LANGUAGE_ID).equals(AUtils.LanguageConstants.MARATHI))
-                        vehicleName = vehicleTypePojoList.get(i).getDescriptionMar();
-                    else
-                        vehicleName = vehicleTypePojoList.get(i).getDescription();
-                }
-            }
-
-            if (!AUtils.isNullString(Prefs.getString(AUtils.VEHICLE_NO,""))) {
-
-                vehicleStatus.setText(String.format("%s%s %s %s%s", this.getResources().getString(R.string.opening_round_bracket), vehicleName, this.getResources().getString(R.string.hyphen), Prefs.getString(AUtils.VEHICLE_NO,""), this.getResources().getString(R.string.closing_round_bracket)));
-            } else {
-                vehicleStatus.setText(String.format("%s%s%s", this.getResources().getString(R.string.opening_round_bracket), vehicleName, this.getResources().getString(R.string.closing_round_bracket)));
-            }
+            attendanceStatus.setTextColor(ContextCompat.getColor(mContext, R.color.colorONDutyGreen));
         } else {
             markAttendance.setChecked(false);
         }
     }
 
-    private void checkIsFromLogin(){
+    private void checkIsFromLogin() {
 
-        if(getIntent().hasExtra(AUtils.isFromLogin)){
+        if (getIntent().hasExtra(AUtils.isFromLogin)) {
             isFromLogin = getIntent().getBooleanExtra(AUtils.isFromLogin, true);
-        }else{
+        } else {
             isFromLogin = false;
         }
     }

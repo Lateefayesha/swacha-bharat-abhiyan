@@ -6,15 +6,15 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.hardware.camera2.CameraCharacteristics;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.CompoundButton;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -25,21 +25,20 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.appynitty.swachbharatabhiyanlibrary.R;
-import com.appynitty.swachbharatabhiyanlibrary.adapters.UI.InflateMenuAdapter;
+import com.appynitty.swachbharatabhiyanlibrary.adapters.UI.DashboardMenuAdapter;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.AttendanceAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.CheckAttendanceAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.OfflineAttendanceAdapterClass;
-import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.ShareLocationAdapterClass;
-import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.SyncServerAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.UserDetailAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.VehicleTypeAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.VerifyDataAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.dialogs.IdCardDialog;
 import com.appynitty.swachbharatabhiyanlibrary.dialogs.PopUpDialog;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.AttendancePojo;
-import com.appynitty.swachbharatabhiyanlibrary.pojos.InPunchPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.LanguagePojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.MenuListPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.UserDetailPojo;
@@ -58,6 +57,8 @@ import com.pixplicity.easyprefs.library.Prefs;
 import com.riaylibrary.custom_component.GlideCircleTransformation;
 import com.riaylibrary.utils.LocaleHelper;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -66,16 +67,17 @@ import java.util.List;
 
 import io.github.kobakei.materialfabspeeddial.FabSpeedDial;
 
-import static com.appynitty.swachbharatabhiyanlibrary.R.color.colorONDutyGreen;
-
 
 public class DashboardActivity extends AppCompatActivity implements PopUpDialog.PopUpDialogListener {
 
     private final static String TAG = "DashboardActivity";
 
+    private static final int REQUEST_CAMERA = 22;
+    private static final int SELECT_FILE = 33;
+
     private Context mContext;
     private FabSpeedDial fab;
-    private GridView menuGridView;
+    private RecyclerView menuGridView;
     private Toolbar toolbar;
     private TextView attendanceStatus;
     private TextView vehicleStatus;
@@ -299,6 +301,22 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == SELECT_FILE) {
+
+//                onSelectFromGalleryResult(data);
+
+            } else if (requestCode == REQUEST_CAMERA) {
+
+                onCaptureImageResult(data);
+            }
+        }
+    }
+
     private void initComponents() {
 
         getPermission();
@@ -328,9 +346,14 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         syncOfflineAttendanceRepository = new SyncOfflineAttendanceRepository(mContext);
 
 
+        if (AUtils.isNull(attendancePojo)) {
+            attendancePojo = new AttendancePojo();
+        }
 
         fab = findViewById(R.id.fab_setting);
         menuGridView = findViewById(R.id.menu_grid);
+        menuGridView.setLayoutManager(new GridLayoutManager(mContext, 2));
+
         toolbar = findViewById(R.id.toolbar);
         attendanceStatus = findViewById(R.id.user_attendance_status);
         vehicleStatus = findViewById(R.id.user_vehicle_type);
@@ -429,13 +452,6 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
             }
         });
 
-        menuGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                setMenuClick(position);
-            }
-        });
-
         mUserDetailAdapter.setUserDetailListener(new UserDetailAdapterClass.UserDetailListener() {
             @Override
             public void onSuccessCallBack() {
@@ -451,7 +467,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         verifyDataAdapterClass.setVerifyAdapterListener(new VerifyDataAdapterClass.VerifyAdapterListener() {
             @Override
             public void onDataVerification(Context context, Class<?> providedClass, boolean killActivity) {
-                if ("LoginActivity".equals(providedClass.getSimpleName())) {
+                if (providedClass.getSimpleName().equals("LoginActivity")) {
                     openLogin(context, providedClass);
                 }else {
                     context.startActivity(new Intent(context, providedClass));
@@ -464,48 +480,48 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
 
     }
 
-    private void setMenuClick(int position) {
-
-        if(!AUtils.isSyncOfflineDataRequestEnable){
-            verifyDataAdapterClass.verifyOfflineSync();
-        }
-
-        switch (position) {
-            case 0:
-                if(AUtils.isIsOnduty())
-                    if(!AUtils.isInternetAvailable()) startActivity(new Intent(mContext, QRcodeScannerActivity.class));
-                    else
-                        //verifyOfflineData(mContext, QRcodeScannerActivity.class, false);
-                        startActivity(new Intent(mContext, QRcodeScannerActivity.class));
-                else
-                    AUtils.warning(mContext, getResources().getString(R.string.be_no_duty));
-                break;
-            case 1:
-                if(AUtils.isIsOnduty())
-                    if(!AUtils.isInternetAvailable()) startActivity(new Intent(mContext, TakePhotoActivity.class));
-                    else
-//                        verifyOfflineData(mContext, TakePhotoActivity.class, false);
-                        startActivity(new Intent(mContext, TakePhotoActivity.class));
-                else
-                    AUtils.warning(mContext, getResources().getString(R.string.be_no_duty));
-                break;
-            case 2:
-                if(AUtils.isIsOnduty())
-                    startActivity(new Intent(mContext, BroadcastActivity.class));
-                else
-                    AUtils.warning(mContext, getResources().getString(R.string.be_no_duty));
-                break;
-            case 3:
-                startActivity(new Intent(mContext, HistoryPageActivity.class));
-                break;
-            case 4:
-                startActivity(new Intent(mContext, ProfilePageActivity.class));
-                break;
-            case 5:
-                startActivity(new Intent(mContext, SyncOfflineActivity.class));
-                break;
-        }
-    }
+//    private void setMenuClick(int position) {
+//
+//        if(!AUtils.isSyncOfflineDataRequestEnable){
+//            verifyDataAdapterClass.verifyOfflineSync();
+//        }
+//
+//        switch (position) {
+//            case 0:
+//                if(AUtils.isIsOnduty())
+//                    if(!AUtils.isInternetAvailable()) startActivity(new Intent(mContext, QRcodeScannerActivity.class));
+//                    else
+//                        //verifyOfflineData(mContext, QRcodeScannerActivity.class, false);
+//                        startActivity(new Intent(mContext, QRcodeScannerActivity.class));
+//                else
+//                    AUtils.warning(mContext, getResources().getString(R.string.be_no_duty));
+//                break;
+//            case 1:
+//                if(AUtils.isIsOnduty())
+//                    if(!AUtils.isInternetAvailable()) startActivity(new Intent(mContext, TakePhotoActivity.class));
+//                    else
+////                        verifyOfflineData(mContext, TakePhotoActivity.class, false);
+//                        startActivity(new Intent(mContext, TakePhotoActivity.class));
+//                else
+//                    AUtils.warning(mContext, getResources().getString(R.string.be_no_duty));
+//                break;
+//            case 2:
+//                if(AUtils.isIsOnduty())
+//                    startActivity(new Intent(mContext, BroadcastActivity.class));
+//                else
+//                    AUtils.warning(mContext, getResources().getString(R.string.be_no_duty));
+//                break;
+//            case 3:
+//                startActivity(new Intent(mContext, HistoryPageActivity.class));
+//                break;
+//            case 4:
+//                startActivity(new Intent(mContext, ProfilePageActivity.class));
+//                break;
+//            case 5:
+//                startActivity(new Intent(mContext, SyncOfflineActivity.class));
+//                break;
+//        }
+//    }
 
     private void initData() {
 
@@ -517,16 +533,17 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
 
         List<MenuListPojo> menuPojoList = new ArrayList<MenuListPojo>();
 
-        menuPojoList.add(new MenuListPojo(getResources().getString(R.string.title_activity_qrcode_scanner), R.drawable.ic_qr_code));
-        menuPojoList.add(new MenuListPojo(getResources().getString(R.string.title_activity_take_photo), R.drawable.ic_photograph));
+        menuPojoList.add(new MenuListPojo(getResources().getString(R.string.title_activity_qrcode_scanner), R.drawable.ic_qr_code, QRcodeScannerActivity.class, true));
+        menuPojoList.add(new MenuListPojo(getResources().getString(R.string.title_activity_take_photo), R.drawable.ic_photograph, TakePhotoActivity.class, true));
 
-        menuPojoList.add(new MenuListPojo(getResources().getString(R.string.title_activity_broadcast_page), R.drawable.ic_broadcast_icon));
-        menuPojoList.add(new MenuListPojo(getResources().getString(R.string.title_activity_history_page), R.drawable.ic_history));
+        menuPojoList.add(new MenuListPojo(getResources().getString(R.string.title_activity_broadcast_page), R.drawable.ic_broadcast_icon, BroadcastActivity.class, true));
+        menuPojoList.add(new MenuListPojo(getResources().getString(R.string.title_activity_history_page), R.drawable.ic_history, HistoryPageActivity.class, false));
 
-        menuPojoList.add(new MenuListPojo(getResources().getString(R.string.title_activity_profile_page), R.drawable.ic_id_card));
-        menuPojoList.add(new MenuListPojo(getResources().getString(R.string.title_activity_sync_offline), R.drawable.ic_sync));
+        menuPojoList.add(new MenuListPojo(getResources().getString(R.string.title_activity_profile_page), R.drawable.ic_id_card, ProfilePageActivity.class, false));
+        menuPojoList.add(new MenuListPojo(getResources().getString(R.string.title_activity_sync_offline), R.drawable.ic_sync, SyncOfflineActivity.class, false));
 
-        InflateMenuAdapter mainMenuAdaptor = new InflateMenuAdapter(DashboardActivity.this, menuPojoList);
+        DashboardMenuAdapter mainMenuAdaptor = new DashboardMenuAdapter(mContext);
+        mainMenuAdaptor.setMenuList(menuPojoList);
         menuGridView.setAdapter(mainMenuAdaptor);
 
         Type type = new TypeToken<AttendancePojo>() {
@@ -605,74 +622,10 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         isSwitchOn = isChecked;
 
         if (isChecked) {
-            if (isLocationPermission) {
-                if(AUtils.isGPSEnable(AUtils.currentContextConstant)) {
-                    if(!AUtils.DutyOffFromService) {
-                        HashMap<Integer, Object> mLanguage = new HashMap<>();
-
-                        vehicleTypePojoList = mVehicleTypeAdapter.getVehicleTypePojoList();
-
-                        if (!AUtils.isNull(vehicleTypePojoList) && !vehicleTypePojoList.isEmpty()) {
-                            for (int i = 0; i < vehicleTypePojoList.size(); i++) {
-                                mLanguage.put(i, vehicleTypePojoList.get(i));
-                            }
-
-                            if (!AUtils.isIsOnduty()) {
-                                ((MyApplication) AUtils.mainApplicationConstant).startLocationTracking();
-
-                                PopUpDialog dialog = new PopUpDialog(DashboardActivity.this, AUtils.DIALOG_TYPE_VEHICLE, mLanguage, this);
-                                dialog.show();
-                            }
-                        } else {
-                            mVehicleTypeAdapter.getVehicleType();
-                            markAttendance.setChecked(false);
-                            AUtils.error(mContext, mContext.getString(R.string.vehicle_not_found_error), Toast.LENGTH_SHORT);
-                        }
-                    } else {
-                        AUtils.DutyOffFromService = false;
-                    }
-                }
-                else {
-                    markAttendance.setChecked(false);
-                    AUtils.showGPSSettingsAlert(mContext);
-                }
-            } else {
-                isLocationPermission = AUtils.isLocationPermissionGiven(DashboardActivity.this);
-            }
+//            onSwitchOn();
+            takePhoto();
         } else {
-            if (AUtils.isIsOnduty()) {
-                try{
-                    if(!isFromAttendanceChecked) {
-                    AUtils.showConfirmationDialog(mContext, AUtils.CONFIRM_OFFDUTY_DIALOG, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            dialogInterface.dismiss();
-                            if(AUtils.isNull(attendancePojo))
-                              attendancePojo = new AttendancePojo();
-
-                            syncOfflineAttendanceRepository.insertCollection(attendancePojo, SyncOfflineAttendanceRepository.OutAttendanceId);
-                            onOutPunchSuccess();
-
-                            if (AUtils.isInternetAvailable()) {
-                                mOfflineAttendanceAdapter.SyncOfflineData();
-                            }
-                        }
-                    }, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            dialogInterface.dismiss();
-                            markAttendance.setChecked(true);
-                        }
-                    });
-
-                    } else {
-                        isFromAttendanceChecked = false;
-                    }
-                }catch (Exception e){
-                    e.printStackTrace();
-                    markAttendance.setChecked(true);
-                }
-            }
+            onSwitchOff();
         }
     }
 
@@ -684,10 +637,6 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
             Prefs.putString(AUtils.VEHICLE_ID, vehicleTypePojo.getVtId());
 
             Prefs.putString(AUtils.VEHICLE_NO, vehicleNo);
-
-            if (AUtils.isNull(attendancePojo)) {
-                attendancePojo = new AttendancePojo();
-            }
 
             try{
                 syncOfflineAttendanceRepository.insertCollection(attendancePojo, SyncOfflineAttendanceRepository.InAttendanceId);
@@ -851,5 +800,116 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
     private void verifyOfflineData(Class<?> nextClass, boolean killPreviousActivity) {
         verifyDataAdapterClass.setRequiredParameters(nextClass, killPreviousActivity);
         verifyDataAdapterClass.verifyData();
+    }
+
+    private void takePhoto() {
+
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        intent.putExtra("android.intent.extras.CAMERA_FACING", CameraCharacteristics.LENS_FACING_BACK);
+        intent.putExtra("android.intent.extra.USE_FRONT_CAMERA", true);
+
+        startActivityForResult(intent, REQUEST_CAMERA);
+    }
+
+    private void onSwitchOn(){
+        if (isLocationPermission) {
+            if(AUtils.isGPSEnable(AUtils.currentContextConstant)) {
+                if(!AUtils.DutyOffFromService) {
+                    HashMap<Integer, Object> mLanguage = new HashMap<>();
+
+                    vehicleTypePojoList = mVehicleTypeAdapter.getVehicleTypePojoList();
+
+                    if (!AUtils.isNull(vehicleTypePojoList) && !vehicleTypePojoList.isEmpty()) {
+                        for (int i = 0; i < vehicleTypePojoList.size(); i++) {
+                            mLanguage.put(i, vehicleTypePojoList.get(i));
+                        }
+
+                        if (!AUtils.isIsOnduty()) {
+                            ((MyApplication) AUtils.mainApplicationConstant).startLocationTracking();
+
+                            PopUpDialog dialog = new PopUpDialog(DashboardActivity.this, AUtils.DIALOG_TYPE_VEHICLE, mLanguage, this);
+                            dialog.show();
+                        }
+                    } else {
+                        mVehicleTypeAdapter.getVehicleType();
+                        markAttendance.setChecked(false);
+                        AUtils.error(mContext, mContext.getString(R.string.vehicle_not_found_error), Toast.LENGTH_SHORT);
+                    }
+                } else {
+                    AUtils.DutyOffFromService = false;
+                }
+            }
+            else {
+                markAttendance.setChecked(false);
+                AUtils.showGPSSettingsAlert(mContext);
+            }
+        } else {
+            isLocationPermission = AUtils.isLocationPermissionGiven(DashboardActivity.this);
+        }
+    }
+
+    private void onSwitchOff(){
+        if (AUtils.isIsOnduty()) {
+            try{
+                if(!isFromAttendanceChecked) {
+                    AUtils.showConfirmationDialog(mContext, AUtils.CONFIRM_OFFDUTY_DIALOG, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                            if(AUtils.isNull(attendancePojo))
+                                attendancePojo = new AttendancePojo();
+
+                            syncOfflineAttendanceRepository.insertCollection(attendancePojo, SyncOfflineAttendanceRepository.OutAttendanceId);
+                            onOutPunchSuccess();
+
+                            if (AUtils.isInternetAvailable()) {
+                                mOfflineAttendanceAdapter.SyncOfflineData();
+                            }
+                        }
+                    }, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                            markAttendance.setChecked(true);
+                        }
+                    });
+
+                } else {
+                    isFromAttendanceChecked = false;
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+                markAttendance.setChecked(true);
+            }
+        }
+    }
+
+    private void onCaptureImageResult(Intent data) {
+
+        Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
+        File destination = null;
+        try {
+            File dir = mContext.getExternalFilesDir(null);
+
+            if (!dir.exists()) {
+                boolean b = dir.mkdir();
+                Log.i(TAG,String.valueOf(b));
+            }
+
+            destination = new File(dir, System.currentTimeMillis() + ".jpg");
+
+            FileOutputStream fOut = new FileOutputStream(destination);
+            thumbnail.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
+
+            attendancePojo.setImagePath(destination.getAbsolutePath());
+
+            onSwitchOn();
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+            AUtils.error(mContext, mContext.getResources().getString(R.string.image_add_error), Toast.LENGTH_SHORT);
+        }
     }
 }

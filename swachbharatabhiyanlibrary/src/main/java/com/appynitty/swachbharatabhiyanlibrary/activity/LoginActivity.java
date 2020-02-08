@@ -26,10 +26,8 @@ import com.appynitty.swachbharatabhiyanlibrary.pojos.LoginPojo;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 import com.google.android.material.snackbar.Snackbar;
 import com.pixplicity.easyprefs.library.Prefs;
-import com.riaylibrary.utils.CommonUtils;
 import com.riaylibrary.utils.LocaleHelper;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -70,40 +68,34 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        switch (requestCode) {
-            case PERMISSIONS_MULTIPLE_REQUEST:
-
-                boolean allgranted = false;
-                for (int i = 0; i < grantResults.length; i++) {
-                    if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                        allgranted = true;
-                    } else {
-                        allgranted = false;
-                        break;
-                    }
-                }
-
-                if (allgranted) {
-
-                    // write your logic here
+        if (requestCode == PERMISSIONS_MULTIPLE_REQUEST) {
+            boolean allgranted = false;
+            for (int grantResult : grantResults) {
+                if (grantResult == PackageManager.PERMISSION_GRANTED) {
+                    allgranted = true;
                 } else {
-                    Snackbar.make(LoginActivity.this.findViewById(android.R.id.content),
-                            "Please Grant Permissions to upload profile photo",
-                            Snackbar.LENGTH_INDEFINITE).setAction("ENABLE",
-                            new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                        requestPermissions(
-                                                new String[]{Manifest.permission
-                                                        .READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA},
-                                                PERMISSIONS_MULTIPLE_REQUEST);
-                                    }
-                                }
-                            }).show();
+                    allgranted = false;
+                    break;
                 }
+            }
 
-                break;
+            if (!allgranted) {
+
+                Snackbar.make(LoginActivity.this.findViewById(android.R.id.content),
+                        "Please Grant Permissions to upload profile photo",
+                        Snackbar.LENGTH_INDEFINITE).setAction("ENABLE",
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                    requestPermissions(
+                                            new String[]{Manifest.permission
+                                                    .READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA},
+                                            PERMISSIONS_MULTIPLE_REQUEST);
+                                }
+                            }
+                        }).show();
+            }
         }
     }
 
@@ -121,12 +113,8 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
     public void onPopUpDismissed(String type, Object listItemSelected, @Nullable String vehicleNo) {
 
         if (!AUtils.isNull(listItemSelected)) {
-            switch (type) {
-                case AUtils.DIALOG_TYPE_LANGUAGE: {
-
-                    onLanguageTypeDialogClose(listItemSelected);
-                }
-                break;
+            if (AUtils.DIALOG_TYPE_LANGUAGE.equals(type)) {
+                onLanguageTypeDialogClose(listItemSelected);
             }
         }
     }
@@ -175,7 +163,7 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
         mAdapter.setLoginListener(new LoginAdapterClass.LoginListener() {
             @Override
             public void onSuccessCallBack() {
-                String message = "";
+                String message;
 
                 if (Prefs.getString(AUtils.LANGUAGE_NAME, AUtils.DEFAULT_LANGUAGE_ID).equals("2")) {
                     message = mAdapter.getLoginDetailsPojo().getMessageMar();
@@ -187,17 +175,15 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
                 Prefs.putString(AUtils.PREFS.USER_TYPE, mAdapter.getLoginDetailsPojo().getType());
                 Prefs.putString(AUtils.PREFS.USER_TYPE_ID, mAdapter.getLoginDetailsPojo().getTypeId());
 
-                Prefs.putBoolean(AUtils.PREFS.IS_GT_FEATURE, (boolean) mAdapter.getLoginDetailsPojo().getGtFeatures());
+                Prefs.putBoolean(AUtils.PREFS.IS_GT_FEATURE, mAdapter.getLoginDetailsPojo().getGtFeatures());
 
                 Prefs.putBoolean(AUtils.PREFS.IS_USER_LOGIN, true);
 
                 AUtils.success(mContext, message, Toast.LENGTH_SHORT);
-                Intent intent;
 
-                if (mAdapter.getLoginDetailsPojo().getTypeId().equals("1"))
-                    intent = new Intent(LoginActivity.this, EmpDashboardActivity.class);
-                else
-                    intent = new Intent(LoginActivity.this, DashboardActivity.class);
+                Intent intent;
+                String userType = mAdapter.getLoginDetailsPojo().getTypeId();
+                intent = new Intent(LoginActivity.this, AUtils.getDashboardClass(userType));
 
                 intent.putExtra(AUtils.isFromLogin, true);
                 startActivity(intent);
@@ -206,9 +192,9 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
 
             @Override
             public void onSuccessFailureCallBack() {
-                String message = "";
+                String message;
 
-                if (Prefs.getString(AUtils.LANGUAGE_NAME, AUtils.DEFAULT_LANGUAGE_ID).equals("2")) {
+                if (Prefs.getString(AUtils.LANGUAGE_NAME, AUtils.DEFAULT_LANGUAGE_ID).equals(AUtils.LanguageIDConstants.MARATHI)) {
                     message = mAdapter.getLoginDetailsPojo().getMessageMar();
                 } else {
                     message = mAdapter.getLoginDetailsPojo().getMessage();
@@ -266,9 +252,9 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
         loginPojo.setUserPassword(txtUserPwd.getText().toString());
         TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 
-        @SuppressLint("MissingPermission") String deviceid = telephonyManager.getDeviceId();
+        @SuppressLint("MissingPermission") String deviceId = telephonyManager.getDeviceId();
 
-        loginPojo.setImiNo(deviceid);
+        loginPojo.setImiNo(deviceId);
     }
 
     private void getPermission() {
@@ -322,8 +308,6 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
                             PERMISSIONS_MULTIPLE_REQUEST);
                 }
             }
-        } else {
-            // write your logic code if permission already granted
         }
     }
 
