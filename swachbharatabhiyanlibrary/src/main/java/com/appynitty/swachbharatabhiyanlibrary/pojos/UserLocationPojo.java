@@ -1,5 +1,7 @@
 package com.appynitty.swachbharatabhiyanlibrary.pojos;
 
+import androidx.annotation.NonNull;
+
 public class UserLocationPojo {
 
     private String OfflineId;
@@ -72,6 +74,7 @@ public class UserLocationPojo {
         isOffline = offline;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "UserLocationPojo{" +

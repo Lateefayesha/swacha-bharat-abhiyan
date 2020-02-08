@@ -74,7 +74,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/emp_id_short"
-                    android:textColor="@color/black_alpfa_50"
+                    android:textColor="@color/black_alpha_20"
                     android:gravity="center_horizontal"/>
 
                 <View
@@ -84,7 +84,7 @@
                     android:layout_marginBottom="@dimen/dim_20_dp"
                     android:layout_marginStart="@dimen/dim_20_dp"
                     android:layout_marginEnd="@dimen/dim_20_dp"
-                    android:background="@color/black_alpfa_50"/>
+                    android:background="@color/black_alpha_20"/>
 
                 <TextView
                     android:id="@+id/profile_contact_no"

@@ -1,12 +1,10 @@
 package com.appynitty.swachbharatabhiyanlibrary.adapters.connection;
 
 import android.content.Context;
-import android.content.Intent;
 
 import androidx.appcompat.app.AlertDialog;
 
 import com.appynitty.swachbharatabhiyanlibrary.R;
-import com.appynitty.swachbharatabhiyanlibrary.activity.SyncOfflineActivity;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.TableDataCountPojo;
 import com.appynitty.swachbharatabhiyanlibrary.repository.SyncOfflineAttendanceRepository;
 import com.appynitty.swachbharatabhiyanlibrary.repository.SyncOfflineRepository;
@@ -20,11 +18,15 @@ public class VerifyDataAdapterClass {
     private Context mContext;
     private Class<?> mClass;
     private boolean mKillActivity;
+    private String verifyType;
     private VerifyAdapterListener verifyAdapterListener;
     private SyncOfflineRepository syncOfflineRepository;
     private SyncOfflineAdapterClass syncOfflineAdapterClass;
     private SyncOfflineAttendanceRepository syncOfflineAttendanceRepository;
     private OfflineAttendanceAdapterClass offlineAttendanceAdapterClass;
+
+    //    private SyncWasteManagementRepository syncWasteManagementRepository;
+    private SyncOfflineWasteManagementAdapterClass wasteManagementAdapterClass;
     private AlertDialog alertDialog;
 
     public VerifyDataAdapterClass(Context context) {
@@ -34,6 +36,9 @@ public class VerifyDataAdapterClass {
 
         offlineAttendanceAdapterClass = new OfflineAttendanceAdapterClass(this.mContext);
         syncOfflineAttendanceRepository = new SyncOfflineAttendanceRepository(this.mContext);
+
+//        syncWasteManagementRepository = new SyncOfflineAttendanceRepository(mContext);
+        wasteManagementAdapterClass = new SyncOfflineWasteManagementAdapterClass(mContext);
 
         registerListener();
     }
@@ -53,7 +58,7 @@ public class VerifyDataAdapterClass {
         syncOfflineAdapterClass.setSyncOfflineListener(new SyncOfflineAdapterClass.SyncOfflineListener() {
             @Override
             public void onSuccessCallback() {
-                if(mClass != null){
+                if (mClass != null) {
                     if (alertDialog.isShowing()) alertDialog.hide();
                     verifyAdapterListener.onDataVerification(mContext, mClass, mKillActivity);
                 }
@@ -61,7 +66,7 @@ public class VerifyDataAdapterClass {
 
             @Override
             public void onFailureCallback() {
-                if(mClass != null){
+                if (mClass != null) {
                     if (alertDialog.isShowing()) alertDialog.hide();
                     AUtils.warning(mContext, mContext.getResources().getString(R.string.try_after_sometime));
                 }
@@ -69,7 +74,7 @@ public class VerifyDataAdapterClass {
 
             @Override
             public void onErrorCallback() {
-                if(mClass != null){
+                if (mClass != null) {
                     if (alertDialog.isShowing()) alertDialog.hide();
                     AUtils.warning(mContext, mContext.getResources().getString(R.string.serverError));
                 }
@@ -92,15 +97,41 @@ public class VerifyDataAdapterClass {
 
             }
         });
+
+        wasteManagementAdapterClass.setSyncOfflineListener(new SyncOfflineWasteManagementAdapterClass.SyncOfflineListener() {
+            @Override
+            public void onSuccessCallback() {
+                if (mClass != null) {
+                    if (alertDialog.isShowing()) alertDialog.hide();
+                    verifyAdapterListener.onDataVerification(mContext, mClass, mKillActivity);
+                }
+            }
+
+            @Override
+            public void onFailureCallback() {
+                if (mClass != null) {
+                    if (alertDialog.isShowing()) alertDialog.hide();
+                    AUtils.warning(mContext, mContext.getResources().getString(R.string.try_after_sometime));
+                }
+            }
+
+            @Override
+            public void onErrorCallback() {
+                if (mClass != null) {
+                    if (alertDialog.isShowing()) alertDialog.hide();
+                    AUtils.warning(mContext, mContext.getResources().getString(R.string.serverError));
+                }
+            }
+        });
     }
 
     public void verifyData() {
         TableDataCountPojo.LocationCollectionCount count = syncOfflineRepository.getLocationCollectionCount(AUtils.getLocalDate());
 
-        if(count.getLocationCount() > 0 || count.getCollectionCount() > 0){
+        if (count.getLocationCount() > 0 || count.getCollectionCount() > 0) {
             if (!alertDialog.isShowing()) alertDialog.show();
             syncOfflineAdapterClass.SyncOfflineData();
-        }else
+        } else
             verifyAdapterListener.onDataVerification(mContext, mClass, mKillActivity);
 
 //        if (count.getCollectionCount() > 0) {
@@ -115,15 +146,28 @@ public class VerifyDataAdapterClass {
     }
 
     public void verifyOfflineSync() {
-
-        if(syncOfflineAttendanceRepository.checkAnyInAttendanceSyncAvailable()){
+        verifyType = AUtils.USER_TYPE.USER_TYPE_GHANTA_GADI;
+        if (AUtils.isInternetAvailable() && syncOfflineAttendanceRepository.checkAnyInAttendanceSyncAvailable()) {
             offlineAttendanceAdapterClass.SyncOfflineData();
         }
 
     }
 
-    private void attendanceSyncCompleted(){
-        syncOfflineAdapterClass.SyncOfflineData();
+    public void verifyWasteManagementSync() {
+        verifyType = AUtils.USER_TYPE.USER_TYPE_WASTE_MANAGER;
+        if (AUtils.isInternetAvailable() && syncOfflineAttendanceRepository.checkAnyInAttendanceSyncAvailable()) {
+            offlineAttendanceAdapterClass.SyncOfflineData();
+        }
+    }
+
+    private void attendanceSyncCompleted() {
+        switch (verifyType) {
+            case AUtils.USER_TYPE.USER_TYPE_WASTE_MANAGER:
+                wasteManagementAdapterClass.syncOfflineWasteManagementData();
+            case AUtils.USER_TYPE.USER_TYPE_GHANTA_GADI:
+            default:
+                syncOfflineAdapterClass.SyncOfflineData();
+        }
     }
 
     public interface VerifyAdapterListener {

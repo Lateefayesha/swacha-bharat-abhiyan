@@ -50,6 +50,15 @@ public class SyncOfflineRepository {
             COLUMN_IS_LOCATION + " TEXT, " +
             COLUMN_DATE + " DATETIME DEFAULT (strftime('%Y-%m-%d %H:%M:%f','now', 'localtime')))";
 
+    public static final String RESTORE_TABLE =
+            "INSERT INTO " + SYNC_OFFLINE_TABLE + " SELECT * FROM TEMP_" + SYNC_OFFLINE_TABLE;
+
+    public static final String DROP_TEMP_TABLE =
+            "DROP TABLE IF EXISTS TEMP_" + SYNC_OFFLINE_TABLE;
+
+    public static final String CREATE_TEMP_TABLE =
+            "ALTER TABLE " + SYNC_OFFLINE_TABLE + " RENAME TO TEMP_" + SYNC_OFFLINE_TABLE;
+
     private Context mContext;
 
     public SyncOfflineRepository(Context context) {

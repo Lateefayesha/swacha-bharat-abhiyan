@@ -2,6 +2,7 @@ package com.appynitty.swachbharatabhiyanlibrary.utils;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.util.Log;
@@ -10,6 +11,10 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 
 import com.appynitty.swachbharatabhiyanlibrary.R;
+import com.appynitty.swachbharatabhiyanlibrary.activity.DashboardActivity;
+import com.appynitty.swachbharatabhiyanlibrary.activity.EmpDashboardActivity;
+import com.appynitty.swachbharatabhiyanlibrary.activity.SplashScreenActivity;
+import com.appynitty.swachbharatabhiyanlibrary.activity.WasteDashboardActivity;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.EmpSyncServerAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.ShareLocationAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.SyncServerAdapterClass;
@@ -32,13 +37,13 @@ import java.util.Locale;
 public class AUtils extends CommonUtils {
 
     //    Local URL
-//    public static final String SERVER_URL = "http://192.168.200.4:6077/";
+    public static final String SERVER_URL = "http://192.168.200.4:6077/";
 
     //    Staging URL
 //    public static final String SERVER_URL = "http://115.115.153.117:4044/";
 
     //    Relese URL
-    public static final String SERVER_URL = "https://ghantagadi.in:444/";
+//    public static final String SERVER_URL = "https://ghantagadi.in:444/";
 
     //    Relese Backup URL
 //    public static final String SERVER_URL = "http://202.65.157.253:4044/";
@@ -127,6 +132,7 @@ public class AUtils extends CommonUtils {
     public static boolean isLocationRequestEnable = false;
     public static boolean isEmpSyncServerRequestEnable = false;
     public static boolean isSyncOfflineDataRequestEnable = false;
+    public static boolean isSyncOfflineWasteManagementDataRequestEnable = false;
 
     private static ArrayList<LanguagePojo> languagePojoList;
 
@@ -160,6 +166,12 @@ public class AUtils extends CommonUtils {
         String WORK_HISTORY_POJO_LIST = "WorkHistoryPullList";
         String WORK_HISTORY_DETAIL_POJO_LIST = "WorkHistoryDetailPullList";
         String LANGUAGE_POJO_LIST = "LanguagePullList";
+    }
+
+    public interface USER_TYPE {
+        String USER_TYPE_GHANTA_GADI = "0";
+        String USER_TYPE_EMP_SCANNIFY = "1";
+        String USER_TYPE_WASTE_MANAGER = "2";
     }
 
     public interface NondaniLocation{
@@ -564,6 +576,18 @@ public class AUtils extends CommonUtils {
         }
 
         return server.format(new Date());
+    }
+
+    public static Class<?> getDashboardClass(String userType) {
+        switch (userType) {
+            case AUtils.USER_TYPE.USER_TYPE_WASTE_MANAGER:
+                return WasteDashboardActivity.class;
+            case AUtils.USER_TYPE.USER_TYPE_EMP_SCANNIFY:
+                return EmpDashboardActivity.class;
+            case AUtils.USER_TYPE.USER_TYPE_GHANTA_GADI:
+            default:
+                return DashboardActivity.class;
+        }
     }
 }
 

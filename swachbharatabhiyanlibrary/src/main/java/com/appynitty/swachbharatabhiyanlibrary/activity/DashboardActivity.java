@@ -11,10 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.CompoundButton;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -25,21 +22,20 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.appynitty.swachbharatabhiyanlibrary.R;
-import com.appynitty.swachbharatabhiyanlibrary.adapters.UI.InflateMenuAdapter;
+import com.appynitty.swachbharatabhiyanlibrary.adapters.UI.DashboardMenuAdapter;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.AttendanceAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.CheckAttendanceAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.OfflineAttendanceAdapterClass;
-import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.ShareLocationAdapterClass;
-import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.SyncServerAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.UserDetailAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.VehicleTypeAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.VerifyDataAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.dialogs.IdCardDialog;
 import com.appynitty.swachbharatabhiyanlibrary.dialogs.PopUpDialog;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.AttendancePojo;
-import com.appynitty.swachbharatabhiyanlibrary.pojos.InPunchPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.LanguagePojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.MenuListPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.UserDetailPojo;
@@ -66,8 +62,6 @@ import java.util.List;
 
 import io.github.kobakei.materialfabspeeddial.FabSpeedDial;
 
-import static com.appynitty.swachbharatabhiyanlibrary.R.color.colorONDutyGreen;
-
 
 public class DashboardActivity extends AppCompatActivity implements PopUpDialog.PopUpDialogListener {
 
@@ -75,7 +69,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
 
     private Context mContext;
     private FabSpeedDial fab;
-    private GridView menuGridView;
+    private RecyclerView menuGridView;
     private Toolbar toolbar;
     private TextView attendanceStatus;
     private TextView vehicleStatus;
@@ -331,6 +325,8 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
 
         fab = findViewById(R.id.fab_setting);
         menuGridView = findViewById(R.id.menu_grid);
+        menuGridView.setLayoutManager(new GridLayoutManager(mContext, 2));
+
         toolbar = findViewById(R.id.toolbar);
         attendanceStatus = findViewById(R.id.user_attendance_status);
         vehicleStatus = findViewById(R.id.user_vehicle_type);
@@ -429,13 +425,6 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
             }
         });
 
-        menuGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                setMenuClick(position);
-            }
-        });
-
         mUserDetailAdapter.setUserDetailListener(new UserDetailAdapterClass.UserDetailListener() {
             @Override
             public void onSuccessCallBack() {
@@ -451,7 +440,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         verifyDataAdapterClass.setVerifyAdapterListener(new VerifyDataAdapterClass.VerifyAdapterListener() {
             @Override
             public void onDataVerification(Context context, Class<?> providedClass, boolean killActivity) {
-                if ("LoginActivity".equals(providedClass.getSimpleName())) {
+                if (providedClass.getSimpleName().equals("LoginActivity")) {
                     openLogin(context, providedClass);
                 }else {
                     context.startActivity(new Intent(context, providedClass));
@@ -464,48 +453,48 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
 
     }
 
-    private void setMenuClick(int position) {
-
-        if(!AUtils.isSyncOfflineDataRequestEnable){
-            verifyDataAdapterClass.verifyOfflineSync();
-        }
-
-        switch (position) {
-            case 0:
-                if(AUtils.isIsOnduty())
-                    if(!AUtils.isInternetAvailable()) startActivity(new Intent(mContext, QRcodeScannerActivity.class));
-                    else
-                        //verifyOfflineData(mContext, QRcodeScannerActivity.class, false);
-                        startActivity(new Intent(mContext, QRcodeScannerActivity.class));
-                else
-                    AUtils.warning(mContext, getResources().getString(R.string.be_no_duty));
-                break;
-            case 1:
-                if(AUtils.isIsOnduty())
-                    if(!AUtils.isInternetAvailable()) startActivity(new Intent(mContext, TakePhotoActivity.class));
-                    else
-//                        verifyOfflineData(mContext, TakePhotoActivity.class, false);
-                        startActivity(new Intent(mContext, TakePhotoActivity.class));
-                else
-                    AUtils.warning(mContext, getResources().getString(R.string.be_no_duty));
-                break;
-            case 2:
-                if(AUtils.isIsOnduty())
-                    startActivity(new Intent(mContext, BroadcastActivity.class));
-                else
-                    AUtils.warning(mContext, getResources().getString(R.string.be_no_duty));
-                break;
-            case 3:
-                startActivity(new Intent(mContext, HistoryPageActivity.class));
-                break;
-            case 4:
-                startActivity(new Intent(mContext, ProfilePageActivity.class));
-                break;
-            case 5:
-                startActivity(new Intent(mContext, SyncOfflineActivity.class));
-                break;
-        }
-    }
+//    private void setMenuClick(int position) {
+//
+//        if(!AUtils.isSyncOfflineDataRequestEnable){
+//            verifyDataAdapterClass.verifyOfflineSync();
+//        }
+//
+//        switch (position) {
+//            case 0:
+//                if(AUtils.isIsOnduty())
+//                    if(!AUtils.isInternetAvailable()) startActivity(new Intent(mContext, QRcodeScannerActivity.class));
+//                    else
+//                        //verifyOfflineData(mContext, QRcodeScannerActivity.class, false);
+//                        startActivity(new Intent(mContext, QRcodeScannerActivity.class));
+//                else
+//                    AUtils.warning(mContext, getResources().getString(R.string.be_no_duty));
+//                break;
+//            case 1:
+//                if(AUtils.isIsOnduty())
+//                    if(!AUtils.isInternetAvailable()) startActivity(new Intent(mContext, TakePhotoActivity.class));
+//                    else
+////                        verifyOfflineData(mContext, TakePhotoActivity.class, false);
+//                        startActivity(new Intent(mContext, TakePhotoActivity.class));
+//                else
+//                    AUtils.warning(mContext, getResources().getString(R.string.be_no_duty));
+//                break;
+//            case 2:
+//                if(AUtils.isIsOnduty())
+//                    startActivity(new Intent(mContext, BroadcastActivity.class));
+//                else
+//                    AUtils.warning(mContext, getResources().getString(R.string.be_no_duty));
+//                break;
+//            case 3:
+//                startActivity(new Intent(mContext, HistoryPageActivity.class));
+//                break;
+//            case 4:
+//                startActivity(new Intent(mContext, ProfilePageActivity.class));
+//                break;
+//            case 5:
+//                startActivity(new Intent(mContext, SyncOfflineActivity.class));
+//                break;
+//        }
+//    }
 
     private void initData() {
 
@@ -517,16 +506,17 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
 
         List<MenuListPojo> menuPojoList = new ArrayList<MenuListPojo>();
 
-        menuPojoList.add(new MenuListPojo(getResources().getString(R.string.title_activity_qrcode_scanner), R.drawable.ic_qr_code));
-        menuPojoList.add(new MenuListPojo(getResources().getString(R.string.title_activity_take_photo), R.drawable.ic_photograph));
+        menuPojoList.add(new MenuListPojo(getResources().getString(R.string.title_activity_qrcode_scanner), R.drawable.ic_qr_code, QRcodeScannerActivity.class, true));
+        menuPojoList.add(new MenuListPojo(getResources().getString(R.string.title_activity_take_photo), R.drawable.ic_photograph, TakePhotoActivity.class, true));
 
-        menuPojoList.add(new MenuListPojo(getResources().getString(R.string.title_activity_broadcast_page), R.drawable.ic_broadcast_icon));
-        menuPojoList.add(new MenuListPojo(getResources().getString(R.string.title_activity_history_page), R.drawable.ic_history));
+        menuPojoList.add(new MenuListPojo(getResources().getString(R.string.title_activity_broadcast_page), R.drawable.ic_broadcast_icon, BroadcastActivity.class, true));
+        menuPojoList.add(new MenuListPojo(getResources().getString(R.string.title_activity_history_page), R.drawable.ic_history, HistoryPageActivity.class, false));
 
-        menuPojoList.add(new MenuListPojo(getResources().getString(R.string.title_activity_profile_page), R.drawable.ic_id_card));
-        menuPojoList.add(new MenuListPojo(getResources().getString(R.string.title_activity_sync_offline), R.drawable.ic_sync));
+        menuPojoList.add(new MenuListPojo(getResources().getString(R.string.title_activity_profile_page), R.drawable.ic_id_card, ProfilePageActivity.class, false));
+        menuPojoList.add(new MenuListPojo(getResources().getString(R.string.title_activity_sync_offline), R.drawable.ic_sync, SyncOfflineActivity.class, false));
 
-        InflateMenuAdapter mainMenuAdaptor = new InflateMenuAdapter(DashboardActivity.this, menuPojoList);
+        DashboardMenuAdapter mainMenuAdaptor = new DashboardMenuAdapter(mContext);
+        mainMenuAdaptor.setMenuList(menuPojoList);
         menuGridView.setAdapter(mainMenuAdaptor);
 
         Type type = new TypeToken<AttendancePojo>() {

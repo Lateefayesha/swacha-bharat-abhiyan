@@ -22,12 +22,12 @@ import java.util.List;
  */
 public class SyncOfflineAttendanceRepository {
 
-    public static final String SYNC_OFFLINE_ATTENDANCE_TABLE = "tableSyncOfflineAttendance";
+    private static final String SYNC_OFFLINE_ATTENDANCE_TABLE = "tableSyncOfflineAttendance";
 
     public static final int InAttendanceId = 1;
     public static final int OutAttendanceId = 2;
-    public final static String COLUMN_DATE_IN = "offlineAttendanceInDate";
-    public final static String COLUMN_DATE_OUT = "offlineAttendanceOutDate";
+    private final static String COLUMN_DATE_IN = "offlineAttendanceInDate";
+    private final static String COLUMN_DATE_OUT = "offlineAttendanceOutDate";
     private static final int DATA_LIMIT = 25;
     private static final int IS_SYNC = 1;
     private static final int NOT_SYNC = 0;
@@ -39,7 +39,7 @@ public class SyncOfflineAttendanceRepository {
 
 
     public static final String CREATE_TABLE = "CREATE TABLE IF NOT EXISTS " +
-            SyncOfflineAttendanceRepository.SYNC_OFFLINE_ATTENDANCE_TABLE + " (" +
+            SYNC_OFFLINE_ATTENDANCE_TABLE + " (" +
             COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             COLUMN_POJO + " TEXT DEFAULT NULL, " +
             COLUMN_IS_ATTENDANCE_IN + " INTEGER DEFAULT 0, " +
@@ -48,6 +48,15 @@ public class SyncOfflineAttendanceRepository {
             COLUMN_IS_IN_SYNC + " INTEGER DEFAULT 0, " +
             COLUMN_IS_OUT_SYNC + " INTEGER DEFAULT 0 " +
             ")";
+
+    public static final String RESTORE_TABLE =
+            "INSERT INTO " + SYNC_OFFLINE_ATTENDANCE_TABLE + " SELECT * FROM TEMP_" + SYNC_OFFLINE_ATTENDANCE_TABLE;
+
+    public static final String DROP_TEMP_TABLE =
+            "DROP TABLE IF EXISTS TEMP_" + SYNC_OFFLINE_ATTENDANCE_TABLE;
+
+    public static final String CREATE_TEMP_TABLE =
+            "ALTER TABLE " + SYNC_OFFLINE_ATTENDANCE_TABLE + " RENAME TO TEMP_" + SYNC_OFFLINE_ATTENDANCE_TABLE;
 
     private Context mContext;
 

@@ -120,12 +120,11 @@
 
     </androidx.cardview.widget.CardView>
 
-    <GridView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/menu_grid"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/user_details_card"
-        android:layout_marginTop="@dimen/dim_6_dp"
-        android:numColumns="2"/>
+        android:layout_marginTop="@dimen/dim_6_dp"/>
 
 </RelativeLayout>
