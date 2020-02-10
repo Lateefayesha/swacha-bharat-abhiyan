@@ -638,6 +638,10 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
 
             Prefs.putString(AUtils.VEHICLE_NO, vehicleNo);
 
+            if (AUtils.isNull(attendancePojo)) {
+                attendancePojo = new AttendancePojo();
+            }
+
             try{
                 syncOfflineAttendanceRepository.insertCollection(attendancePojo, SyncOfflineAttendanceRepository.InAttendanceId);
                 onInPunchSuccess();
