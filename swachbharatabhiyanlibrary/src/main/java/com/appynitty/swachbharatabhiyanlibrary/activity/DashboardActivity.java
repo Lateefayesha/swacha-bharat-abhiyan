@@ -622,8 +622,8 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         isSwitchOn = isChecked;
 
         if (isChecked) {
-//            onSwitchOn();
-            takePhoto();
+            onSwitchOn();
+//            takePhoto();
         } else {
             onSwitchOff();
         }
