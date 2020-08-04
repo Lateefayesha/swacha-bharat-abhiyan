@@ -1405,5 +1405,50 @@ public class CommonUtils {
         String unit_min = "min";
         String unit_hour = "hr";
     }
+
+    public static String getLanguageName(String languageId) {
+        switch (languageId) {
+            case LanguageConstants.ASSAMESE:
+                return LanguageNameConstants.ASSAMESE;
+            case LanguageConstants.BENGALI:
+                return LanguageNameConstants.BENGALI;
+            case LanguageConstants.BIHARI:
+                return LanguageNameConstants.BIHARI;
+            case LanguageConstants.BODO:
+                return LanguageNameConstants.BODO;
+            case LanguageConstants.GUJARATI:
+                return LanguageNameConstants.GUJARATI;
+            case LanguageConstants.HINDI:
+                return LanguageNameConstants.HINDI;
+            case LanguageConstants.KANADA:
+                return LanguageNameConstants.KANADA;
+            case LanguageConstants.KASHMIRI:
+                return LanguageNameConstants.KASHMIRI;
+            case LanguageConstants.KONKANI:
+                return LanguageNameConstants.KONKANI;
+            case LanguageConstants.MALAYALAM:
+                return LanguageNameConstants.MALAYALAM;
+            case LanguageConstants.MARATHI:
+                return LanguageNameConstants.MARATHI;
+            case LanguageConstants.NEPALI:
+                return LanguageNameConstants.NEPALI;
+            case LanguageConstants.ORIYA:
+                return LanguageNameConstants.ORIYA;
+            case LanguageConstants.PUNJABI:
+                return LanguageNameConstants.PUNJABI;
+            case LanguageConstants.SANSKRIT:
+                return LanguageNameConstants.SANSKRIT;
+            case LanguageConstants.TAMIL:
+                return LanguageNameConstants.TAMIL;
+            case LanguageConstants.TELUGU:
+                return LanguageNameConstants.TELUGU;
+            case LanguageConstants.TIBETAN:
+                return LanguageNameConstants.TIBETAN;
+            case LanguageConstants.URDU:
+                return LanguageNameConstants.URDU;
+            default:
+                return LanguageNameConstants.ENGLISH;
+        }
+    }
 }
 
