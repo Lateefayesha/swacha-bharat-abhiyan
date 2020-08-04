@@ -241,6 +241,7 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
         return true;
     }
 
+    @SuppressLint("MissingPermission")
     private void getFormData() {
 
         loginPojo = new LoginPojo();
@@ -252,7 +253,11 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
         loginPojo.setUserPassword(txtUserPwd.getText().toString());
         TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 
-        @SuppressLint("MissingPermission") String deviceId = telephonyManager.getDeviceId();
+        String deviceId = AUtils.getAndroidId();
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            deviceId = telephonyManager.getDeviceId();
+        }
 
         loginPojo.setImiNo(deviceId);
     }
