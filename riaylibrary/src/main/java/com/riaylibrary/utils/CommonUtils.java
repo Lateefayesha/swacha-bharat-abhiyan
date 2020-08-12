@@ -1314,6 +1314,7 @@ public class CommonUtils {
         String KONKANI = "kok";
         String MALAYALAM = "ml";
         String MARATHI = "mr";
+//        String MARATHI = "mr-rIN";
         String NEPALI = "ne";
         String ORIYA = "or";
         String PUNJABI = "pa";
