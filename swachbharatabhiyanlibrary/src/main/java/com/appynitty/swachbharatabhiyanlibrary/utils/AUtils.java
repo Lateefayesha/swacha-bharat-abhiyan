@@ -75,7 +75,7 @@ public class AUtils extends CommonUtils {
     public static final String LAT = "Lat";
     public static final String LONG = "Long";
 
-    public static final int LOCATION_INTERVAL = 10000;
+    public static final int LOCATION_INTERVAL = 1000 * 60 * 10; //10 Minute
     public static final int FASTEST_LOCATION_INTERVAL = 5000;
 
     public static final String HISTORY_DETAILS_DATE = "HistoryDetailsDate";

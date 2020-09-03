@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
 
         Prefs.putString(AUtils.APP_ID, "1");
 //        Prefs.putInt(AUtils.VERSION_CODE, BuildConfig.VERSION_CODE);
-        Prefs.putInt(AUtils.VERSION_CODE, 23);
+        Prefs.putInt(AUtils.VERSION_CODE, 30);
 //        initLanguageList();
 
         startActivity(new Intent(MainActivity.this, SplashScreenActivity.class));
