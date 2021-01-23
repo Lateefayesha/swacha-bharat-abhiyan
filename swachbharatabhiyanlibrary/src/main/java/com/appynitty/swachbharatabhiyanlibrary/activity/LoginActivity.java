@@ -272,6 +272,10 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
                 .checkSelfPermission(LoginActivity.this,
                         Manifest.permission.ACCESS_FINE_LOCATION) + ActivityCompat
                 .checkSelfPermission(LoginActivity.this,
+                        Manifest.permission.ACCESS_BACKGROUND_LOCATION) + ActivityCompat
+
+
+                .checkSelfPermission(LoginActivity.this,
                         Manifest.permission.READ_PHONE_STATE)
                 != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale
@@ -282,6 +286,12 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
                             (LoginActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) ||
                     ActivityCompat.shouldShowRequestPermissionRationale
                             (LoginActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) ||
+
+                    ActivityCompat.shouldShowRequestPermissionRationale
+                            (LoginActivity.this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) ||
+
+
+
                     ActivityCompat.shouldShowRequestPermissionRationale
                             (LoginActivity.this, Manifest.permission.READ_PHONE_STATE)) {
 
@@ -297,6 +307,7 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
                                                     Manifest.permission.CAMERA,
                                                     Manifest.permission.ACCESS_COARSE_LOCATION,
                                                     Manifest.permission.ACCESS_FINE_LOCATION,
+                                                    Manifest.permission.ACCESS_BACKGROUND_LOCATION,
                                                     Manifest.permission.READ_PHONE_STATE},
                                             PERMISSIONS_MULTIPLE_REQUEST);
                                 }
@@ -309,6 +320,7 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
                                     Manifest.permission.CAMERA,
                                     Manifest.permission.ACCESS_COARSE_LOCATION,
                                     Manifest.permission.ACCESS_FINE_LOCATION,
+                                    Manifest.permission.ACCESS_BACKGROUND_LOCATION,
                                     Manifest.permission.READ_PHONE_STATE},
                             PERMISSIONS_MULTIPLE_REQUEST);
                 }

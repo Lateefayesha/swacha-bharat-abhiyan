@@ -543,7 +543,6 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
         intent.putExtra(AUtils.ADD_DETAILS_TYPE_KEY, AUtils.NondaniLocation.OPEN_FORM_TYPE);
         intent.putExtra(AUtils.NondaniLocation.REFERENCE_ID, refId);
         intent.putExtra(AUtils.NondaniLocation.SUBMIT_TYPE, gctype);
-
         startActivityForResult(intent, AUtils.ADD_DETAILS_REQUEST_KEY);
     }
 

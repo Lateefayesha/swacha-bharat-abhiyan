@@ -231,6 +231,7 @@ public class EmpAddLocationDetailsActivity extends AppCompatActivity {
             public void onSuccessCallback(EmpRegistrationPojo empRegistrationPojo) {
                 myProgressDialog.dismiss();
                 if(!AUtils.isNull(empRegistrationPojo))
+
                     initFieldData(empRegistrationPojo);
                 else
                     AUtils.error(mContext,getResources().getString(R.string.something_error), Toast.LENGTH_LONG);
@@ -257,6 +258,7 @@ public class EmpAddLocationDetailsActivity extends AppCompatActivity {
         QrLocationPojo pojo = new QrLocationPojo();
         pojo.setReferanceId(referenceId);
         pojo.setGcType(submitType);
+
         empRegistrationDataAdapterClass.fetchRegistrationDetails(pojo);
 
         mAdapterClass.fetchZone();
@@ -364,6 +366,7 @@ public class EmpAddLocationDetailsActivity extends AppCompatActivity {
         qrLocationPojo.setGcType(submitType);
         qrLocationPojo.setLat(Prefs.getString(AUtils.LAT, ""));
         qrLocationPojo.setLong(Prefs.getString(AUtils.LONG, ""));
+
 
         qrLocationPojo.setName(txtName.getText().toString());
         qrLocationPojo.setNameMar(txtNameMar.getText().toString());

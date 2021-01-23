@@ -82,7 +82,6 @@ public class ForgroundService extends Service {
         if(Prefs.getBoolean(AUtils.PREFS.IS_ON_DUTY,false))
         {
             Intent broadcastIntent = new Intent(this, RestarterBroadcastReceiver.class);
-
             sendBroadcast(broadcastIntent);
         }
     }
@@ -125,7 +124,6 @@ public class ForgroundService extends Service {
     }
 
     private int getNotificationIcon(NotificationCompat.Builder notificationBuilder) {
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             int color = 0x008000;
             notificationBuilder.setColor(color);

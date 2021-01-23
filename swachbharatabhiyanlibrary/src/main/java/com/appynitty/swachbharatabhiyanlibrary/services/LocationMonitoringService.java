@@ -49,7 +49,7 @@ public class LocationMonitoringService implements LocationListener, GpsStatus.Li
     private SyncOfflineAttendanceRepository syncOfflineAttendanceRepository;
 
 
-    public LocationMonitoringService (final Context context) {
+    public LocationMonitoringService(final Context context) {
         mContext = context;
 
         mLocationRepository = new LocationRepository(AUtils.mainApplicationConstant.getApplicationContext());
@@ -66,10 +66,9 @@ public class LocationMonitoringService implements LocationListener, GpsStatus.Li
 
             @Override
             public void onSuccessCallBack(boolean isAttendanceOff) {
-                if(isAttendanceOff && !syncOfflineAttendanceRepository.checkIsAttendanceIn())
-                {
+                if (isAttendanceOff && !syncOfflineAttendanceRepository.checkIsAttendanceIn()) {
                     AUtils.setIsOnduty(false);
-                    ((MyApplication)AUtils.mainApplicationConstant).stopLocationTracking();
+                    ((MyApplication) AUtils.mainApplicationConstant).stopLocationTracking();
                 }
             }
 
@@ -98,21 +97,30 @@ public class LocationMonitoringService implements LocationListener, GpsStatus.Li
             criteria.setHorizontalAccuracy(Criteria.ACCURACY_HIGH);
             criteria.setVerticalAccuracy(Criteria.ACCURACY_HIGH);
 
+
+
             int gpsFreqInDistance = 0;
 
+            assert locationManager != null;
             locationManager.addGpsStatusListener(this);
 
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,AUtils.LOCATION_INTERVAL,
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, AUtils.LOCATION_INTERVAL,
                     gpsFreqInDistance, this, null);
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,AUtils.LOCATION_INTERVAL,
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, AUtils.LOCATION_INTERVAL,
                     gpsFreqInDistance, this, null);
 
-        } catch (IllegalArgumentException e) {
+
+        } catch (IllegalArgumentException | SecurityException e) {
             Log.e(TAG, Objects.requireNonNull(e.getLocalizedMessage()));
-        } catch (SecurityException e) {
-            Log.e(TAG, Objects.requireNonNull(e.getLocalizedMessage()));
+            Log.d(TAG, "onStartTacking: " + e.getMessage());
+            Log.d(TAG, "onStartTacking: " + e.getLocalizedMessage());
+
+            e.printStackTrace();
         } catch (RuntimeException e) {
             Log.e(TAG, Objects.requireNonNull(e.getLocalizedMessage()));
+            Log.d(TAG, "onStartTacking: " + e.getMessage());
+            e.printStackTrace();
+
         }
     }
 
@@ -140,7 +148,7 @@ public class LocationMonitoringService implements LocationListener, GpsStatus.Li
                 Prefs.putString(AUtils.LAT, String.valueOf(location.getLatitude()));
                 Prefs.putString(AUtils.LONG, String.valueOf(location.getLongitude()));
 
-                if(Prefs.getBoolean(AUtils.PREFS.IS_ON_DUTY,false)) {
+                if (Prefs.getBoolean(AUtils.PREFS.IS_ON_DUTY, false)) {
                     if (updatedTime == 0) {
                         updatedTime = System.currentTimeMillis();
                         Log.d(TAG, "updated Time ==== " + updatedTime);
@@ -154,22 +162,26 @@ public class LocationMonitoringService implements LocationListener, GpsStatus.Li
                     sendLocation();
                 }
             }
+        } else {
+            Log.d(TAG, "onLocationChanged:  no location found !!");
         }
     }
 
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
+        Log.d(TAG, "onStatusChanged" + provider + "Status" + status);
 
     }
 
     @Override
     public void onProviderEnabled(String provider) {
+        Log.d(TAG, " onProviderEnabled" + provider);
 
     }
 
     @Override
     public void onProviderDisabled(String provider) {
-
+        Log.d(TAG, " onProviderDisabled" + provider);
     }
 
 
@@ -179,14 +191,15 @@ public class LocationMonitoringService implements LocationListener, GpsStatus.Li
     }
 
     private void sendLocation() {
+        Log.d(TAG, "sendLocation: Current Time In Millies"+ System.currentTimeMillis());
 
         try {
             Calendar CurrentTime = AUtils.getCurrentTime();
             Calendar DutyOffTime = AUtils.getDutyEndTime();
 
-            if(CurrentTime.before(DutyOffTime)) {
+            if (CurrentTime.before(DutyOffTime)) {
 
-                Log.i(TAG,"Before");
+                Log.i(TAG, "Before");
 
                 UserLocationPojo userLocationPojo = new UserLocationPojo();
 
@@ -201,15 +214,15 @@ public class LocationMonitoringService implements LocationListener, GpsStatus.Li
                 userLocationPojo.setDatetime(AUtils.getServerDateTimeLocal());
                 userLocationPojo.setOfflineId("0");
 
-                if(AUtils.isInternetAvailable() && AUtils.isConnectedFast(mContext))
+                if (AUtils.isInternetAvailable() && AUtils.isConnectedFast(mContext))
                     userLocationPojo.setIsOffline(true);
                 else
                     userLocationPojo.setIsOffline(false);
 
                 String UserTypeId = Prefs.getString(AUtils.PREFS.USER_TYPE_ID, AUtils.USER_TYPE.USER_TYPE_GHANTA_GADI);
-                if(AUtils.isInternetAvailable()) {
+                if (AUtils.isInternetAvailable()) {
                     TableDataCountPojo.LocationCollectionCount count = syncOfflineRepository.getLocationCollectionCount(AUtils.getLocalDate());
-                    if((UserTypeId.equals(AUtils.USER_TYPE.USER_TYPE_GHANTA_GADI) || UserTypeId.equals(AUtils.USER_TYPE.USER_TYPE_WASTE_MANAGER)) && (count.getLocationCount() > 0 || count.getCollectionCount() > 0)){
+                    if ((UserTypeId.equals(AUtils.USER_TYPE.USER_TYPE_GHANTA_GADI) || UserTypeId.equals(AUtils.USER_TYPE.USER_TYPE_WASTE_MANAGER)) && (count.getLocationCount() > 0 || count.getCollectionCount() > 0)) {
                         syncOfflineRepository.insetUserLocation(userLocationPojo);
                     } else {
                         mUserLocationPojoList.add(userLocationPojo);
@@ -217,37 +230,38 @@ public class LocationMonitoringService implements LocationListener, GpsStatus.Li
                         mUserLocationPojoList.clear();
                     }
                 } else {
-                    if(UserTypeId.equals(AUtils.USER_TYPE.USER_TYPE_EMP_SCANNIFY)){
-                        Type type = new TypeToken<UserLocationPojo>() {}.getType();
-                        mLocationRepository.insertUserLocationEntity(new Gson().toJson(userLocationPojo,type));
-                    }else {
+                    if (UserTypeId.equals(AUtils.USER_TYPE.USER_TYPE_EMP_SCANNIFY)) {
+                        Type type = new TypeToken<UserLocationPojo>() {
+                        }.getType();
+                        mLocationRepository.insertUserLocationEntity(new Gson().toJson(userLocationPojo, type));
+                    } else {
                         syncOfflineRepository.insetUserLocation(userLocationPojo);
                     }
                     mUserLocationPojoList.clear();
                 }
-            }
-            else {
-                Log.i(TAG,"After");
+            } else {
+                Log.i(TAG, "After");
 
                 syncOfflineAttendanceRepository.performCollectionInsert(mContext,
                         syncOfflineAttendanceRepository.checkAttendance(), AUtils.getCurrentDateDutyOffTime());
 
                 AUtils.setIsOnduty(false);
-                ((MyApplication)AUtils.mainApplicationConstant).stopLocationTracking();
+                ((MyApplication) AUtils.mainApplicationConstant).stopLocationTracking();
 
-                Activity activity = ((Activity)AUtils.currentContextConstant);
+                Activity activity = ((Activity) AUtils.currentContextConstant);
 
-                if(activity instanceof DashboardActivity) {
-                    ((Activity)AUtils.currentContextConstant).recreate();
+                if (activity instanceof DashboardActivity) {
+                    ((Activity) AUtils.currentContextConstant).recreate();
                     AUtils.DutyOffFromService = true;
                 }
 
-                if(!AUtils.isNull(AUtils.currentContextConstant)) {
-                    ((Activity)AUtils.currentContextConstant).recreate();
+                if (!AUtils.isNull(AUtils.currentContextConstant)) {
+                    ((Activity) AUtils.currentContextConstant).recreate();
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
+
         }
 
 

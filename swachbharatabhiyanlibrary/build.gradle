@@ -79,4 +79,10 @@ dependencies {
 
     // Lottie Animation
     implementation 'com.airbnb.android:lottie:3.0.7'
+
+
+
+    implementation 'com.facebook.stetho:stetho:1.5.1'
+
+
 }

@@ -16,6 +16,8 @@ import retrofit2.http.Header;
  */
 public interface AreaHousePointService {
 
+
+
     @GET("api/Get/CollectionArea")
     Call<List<CollectionAreaPojo>> fetchCollectionArea(@Header("appId") String appId,
                                                        @Header("type") String collectionType);

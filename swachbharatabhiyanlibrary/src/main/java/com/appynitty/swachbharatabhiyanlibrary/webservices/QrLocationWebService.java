@@ -19,6 +19,8 @@ import retrofit2.http.POST;
  */
 public interface QrLocationWebService {
 
+
+
     @POST("api/Save/QrHPDCollections")
     Call<ResultPojo> saveQrLocationDetails(@Header("appId") String appId,
                                            @Header("referanceId") String refId,

@@ -131,13 +131,13 @@ public class SyncOfflineActivity extends AppCompatActivity {
             gridOfflineData.setVisibility(View.VISIBLE);
             btnSyncOfflineData.setVisibility(View.VISIBLE);
             layoutNoOfflineData.setVisibility(View.GONE);
-
             InflateHistoryAdapter historyAdapter = new InflateHistoryAdapter(mContext, workHistoryList);
             gridOfflineData.setAdapter(historyAdapter);
         }else {
             gridOfflineData.setVisibility(View.GONE);
             btnSyncOfflineData.setVisibility(View.GONE);
             layoutNoOfflineData.setVisibility(View.VISIBLE);
+
         }
     }
 

@@ -14,6 +14,7 @@ import android.os.Bundle;
 
 import com.appynitty.swachbharatabhiyanlibrary.services.ForgroundService;
 import com.appynitty.swachbharatabhiyanlibrary.services.NetworkSchedulerService;
+import com.facebook.stetho.Stetho;
 import com.pixplicity.easyprefs.library.Prefs;
 import com.riaylibrary.utils.LocaleHelper;
 
@@ -32,6 +33,7 @@ public class MyApplication extends Application {
                 .setPrefsName(getPackageName())
                 .setUseDefaultSharedPreference(true)
                 .build();
+        Stetho.initializeWithDefaults(this);
 
         AUtils.mainApplicationConstant = this;
         //FirebaseApp.initializeApp(getApplicationContext());

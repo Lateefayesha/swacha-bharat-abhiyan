@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.text.TextUtils;
 
 import com.appynitty.swachbharatabhiyanlibrary.entity.UserDailyAttendanceEntity;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.AttendancePojo;
@@ -374,7 +375,7 @@ public class SyncOfflineAttendanceRepository {
         ContentValues contentValues = new ContentValues();
 
         String outDate = date;
-
+if(TextUtils.isEmpty(outDate))
         pojo.setDaEndDate(AUtils.serverDateFromLocal(outDate));
         pojo.setEndTime(AUtils.serverTimeFromLocal(outDate));
 

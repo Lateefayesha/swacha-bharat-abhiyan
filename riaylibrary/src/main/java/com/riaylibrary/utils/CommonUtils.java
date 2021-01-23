@@ -265,7 +265,22 @@ public class CommonUtils {
                     }
                 });
 
-            } else if (Prefs.getBoolean(Manifest.permission.ACCESS_FINE_LOCATION, false)) {
+            }  else if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) context, Manifest.permission.ACCESS_BACKGROUND_LOCATION)) {
+                //Show Information about why you need the permission
+
+                showPermissionDialog(context, "LOCATION", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        dialog.cancel();
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            ((Activity) context).requestPermissions(new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION}, MY_PERMISSIONS_REQUEST_LOCATION);
+                        }
+                    }
+                });
+
+            }
+            else if (Prefs.getBoolean(Manifest.permission.ACCESS_FINE_LOCATION, false)) {
                 //Previously Permission Request was cancelled with 'Dont Ask Again',
                 // Redirect to Settings after showing Information about why you need the permission
 
@@ -298,15 +313,31 @@ public class CommonUtils {
 
     public static ArrayList<String> getMonthList() {
         ArrayList<String> spinnerList = new ArrayList<>();
-
+    //    String[] monthNames = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
         spinnerList.add("Select Month");
-        for (int i = 0; i < 12; i++) {
-            Calendar cal = Calendar.getInstance();
-            SimpleDateFormat month_date = new SimpleDateFormat("MMMM", Locale.ENGLISH);
-            cal.set(Calendar.MONTH, i);
-            String month_name = month_date.format(cal.getTime());
-            spinnerList.add(month_name);
-        }
+        spinnerList.add("Jan");
+        spinnerList.add("Feb");
+        spinnerList.add("Mar");
+        spinnerList.add("Apr");
+        spinnerList.add("May");
+        spinnerList.add("June");
+        spinnerList.add("Jul");
+        spinnerList.add("Aug");
+        spinnerList.add("Sep");
+        spinnerList.add("Oct");
+        spinnerList.add("Nov");
+        spinnerList.add("Dec");
+
+//        for (int i = 0; i < 12; i++) {
+//            Calendar cal = Calendar.getInstance();
+//            SimpleDateFormat month_date = new SimpleDateFormat("MMM");
+//            cal.set(Calendar.MONTH, i);
+//            String month_name = month_date.format(cal.getTime());
+////            String month_name = month_date.format(cal.get(Calendar.MONTH)+1);
+//            spinnerList.add(month_name);
+//            Log.d(TAG, "getMonthList:"+month_name +" Print i"+i);
+//
+//        }
 
         return spinnerList;
     }

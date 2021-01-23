@@ -43,6 +43,11 @@ public class ShareLocationAdapterClass {
         this.mListener = mListener;
     }
 
+    /**
+     * Share Location To server
+     *
+     * @param userLocationPojos
+     */
     public void shareLocation(final List<UserLocationPojo> userLocationPojos) {
 
         UserLocationWebService service = Connection.createService(UserLocationWebService.class, AUtils.SERVER_URL);

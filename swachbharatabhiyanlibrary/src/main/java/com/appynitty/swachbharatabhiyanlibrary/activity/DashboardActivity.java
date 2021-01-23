@@ -155,11 +155,11 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
     @Override
     protected void onResume() {
         super.onResume();
-
         AUtils.currentContextConstant = mContext;
         checkIsFromLogin();
-
         initUserDetails();
+
+
     }
 
     @Override
@@ -187,7 +187,9 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, AUtils.MY_PERMISSIONS_REQUEST_LOCATION);
+                            requestPermissions(new String[]{
+                                    Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION , Manifest.permission.ACCESS_BACKGROUND_LOCATION},
+                                    AUtils.MY_PERMISSIONS_REQUEST_LOCATION);
                         }
                     }
                 });
@@ -329,11 +331,9 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
     private void generateId() {
 
         setContentView(R.layout.activity_dashboard);
-
         mContext = DashboardActivity.this;
         AUtils.currentContextConstant = mContext;
         checkIsFromLogin();
-
         mCheckAttendanceAdapter = new CheckAttendanceAdapterClass();
         mAttendanceAdapter = new AttendanceAdapterClass();
         mVehicleTypeAdapter = new VehicleTypeAdapterClass();
@@ -809,11 +809,10 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
     private void takePhoto() {
 
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
         intent.putExtra("android.intent.extras.CAMERA_FACING", CameraCharacteristics.LENS_FACING_BACK);
         intent.putExtra("android.intent.extra.USE_FRONT_CAMERA", true);
-
         startActivityForResult(intent, REQUEST_CAMERA);
+
     }
 
     private void onSwitchOn(){
