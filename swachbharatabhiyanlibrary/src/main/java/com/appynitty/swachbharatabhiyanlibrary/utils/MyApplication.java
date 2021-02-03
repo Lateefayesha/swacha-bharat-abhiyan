@@ -12,6 +12,8 @@ import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
 
+import androidx.core.content.ContextCompat;
+
 import com.appynitty.swachbharatabhiyanlibrary.services.ForgroundService;
 import com.appynitty.swachbharatabhiyanlibrary.services.NetworkSchedulerService;
 import com.facebook.stetho.Stetho;
@@ -86,9 +88,9 @@ public class MyApplication extends Application {
         Intent intent = new Intent(this, ForgroundService.class);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForegroundService(intent);
+           startForegroundService(intent);
         } else {
-            startService(intent);
+        startService(intent);
         }
     }
 

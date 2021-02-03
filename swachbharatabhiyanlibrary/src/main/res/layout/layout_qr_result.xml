@@ -11,9 +11,24 @@
             <RelativeLayout
                 android:id="@+id/relative_bg"
                 android:layout_width="match_parent"
-                android:layout_height="190dp"
+                android:layout_height="wrap_content"
+                android:paddingTop="50dp"
+                android:paddingBottom="50dp"
                 android:background="@drawable/ic_login_vector"
                 android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/lbl_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/hyphen"
+                    android:gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/dim_20_dp"
+                    android:textSize="@dimen/dim_16_dp"
+                    android:textAllCaps="true"
+                    android:visibility="visible"
+                    android:textColor="@color/white"
+                   />
 
                 <TextView
                     android:id="@+id/house_owner_name"
@@ -22,8 +37,10 @@
                     android:text="@string/hyphen"
                     android:textColor="@color/white"
                     android:textSize="@dimen/dimen_30_sp"
-                    android:layout_marginTop="@dimen/dim_30_dp"
+                    android:layout_marginTop="@dimen/dim_20_dp"
+                    android:visibility="visible"
                     android:gravity="center_horizontal"
+                    android:layout_below="@id/lbl_title"
                     android:layout_marginStart="@dimen/dim_6_dp"
                     android:layout_marginEnd="@dimen/dim_6_dp"/>
                 <TextView
@@ -34,21 +51,23 @@
                     android:gravity="center_horizontal"
                     android:layout_marginTop="@dimen/dim_10_dp"
                     android:textSize="20sp"
+                    android:visibility="gone"
                     android:textAllCaps="true"
                     android:textColor="@color/white"
                     android:layout_below="@id/house_owner_name"/>
 
-                <TextView
-                    android:id="@+id/house_id"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/hyphen"
-                    android:gravity="center_horizontal"
-                    android:layout_marginTop="@dimen/dim_20_dp"
-                    android:textSize="20sp"
-                    android:textAllCaps="true"
-                    android:textColor="@color/white"
-                    android:layout_below="@id/house_owner_mobile"/>
+<!--                <TextView-->
+<!--                    android:id="@+id/house_id"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="@string/hyphen"-->
+<!--                    android:gravity="center_horizontal"-->
+<!--                    android:layout_marginTop="@dimen/dim_20_dp"-->
+<!--                    android:textSize="20sp"-->
+<!--                    android:textAllCaps="true"-->
+<!--                    android:visibility="gone"-->
+<!--                    android:textColor="@color/white"-->
+<!--                    android:layout_below="@id/house_owner_mobile"/>-->
 
             </RelativeLayout>
 

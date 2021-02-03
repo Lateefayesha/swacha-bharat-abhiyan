@@ -1,5 +1,6 @@
 package com.appynitty.swachbharatabhiyanlibrary.services;
 
+import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -11,7 +12,9 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.util.Log;
 
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 
@@ -35,22 +38,30 @@ public class ForgroundService extends Service {
 
     private static String channelId;
 
+
+
     @Override
     public IBinder onBind(Intent intent) {
         // TODO Auto-generated method stub
         return null;
     }
 
+
+
     @Override
     public void onCreate() {
-        //Toast.makeText(this, " MyService Created ", Toast.LENGTH_LONG).show();
+//        Toast.makeText(this, " MyService Created ", Toast.LENGTH_LONG).show();
+        Log.d("okh", "onCreate: " +System.currentTimeMillis());
         monitoringService = new LocationMonitoringService(this);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        //Toast.makeText(this, " MyService Started", Toast.LENGTH_LONG).show();
+//        Toast.makeText(this, " MyService Started", Toast.LENGTH_LONG).show();
+        Log.d("okh", "onCreate: " +System.currentTimeMillis());
+
+        Log.d("okh", "onStartCommand: ");
         final int currentId = startId;
 
         locationThread = new Runnable() {
@@ -66,6 +77,8 @@ public class ForgroundService extends Service {
         startLocationForeground();
 
         return Service.START_STICKY;
+
+//        return Service.START_NOT_STICKY;
     }
 
     @Override
@@ -88,24 +101,25 @@ public class ForgroundService extends Service {
 
     private void startLocationForeground() {
 
+        if (Build.VERSION.SDK_INT >= 26) {
+            String channelId = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
+                    ? this.createNotificationChannel("my_service", "My Background Service")
+                    : "";
 
-        String channelId = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
-                ? this.createNotificationChannel("my_service", "My Background Service")
-                : "";
-
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder((Context)this,
-                channelId);
+            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder((Context) this,
+                    channelId);
 
 
-        Notification notification = notificationBuilder
-                .setOngoing(true)
-                .setContentText("Please don't kill the app from background. Thank you!!")
-                .setSmallIcon(getNotificationIcon(notificationBuilder))
-                .setPriority(-2)
-                .setCategory("service")
-                .build();
+            Notification notification = notificationBuilder
+                    .setOngoing(true)
+                    .setContentText("Please don't kill the app from background. Thank you!!")
+                    .setSmallIcon(getNotificationIcon(notificationBuilder))
+                    .setPriority(-2)
+                    .setCategory("service")
+                    .build();
 
-        this.startForeground(101, notification);
+            startForeground(101, notification);
+        }
     }
 
     @RequiresApi(26)

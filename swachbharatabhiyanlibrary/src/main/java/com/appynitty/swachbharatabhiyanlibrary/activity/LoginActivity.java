@@ -165,7 +165,7 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
             public void onSuccessCallBack() {
                 String message;
 
-                if (Prefs.getString(AUtils.LANGUAGE_NAME, AUtils.DEFAULT_LANGUAGE_ID).equals("2")) {
+                if (Prefs.getString(AUtils.LANGUAGE_NAME, AUtils.DEFAULT_LANGUAGE_ID).equalsIgnoreCase(AUtils.LanguageConstants.MARATHI)) {
                     message = mAdapter.getLoginDetailsPojo().getMessageMar();
                 } else {
                     message = mAdapter.getLoginDetailsPojo().getMessage();
@@ -194,7 +194,7 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
             public void onSuccessFailureCallBack() {
                 String message;
 
-                if (Prefs.getString(AUtils.LANGUAGE_NAME, AUtils.DEFAULT_LANGUAGE_ID).equals(AUtils.LanguageIDConstants.MARATHI)) {
+                if (Prefs.getString(AUtils.LANGUAGE_NAME, AUtils.DEFAULT_LANGUAGE_ID).equalsIgnoreCase(AUtils.LanguageConstants.MARATHI)) {
                     message = mAdapter.getLoginDetailsPojo().getMessageMar();
                 } else {
                     message = mAdapter.getLoginDetailsPojo().getMessage();

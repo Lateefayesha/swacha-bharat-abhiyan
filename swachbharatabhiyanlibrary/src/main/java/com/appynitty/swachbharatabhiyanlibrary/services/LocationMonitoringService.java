@@ -138,7 +138,7 @@ public class LocationMonitoringService implements LocationListener, GpsStatus.Li
     //to get the location change
     @Override
     public void onLocationChanged(Location location) {
-
+        Log.d("okh ", "onLocationChanged:   "+System.currentTimeMillis());
         if (location != null) {
 
             Log.d(TAG, String.valueOf(location.getAccuracy()));
@@ -191,7 +191,7 @@ public class LocationMonitoringService implements LocationListener, GpsStatus.Li
     }
 
     private void sendLocation() {
-        Log.d(TAG, "sendLocation: Current Time In Millies"+ System.currentTimeMillis());
+        Log.d("okh", "sendLocation: Current Time In Millies "+ System.currentTimeMillis());
 
         try {
             Calendar CurrentTime = AUtils.getCurrentTime();

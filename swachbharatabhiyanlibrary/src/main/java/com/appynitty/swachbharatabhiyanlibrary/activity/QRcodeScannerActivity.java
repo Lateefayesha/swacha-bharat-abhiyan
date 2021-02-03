@@ -564,7 +564,7 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
 
             @Override
             public void onFailureCallBack(GarbageCollectionPojo garbageCollectionPojo) {
-                Log.d(TAG, "onFailureCallBack: "+new Gson().toJson(garbageCollectionPojo));
+                Log.d(TAG, "onFailureCallBack: " + new Gson().toJson(garbageCollectionPojo));
                 restartPreview();
                 insertToDB(garbageCollectionPojo);
                 AUtils.error(mContext, mContext.getString(R.string.serverError), Toast.LENGTH_SHORT);
@@ -596,6 +596,7 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
     }
 
     private void submitQRcode(String houseid) {
+        Log.d(TAG, "submitQRcode: " + houseid);
         if (houseid.substring(0, 2).matches("^[HhPp]+$"))
             validateTypeOfCollection(houseid);
         else if (houseid.substring(0, 2).matches("^[GgPp]+$"))
@@ -610,6 +611,7 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
 
     private void showPopup(String id, GcResultPojo pojo) {
         Log.d(TAG, "showPopup: " + new Gson().toJson(pojo));
+        Log.d(TAG, "showPopup: " + id);
         final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setCancelable(false);
         View view = View.inflate(mContext, R.layout.layout_qr_result, null);
@@ -746,6 +748,7 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
     }
 
     public void handleResult(Result result) {
+        Log.d(TAG, "handleResult: " + new Gson().toJson(result));
         submitQRcode(result.getContents());
 //        restartPreview();
     }
@@ -957,7 +960,7 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
     }
 
     private GarbageCollectionPojo getGarbageCollectionPojo() {
-        Log.d(TAG, "getGarbageCollectionPojo: "+new Gson().toJson(garbageCollectionPojo));
+        Log.d(TAG, "getGarbageCollectionPojo: " + new Gson().toJson(garbageCollectionPojo));
         return garbageCollectionPojo;
     }
 
@@ -994,10 +997,10 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
 //        syncServerRepository.insertSyncServerEntity(new Gson().toJson(entity, type)); //TODO
         syncOfflineRepository.insertCollection(entity);
 
-        showOfflinePopup(garbageCollectionPojo.getId());
+        showOfflinePopup(garbageCollectionPojo.getId(), entity.getGcType());
     }
 
-    private void showOfflinePopup(String pojo) {
+    private void showOfflinePopup(String pojo, String garbageType) {
 
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
@@ -1010,9 +1013,27 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
         }
 
         TextView ownerName = view.findViewById(R.id.house_owner_name);
+        TextView houseTitle = view.findViewById(R.id.lbl_title);
         Button doneBtn = view.findViewById(R.id.done_btn);
 
         ownerName.setText(pojo);
+        String value="";
+
+        switch (garbageType) {
+            case "1":
+                value= "House Id";
+                break;
+
+            case "2":
+                value= "Garbage Point Id";
+                break;
+            case "3":
+                value= "Dump yard Id  ";
+                break;
+        }
+
+        houseTitle.setText(value);
+
         doneBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
