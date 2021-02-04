@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -249,8 +250,10 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
         loginPojo.setStatus("");
         loginPojo.setType("");
         loginPojo.setUserId("");*/
-        loginPojo.setUserLoginId(txtUserName.getText().toString());
-        loginPojo.setUserPassword(txtUserPwd.getText().toString());
+        loginPojo.setUserLoginId(txtUserName.getText().toString().trim());
+        loginPojo.setUserPassword(txtUserPwd.getText().toString().trim());
+        Log.d("TAG", "getFormData: "+loginPojo.getUserLoginId());
+        Log.d("TAG", "getFormData: "+loginPojo.getUserPassword());
         TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 
         String deviceId = AUtils.getAndroidId();
