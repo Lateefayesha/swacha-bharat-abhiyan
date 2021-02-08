@@ -995,6 +995,8 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
 
 //        Type type = new TypeToken<OfflineGarbageColectionPojo>() {}.getType(); //TODO
 //        syncServerRepository.insertSyncServerEntity(new Gson().toJson(entity, type)); //TODO
+
+
         syncOfflineRepository.insertCollection(entity);
 
         showOfflinePopup(garbageCollectionPojo.getId(), entity.getGcType());

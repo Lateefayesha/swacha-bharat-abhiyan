@@ -16,6 +16,7 @@ import com.pixplicity.easyprefs.library.Prefs;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
@@ -25,6 +26,8 @@ import retrofit2.Response;
 public class ShareLocationAdapterClass {
 
     private ShareLocationListener mListener;
+
+    HashMap<String , UserLocationPojo> hashMap = new HashMap<>();
 
     private LocationRepository mLocationRepository;
 
@@ -46,9 +49,28 @@ public class ShareLocationAdapterClass {
     /**
      * Share Location To server
      *
+     * set Hashmap for not send multiple location
      * @param userLocationPojos
      */
     public void shareLocation(final List<UserLocationPojo> userLocationPojos) {
+        if(userLocationPojos.size()>0) {
+            for (UserLocationPojo user : userLocationPojos) {
+
+                if (!hashMap.containsKey(user.getDatetime())) {
+                    hashMap.put(user.getDatetime(), user);
+                }
+
+            }
+
+
+            hitLocationServer(new ArrayList<UserLocationPojo>(hashMap.values()));
+
+        }
+
+
+
+    }
+    private void hitLocationServer(final List<UserLocationPojo> userLocationPojos){
 
         UserLocationWebService service = Connection.createService(UserLocationWebService.class, AUtils.SERVER_URL);
 
@@ -57,52 +79,52 @@ public class ShareLocationAdapterClass {
                 Prefs.getString(AUtils.PREFS.USER_TYPE_ID, "0"),
                 AUtils.getBatteryStatus(), userLocationPojos)
                 .enqueue(new Callback<List<UserLocationResultPojo>>() {
-            @Override
-            public void onResponse(Call<List<UserLocationResultPojo>> call, Response<List<UserLocationResultPojo>> response) {
+                    @Override
+                    public void onResponse(Call<List<UserLocationResultPojo>> call, Response<List<UserLocationResultPojo>> response) {
 
-                if (response.code() == 200) {
-                    List<UserLocationResultPojo> resultPojoList = response.body();
-                    if(!AUtils.isNull(resultPojoList) && resultPojoList.size() > 0) {
-                        for (UserLocationResultPojo pojo : resultPojoList) {
-                            if (pojo.getStatus().equals(AUtils.STATUS_SUCCESS)) {
-                                if(!AUtils.isNull(mListener)) {
-                                    mListener.onSuccessCallBack(pojo.getIsAttendenceOff());
-                                }
-                            } else {
-                                if(!AUtils.isNull(mListener)) {
-                                    mListener.onFailureCallBack();
+                        if (response.code() == 200) {
+                            List<UserLocationResultPojo> resultPojoList = response.body();
+                            if(!AUtils.isNull(resultPojoList) && resultPojoList.size() > 0) {
+                                for (UserLocationResultPojo pojo : resultPojoList) {
+                                    if (pojo.getStatus().equals(AUtils.STATUS_SUCCESS)) {
+                                        if(!AUtils.isNull(mListener)) {
+                                            mListener.onSuccessCallBack(pojo.getIsAttendenceOff());
+                                        }
+                                    } else {
+                                        if(!AUtils.isNull(mListener)) {
+                                            mListener.onFailureCallBack();
+                                        }
+                                    }
                                 }
                             }
+                        } else {
+                            mListener.onFailureCallBack();
+                            Log.i(AUtils.TAG_HTTP_RESPONSE, "onFailureCallback: Response Code-" + response.code());
                         }
                     }
-                } else {
-                    mListener.onFailureCallBack();
-                    Log.i(AUtils.TAG_HTTP_RESPONSE, "onFailureCallback: Response Code-" + response.code());
-                }
-            }
 
-            @Override
-            public void onFailure(Call<List<UserLocationResultPojo>> call, Throwable t) {
-                for (UserLocationPojo pojo : userLocationPojos) {
+                    @Override
+                    public void onFailure(Call<List<UserLocationResultPojo>> call, Throwable t) {
+                        for (UserLocationPojo pojo : userLocationPojos) {
 
-                    if(pojo.getOfflineId().equals("0")) {
-                        Type type = new TypeToken<UserLocationPojo>() {}.getType();
-                        mLocationRepository.insertUserLocationEntity(new Gson().toJson(pojo,type));
+                            if(pojo.getOfflineId().equals("0")) {
+                                Type type = new TypeToken<UserLocationPojo>() {}.getType();
+                                mLocationRepository.insertUserLocationEntity(new Gson().toJson(pojo,type));
+                            }
+                        }
+                        if(!AUtils.isNull(mListener)) {
+                            mListener.onFailureCallBack();
+                        }
+                        Log.i(AUtils.TAG_HTTP_RESPONSE, "onFailureCallback: Response Code-" + t.getMessage());
                     }
-                }
-                if(!AUtils.isNull(mListener)) {
-                    mListener.onFailureCallBack();
-                }
-                Log.i(AUtils.TAG_HTTP_RESPONSE, "onFailureCallback: Response Code-" + t.getMessage());
-            }
-        });
-
+                });
     }
 
     public void shareLocation() {
         if(!AUtils.isLocationRequestEnable) {
 
             getDBList();
+            Log.d("TAG", "shareLocation: "+new Gson().toJson(userLocationPojoList));
 
             if (userLocationPojoList.size() > 0) {
 

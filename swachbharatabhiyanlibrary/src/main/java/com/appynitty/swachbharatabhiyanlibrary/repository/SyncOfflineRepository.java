@@ -162,6 +162,12 @@ public class SyncOfflineRepository {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + SYNC_OFFLINE_TABLE);
     }
 
+    /**
+     * IsLOCATION SET 1
+     *   CAME FROM LOCATION MANAGER
+     * @param sqLiteDatabase
+     * @param pojo
+     */
     private static void performLocationInsert(SQLiteDatabase sqLiteDatabase, UserLocationPojo pojo) {
         ContentValues contentValues = new ContentValues();
 
@@ -186,6 +192,13 @@ public class SyncOfflineRepository {
         insertSyncTableData(sqLiteDatabase, contentValues);
     }
 
+    /**
+     * isLOcation set 0
+     *  CAME FROM SCANNER ACTIVITY...
+     *
+     * @param sqLiteDatabase
+     * @param pojo
+     */
     private static void performCollectionInsert(SQLiteDatabase sqLiteDatabase, OfflineGarbageColectionPojo pojo) {
 
         ContentValues contentValues = new ContentValues();

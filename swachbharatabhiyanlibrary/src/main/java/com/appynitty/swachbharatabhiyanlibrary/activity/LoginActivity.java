@@ -25,6 +25,7 @@ import com.appynitty.swachbharatabhiyanlibrary.dialogs.PopUpDialog;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.LanguagePojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.LoginPojo;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
+import com.facebook.stetho.common.StringUtil;
 import com.google.android.material.snackbar.Snackbar;
 import com.pixplicity.easyprefs.library.Prefs;
 import com.riaylibrary.utils.LocaleHelper;
@@ -85,7 +86,7 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
                 Snackbar.make(LoginActivity.this.findViewById(android.R.id.content),
                         "Please Grant Permissions to upload profile photo",
                         Snackbar.LENGTH_INDEFINITE).setAction("ENABLE",
-                        new View.OnClickListener() {
+                         new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -250,10 +251,13 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
         loginPojo.setStatus("");
         loginPojo.setType("");
         loginPojo.setUserId("");*/
-        loginPojo.setUserLoginId(txtUserName.getText().toString().trim());
-        loginPojo.setUserPassword(txtUserPwd.getText().toString().trim());
+        String userName = txtUserName.getText().toString().replaceAll("\\s", "");
+        String password = txtUserPwd.getText().toString().replaceAll("\\s", "");
+        loginPojo.setUserLoginId(userName);
+        loginPojo.setUserPassword(password);
         Log.d("TAG", "getFormData: "+loginPojo.getUserLoginId());
         Log.d("TAG", "getFormData: "+loginPojo.getUserPassword());
+
         TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 
         String deviceId = AUtils.getAndroidId();
@@ -267,12 +271,12 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
 
     private void getPermission() {
         if (ActivityCompat.checkSelfPermission(LoginActivity.this,
-                Manifest.permission.READ_EXTERNAL_STORAGE) + ActivityCompat
-                .checkSelfPermission(LoginActivity.this,
-                        Manifest.permission.CAMERA) + ActivityCompat
-                .checkSelfPermission(LoginActivity.this,
-                        Manifest.permission.ACCESS_COARSE_LOCATION) + ActivityCompat
-                .checkSelfPermission(LoginActivity.this,
+                Manifest.permission.READ_EXTERNAL_STORAGE) +
+                ActivityCompat.checkSelfPermission(LoginActivity.this,
+                        Manifest.permission.CAMERA) +
+                ActivityCompat.checkSelfPermission(LoginActivity.this,
+                        Manifest.permission.ACCESS_COARSE_LOCATION) +
+                ActivityCompat.checkSelfPermission(LoginActivity.this,
                         Manifest.permission.ACCESS_FINE_LOCATION) + ActivityCompat
                 .checkSelfPermission(LoginActivity.this,
                         Manifest.permission.ACCESS_BACKGROUND_LOCATION) + ActivityCompat
@@ -287,6 +291,8 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
                             (LoginActivity.this, Manifest.permission.CAMERA) ||
                     ActivityCompat.shouldShowRequestPermissionRationale
                             (LoginActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) ||
+
+
                     ActivityCompat.shouldShowRequestPermissionRationale
                             (LoginActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) ||
 

@@ -110,6 +110,7 @@ public class LocationMonitoringService implements LocationListener, GpsStatus.Li
                     gpsFreqInDistance, this, null);
 
 
+
         } catch (IllegalArgumentException | SecurityException e) {
             Log.e(TAG, Objects.requireNonNull(e.getLocalizedMessage()));
             Log.d(TAG, "onStartTacking: " + e.getMessage());
@@ -191,6 +192,9 @@ public class LocationMonitoringService implements LocationListener, GpsStatus.Li
     }
 
     private void sendLocation() {
+
+
+      //  mAdapter.shareLocation(getTempList());
         Log.d("okh", "sendLocation: Current Time In Millies "+ System.currentTimeMillis());
 
         try {
@@ -222,7 +226,8 @@ public class LocationMonitoringService implements LocationListener, GpsStatus.Li
                 String UserTypeId = Prefs.getString(AUtils.PREFS.USER_TYPE_ID, AUtils.USER_TYPE.USER_TYPE_GHANTA_GADI);
                 if (AUtils.isInternetAvailable()) {
                     TableDataCountPojo.LocationCollectionCount count = syncOfflineRepository.getLocationCollectionCount(AUtils.getLocalDate());
-                    if ((UserTypeId.equals(AUtils.USER_TYPE.USER_TYPE_GHANTA_GADI) || UserTypeId.equals(AUtils.USER_TYPE.USER_TYPE_WASTE_MANAGER)) && (count.getLocationCount() > 0 || count.getCollectionCount() > 0)) {
+                    if ((UserTypeId.equals(AUtils.USER_TYPE.USER_TYPE_GHANTA_GADI) || UserTypeId.equals(AUtils.USER_TYPE.USER_TYPE_WASTE_MANAGER))
+                            && (count.getLocationCount() > 0 || count.getCollectionCount() > 0)) {
                         syncOfflineRepository.insetUserLocation(userLocationPojo);
                     } else {
                         mUserLocationPojoList.add(userLocationPojo);
@@ -265,5 +270,22 @@ public class LocationMonitoringService implements LocationListener, GpsStatus.Li
         }
 
 
+    }
+    //15	08/02/21 07:26	20.105894	79.1197105			NULL	60	NULL	28:28.5	1	NULL	NULL	NULL	NULL
+
+    private List<UserLocationPojo> getTempList() {
+       List<UserLocationPojo> list = new ArrayList<>();
+        for(int i=0; i<1000; i++){
+
+            UserLocationPojo pojo = new UserLocationPojo();
+            pojo.setDatetime("08/02/21 07:26");
+            pojo.setLat("20.105894");
+            pojo.setLong("79.1197105");
+            list.add(pojo);
+
+
+        }
+
+        return list;
     }
 }
