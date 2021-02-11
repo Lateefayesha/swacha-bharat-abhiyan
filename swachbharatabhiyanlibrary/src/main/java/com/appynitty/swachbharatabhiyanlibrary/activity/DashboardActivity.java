@@ -11,6 +11,7 @@ import android.hardware.camera2.CameraCharacteristics;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,11 +29,14 @@ import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.appynitty.retrofitconnectionlibrary.connection.Connection;
+import com.appynitty.retrofitconnectionlibrary.pojos.ResultPojo;
 import com.appynitty.swachbharatabhiyanlibrary.R;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.UI.DashboardMenuAdapter;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.AttendanceAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.CheckAttendanceAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.OfflineAttendanceAdapterClass;
+import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.SyncOfflineAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.UserDetailAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.VehicleTypeAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.VerifyDataAdapterClass;
@@ -49,6 +53,7 @@ import com.appynitty.swachbharatabhiyanlibrary.repository.SyncOfflineRepository;
 import com.appynitty.swachbharatabhiyanlibrary.services.ForgroundService;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 import com.appynitty.swachbharatabhiyanlibrary.utils.MyApplication;
+import com.appynitty.swachbharatabhiyanlibrary.webservices.IMEIWebService;
 import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
@@ -66,6 +71,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import io.github.kobakei.materialfabspeeddial.FabSpeedDial;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class DashboardActivity extends AppCompatActivity implements PopUpDialog.PopUpDialogListener {
@@ -82,10 +90,11 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
     private TextView attendanceStatus;
     private TextView vehicleStatus;
     private Switch markAttendance;
-    private TextView userName;
-    private TextView empId;
     private ImageView profilePic;
     public  boolean isView=false;
+    private TextView userName;
+    private TextView empId;
+    public boolean isSync=false;
 
     private AttendancePojo attendancePojo = null;
 
@@ -111,6 +120,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
     private SyncOfflineAttendanceRepository syncOfflineAttendanceRepository;
 
     private boolean isFromAttendanceChecked = false;
+    private boolean isDeviceMatch=false;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -319,6 +329,106 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         generateId();
         registerEvents();
         initData();
+        isUserLoginValidIMEINumber();
+    }
+
+    /**
+     * Call this method first of page for found any user login with the diffrent mobile to avoid to conflit in data
+     */
+    private void isUserLoginValidIMEINumber() {
+
+        syncOfflineData();
+
+
+
+
+
+    }
+
+    private void syncOfflineData() {
+        SyncOfflineAdapterClass offlineAdapterClasss= new SyncOfflineAdapterClass(this);
+        offlineAdapterClasss.SyncOfflineData();
+
+        offlineAdapterClasss.setSyncOfflineListener(new SyncOfflineAdapterClass.SyncOfflineListener() {
+            @Override
+            public void onSuccessCallback() {
+                isSync=true;
+                 isValidIMEINumber(isSync);
+            }
+            @Override
+            public void onFailureCallback() {
+                isSync=false;
+                isValidIMEINumber(isSync);
+            }
+
+            @Override
+            public void onErrorCallback() {
+                isSync=false;
+                isValidIMEINumber(isSync);
+            }
+
+        });
+
+
+
+
+    }
+
+    private void isValidIMEINumber(boolean isSync) {
+        IMEIWebService service= Connection.createService(IMEIWebService.class, AUtils.SERVER_URL);
+        service.compareIMEINumber(
+                Prefs.getString(AUtils.APP_ID, ""),
+                Prefs.getString(AUtils.PREFS.USER_ID,"") ,
+                isSync,
+                AUtils.getBatteryStatus(),
+                AUtils.CONTENT_TYPE
+                ).enqueue(new Callback<ResultPojo>() {
+            @Override
+            public void onResponse(Call<ResultPojo> call, Response<ResultPojo> response) {
+                if(response.isSuccessful() && response.code() == 200){
+                    if(response.body()!=null){
+                     performLogoutDirectly(response.body());
+
+
+                    }
+
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResultPojo> call, Throwable t) {
+                Log.d(AUtils.TAG_HTTP_RESPONSE, "onFailureCallback: Response Code-" + t.getMessage());
+            }
+        });
+
+
+
+
+    }
+
+    private void performLogoutDirectly(ResultPojo body) {
+
+
+            TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+
+            String deviceId = AUtils.getAndroidId();
+
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                deviceId = telephonyManager.getDeviceId();
+            }
+            if(body.getMessage().equalsIgnoreCase(deviceId)){
+                isDeviceMatch=true;
+                if (!AUtils.isIsOnduty()) {
+                    verifyOfflineData(LoginActivity.class, true);
+
+                } else{
+                    AUtils.info(mContext, getResources().getString(R.string.off_duty_warning));
+                }
+            }
+
+
+
     }
 
     private void generateId() {
@@ -619,6 +729,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         } else {
             onSwitchOff();
         }
+
     }
 
     private void onVehicleTypeDialogClose(Object listItemSelected, String vehicleNo) {
@@ -873,6 +984,13 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
                 markAttendance.setChecked(true);
             }
         }
+        /**
+         * Add Now to Direct logout after sync to server to perform logout...
+         */
+        else if(isDeviceMatch){
+            verifyOfflineData(LoginActivity.class, true);
+        }
+
     }
 
     private void onCaptureImageResult(Intent data) {
@@ -906,6 +1024,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
     @Override
     protected void onDestroy() {
         isView=false;
+        isDeviceMatch=false;
         super.onDestroy();
     }
 }

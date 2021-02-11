@@ -193,7 +193,7 @@ public class SyncOfflineRepository {
     }
 
     /**
-     * isLOcation set 0
+     * isLocation set 0
      *  CAME FROM SCANNER ACTIVITY...
      *
      * @param sqLiteDatabase
