@@ -135,6 +135,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initComponents();
+
     }
 
     @Override
@@ -329,7 +330,15 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         generateId();
         registerEvents();
         initData();
-        isUserLoginValidIMEINumber();
+      //  isUserLoginValidIMEINumber();
+        checkDemoInsertIMEINumber();
+    }
+
+    private void checkDemoInsertIMEINumber() {
+
+
+
+
     }
 
     /**
@@ -555,7 +564,9 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         mUserDetailAdapter.setUserDetailListener(new UserDetailAdapterClass.UserDetailListener() {
             @Override
             public void onSuccessCallBack() {
+
                 initUserDetails();
+
             }
 
             @Override

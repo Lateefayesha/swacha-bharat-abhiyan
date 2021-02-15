@@ -45,6 +45,9 @@ public class OfflineAttendanceAdapterClass {
         this.offlineAttendanceListener = syncOfflineListener;
     }
 
+    /**
+     * Add CurrentTime
+     */
     public void SyncOfflineData(){
         if(!AUtils.isSyncOfflineDataRequestEnable) {
 
@@ -57,7 +60,7 @@ public class OfflineAttendanceAdapterClass {
                 PunchWebService service = Connection.createService(PunchWebService.class, AUtils.SERVER_URL);
 
                 service.saveOfflineAttendanceDetails(Prefs.getString(AUtils.APP_ID, ""),
-                        AUtils.CONTENT_TYPE, syncOfflineList)
+                        AUtils.CONTENT_TYPE, AUtils.getServerDateTimeWithMilliesSecond(),syncOfflineList)
                         .enqueue(new Callback<List<AttendanceResponsePojo>>() {
                     @Override
                     public void onResponse(@NonNull Call<List<AttendanceResponsePojo>> call,

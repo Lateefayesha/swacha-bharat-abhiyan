@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#000000</color>
+    <color name="cart_count_color">#e57373</color>
+    <color name="colorAccent">#e57373</color>
+    <color name="colorPrimary">#64b5f6</color>
+    <color name="colorPrimaryDark">#64b5f6</color>
+    <color name="gradient_end_color">#FF009EFD</color>
+    <color name="gradient_start_color">#FF2AF598</color>
+    <color name="text_color_no_data">#6A6A6A</color>
+    <color name="white">#ffffff</color>
+    <color name="yellow">#ffdd00</color>
+    <dimen name="dim_0_dp">0dp</dimen>
+    <dimen name="dim_100_dp">100dp</dimen>
+    <dimen name="dim_10_dp">10dp</dimen>
+    <dimen name="dim_10_sp">10sp</dimen>
+    <dimen name="dim_120_dp">120dp</dimen>
+    <dimen name="dim_12_dp">12dp</dimen>
+    <dimen name="dim_12_sp">12sp</dimen>
+    <dimen name="dim_130_dp">130dp</dimen>
+    <dimen name="dim_13_sp">13sp</dimen>
+    <dimen name="dim_140_dp">140dp</dimen>
+    <dimen name="dim_14_sp">14sp</dimen>
+    <dimen name="dim_150_dp">150dp</dimen>
+    <dimen name="dim_15_dp">15dp</dimen>
+    <dimen name="dim_16_dp">16dp</dimen>
+    <dimen name="dim_17_sp">17sp</dimen>
+    <dimen name="dim_18_dp">18dp</dimen>
+    <dimen name="dim_18_sp">18sp</dimen>
+    <dimen name="dim_200_dp">200dp</dimen>
+    <dimen name="dim_20_dp">20dp</dimen>
+    <dimen name="dim_20_sp">20sp</dimen>
+    <dimen name="dim_220_dp">220dp</dimen>
+    <dimen name="dim_24_dp">24dp</dimen>
+    <dimen name="dim_250_dp">250dp</dimen>
+    <dimen name="dim_25_sp">25sp</dimen>
+    <dimen name="dim_2_dp">2dp</dimen>
+    <dimen name="dim_300_dp">300dp</dimen>
+    <dimen name="dim_30_dp">30dp</dimen>
+    <dimen name="dim_3_dp">3dp</dimen>
+    <dimen name="dim_40_dp">40dp</dimen>
+    <dimen name="dim_40_sp">40sp</dimen>
+    <dimen name="dim_45_dp">45dp</dimen>
+    <dimen name="dim_480_dp">480dp</dimen>
+    <dimen name="dim_50_dp">50dp</dimen>
+    <dimen name="dim_5_dp">5dp</dimen>
+    <dimen name="dim_60_dp">60dp</dimen>
+    <dimen name="dim_6_dp">6dp</dimen>
+    <dimen name="dim_80_dp">80dp</dimen>
+    <dimen name="dim_8_dp">8dp</dimen>
+    <dimen name="dimen_24_sp">24sp</dimen>
+    <dimen name="dimen_30_sp">30sp</dimen>
+    <string name="app_name">My Library</string>
+    <string name="app_share_text" translatable="false">Share the App:</string>
+    <string name="currentDir">Current Dir</string>
+    <string name="fileSize">File Size</string>
+    <string name="logout_confirmation_msg">Are you sure, you want to Logout?</string>
+    <string name="logout_confirmation_title">Logout Confirmation</string>
+    <string name="noData">No data found.</string>
+    <string name="no_internet_error">No Internet Connection</string>
+    <string name="no_thanks_txt" translatable="false">NO, THANKS</string>
+    <string name="no_txt">No</string>
+    <string name="offduty_confirmation_msg">Are you sure, you want to end your Duty?</string>
+    <string name="offduty_confirmation_title">End Duty Confirmation</string>
+    <string name="ok_txt">OK</string>
+    <string name="update_message" translatable="false">Please, update app to new version.</string>
+    <string name="update_title" translatable="false">New Version Available</string>
+    <string name="update_txt" translatable="false">UPDATE</string>
+    <string name="warning_uni_code">⚠</string>
+    <string name="yes_txt">Yes</string>
+    <style name="MyProgressDialog" parent="Theme.AppCompat.Dialog"/>
+    <style name="MyTabLayoutStyle">
+        <item name="textAllCaps">false</item>
+        <item name="android:textSize">@dimen/dim_17_sp</item>
+        <item name="android:typeface">serif</item>
+    </style>
+    <style name="Toolbar" parent="Theme.AppCompat">
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">@color/white</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+    <declare-styleable name="CircleImageView">
+        <attr format="dimension" name="border_width"/>
+        <attr format="color" name="border_color"/>
+        <attr format="boolean" name="border_overlay"/>
+    </declare-styleable>
+    <declare-styleable name="MyZoomageView">
+        <attr format="boolean" name="zoomage_zoomable"/>
+        <attr format="boolean" name="zoomage_translatable"/>
+        <attr format="boolean" name="zoomage_restrictBounds"/>
+        <attr format="boolean" name="zoomage_animateOnReset"/>
+        <attr format="boolean" name="zoomage_autoCenter"/>
+        <attr format="float" name="zoomage_minScale"/>
+        <attr format="float" name="zoomage_maxScale"/>
+        <attr format="enum" name="zoomage_autoResetMode">
+            <enum name="UNDER" value="0"/>
+            <enum name="OVER" value="1"/>
+            <enum name="ALWAYS" value="2"/>
+            <enum name="NEVER" value="3"/>
+        </attr>
+    </declare-styleable>
+</resources>

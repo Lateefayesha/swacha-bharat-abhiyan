@@ -40,10 +40,10 @@ public class AUtils extends CommonUtils {
 //    public static final String SERVER_URL = "http://192.168.200.4:6077/";
 
     //    Staging URL
-    public static final String SERVER_URL = "http://115.115.153.117:4044/";
+//    public static final String SERVER_URL = "http://115.115.153.117:4044/";
 
     //    Relese URL
-//    public static final String SERVER_URL = "https://ghantagadi.in:444/";
+    public static final String SERVER_URL = "https://ghantagadi.in:444/";
 
     //    Relese Backup URL
 //    public static final String SERVER_URL = "http://202.65.157.253:4044/";
@@ -244,6 +244,11 @@ public class AUtils extends CommonUtils {
     public static String getServerDateTime() {
 
         SimpleDateFormat format = new SimpleDateFormat(AUtils.SERVER_DATE_TIME_FORMATE, Locale.ENGLISH);
+        return format.format(Calendar.getInstance().getTime());
+    }
+    public static String getServerDateTimeWithMilliesSecond() {
+
+        SimpleDateFormat format = new SimpleDateFormat(AUtils.SERVER_DATE_TIME_FORMATE_LOCAL, Locale.ENGLISH);
         return format.format(Calendar.getInstance().getTime());
     }
 

@@ -32,5 +32,6 @@ public interface PunchWebService {
     @POST("api/Save/AttendenceOffline")
     Call<List<AttendanceResponsePojo>> saveOfflineAttendanceDetails(@Header("appId") String appId,
                                                                     @Header("Content-Type") String content_type,
+                                                                    @Header("cdate")String currentDateTime,
                                                                     @Body List<AttendancePojo> attendancePojoList);
 }
