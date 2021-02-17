@@ -62,8 +62,12 @@ import com.pixplicity.easyprefs.library.Prefs;
 import com.riaylibrary.custom_component.GlideCircleTransformation;
 import com.riaylibrary.utils.LocaleHelper;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -71,6 +75,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import io.github.kobakei.materialfabspeeddial.FabSpeedDial;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -91,10 +96,10 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
     private TextView vehicleStatus;
     private Switch markAttendance;
     private ImageView profilePic;
-    public  boolean isView=false;
+    public boolean isView = false;
     private TextView userName;
     private TextView empId;
-    public boolean isSync=false;
+    public boolean isSync = false;
 
     private AttendancePojo attendancePojo = null;
 
@@ -120,7 +125,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
     private SyncOfflineAttendanceRepository syncOfflineAttendanceRepository;
 
     private boolean isFromAttendanceChecked = false;
-    private boolean isDeviceMatch=false;
+    private boolean isDeviceMatch = false;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -300,7 +305,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
                 verifyDataAdapterClass.verifyOfflineSync();
             }
             if (isView)
-                 checkDutyStatus();
+                checkDutyStatus();
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -324,118 +329,167 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
     }
 
     private void initComponents() {
-        isView=true;
+        isView = true;
         getPermission();
-
         generateId();
         registerEvents();
         initData();
-      //  isUserLoginValidIMEINumber();
-        checkDemoInsertIMEINumber();
+          isUserLoginValidIMEINumber();
     }
 
-    private void checkDemoInsertIMEINumber() {
-
-
-
-
-    }
 
     /**
      * Call this method first of page for found any user login with the diffrent mobile to avoid to conflit in data
      */
+//{"imiNo":"2d055f954e6ab7bd","userLoginId":"ayesha","userPassword":"123"}
+
+/// {
+//     *     "UserId": 1,
+//     *     "IsInSync": true,
+//     *     "batterystatus": 70,
+//     *     "imei": "860353049070255"
+//                * }
     private void isUserLoginValidIMEINumber() {
 
-        syncOfflineData();
-
-
-
-
+//        syncOfflineData();
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("UserId", 1);
+            jsonObject.put("IsInSync", true);
+            jsonObject.put("batterystatus", 70);
+            jsonObject.put("imei","2d055f954e6ab7bd");
+            responseIMEINumber(jsonObject);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
     }
 
     private void syncOfflineData() {
-        SyncOfflineAdapterClass offlineAdapterClasss= new SyncOfflineAdapterClass(this);
+        SyncOfflineAdapterClass offlineAdapterClasss = new SyncOfflineAdapterClass(this);
         offlineAdapterClasss.SyncOfflineData();
 
         offlineAdapterClasss.setSyncOfflineListener(new SyncOfflineAdapterClass.SyncOfflineListener() {
             @Override
             public void onSuccessCallback() {
-                isSync=true;
-                 isValidIMEINumber(isSync);
+                isSync = true;
+                isValidIMEINumber(isSync);
             }
+
             @Override
             public void onFailureCallback() {
-                isSync=false;
+                isSync = false;
                 isValidIMEINumber(isSync);
             }
 
             @Override
             public void onErrorCallback() {
-                isSync=false;
+                isSync = false;
                 isValidIMEINumber(isSync);
             }
 
         });
 
 
-
-
     }
 
     private void isValidIMEINumber(boolean isSync) {
-        IMEIWebService service= Connection.createService(IMEIWebService.class, AUtils.SERVER_URL);
+//        "UserId": 1,
+//                "IsInSync": true,
+//                "batterystatus": 70,
+//                "imei": "860353049070295"
+        IMEIWebService service = Connection.createService(IMEIWebService.class, AUtils.SERVER_URL);
         service.compareIMEINumber(
                 Prefs.getString(AUtils.APP_ID, ""),
-                Prefs.getString(AUtils.PREFS.USER_ID,"") ,
+                Prefs.getString(AUtils.PREFS.USER_ID, ""),
                 isSync,
                 AUtils.getBatteryStatus(),
                 AUtils.CONTENT_TYPE
-                ).enqueue(new Callback<ResultPojo>() {
+        ).enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<ResultPojo> call, Response<ResultPojo> response) {
-                if(response.isSuccessful() && response.code() == 200){
-                    if(response.body()!=null){
-                     performLogoutDirectly(response.body());
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful() && response.code() == 200) {
+                    if (response.body() != null) {
+//                        responseIMEINumber(response);
 
 
                     }
-
-
                 }
             }
 
             @Override
-            public void onFailure(Call<ResultPojo> call, Throwable t) {
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Log.d(AUtils.TAG_HTTP_RESPONSE, "onFailureCallback: Response Code-" + t.getMessage());
+
             }
         });
 
 
+    }
 
+    /**
+     *
+     * response
+     * {
+     *     "UserId": 1,
+     *     "IsInSync": true,
+     *     "batterystatus": 70,
+     *     "imei": "860353049070255"
+     * }
+     */
+    private void responseIMEINumber(JSONObject jsonObject) {
+        try {
+//            JSONObject jsonObject = new JSONObject(response.string());
+                    if (jsonObject.has("IsInSync")) {
+                       if( jsonObject.getBoolean("IsInSync")) {
+                           if (jsonObject.has("UserId"))
+                            //   if (jsonObject.getString("UserId").equalsIgnoreCase(Prefs.getString(AUtils.APP_ID, ""))) {
+                                   if (jsonObject.has("imei")) {
+                                       String imei = jsonObject.getString("imei");
+
+                                       if (compareImeiNumber(imei)) {
+                                           boolean isMatch = compareImeiNumber(imei);
+
+                                           performLogoutDirectly();
+
+                                       }
+                                   }
+                               }
+                       //}
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private boolean compareImeiNumber(String imei) {
+        TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+//            isDeviceMatch = true;
+        String deviceId = AUtils.getAndroidId();
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            deviceId = telephonyManager.getDeviceId();
+        }
+        return deviceId.equalsIgnoreCase(imei);
 
     }
 
-    private void performLogoutDirectly(ResultPojo body) {
+    private void performLogoutDirectly() {
 
 
-            TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 
-            String deviceId = AUtils.getAndroidId();
+//        if (body.getMessage().equalsIgnoreCase(deviceId)) {
+            if (!AUtils.isIsOnduty()) {
+                verifyOfflineData(LoginActivity.class, true);
 
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-                deviceId = telephonyManager.getDeviceId();
-            }
-            if(body.getMessage().equalsIgnoreCase(deviceId)){
-                isDeviceMatch=true;
-                if (!AUtils.isIsOnduty()) {
-                    verifyOfflineData(LoginActivity.class, true);
-
-                } else{
-                    AUtils.info(mContext, getResources().getString(R.string.off_duty_warning));
-                }
             }
 
+
+//            else {
+//                AUtils.info(mContext, getResources().getString(R.string.off_duty_warning));
+//            }
+//        }
 
 
     }
@@ -473,8 +527,9 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         userName = findViewById(R.id.user_full_name);
         empId = findViewById(R.id.user_emp_id);
         profilePic = findViewById(R.id.user_profile_pic);
-
         initToolBar();
+
+
     }
 
     private void initToolBar() {
@@ -998,7 +1053,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         /**
          * Add Now to Direct logout after sync to server to perform logout...
          */
-        else if(isDeviceMatch){
+        else if (isDeviceMatch) {
             verifyOfflineData(LoginActivity.class, true);
         }
 
@@ -1034,8 +1089,8 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
 
     @Override
     protected void onDestroy() {
-        isView=false;
-        isDeviceMatch=false;
+        isView = false;
+        isDeviceMatch = false;
         super.onDestroy();
     }
 }
