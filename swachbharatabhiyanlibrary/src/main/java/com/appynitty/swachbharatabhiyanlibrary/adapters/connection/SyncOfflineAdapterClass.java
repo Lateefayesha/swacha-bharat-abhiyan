@@ -80,10 +80,14 @@ public class SyncOfflineAdapterClass {
                         syncOfflineListener.onErrorCallback();
                     }
                 });
-            }else
-                syncOfflineListener.onSuccessCallback();
-        }else
-            syncOfflineListener.onFailureCallback();
+            }else {
+                if (syncOfflineListener != null)
+                    syncOfflineListener.onSuccessCallback();
+            }
+        }else {
+            if (syncOfflineListener != null)
+                syncOfflineListener.onFailureCallback();
+        }
 
     }
 

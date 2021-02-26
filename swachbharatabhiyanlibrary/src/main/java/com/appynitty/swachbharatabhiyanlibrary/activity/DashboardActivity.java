@@ -99,7 +99,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
     public boolean isView = false;
     private TextView userName;
     private TextView empId;
-    public boolean isSync = false;
+    public boolean isSync = true;
 
     private AttendancePojo attendancePojo = null;
 
@@ -175,6 +175,8 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         AUtils.currentContextConstant = mContext;
         checkIsFromLogin();
         initUserDetails();
+       // isValidIMEINumber(true);
+
 
 
     }
@@ -334,7 +336,8 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         generateId();
         registerEvents();
         initData();
-          isUserLoginValidIMEINumber();
+        isUserLoginValidIMEINumber();
+
     }
 
 
@@ -351,17 +354,19 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
 //                * }
     private void isUserLoginValidIMEINumber() {
 
-//        syncOfflineData();
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("UserId", 1);
-            jsonObject.put("IsInSync", true);
-            jsonObject.put("batterystatus", 70);
-            jsonObject.put("imei","2d055f954e6ab7bd");
-            responseIMEINumber(jsonObject);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        //syncOfflineData();
+        isValidIMEINumber(isSync);
+
+//        JSONObject jsonObject = new JSONObject();
+//        try {
+//            jsonObject.put("UserId", 1);
+//            jsonObject.put("IsInSync", true);
+//            jsonObject.put("batterystatus", 70);
+//            jsonObject.put("imei","2d055f954e6ab7bd");
+//            responseIMEINumber(jsonObject);
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
 
     }
 
@@ -373,7 +378,6 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
             @Override
             public void onSuccessCallback() {
                 isSync = true;
-                isValidIMEINumber(isSync);
             }
 
             @Override
@@ -398,11 +402,14 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
 //                "IsInSync": true,
 //                "batterystatus": 70,
 //                "imei": "860353049070295"
+
+        String deviceId = getDeviceId();
         IMEIWebService service = Connection.createService(IMEIWebService.class, AUtils.SERVER_URL);
         service.compareIMEINumber(
                 Prefs.getString(AUtils.APP_ID, ""),
                 Prefs.getString(AUtils.PREFS.USER_ID, ""),
                 isSync,
+                deviceId,
                 AUtils.getBatteryStatus(),
                 AUtils.CONTENT_TYPE
         ).enqueue(new Callback<ResponseBody>() {
@@ -410,7 +417,8 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful() && response.code() == 200) {
                     if (response.body() != null) {
-//                        responseIMEINumber(response);
+                        Log.d(TAG, "onResponse: "+new Gson().toJson(response.body()));
+                        responseIMEINumber(response.body());
 
 
                     }
@@ -436,34 +444,50 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
      *     "batterystatus": 70,
      *     "imei": "860353049070255"
      * }
+     * @param response
      */
-    private void responseIMEINumber(JSONObject jsonObject) {
+//    {"UserId":10162,"IsInSync":false,"batterystatus":15,"imei":null}
+    private void responseIMEINumber(ResponseBody response) {
         try {
-//            JSONObject jsonObject = new JSONObject(response.string());
-                    if (jsonObject.has("IsInSync")) {
-                       if( jsonObject.getBoolean("IsInSync")) {
-                           if (jsonObject.has("UserId"))
+            JSONObject jsonObject = null;
+//            try {
+                jsonObject = new JSONObject(response.string());
+
+                if (jsonObject.has("IsInSync")) {
+                    if( jsonObject.getBoolean("IsInSync")) {
+                        if (jsonObject.has("UserId"))
                             //   if (jsonObject.getString("UserId").equalsIgnoreCase(Prefs.getString(AUtils.APP_ID, ""))) {
-                                   if (jsonObject.has("imei")) {
-                                       String imei = jsonObject.getString("imei");
+                            if (jsonObject.has("imei")) {
+                                String imei = jsonObject.getString("imei");
 
-                                       if (compareImeiNumber(imei)) {
-                                           boolean isMatch = compareImeiNumber(imei);
+                                if (compareImeiNumber(imei)) {
+                                    boolean isMatch = compareImeiNumber(imei);
 
-                                           performLogoutDirectly();
+                                    performLogoutDirectly();
 
-                                       }
-                                   }
-                               }
-                       //}
-            }
+                                }
+                            }
+                    }else{
+                        Log.d(TAG, "responseIMEINumber: "+jsonObject.getBoolean("IsInSync"));
+                    }
+                    //}
+                }
+//            }
 
-        } catch (JSONException e) {
+
+        } catch (JSONException | IOException e) {
             e.printStackTrace();
+            Log.d(TAG, "responseIMEINumber: "+e.getMessage());
         }
     }
 
     private boolean compareImeiNumber(String imei) {
+        String deviceId = getDeviceId();
+        return deviceId.equalsIgnoreCase(imei);
+
+    }
+
+    private String getDeviceId() {
         TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 //            isDeviceMatch = true;
         String deviceId = AUtils.getAndroidId();
@@ -471,8 +495,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
             deviceId = telephonyManager.getDeviceId();
         }
-        return deviceId.equalsIgnoreCase(imei);
-
+        return deviceId;
     }
 
     private void performLogoutDirectly() {
