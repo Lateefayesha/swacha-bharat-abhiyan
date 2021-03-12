@@ -130,6 +130,7 @@ public class SyncOfflineAdapterClass {
             offlinePojo.setUserId(Prefs.getString(AUtils.PREFS.USER_ID, ""));
             offlinePojo.setOfflineID(String.valueOf(entity.getOfflineId()));
             offlinePojo.setIsLocation(entity.getOfflineIsLocation());
+
             Log.d("TAG", "setOfflineData: "+new Gson().toJson(offlinePojo));
             syncOfflineList.add(offlinePojo);
 

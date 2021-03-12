@@ -89,10 +89,12 @@ public class ShareLocationAdapterClass {
                                     if (pojo.getStatus().equals(AUtils.STATUS_SUCCESS)) {
                                         if(!AUtils.isNull(mListener)) {
                                             mListener.onSuccessCallBack(pojo.getIsAttendenceOff());
+                                            hashMap.clear();
                                         }
                                     } else {
                                         if(!AUtils.isNull(mListener)) {
                                             mListener.onFailureCallBack();
+                                            hashMap.clear();
                                         }
                                     }
                                 }
@@ -100,6 +102,7 @@ public class ShareLocationAdapterClass {
                         } else {
                             mListener.onFailureCallBack();
                             Log.i(AUtils.TAG_HTTP_RESPONSE, "onFailureCallback: Response Code-" + response.code());
+                            hashMap.clear();
                         }
                     }
 

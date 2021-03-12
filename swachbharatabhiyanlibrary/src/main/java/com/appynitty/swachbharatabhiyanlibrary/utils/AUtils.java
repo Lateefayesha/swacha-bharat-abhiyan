@@ -1,10 +1,20 @@
 package com.appynitty.swachbharatabhiyanlibrary.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.ImageDecoder;
 import android.location.Location;
+import android.net.Uri;
+import android.os.Build;
+import android.provider.MediaStore;
+import android.text.TextUtils;
+import android.util.Base64;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
@@ -24,7 +34,11 @@ import com.appynitty.swachbharatabhiyanlibrary.repository.LastLocationRepository
 import com.appynitty.swachbharatabhiyanlibrary.repository.SyncOfflineRepository;
 import com.pixplicity.easyprefs.library.Prefs;
 import com.riaylibrary.utils.CommonUtils;
+import com.valdesekamdem.library.mdtoast.MDToast;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -38,6 +52,7 @@ public class AUtils extends CommonUtils {
 
     //    Local URL
 //    public static final String SERVER_URL = "http://192.168.200.4:6077/";
+    //
 
     //    Staging URL
     public static final String SERVER_URL = "http://115.115.153.117:4044/";
@@ -593,6 +608,115 @@ public class AUtils extends CommonUtils {
             default:
                 return DashboardActivity.class;
         }
+    }
+
+
+    /**
+     * Encoded Image
+     */
+
+
+
+    @Nullable
+    public static Bitmap getImageBitmap(String _sourcePath, Context _context) throws Resources.NotFoundException {
+        Bitmap bitmap = null;
+        if ( _sourcePath != null) {
+
+            File file = new File(_sourcePath);
+            if (file.exists()) {
+                bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+            }
+
+            Uri uri = Uri.fromFile(file);
+            Log.d(TAG, "getImageBitmap: "+uri);
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(_context.getContentResolver(), uri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+//            bitmap= BitmapFactory.decodeFile(_sourcePath);
+        } else {
+            throw new Resources.NotFoundException("Invalid Source Path");
+        }
+        return bitmap;
+    }
+    @Nullable
+    public Bitmap getImageSourcePath(String _sourcePath, Context _context ) throws Resources.NotFoundException, IOException {
+        File file = null;
+        Bitmap bitmap=null;
+
+        if (_sourcePath != null) {
+            file = new File(_sourcePath);
+//             if(file.exists()){
+//
+//                 BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+//                      bitmap = BitmapFactory.decodeFile(file.getPath(), bmOptions);
+//                     bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, true);
+//
+//             }
+
+
+            Uri uri = Uri.fromFile(file);
+
+            Log.d(TAG, "getImageSourcePath: "+_sourcePath);
+//            Log.d(TAG, "getImageSourcePath: "+uri);
+//            content://com.appynitty.basepta.fileProvider/external_files/Android/data/com.appynitty.basepta/files/Pictures/image_20201218_1830485390469829670621400.jpg
+//            content://com.appynitty.basepta.fileProvider/external_files/Android/data/com.appynitty.basepta/files/Pictures/image_20201218_1830485390469829670621400.jpg
+
+
+//            if (file.exists()) {
+//                bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+//            }
+
+//            /storage/emulated/0/Android/data/com.appynitty.basepta/files/Pictures/image_20201218_1814219021659496099062004.jpg
+//             /storage/emulated/0/Android/data/com.appynitty.basepta/files/Pictures/image_20201218_1814219021659496099062004.jpg
+//              /storage/emulated/0/Android/data/com.appynitty.basepta/files/Pictures/image_20201218_1814219021659496099062004.jpg
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                try {
+                    bitmap = ImageDecoder.decodeBitmap(ImageDecoder.createSource(_context.getContentResolver(), uri));
+
+                }
+
+                catch (IOException e) {
+                    e.printStackTrace();
+                    MDToast.makeText(_context, e.getMessage());
+                }
+            } else {
+                bitmap = MediaStore.Images.Media.getBitmap(_context.getContentResolver(), uri);
+            }
+        }
+
+
+        else if (_sourcePath == null) {
+            throw new Resources.NotFoundException("Invalid Source Path");
+        }
+        Log.d(TAG, "getImageSourcePath:  Bitmap "+file);
+        return bitmap;
+    }
+
+
+
+    @Nullable
+    public static String getEncodedImage(String _sourcePath, Context _context) throws IOException, Resources.NotFoundException {
+        String encoded = null;
+            if(TextUtils.isEmpty(_sourcePath)){
+                return "";
+            }
+            Bitmap bitmap = getImageBitmap(_sourcePath, _context);
+            if (bitmap != null) {
+                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStream);
+                byte[] array = byteArrayOutputStream.toByteArray();
+                String encode = Base64.encodeToString(array, Base64.DEFAULT);
+                encoded = String.format("data:image/jpg;Base64,%s", encode);
+                byteArrayOutputStream.flush();
+                byteArrayOutputStream.close();
+            }
+
+        Log.d(TAG, "getEncodedImage: "+encoded);
+        return encoded;
+
     }
 }
 

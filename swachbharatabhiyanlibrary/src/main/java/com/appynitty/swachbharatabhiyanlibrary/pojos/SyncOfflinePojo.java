@@ -25,6 +25,42 @@ public class SyncOfflinePojo {
     private String IsLocation;
     private Boolean isOffline;
 
+    private String gpBeforImage;
+
+    public String getGpBeforImage() {
+        return gpBeforImage;
+    }
+
+    public void setGpBeforImage(String gpBeforImage) {
+        this.gpBeforImage = gpBeforImage;
+    }
+
+    public String getGpAfterImage() {
+        return gpAfterImage;
+    }
+
+    public void setGpAfterImage(String gpAfterImage) {
+        this.gpAfterImage = gpAfterImage;
+    }
+
+    private String gpAfterImage;
+
+
+
+    public Boolean getOffline() {
+        return isOffline;
+    }
+
+    public void setOffline(Boolean offline) {
+        isOffline = offline;
+    }
+
+
+
+
+
+
+
     public String getOfflineID() {
         return OfflineID;
     }

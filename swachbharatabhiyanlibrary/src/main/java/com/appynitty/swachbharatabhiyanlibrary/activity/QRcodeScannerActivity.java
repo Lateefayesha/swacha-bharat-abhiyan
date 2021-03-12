@@ -40,6 +40,7 @@ import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.AreaPointAdap
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.CollectionAreaAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.DumpYardAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.GarbageCollectionAdapterClass;
+import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.SyncServerAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.dialogs.GarbageTypePopUp;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.CollectionAreaHousePojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.CollectionAreaPointPojo;
@@ -51,6 +52,7 @@ import com.appynitty.swachbharatabhiyanlibrary.pojos.ImagePojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.OfflineGarbageColectionPojo;
 import com.appynitty.swachbharatabhiyanlibrary.repository.SyncOfflineAttendanceRepository;
 import com.appynitty.swachbharatabhiyanlibrary.repository.SyncOfflineRepository;
+import com.appynitty.swachbharatabhiyanlibrary.repository.SyncServerRepository;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 import com.appynitty.swachbharatabhiyanlibrary.utils.MyApplication;
 import com.google.android.material.textfield.TextInputLayout;
@@ -59,6 +61,7 @@ import com.google.gson.reflect.TypeToken;
 import com.pixplicity.easyprefs.library.Prefs;
 import com.riaylibrary.utils.LocaleHelper;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -99,7 +102,7 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
 
     GarbageCollectionPojo garbageCollectionPojo;
 
-    //    private SyncServerRepository syncServerRepository; //TODO
+//        private SyncServerRepository syncServerRepository; //TODO
     private SyncOfflineRepository syncOfflineRepository;
     private SyncOfflineAttendanceRepository syncOfflineAttendanceRepository;
 
@@ -793,6 +796,7 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
 //            mAdapter.submitQR(garbageCollectionPojo);
 //        }
 //        else {
+        Log.d(TAG, "startSubmitQRAsyncTask: "+ new Gson().toJson(garbageCollectionPojo));
         insertToDB(garbageCollectionPojo);
 //        }
     }
@@ -933,6 +937,8 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
             garbageCollectionPojo.setImage1(imagePojo.getImage1());
             garbageCollectionPojo.setImage2(imagePojo.getImage2());
         }
+
+
     }
 
     private void setGarbageCollectionPojo(HashMap<String, String> map) {
@@ -993,9 +999,28 @@ public class QRcodeScannerActivity extends AppCompatActivity implements ZBarScan
         else
             entity.setIsOffline(false);
 
-//        Type type = new TypeToken<OfflineGarbageColectionPojo>() {}.getType(); //TODO
-//        syncServerRepository.insertSyncServerEntity(new Gson().toJson(entity, type)); //TODO
+        if (isActivityData) {
+//            entity.setAfterImage(imagePojo.getAfterImage());
+//            entity.setBeforeImage(imagePojo.getBeforeImage());
+//            entity.setComment(imagePojo.getComment());
 
+            try {
+                entity.setGpBeforImage(AUtils.getEncodedImage(imagePojo.getImage1(), this));
+                entity.setGpAfterImage(AUtils.getEncodedImage(imagePojo.getImage2(), this));
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+
+
+//        SyncServerRepository   mSyncServerRepository = new SyncServerRepository(AUtils.mainApplicationConstant.getApplicationContext());
+//
+//
+//        Type type = new TypeToken<OfflineGarbageColectionPojo>() {}.getType(); //TODO
+//        mSyncServerRepository.insertSyncServerEntity(new Gson().toJson(entity, type)); //TODO
 
         syncOfflineRepository.insertCollection(entity);
 

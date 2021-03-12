@@ -175,8 +175,6 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         AUtils.currentContextConstant = mContext;
         checkIsFromLogin();
         initUserDetails();
-       // isValidIMEINumber(true);
-
 
 
     }
@@ -336,10 +334,15 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         generateId();
         registerEvents();
         initData();
-        isUserLoginValidIMEINumber();
+
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        isUserLoginValidIMEINumber();
+    }
 
     /**
      * Call this method first of page for found any user login with the diffrent mobile to avoid to conflit in data
@@ -355,7 +358,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
     private void isUserLoginValidIMEINumber() {
 
         //syncOfflineData();
-        isValidIMEINumber(isSync);
+        syncOfflineData(isSync);
 
 //        JSONObject jsonObject = new JSONObject();
 //        try {
@@ -370,25 +373,24 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
 
     }
 
-    private void syncOfflineData() {
+    private void syncOfflineData(final boolean isSync) {
         SyncOfflineAdapterClass offlineAdapterClasss = new SyncOfflineAdapterClass(this);
         offlineAdapterClasss.SyncOfflineData();
 
         offlineAdapterClasss.setSyncOfflineListener(new SyncOfflineAdapterClass.SyncOfflineListener() {
             @Override
             public void onSuccessCallback() {
-                isSync = true;
+                DashboardActivity.this.isSync = true;
             }
 
             @Override
             public void onFailureCallback() {
-                isSync = false;
                 isValidIMEINumber(isSync);
             }
 
             @Override
             public void onErrorCallback() {
-                isSync = false;
+                DashboardActivity.this.isSync = false;
                 isValidIMEINumber(isSync);
             }
 
@@ -404,6 +406,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
 //                "imei": "860353049070295"
 
         String deviceId = getDeviceId();
+
         IMEIWebService service = Connection.createService(IMEIWebService.class, AUtils.SERVER_URL);
         service.compareIMEINumber(
                 Prefs.getString(AUtils.APP_ID, ""),
@@ -417,7 +420,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful() && response.code() == 200) {
                     if (response.body() != null) {
-                        Log.d(TAG, "onResponse: "+new Gson().toJson(response.body()));
+                        Log.d(TAG, "onResponse: " + new Gson().toJson(response.body()));
                         responseIMEINumber(response.body());
 
 
@@ -436,14 +439,14 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
     }
 
     /**
-     *
      * response
      * {
-     *     "UserId": 1,
-     *     "IsInSync": true,
-     *     "batterystatus": 70,
-     *     "imei": "860353049070255"
+     * "UserId": 1,
+     * "IsInSync": true,
+     * "batterystatus": 70,
+     * "imei": "860353049070255"
      * }
+     *
      * @param response
      */
 //    {"UserId":10162,"IsInSync":false,"batterystatus":15,"imei":null}
@@ -451,33 +454,33 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         try {
             JSONObject jsonObject = null;
 //            try {
-                jsonObject = new JSONObject(response.string());
+            jsonObject = new JSONObject(response.string());
 
-                if (jsonObject.has("IsInSync")) {
-                    if( jsonObject.getBoolean("IsInSync")) {
-                        if (jsonObject.has("UserId"))
-                            //   if (jsonObject.getString("UserId").equalsIgnoreCase(Prefs.getString(AUtils.APP_ID, ""))) {
-                            if (jsonObject.has("imei")) {
-                                String imei = jsonObject.getString("imei");
+            if (jsonObject.has("IsInSync")) {
+                if (jsonObject.getBoolean("IsInSync")) {
+                    if (jsonObject.has("UserId"))
+                        //   if (jsonObject.getString("UserId").equalsIgnoreCase(Prefs.getString(AUtils.APP_ID, ""))) {
+                        if (jsonObject.has("imei")) {
+                            String imei = jsonObject.getString("imei");
 
-                                if (compareImeiNumber(imei)) {
-                                    boolean isMatch = compareImeiNumber(imei);
+                            if (compareImeiNumber(imei)) {
+//                                    boolean isMatch = compareImeiNumber(imei);
 
-                                    performLogoutDirectly();
+                                performLogoutDirectly();
 
-                                }
                             }
-                    }else{
-                        Log.d(TAG, "responseIMEINumber: "+jsonObject.getBoolean("IsInSync"));
-                    }
-                    //}
+                        }
+                } else {
+                    Log.d(TAG, "responseIMEINumber: " + jsonObject.getBoolean("IsInSync"));
                 }
+                //}
+            }
 //            }
 
 
         } catch (JSONException | IOException e) {
             e.printStackTrace();
-            Log.d(TAG, "responseIMEINumber: "+e.getMessage());
+            Log.d(TAG, "responseIMEINumber: " + e.getMessage());
         }
     }
 
@@ -501,18 +504,8 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
     private void performLogoutDirectly() {
 
 
-
-//        if (body.getMessage().equalsIgnoreCase(deviceId)) {
-            if (!AUtils.isIsOnduty()) {
-                verifyOfflineData(LoginActivity.class, true);
-
-            }
-
-
-//            else {
-//                AUtils.info(mContext, getResources().getString(R.string.off_duty_warning));
-//            }
-//        }
+        stopServiceIfRunning();
+        verifyOfflineData(LoginActivity.class, true);
 
 
     }
@@ -887,16 +880,20 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
 
         vehicleStatus.setText("");
 
-        boolean isservicerunning = AUtils.isMyServiceRunning(AUtils.mainApplicationConstant, ForgroundService.class);
-
-        if (isservicerunning)
-            ((MyApplication) AUtils.mainApplicationConstant).stopLocationTracking();
+        stopServiceIfRunning();
 
         markAttendance.setChecked(false);
 
         attendancePojo = null;
         AUtils.removeInPunchDate();
         AUtils.setIsOnduty(false);
+    }
+
+    private void stopServiceIfRunning() {
+        boolean isservicerunning = AUtils.isMyServiceRunning(AUtils.mainApplicationConstant, ForgroundService.class);
+
+        if (isservicerunning)
+            ((MyApplication) AUtils.mainApplicationConstant).stopLocationTracking();
     }
 
     private void getPermission() {
@@ -1073,12 +1070,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
                 markAttendance.setChecked(true);
             }
         }
-        /**
-         * Add Now to Direct logout after sync to server to perform logout...
-         */
-        else if (isDeviceMatch) {
-            verifyOfflineData(LoginActivity.class, true);
-        }
+
 
     }
 

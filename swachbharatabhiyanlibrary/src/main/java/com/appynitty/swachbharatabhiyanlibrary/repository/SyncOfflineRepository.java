@@ -220,6 +220,8 @@ public class SyncOfflineRepository {
         offlinePojo.setTotalGcWeight(pojo.getTotalGcWeight());
         offlinePojo.setVehicleNumber(pojo.getVehicleNumber());
         offlinePojo.setBatteryStatus(String.valueOf(AUtils.getBatteryStatus()));
+        offlinePojo.setGpAfterImage(pojo.getGpAfterImage());
+        offlinePojo.setGpBeforImage(pojo.getGpBeforImage());
         offlinePojo.setDistance(pojo.getDistance());
         offlinePojo.setIsOffline(pojo.getIsOffline());
 
@@ -277,6 +279,7 @@ public class SyncOfflineRepository {
                 entity.setOfflineGcType(cursor.getString(cursor.getColumnIndex(COLUMN_GC_TYPE)));
                 entity.setOfflineIsLocation(cursor.getString(cursor.getColumnIndex(COLUMN_IS_LOCATION)));
                 entity.setOfflineDate(cursor.getString(cursor.getColumnIndex(COLUMN_DATE)));
+
 
                 mList.add(entity);
 
@@ -391,6 +394,10 @@ public class SyncOfflineRepository {
         sqLiteDatabase.close();
     }
 
+    /**
+     * Insert OfflinePojo
+     * @param pojo
+     */
     public void insertCollection(OfflineGarbageColectionPojo pojo) {
         SQLiteDatabase sqLiteDatabase = AUtils.sqlDBInstance(mContext);
         performCollectionInsert(sqLiteDatabase, pojo);
